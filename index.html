@@ -3131,6 +3131,61 @@ boot();
   // OpenAI-format message history (content may be string OR array of parts)
   const history = [];
 
+  // ---------- Response cache (localStorage) ----------
+  const CACHE_KEY = 'datescan.chatCache';
+  const CACHE_MAX = 50;          // max entries
+  const CACHE_TTL = 7 * 24 * 3600 * 1000; // 7 days
+
+  function djb2(str) {
+    let h = 5381;
+    for (let i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) | 0;
+    return (h >>> 0).toString(36);
+  }
+
+  function loadCache() {
+    try { return JSON.parse(localStorage.getItem(CACHE_KEY) || '{}'); }
+    catch(e) { return {}; }
+  }
+  function saveCache(c) {
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify(c)); } catch(e) {}
+  }
+
+  function makeCacheKey(text, attachments, systemPrompt) {
+    // Hash attachment data URLs (expensive but deterministic)
+    const attHashes = attachments.map(a => djb2(a.url)).join('|');
+    const sysHash = djb2(systemPrompt);
+    return djb2((text || '').trim().toLowerCase() + '::' + attHashes + '::' + sysHash);
+  }
+
+  function getCached(key) {
+    const cache = loadCache();
+    const entry = cache[key];
+    if (!entry) return null;
+    if (Date.now() - entry.ts > CACHE_TTL) {
+      delete cache[key];
+      saveCache(cache);
+      return null;
+    }
+    // Touch: move to front by updating ts slightly (keeps LRU-ish)
+    entry.ts = Date.now();
+    cache[key] = entry;
+    saveCache(cache);
+    return entry.reply;
+  }
+
+  function setCached(key, reply) {
+    const cache = loadCache();
+    cache[key] = { reply: reply, ts: Date.now() };
+    // Evict oldest if over cap
+    const keys = Object.keys(cache);
+    if (keys.length > CACHE_MAX) {
+      keys.sort((a, b) => cache[a].ts - cache[b].ts);
+      const toRemove = keys.length - CACHE_MAX;
+      for (let i = 0; i < toRemove; i++) delete cache[keys[i]];
+    }
+    saveCache(cache);
+  }
+
   // ---------- Image compression ----------
   function compressImage(fileOrDataUrl, maxSize = 768, quality = 0.8) {
     return new Promise((resolve, reject) => {
@@ -3359,10 +3414,27 @@ boot();
     thinking.classList.add('animate-pulse');
 
     // Fresh system prompt (with current module context) on every send
+    const systemPrompt = buildSystemPrompt();
     const messagesForApi = [
-      { role: 'system', content: buildSystemPrompt() },
+      { role: 'system', content: systemPrompt },
       ...history
     ];
+
+    // Check cache first
+    const cacheKey = makeCacheKey(text, attachments, systemPrompt);
+    const cachedReply = getCached(cacheKey);
+    if (cachedReply) {
+      thinking.classList.remove('animate-pulse');
+      thinking.textContent = cachedReply;
+      // Small "cached" indicator
+      const badge = document.createElement('div');
+      badge.className = 'text-[9px] uppercase tracking-widest text-purple-300/60 mt-1.5 font-bold';
+      badge.textContent = '⚡ cached';
+      thinking.appendChild(badge);
+      history.push({ role: 'assistant', content: cachedReply });
+      scrollDown();
+      return;
+    }
 
     try {
       const res = await fetch(WORKER_URL + '/chat', {
@@ -3379,8 +3451,13 @@ boot();
                     (data.choices && data.choices[0] && (data.choices[0].message?.content || data.choices[0].text)) ||
                     '';
       thinking.classList.remove('animate-pulse');
-      thinking.textContent = (reply || '').trim() || "Hmm, I didn't catch that. Try again?";
-      history.push({ role: 'assistant', content: thinking.textContent });
+      const finalReply = (reply || '').trim() || "Hmm, I didn't catch that. Try again?";
+      thinking.textContent = finalReply;
+      history.push({ role: 'assistant', content: finalReply });
+      // Only cache successful non-error replies
+      if (reply && !finalReply.startsWith('⚠️')) {
+        setCached(cacheKey, finalReply);
+      }
     } catch (err) {
       thinking.classList.remove('animate-pulse');
       thinking.textContent = "⚠️ Couldn't reach the stylist right now. Please try again in a moment.";
