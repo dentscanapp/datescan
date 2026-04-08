@@ -19,6 +19,7 @@
 <!-- Favicon Generated from the Logo SVG -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='40' y2='40' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%23ec4899'/%3E%3Cstop offset='1' stop-color='%239333ea'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M10 5 H5 V10' stroke='url(%23bg)' stroke-width='2'/%3E%3Cpath d='M30 5 H35 V10' stroke='url(%23bg)' stroke-width='2'/%3E%3Cpath d='M10 35 H5 V30' stroke='url(%23bg)' stroke-width='2'/%3E%3Cpath d='M30 35 H35 V30' stroke='url(%23bg)' stroke-width='2'/%3E%3Cpath d='M20 13.5C20 13.5 16 9 11.5 9C7.5 9 5 12.5 5 16.5C5 22 13 28 20 32C27 28 35 22 35 16.5C35 12.5 32.5 9 28.5 9C24 9 20 13.5 20 13.5Z' fill='url(%23bg)' fill-opacity='0.2' stroke='url(%23bg)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='4' y1='20' x2='36' y2='20' stroke='%23f472b6' stroke-width='1.5' stroke-dasharray='2 2' opacity='0.8'/%3E%3C/svg%3E">
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/idb@8.0.0/build/umd.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
 <script>
   tailwind.config = {
@@ -44,7 +45,44 @@
   }
 </script>
 <style>
-  * { -webkit-tap-highlight-color: transparent; }
+  /* Global Scrollbar Hide */
+  * { 
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* Hide scrollbars on mobile/tablet only — desktop users expect them. */
+  @media (max-width: 1023px) {
+    * {
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE and Edge */
+    }
+    *::-webkit-scrollbar {
+      display: none; /* Chrome, Safari and Opera */
+    }
+  }
+  /* Slim, theme-matched scrollbar on desktop. */
+  @media (min-width: 1024px) {
+    html {
+      scrollbar-width: thin; /* Firefox */
+      scrollbar-color: rgba(236, 72, 153, 0.4) transparent;
+    }
+    *::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    *::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    *::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+    *::-webkit-scrollbar-thumb:hover {
+      background-color: rgba(236, 72, 153, 0.45);
+      background-clip: padding-box;
+    }
+  }
   
   body {
     background-color: #09090b;
@@ -52,6 +90,16 @@
     min-height: 100vh;
     overflow-x: hidden;
   }
+
+  /* Lock body scrolling when onboarding is active */
+  body.has-onboarding {
+    overflow: hidden !important;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+  }
+  body.has-onboarding #mobileBottomNav { display: none !important; }
 
   /* Ambient Background Glow */
   .ambient-glow {
@@ -186,8 +234,6 @@
     height: 100%;
   }
 
-  /* Hide the bottom nav while the onboarding modal is visible */
-  body.has-onboarding #mobileBottomNav { display: none !important; }
   .scanning .hud { opacity: 1; }
   
   .hud-element {
@@ -308,9 +354,6 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
-  .scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-
   #analysisCanvas { display: none; }
   .mobile-nav-btn.is-active {
     background: linear-gradient(to bottom, rgba(236,72,153,0.28), rgba(147,51,234,0.18)) !important;
@@ -349,7 +392,7 @@
 
 <!-- Onboarding Modal -->
 <div id="onboardingModal" class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-[#09090b]/95 backdrop-blur-xl transition-opacity duration-500">
-  <div class="premium-glass border border-brand-500/20 rounded-[32px] p-8 max-w-md w-full relative overflow-hidden fade-up">
+  <div class="premium-glass border border-brand-500/20 rounded-[32px] p-8 max-w-md w-full relative max-h-[95vh] overflow-y-auto fade-up">
     <!-- Decoration -->
     <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-500 rounded-full mix-blend-screen filter blur-[60px] opacity-30 pointer-events-none"></div>
 
@@ -363,21 +406,27 @@
 
     <div class="space-y-6 relative z-10 mb-8">
       <div class="flex items-center gap-4">
-        <div class="w-12 h-12 rounded-full bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-xl shrink-0">📸</div>
+        <div class="w-12 h-12 rounded-full bg-brand-500/10 border border-brand-500/20 flex items-center justify-center shrink-0 text-brand-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3.5"/></svg>
+        </div>
         <div class="text-left">
           <h4 class="font-medium text-white text-sm">1. Allow Camera</h4>
           <p class="text-xs text-gray-500 mt-0.5">We need to see your outfit. 100% private.</p>
         </div>
       </div>
       <div class="flex items-center gap-4">
-        <div class="w-12 h-12 rounded-full bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-xl shrink-0">💡</div>
+        <div class="w-12 h-12 rounded-full bg-purple-500/10 border border-purple-500/20 flex items-center justify-center shrink-0 text-purple-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.7.6 1 1.4 1 2.3v1h6v-1c0-.9.3-1.7 1-2.3A7 7 0 0 0 12 2z"/></svg>
+        </div>
         <div class="text-left">
           <h4 class="font-medium text-white text-sm">2. Stand in Good Light</h4>
           <p class="text-xs text-gray-500 mt-0.5">Face a window or light source for accuracy.</p>
         </div>
       </div>
       <div class="flex items-center gap-4">
-        <div class="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-xl shrink-0">✨</div>
+        <div class="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0 text-emerald-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.6 4.6L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.4z"/><path d="M19 14l.7 1.9 1.8.6-1.8.6L19 19l-.7-1.9-1.8-.6 1.8-.6z"/><path d="M5 16l.5 1.4L7 17.9l-1.5.5L5 19.8l-.5-1.4L3 17.9l1.5-.5z"/></svg>
+        </div>
         <div class="text-left">
           <h4 class="font-medium text-white text-sm">3. Get Your Action Plan</h4>
           <p class="text-xs text-gray-500 mt-0.5">Instant grooming and style feedback.</p>
@@ -385,8 +434,8 @@
       </div>
     </div>
 
-    <!-- Install as App card (shown only when installable / not already installed) -->
-    <div id="pwaInstallCard" class="hidden relative z-10 mb-5 rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/15 to-purple-500/10 p-4">
+    <!-- Install as App card (Hidden on lg monitors via Tailwind lg:hidden) -->
+    <div id="pwaInstallCard" class="hidden lg:hidden relative z-10 mb-5 rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/15 to-purple-500/10 p-4">
       <div class="flex items-start gap-3">
         <div class="shrink-0 w-10 h-10 rounded-xl bg-brand-500/20 border border-brand-500/40 flex items-center justify-center text-lg">📲</div>
         <div class="flex-1 min-w-0">
@@ -432,7 +481,7 @@
   </div>
   <div class="flex items-center gap-3 sm:gap-4">
     <button id="navClosetBtn" class="hidden lg:flex text-xs font-bold px-3 py-2 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors items-center gap-1.5">
-      <span class="text-base">👕</span>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
       <span class="hidden sm:inline">Closet</span>
     </button>
     <span id="usageBadge" class="inline-block text-[10px] sm:text-xs font-medium px-2.5 sm:px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-300 transition-all whitespace-nowrap">
@@ -457,7 +506,7 @@
         </p>
       </div>
 
-      <div id="mainLayout" class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start transition-all duration-700">
+      <div id="mainLayout" class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start transition-all duration-700">
         
         <!-- Camera Section -->
         <div id="cameraCol" class="lg:col-span-12 flex flex-col gap-6 max-w-2xl mx-auto w-full transition-all duration-700 ease-in-out">
@@ -471,7 +520,7 @@
             <div class="camera-container relative" id="videoWrap">
               <video id="video" autoplay playsinline webkit-playsinline muted></video>
               <div class="scanline"></div>
-              <svg id="hud" class="hud" preserveAspectRatio="xMidYMid slice"></svg>
+              <svg id="hud" class="hud" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
               <div class="viewfinder">
                 <div class="vf-corner vf-tl"></div>
                 <div class="vf-corner vf-tr"></div>
@@ -509,21 +558,22 @@
           <div>
             <div class="mb-4 fade-up" style="animation-delay: 0.1s;">
               <div class="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-2 ml-1">Target Occasion</div>
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="occasionSelector">
-                <button data-occ="casual" class="occ-btn border border-brand-500 text-brand-400 bg-black/40 rounded-xl py-3 text-xs font-bold uppercase tracking-widest transition-all">Casual</button>
-                <button data-occ="first_date" class="occ-btn border border-white/10 bg-black/40 text-gray-500 rounded-xl py-3 text-xs font-bold uppercase tracking-widest transition-all">Date</button>
-                <button data-occ="night_out" class="occ-btn border border-white/10 bg-black/40 text-gray-500 rounded-xl py-3 text-xs font-bold uppercase tracking-widest transition-all">Party</button>
-                <button data-occ="fancy" class="occ-btn border border-white/10 bg-black/40 text-gray-500 rounded-xl py-3 text-xs font-bold uppercase tracking-widest transition-all">Formal</button>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="occasionSelector" role="group" aria-label="Target occasion">
+                <button type="button" data-occ="casual" aria-pressed="true" class="occ-btn border border-brand-500 text-brand-400 bg-black/40 rounded-xl py-3 text-xs font-bold uppercase tracking-widest transition-all">Casual</button>
+                <button type="button" data-occ="first_date" aria-pressed="false" class="occ-btn border border-white/10 bg-black/40 text-gray-500 rounded-xl py-3 text-xs font-bold uppercase tracking-widest transition-all">Date</button>
+                <button type="button" data-occ="night_out" aria-pressed="false" class="occ-btn border border-white/10 bg-black/40 text-gray-500 rounded-xl py-3 text-xs font-bold uppercase tracking-widest transition-all">Party</button>
+                <button type="button" data-occ="fancy" aria-pressed="false" class="occ-btn border border-white/10 bg-black/40 text-gray-500 rounded-xl py-3 text-xs font-bold uppercase tracking-widest transition-all">Formal</button>
               </div>
             </div>
 
             <button id="scanBtn" class="w-full btn-primary py-4 rounded-2xl text-lg font-bold shadow-xl shadow-brand-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-3 transition-all" disabled>
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V6a2 2 0 0 1 2-2h2"/><path d="M16 4h2a2 2 0 0 1 2 2v2"/><path d="M20 16v2a2 2 0 0 1-2 2h-2"/><path d="M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="11" r="2.4"/><path d="M8 17c1-1.5 2.4-2.3 4-2.3s3 .8 4 2.3"/></svg>
               <span id="scanBtnText">Initializing...</span>
             </button>
-            <p class="text-center text-[11px] text-gray-500 mt-4 flex items-center justify-center gap-1.5">
+            <p class="text-center text-[11px] text-gray-500 mt-4 flex items-center justify-center gap-1.5 flex-wrap">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-              Strictly private. Runs in your browser, no data is uploaded.
+              <span>Scan runs locally on your device.</span>
+              <button type="button" id="openPrivacyBtn" class="underline decoration-dotted underline-offset-2 text-brand-400 hover:text-brand-300 transition">Privacy details</button>
             </p>
           </div>
 
@@ -539,7 +589,7 @@
                   <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-1">Date Prep</div>
                   <h2 class="font-serif text-xl font-semibold">Countdown</h2>
                 </div>
-                <span class="text-2xl filter drop-shadow-md">⏳</span>
+                <svg class="w-7 h-7 text-brand-400" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
               </div>
 
               <!-- Timer Setup View -->
@@ -547,7 +597,7 @@
                 <p class="text-xs text-gray-400 mb-3">When is the big date?</p>
                 <input type="datetime-local" id="dateTimerInput" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm text-white mb-3 focus:border-brand-500 outline-none transition-colors">
                 <button id="startDateTimerBtn" class="w-full text-sm font-semibold py-3 px-3 rounded-xl border border-brand-500/40 bg-brand-500/15 text-brand-400 hover:bg-brand-500/25 transition flex items-center justify-center gap-2">
-                  <span>⏱️</span> Start Countdown
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 1.5"/><path d="M9 2h6"/><path d="M12 2v2"/></svg> Start Countdown
                 </button>
               </div>
 
@@ -556,6 +606,7 @@
                  <div class="bg-black/30 border border-white/5 rounded-2xl p-4 mb-4">
                    <div id="countdownDisplay" class="font-serif font-bold text-4xl text-white tracking-wider mb-1 drop-shadow-[0_0_10px_rgba(236,72,153,0.3)] tabular-nums">00:00:00</div>
                    <div class="text-[10px] text-gray-500 uppercase tracking-widest">Remaining</div>
+                   <div id="targetDateLabel" class="text-[11px] text-gray-400 mt-2 tabular-nums"></div>
                  </div>
                  
                  <div class="bg-white/5 border border-white/10 rounded-xl p-3 mb-4 flex items-start gap-3 text-left">
@@ -613,7 +664,9 @@
                     </div>
                   </div>
                   <div class="text-right">
-                    <div class="text-3xl filter drop-shadow-md" id="streakFlame">🔥</div>
+                    <div id="streakFlame" class="flex justify-end text-orange-400">
+                      <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+                    </div>
                     <div id="missionStreak" class="text-[11px] font-bold text-orange-400 mt-1">0 Day Streak</div>
                   </div>
                 </div>
@@ -623,7 +676,8 @@
                 </div>
 
                 <button id="logDateBtn" class="w-full text-xs font-semibold py-3 px-3 rounded-xl border border-brand-500/40 bg-brand-500/15 text-brand-400 hover:bg-brand-500/25 transition flex items-center justify-center gap-2">
-                  <span>💕</span> Log tonight's date <span class="opacity-50 font-normal">(+50 XP)</span>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  Log tonight's date <span class="opacity-50 font-normal">(+50 XP)</span>
                 </button>
               </div>
             </div>
@@ -632,7 +686,7 @@
         </div>
 
         <!-- Results Section -->
-        <div id="resultsCol" class="hidden lg:col-span-7 flex flex-col gap-6 w-full opacity-0 translate-y-8 transition-all duration-700 ease-out lg:sticky lg:top-6 pb-12">
+        <div id="resultsCol" class="hidden lg:col-span-7 flex flex-col gap-6 w-full opacity-0 translate-y-8 transition-all duration-700 ease-out lg:sticky lg:top-6 lg:pb-12">
           
           <div class="premium-glass rounded-[32px] p-6 sm:p-8 relative overflow-hidden">
             <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-brand-500/20 mix-blend-screen filter blur-[40px] pointer-events-none"></div>
@@ -643,7 +697,13 @@
             <p class="text-xs text-gray-400 mb-6 relative z-10">Deep analysis of your outfit's color, contrast, and coordination.</p>
             
             <div id="styleCoachResult" class="transition-all duration-300 min-h-[160px] relative z-10">
-               <!-- Populated by JS -->
+               <div id="styleCoachEmpty" class="flex flex-col items-center justify-center text-center py-6 px-4">
+                 <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-500/20 to-purple-500/20 border border-brand-500/30 flex items-center justify-center mb-3 shadow-lg shadow-brand-500/10 text-brand-300">
+                   <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.6 4.6L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.4z"/><path d="M19 14l.7 1.9 1.8.6-1.8.6L19 19l-.7-1.9-1.8-.6 1.8-.6z"/><path d="M5 16l.5 1.4L7 17.9l-1.5.5L5 19.8l-.5-1.4L3 17.9l1.5-.5z"/></svg>
+                 </div>
+                 <p class="font-serif text-base text-white/90 mb-1">Ready when you are</p>
+                 <p class="text-xs text-gray-400 max-w-[260px] leading-relaxed">Tap <span class="text-brand-400 font-semibold">Scan Outfit &amp; Face</span> above and I'll break down your look in seconds.</p>
+               </div>
             </div>
           </div>
 
@@ -652,15 +712,18 @@
             <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-purple-500/20 mix-blend-screen filter blur-[40px] pointer-events-none"></div>
             <div class="flex items-center justify-between mb-1 relative z-10">
               <h2 class="font-serif text-2xl font-semibold flex items-center gap-2">
-                <span>💬</span> AI Style Coach Chat
+                <svg class="w-6 h-6 text-purple-300" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg>
+                AI Style Coach Chat
               </h2>
               <span class="text-[10px] font-sans font-bold uppercase tracking-widest text-purple-300 border border-purple-500/30 bg-purple-500/10 px-2 py-0.5 rounded-full">Vision AI</span>
             </div>
             <p class="text-xs text-gray-400 mb-5 relative z-10">Upload an outfit photo, pick from your closet, or just ask — I'll see it and help.</p>
 
-            <div id="coachChatMessages" class="relative z-10 space-y-3 max-h-[420px] overflow-y-auto pr-1 mb-4 scrollbar">
+            <div id="coachChatMessages" class="relative z-10 space-y-3 max-h-[420px] overflow-y-auto pr-1 mb-4">
               <div class="flex gap-2.5">
-                <div class="shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-purple-500 flex items-center justify-center text-sm">✨</div>
+                <div class="shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-purple-500 flex items-center justify-center text-white">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.6 4.6L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.4z"/><path d="M19 14l.7 1.9 1.8.6-1.8.6L19 19l-.7-1.9-1.8-.6 1.8-.6z"/></svg>
+                </div>
                 <div class="bg-white/5 border border-white/10 rounded-2xl rounded-tl-sm px-4 py-2.5 text-sm text-gray-200 max-w-[85%]">
                   Hey! I'm your AI Style Coach with vision. Upload a photo or tap 👕 to pick from your closet, and I'll give you feedback on colors, fit, and how it works for your date tonight.
                 </div>
@@ -672,15 +735,15 @@
 
             <form id="coachChatForm" class="relative z-10 flex gap-2 items-center">
               <input id="coachChatFile" type="file" accept="image/*" class="hidden" />
-              <button id="coachChatUploadBtn" type="button" title="Upload photo" class="shrink-0 w-11 h-11 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 flex items-center justify-center transition">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              <button id="coachChatUploadBtn" type="button" title="Upload photo" aria-label="Upload photo" class="shrink-0 w-11 h-11 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 flex items-center justify-center transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="m21 16-4-4-8 8"/></svg>
               </button>
-              <button id="coachChatClosetBtn" type="button" title="Pick from closet" class="shrink-0 w-11 h-11 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 flex items-center justify-center transition text-lg">
-                👕
+              <button id="coachChatClosetBtn" type="button" title="Pick from closet" aria-label="Pick from closet" class="shrink-0 w-11 h-11 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 flex items-center justify-center transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
               </button>
               <input id="coachChatInput" type="text" autocomplete="off" placeholder="Ask me anything…" class="flex-1 min-w-0 bg-white/5 border border-white/10 focus:border-brand-500/60 focus:bg-white/10 outline-none rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-500 transition" />
-              <button id="coachChatSend" type="submit" class="shrink-0 btn-primary w-11 h-11 rounded-xl flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 5l7 7-7 7"/></svg>
+              <button id="coachChatSend" type="submit" aria-label="Send message" class="shrink-0 btn-primary w-11 h-11 rounded-xl flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>
               </button>
             </form>
           </div>
@@ -692,7 +755,7 @@
                 <h3 class="font-serif text-xl font-semibold">Pick from your closet</h3>
                 <button id="coachClosetPickerClose" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center transition">✕</button>
               </div>
-              <div id="coachClosetPickerGrid" class="p-5 grid grid-cols-2 sm:grid-cols-3 gap-3 overflow-y-auto scrollbar">
+              <div id="coachClosetPickerGrid" class="p-5 grid grid-cols-2 sm:grid-cols-3 gap-3 overflow-y-auto">
                 <!-- Populated by JS -->
               </div>
             </div>
@@ -726,12 +789,12 @@
          </button>
       </div>
        
-      <div class="mb-6 flex gap-2 overflow-x-auto pb-2 scrollbar" id="closetFilters">
-          <button data-filter="all" class="closet-filter-btn border border-brand-500/50 bg-brand-500/20 text-white rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">All Outfits</button>
-          <button data-filter="casual" class="closet-filter-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">Casual</button>
-          <button data-filter="first_date" class="closet-filter-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">First Date</button>
-          <button data-filter="fancy" class="closet-filter-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">Fancy Dinner</button>
-          <button data-filter="night_out" class="closet-filter-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">Night Out</button>
+      <div class="mb-6 flex gap-2 overflow-x-auto pb-2" id="closetFilters" role="group" aria-label="Closet category filter">
+          <button type="button" data-filter="all" aria-pressed="true" class="closet-filter-btn border border-brand-500/50 bg-brand-500/20 text-white rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">All Outfits</button>
+          <button type="button" data-filter="casual" aria-pressed="false" class="closet-filter-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">Casual</button>
+          <button type="button" data-filter="first_date" aria-pressed="false" class="closet-filter-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">First Date</button>
+          <button type="button" data-filter="fancy" aria-pressed="false" class="closet-filter-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">Fancy Dinner</button>
+          <button type="button" data-filter="night_out" aria-pressed="false" class="closet-filter-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">Night Out</button>
       </div>
 
       <div id="closetGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -778,19 +841,139 @@
 <nav id="mobileBottomNav" class="lg:hidden fixed bottom-0 left-0 right-0 z-[80] px-3 pt-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] bg-gradient-to-t from-[#09090b] via-[#09090b]/95 to-transparent pointer-events-none">
   <div class="max-w-md mx-auto grid grid-cols-3 gap-2 pointer-events-auto">
     <button id="mobileNavScan" class="mobile-nav-btn bg-dark-950/80 backdrop-blur-xl rounded-2xl p-3 border border-white/10 flex flex-col items-center gap-1 transition-all active:scale-95">
-      <svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      <svg class="w-[22px] h-[22px] text-brand-400" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 8V6a2 2 0 0 1 2-2h2"/>
+        <path d="M16 4h2a2 2 0 0 1 2 2v2"/>
+        <path d="M20 16v2a2 2 0 0 1-2 2h-2"/>
+        <path d="M8 20H6a2 2 0 0 1-2-2v-2"/>
+        <circle cx="12" cy="11" r="2.4"/>
+        <path d="M8 17c1-1.5 2.4-2.3 4-2.3s3 .8 4 2.3"/>
+      </svg>
       <span class="text-[10px] font-bold uppercase tracking-widest text-white">Scan</span>
     </button>
     <button id="mobileNavCloset" class="mobile-nav-btn bg-dark-950/80 backdrop-blur-xl rounded-2xl p-3 border border-white/10 flex flex-col items-center gap-1 transition-all active:scale-95">
-      <span class="text-xl leading-none">👕</span>
+      <svg class="w-[22px] h-[22px] text-white" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/>
+      </svg>
       <span class="text-[10px] font-bold uppercase tracking-widest text-white">Closet</span>
     </button>
     <button id="mobileNavPro" class="mobile-nav-btn bg-dark-950/80 backdrop-blur-xl rounded-2xl p-3 border border-white/10 flex flex-col items-center gap-1 transition-all active:scale-95">
-      <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.39 7.36H22l-6.19 4.5 2.39 7.36L12 16.72l-6.19 4.5 2.39-7.36L2 9.36h7.61z"/></svg>
+      <svg class="w-[22px] h-[22px] text-white" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2.5l2.9 6 6.6.95-4.78 4.66 1.13 6.58L12 17.6l-5.85 3.07L7.28 14.1 2.5 9.45l6.6-.95z"/>
+      </svg>
       <span class="text-[10px] font-bold uppercase tracking-widest text-white">Pro</span>
     </button>
   </div>
 </nav>
+
+<script>
+// ===== Privacy state (private mode + chat image consent) =====
+window.dsPrivacy = (function () {
+  const PRIVATE_KEY = 'datescan.privateMode';
+  const CONSENT_KEY = 'datescan.chatImageConsent';
+  const listeners = new Set();
+  function isPrivateMode() {
+    try { return localStorage.getItem(PRIVATE_KEY) === '1'; } catch { return false; }
+  }
+  function setPrivateMode(on) {
+    try { localStorage.setItem(PRIVATE_KEY, on ? '1' : '0'); } catch {}
+    listeners.forEach(fn => { try { fn(on); } catch (e) {} });
+  }
+  function hasChatImageConsent() {
+    try { return localStorage.getItem(CONSENT_KEY) === '1'; } catch { return false; }
+  }
+  function grantChatImageConsent() {
+    try { localStorage.setItem(CONSENT_KEY, '1'); } catch {}
+  }
+  function onChange(fn) { listeners.add(fn); return () => listeners.delete(fn); }
+
+  // Returns Promise<boolean>: true if upload allowed, false if blocked.
+  function requestChatImagePermission() {
+    return new Promise((resolve) => {
+      if (isPrivateMode()) {
+        showToast('Private Mode is on — image uploads in chat are disabled.');
+        resolve(false);
+        return;
+      }
+      if (hasChatImageConsent()) { resolve(true); return; }
+      const modal = document.getElementById('chatConsentModal');
+      const accept = document.getElementById('chatConsentAccept');
+      const decline = document.getElementById('chatConsentDecline');
+      const remember = document.getElementById('chatConsentRemember');
+      if (!modal || !accept || !decline) { resolve(true); return; }
+      modal.classList.remove('hidden');
+      const cleanup = () => {
+        modal.classList.add('hidden');
+        accept.removeEventListener('click', onAccept);
+        decline.removeEventListener('click', onDecline);
+      };
+      const onAccept = () => {
+        if (remember && remember.checked) grantChatImageConsent();
+        cleanup();
+        resolve(true);
+      };
+      const onDecline = () => { cleanup(); resolve(false); };
+      accept.addEventListener('click', onAccept);
+      decline.addEventListener('click', onDecline);
+    });
+  }
+
+  function showToast(msg, ms = 2600) {
+    const t = document.getElementById('dsToast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.remove('hidden');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => t.classList.add('hidden'), ms);
+  }
+
+  return {
+    isPrivateMode, setPrivateMode,
+    hasChatImageConsent, grantChatImageConsent,
+    requestChatImagePermission, onChange, showToast
+  };
+})();
+
+document.addEventListener('DOMContentLoaded', function () {
+  const openBtn = document.getElementById('openPrivacyBtn');
+  const modal = document.getElementById('privacyModal');
+  const closeBtn = document.getElementById('closePrivacyBtn');
+  const doneBtn = document.getElementById('privacyDoneBtn');
+  const toggle = document.getElementById('privateModeToggle');
+  const knob = document.getElementById('privateModeKnob');
+  const statusEl = document.getElementById('privateModeStatus');
+  if (!modal || !toggle) return;
+
+  function syncToggleUI(on) {
+    toggle.setAttribute('aria-checked', on ? 'true' : 'false');
+    toggle.classList.toggle('bg-brand-500/60', on);
+    toggle.classList.toggle('border-brand-500/60', on);
+    toggle.classList.toggle('bg-white/10', !on);
+    toggle.classList.toggle('border-white/15', !on);
+    if (knob) knob.style.transform = on ? 'translateX(20px)' : 'translateX(0)';
+    if (statusEl) {
+      statusEl.innerHTML = on
+        ? 'Status: <span class="text-brand-400 font-semibold">On</span> — chat image uploads blocked, on-device AI uses CPU backend.'
+        : 'Status: <span class="text-gray-300">Off</span> — image uploads in chat are allowed after consent.';
+    }
+  }
+  syncToggleUI(window.dsPrivacy.isPrivateMode());
+
+  toggle.addEventListener('click', () => {
+    const next = !window.dsPrivacy.isPrivateMode();
+    window.dsPrivacy.setPrivateMode(next);
+    syncToggleUI(next);
+    if (next) window.dsPrivacy.showToast('Private Mode on. Reload to apply CPU backend to the scanner.');
+  });
+
+  function open() { modal.classList.remove('hidden'); }
+  function close() { modal.classList.add('hidden'); }
+  openBtn?.addEventListener('click', open);
+  closeBtn?.addEventListener('click', close);
+  doneBtn?.addEventListener('click', close);
+  modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
+});
+</script>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
@@ -855,7 +1038,7 @@
   });
 </script>
 
-<canvas id="analysisCanvas"></canvas>
+<canvas id="analysisCanvas" aria-hidden="true"></canvas>
 
 <!-- AI Suggestion Modal -->
 <div id="aiMixModal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[#09090b]/95 backdrop-blur-xl transition-opacity duration-300">
@@ -883,9 +1066,81 @@
     </div>
 </div>
 
+<!-- Privacy & Data Modal -->
+<div id="privacyModal" class="hidden fixed inset-0 z-[90] flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm">
+  <div class="premium-glass border border-brand-500/30 rounded-[28px] p-6 sm:p-7 max-w-md w-full max-h-[90vh] overflow-y-auto fade-up">
+    <div class="flex items-start justify-between mb-4">
+      <div>
+        <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-1">Privacy &amp; Data</div>
+        <h3 class="font-serif text-2xl font-semibold text-white">What leaves your device</h3>
+      </div>
+      <button id="closePrivacyBtn" class="shrink-0 w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center transition" aria-label="Close">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <ul class="space-y-3 text-sm text-gray-300 mb-6">
+      <li class="flex gap-3">
+        <span class="text-emerald-400 shrink-0">●</span>
+        <div><strong class="text-white">Camera scan &amp; analysis.</strong> Runs 100% on your device using MediaPipe + WebAssembly. Your video frames never leave the browser.</div>
+      </li>
+      <li class="flex gap-3">
+        <span class="text-emerald-400 shrink-0">●</span>
+        <div><strong class="text-white">Closet &amp; history.</strong> Stored locally in your browser's IndexedDB. Nothing is sent anywhere.</div>
+      </li>
+      <li class="flex gap-3">
+        <span class="text-yellow-400 shrink-0">●</span>
+        <div><strong class="text-white">AI Style Coach Chat — text.</strong> Your messages are sent to <code class="text-[11px] bg-white/10 px-1.5 py-0.5 rounded">api.datescan.app</code> and forwarded to a vision-language model so you can get a reply.</div>
+      </li>
+      <li class="flex gap-3">
+        <span class="text-yellow-400 shrink-0">●</span>
+        <div><strong class="text-white">AI Style Coach Chat — images.</strong> If you attach a photo or pick one from your closet, that image is uploaded with your message for the model to "see". It is processed for that single request and not retained on our server beyond the response. We do not use chat content to train models.</div>
+      </li>
+    </ul>
+
+    <div class="rounded-2xl border border-white/10 bg-white/5 p-4 mb-4">
+      <div class="flex items-start justify-between gap-3 mb-2">
+        <div>
+          <div class="text-sm font-semibold text-white">Private Mode</div>
+          <p class="text-xs text-gray-400 mt-0.5">Blocks all image uploads in chat and forces the on-device AI to use the CPU backend (no GPU fingerprint surface).</p>
+        </div>
+        <button id="privateModeToggle" type="button" role="switch" aria-checked="false"
+          class="shrink-0 relative w-12 h-7 rounded-full bg-white/10 border border-white/15 transition-colors">
+          <span id="privateModeKnob" class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform"></span>
+        </button>
+      </div>
+      <div id="privateModeStatus" class="text-[11px] text-gray-500">Status: <span class="text-gray-300">Off</span> — image uploads in chat are allowed after consent.</div>
+    </div>
+
+    <button id="privacyDoneBtn" class="w-full btn-primary py-3 rounded-xl font-semibold text-sm">Done</button>
+  </div>
+</div>
+
+<!-- Chat Image Consent Modal -->
+<div id="chatConsentModal" class="hidden fixed inset-0 z-[95] flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm">
+  <div class="premium-glass border border-brand-500/30 rounded-[24px] p-6 max-w-sm w-full fade-up">
+    <div class="text-3xl mb-2 text-center">📤</div>
+    <h3 class="font-serif text-xl font-semibold text-white mb-2 text-center">Send this image to the AI?</h3>
+    <p class="text-sm text-gray-400 mb-4 leading-relaxed">
+      To analyze a photo in chat, we upload it to <code class="text-[11px] bg-white/10 px-1.5 py-0.5 rounded">api.datescan.app</code>, which forwards it to a vision-language model. The image is processed for this request only and not stored on our server beyond the response.
+    </p>
+    <label class="flex items-center gap-2 text-xs text-gray-400 mb-5 cursor-pointer select-none">
+      <input id="chatConsentRemember" type="checkbox" class="accent-brand-500 w-4 h-4" checked />
+      Don't ask me again on this device
+    </label>
+    <div class="flex gap-3">
+      <button id="chatConsentDecline" class="flex-1 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition">Cancel</button>
+      <button id="chatConsentAccept" class="flex-1 py-3 rounded-xl btn-primary font-bold">Send</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div id="dsToast" class="hidden fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] px-4 py-2.5 rounded-full bg-black/85 border border-white/15 backdrop-blur-md text-xs text-white shadow-xl pointer-events-none"></div>
+
 <!-- Share Modal -->
 <div id="shareModal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl">
-  <div class="premium-glass border border-brand-500/30 rounded-[32px] p-5 sm:p-6 max-w-sm w-full relative overflow-hidden fade-up max-h-[95vh] overflow-y-auto scrollbar">
+  <div class="premium-glass border border-brand-500/30 rounded-[32px] p-5 sm:p-6 max-w-sm w-full relative overflow-hidden fade-up max-h-[95vh] overflow-y-auto">
     <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-500 rounded-full mix-blend-screen filter blur-[60px] opacity-30 pointer-events-none"></div>
 
     <div class="text-center relative z-10 mb-4">
@@ -898,7 +1153,7 @@
 
     <!-- Generated card preview -->
     <div class="relative z-10 rounded-2xl overflow-hidden border border-white/10 bg-black mb-4 aspect-[9/16] max-h-[55vh] mx-auto flex items-center justify-center">
-      <canvas id="shareCanvas" class="w-full h-full object-contain"></canvas>
+      <canvas id="shareCanvas" role="img" aria-label="Shareable score card preview" class="w-full h-full object-contain"></canvas>
     </div>
 
     <div class="relative z-10 space-y-2.5">
@@ -972,8 +1227,6 @@
 <script type="module">
 import { FilesetResolver, FaceLandmarker } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs";
 
-// Capture beforeinstallprompt as early as possible — Chrome fires it on page load
-// and we need it available later when the onboarding modal renders.
 window._deferredInstallPrompt = null;
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
@@ -984,31 +1237,21 @@ window.addEventListener('beforeinstallprompt', (e) => {
 const createStore = (initialState, reducer) => {
   let state = { ...initialState };
   const listeners = new Set();
-  const actionLog = []; // last 30 actions for debugging
+  const actionLog = []; 
 
   const notify = () => listeners.forEach(fn => fn(state));
 
   return {
     get: () => state,
     set: (newState) => {
-      // Low-level direct patch (still supported for backwards compat)
       state = { ...state, ...newState };
       notify();
     },
-    // Flux-style: single entry point, all mutations flow through the reducer.
-    // Usage: store.dispatch({ type: 'SET_OCCASION', payload: 'fancy' });
     dispatch: (action) => {
-      if (!action || !action.type) {
-        console.warn('[store] dispatch called without a type:', action);
-        return state;
-      }
+      if (!action || !action.type) return state;
       const prev = state;
-      try {
-        state = reducer(state, action);
-      } catch (err) {
-        console.error('[store] reducer threw for action', action, err);
-        return prev;
-      }
+      try { state = reducer(state, action); } 
+      catch (err) { return prev; }
       actionLog.push({ type: action.type, payload: action.payload, ts: Date.now() });
       if (actionLog.length > 30) actionLog.shift();
       if (state !== prev) notify();
@@ -1019,30 +1262,19 @@ const createStore = (initialState, reducer) => {
       fn(state);
       return () => listeners.delete(fn);
     },
-    // Debug helper: window.store.debug() in the console shows recent actions.
     debug: () => ({ state, actions: actionLog.slice() })
   };
 };
 
-// Central reducer. Add new action types here as the app grows.
-// Keeping it exhaustive is optional — unknown actions fall through unchanged,
-// which means existing store.set() call sites continue to work untouched.
 const appReducer = (state, action) => {
   switch (action.type) {
-    case 'AI_READY':
-      return { ...state, faceLandmarker: action.payload.landmarker, aiReady: true };
-    case 'CAMERA_STREAM_READY':
-      return { ...state, stream: action.payload };
-    case 'CAMERA_READY':
-      return { ...state, cameraReady: true };
-    case 'SET_VIEW':
-      return { ...state, activeView: action.payload };
-    case 'SET_OCCASION':
-      return { ...state, occasion: action.payload };
-    case 'SCAN_START':
-      return { ...state, isScanning: true };
-    case 'SCAN_END':
-      return { ...state, isScanning: false };
+    case 'AI_READY': return { ...state, faceLandmarker: action.payload.landmarker, aiReady: true };
+    case 'CAMERA_STREAM_READY': return { ...state, stream: action.payload };
+    case 'CAMERA_READY': return { ...state, cameraReady: true };
+    case 'SET_VIEW': return { ...state, activeView: action.payload };
+    case 'SET_OCCASION': return { ...state, occasion: action.payload };
+    case 'SCAN_START': return { ...state, isScanning: true };
+    case 'SCAN_END': return { ...state, isScanning: false };
     case 'SCAN_RESULT':
       return {
         ...state,
@@ -1052,8 +1284,7 @@ const appReducer = (state, action) => {
         lastScoreLabel: action.payload.scoreLabel ?? state.lastScoreLabel,
         lastCap: action.payload.cap ?? state.lastCap,
       };
-    default:
-      return state; // unknown action — no-op
+    default: return state; 
   }
 };
 
@@ -1069,7 +1300,6 @@ const store = createStore({
   activeView: 'scanner'
 }, appReducer);
 
-// Expose for console debugging
 window.store = store;
 
 const $ = (id) => document.getElementById(id);
@@ -1098,7 +1328,9 @@ const thinkingTextEl = $("thinkingText");
 
 store.subscribe((s) => {
   document.querySelectorAll('.occ-btn').forEach(btn => {
-    if (btn.dataset.occ === s.occasion) {
+    const isActive = btn.dataset.occ === s.occasion;
+    btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    if (isActive) {
       btn.classList.remove('border-white/10', 'text-gray-500');
       btn.classList.add('border-brand-500', 'text-brand-400');
     } else {
@@ -1211,13 +1443,16 @@ function toggleView(targetView) {
             viewCloset.classList.replace("translate-y-8", "translate-y-0");
         }, 50);
 
-        navBtn.innerHTML = `<span class="text-base">📸</span><span class="hidden sm:inline">Scanner</span>`;
+        navBtn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V6a2 2 0 0 1 2-2h2"/><path d="M16 4h2a2 2 0 0 1 2 2v2"/><path d="M20 16v2a2 2 0 0 1-2 2h-2"/><path d="M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="11" r="2.4"/><path d="M8 17c1-1.5 2.4-2.3 4-2.3s3 .8 4 2.3"/></svg><span class="hidden sm:inline">Scanner</span>`;
         navBtn.classList.replace("bg-white/5", "bg-brand-500/20");
         navBtn.classList.replace("text-white", "text-brand-300");
         navBtn.classList.replace("border-white/10", "border-brand-500/40");
         
         renderCloset(); 
         store.set({ activeView: 'closet' });
+        if (!/^#closet(\/|$)/.test(location.hash)) {
+            history.replaceState(null, '', '#closet');
+        }
     } else {
         viewCloset.classList.replace("opacity-100", "opacity-0");
         viewCloset.classList.replace("translate-y-0", "translate-y-8");
@@ -1227,12 +1462,15 @@ function toggleView(targetView) {
             setTimeout(() => viewScanner.classList.add("opacity-100"), 50);
         }, 300);
 
-        navBtn.innerHTML = `<span class="text-base">👕</span><span class="hidden sm:inline">Closet</span>`;
+        navBtn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg><span class="hidden sm:inline">Closet</span>`;
         navBtn.classList.replace("bg-brand-500/20", "bg-white/5");
         navBtn.classList.replace("text-brand-300", "text-white");
         navBtn.classList.replace("border-brand-500/40", "border-white/10");
         
         store.set({ activeView: 'scanner' });
+        if (/^#closet(\/|$)/.test(location.hash)) {
+            history.replaceState(null, '', location.pathname + location.search);
+        }
     }
 }
 
@@ -1250,13 +1488,87 @@ $("logoBtn").addEventListener("click", () => {
 });
 
 
-let userCloset = JSON.parse(localStorage.getItem('datescan.closet') || '{"outfits":[]}');
+// ===== IndexedDB-backed Closet (via idb) =====
+// In-memory mirror so existing sync reads (length checks, render, etc.) keep working.
+let userCloset = { outfits: [] };
+
+const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
+
+const closetDB = (function () {
+  let dbPromise = null;
+  function getDB() {
+    if (!dbPromise) {
+      if (!window.idb || !window.idb.openDB) {
+        return Promise.reject(new Error('idb library not loaded'));
+      }
+      dbPromise = window.idb.openDB('datescan-db', 1, {
+        upgrade(db) {
+          if (!db.objectStoreNames.contains('outfits')) {
+            const store = db.createObjectStore('outfits', { keyPath: 'id' });
+            store.createIndex('date', 'date');
+          }
+        }
+      });
+    }
+    return dbPromise;
+  }
+  return {
+    async getAll() {
+      const db = await getDB();
+      const all = await db.getAll('outfits');
+      // Newest first
+      all.sort((a, b) => (b.date || 0) - (a.date || 0));
+      return all;
+    },
+    async put(outfit) {
+      const db = await getDB();
+      await db.put('outfits', outfit);
+    },
+    async delete(id) {
+      const db = await getDB();
+      await db.delete('outfits', id);
+    },
+    async clear() {
+      const db = await getDB();
+      await db.clear('outfits');
+    }
+  };
+})();
+
+async function closetInit() {
+  try {
+    // One-time migration from legacy localStorage closet
+    const legacyRaw = localStorage.getItem('datescan.closet');
+    if (legacyRaw) {
+      try {
+        const legacy = JSON.parse(legacyRaw);
+        if (legacy && Array.isArray(legacy.outfits) && legacy.outfits.length) {
+          for (const o of legacy.outfits) {
+            if (o && o.id) await closetDB.put(o);
+          }
+        }
+      } catch (e) { console.warn('Closet migration parse failed:', e); }
+      localStorage.removeItem('datescan.closet');
+    }
+
+    userCloset.outfits = await closetDB.getAll();
+    if (typeof window.renderCloset === 'function' &&
+        store.get().activeView === 'closet') {
+      window.renderCloset();
+    }
+    if (typeof updateUsageBadge === 'function') updateUsageBadge();
+  } catch (e) {
+    console.error('Closet init failed:', e);
+  }
+}
+// Kick off the load (non-blocking)
+closetInit();
 
 function generateThumbnail(dataUrl, callback) {
     const img = new Image();
     img.onload = () => {
         const canvas = document.createElement('canvas');
-        const max = 800; // Csökkentve 1600-ról 800-ra a jobb mobil teljesítményért
+        const max = 800; 
         let w = img.width, h = img.height;
         if (w > h) { if (w > max) { h *= max / w; w = max; } }
         else { if (h > max) { w *= max / h; h = max; } }
@@ -1265,7 +1577,7 @@ function generateThumbnail(dataUrl, callback) {
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = 'high';
         ctx.drawImage(img, 0, 0, w, h);
-        callback(canvas.toDataURL('image/webp', 0.85)); // JPEG helyett WebP használata
+        callback(canvas.toDataURL('image/webp', 0.85)); 
     };
     img.src = dataUrl;
 }
@@ -1314,20 +1626,59 @@ window.renderCloset = function(filter = 'all') {
     `).join('');
 };
 
+// Apply a closet filter by name: updates the active button styles, re-renders
+// the grid, and reflects the choice in the URL hash so links can be shared.
+window.setClosetFilter = function(filter, opts = {}) {
+    const { updateHash = true } = opts;
+    if (!filter) filter = 'all';
+    const valid = ['all','casual','first_date','fancy','night_out'];
+    if (!valid.includes(filter)) filter = 'all';
+
+    document.querySelectorAll(".closet-filter-btn").forEach(b => {
+        const isActive = b.dataset.filter === filter;
+        b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        b.classList.toggle("border-brand-500/50", isActive);
+        b.classList.toggle("bg-brand-500/20", isActive);
+        b.classList.toggle("text-white", isActive);
+        b.classList.toggle("border-white/10", !isActive);
+        b.classList.toggle("bg-white/5", !isActive);
+        b.classList.toggle("text-gray-400", !isActive);
+    });
+
+    renderCloset(filter);
+
+    if (updateHash) {
+        const next = filter === 'all' ? 'closet' : 'closet/' + filter;
+        if (location.hash !== '#' + next) {
+            history.replaceState(null, '', '#' + next);
+        }
+    }
+};
+
 document.querySelectorAll(".closet-filter-btn").forEach(btn => {
     btn.addEventListener("click", (e) => {
         triggerHaptic('tap');
-        const filter = e.target.dataset.filter;
-        
-        document.querySelectorAll(".closet-filter-btn").forEach(b => {
-            b.classList.remove("border-brand-500/50", "bg-brand-500/20", "text-white");
-            b.classList.add("border-white/10", "bg-white/5", "text-gray-400");
-        });
-        e.target.classList.remove("border-white/10", "bg-white/5", "text-gray-400");
-        e.target.classList.add("border-brand-500/50", "bg-brand-500/20", "text-white");
-
-        renderCloset(filter);
+        const filter = e.currentTarget.dataset.filter;
+        window.setClosetFilter(filter);
     });
+});
+
+// Read filter from URL hash (e.g. #closet/first_date) on load and hashchange.
+function applyClosetFilterFromHash() {
+    const m = (location.hash || '').match(/^#closet(?:\/([^/?#]+))?$/);
+    if (!m) return false;
+    const filter = m[1] || 'all';
+    if (store.get().activeView !== 'closet') {
+        toggleView('closet');
+    }
+    // Wait one tick so renderCloset runs after toggleView's own renderCloset()
+    setTimeout(() => window.setClosetFilter(filter, { updateHash: false }), 0);
+    return true;
+}
+window.addEventListener('hashchange', applyClosetFilterFromHash);
+// Run once on initial load (after DOM + closet are wired up)
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(applyClosetFilterFromHash, 100);
 });
 
 let outfitToDelete = null;
@@ -1343,12 +1694,17 @@ $("cancelDeleteBtn").addEventListener("click", () => {
     $("deleteModal").classList.add("hidden");
 });
 
-$("confirmDeleteBtn").addEventListener("click", () => {
+$("confirmDeleteBtn").addEventListener("click", async () => {
     triggerHaptic('success');
     if (outfitToDelete) {
-        userCloset.outfits = userCloset.outfits.filter(o => o.id !== outfitToDelete);
-        localStorage.setItem('datescan.closet', JSON.stringify(userCloset));
-        
+        const idToDelete = outfitToDelete;
+        userCloset.outfits = userCloset.outfits.filter(o => o.id !== idToDelete);
+        try {
+            await closetDB.delete(idToDelete);
+        } catch (e) {
+            console.error('IDB delete failed:', e);
+        }
+
         const activeFilterBtn = document.querySelector(".closet-filter-btn.border-brand-500\\/50");
         const filter = activeFilterBtn ? activeFilterBtn.dataset.filter : 'all';
         renderCloset(filter);
@@ -1373,8 +1729,8 @@ window.saveCurrentOutfit = function() {
     btn.innerHTML = `<span class="animate-pulse">Saving...</span>`;
     btn.disabled = true;
 
-    generateThumbnail(s.lastCap, (thumbBase64) => {
-        userCloset.outfits.unshift({
+    generateThumbnail(s.lastCap, async (thumbBase64) => {
+        const newOutfit = {
             id: 'outfit_' + Date.now(),
             image: thumbBase64,
             score: s.lastScore || 75,
@@ -1382,10 +1738,12 @@ window.saveCurrentOutfit = function() {
             colorHex: s.lastColor ? s.lastColor.hex : '#888',
             occasion: s.occasion,
             date: Date.now()
-        });
+        };
 
         try {
-            localStorage.setItem('datescan.closet', JSON.stringify(userCloset));
+            await closetDB.put(newOutfit);
+            userCloset.outfits.unshift(newOutfit);
+
             btn.innerHTML = `<span>✓ Saved to Closet</span>`;
             btn.classList.remove("bg-white/5", "border-white/20", "text-white");
             btn.classList.add("bg-emerald-500/10", "border-emerald-500/40", "text-emerald-400");
@@ -1393,8 +1751,11 @@ window.saveCurrentOutfit = function() {
             if(store.get().activeView === 'closet') renderCloset();
         } catch(e) {
             console.error(e);
-            alert("Storage full! Couldn't save outfit.");
-            btn.innerHTML = `<span>👕 Save to Digital Closet</span>`;
+            const msg = (e && e.name === 'QuotaExceededError')
+              ? "Storage full! Couldn't save outfit."
+              : "Couldn't save outfit. Please try again.";
+            alert(msg);
+            btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg> Save to Digital Closet`;
             btn.disabled = false;
         }
     });
@@ -1644,9 +2005,13 @@ function hideError() {
 }
 
 function hasWebGL() {
+  // Feature-detect WITHOUT creating a context. Creating a real WebGL context
+  // spins up the GPU process and exposes a fingerprintable surface
+  // (UNMASKED_RENDERER_WEBGL etc.). Just checking the constructor is enough
+  // for our needs — MediaPipe can also fall back to the CPU delegate.
   try {
-    const c = document.createElement("canvas");
-    return !!(window.WebGLRenderingContext && (c.getContext("webgl") || c.getContext("experimental-webgl")));
+    return typeof window.WebGL2RenderingContext === 'function'
+        || typeof window.WebGLRenderingContext === 'function';
   } catch { return false; }
 }
 
@@ -1656,10 +2021,12 @@ async function initFaceLandmarker() {
     const fileset = await FilesetResolver.forVisionTasks(
       "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm"
     );
+    const usePrivate = !!(window.dsPrivacy && window.dsPrivacy.isPrivateMode());
     const landmarker = await FaceLandmarker.createFromOptions(fileset, {
       baseOptions: {
         modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
-        delegate: "GPU",
+        // Private mode → CPU (WASM) backend, no GPU fingerprint surface.
+        delegate: usePrivate ? "CPU" : "GPU",
       },
       runningMode: "IMAGE",
       numFaces: 1,
@@ -1689,17 +2056,51 @@ async function initCamera() {
     store.set({ stream });
     video.srcObject = stream;
     
-    await new Promise((res, rej) => { 
-      const onReady = () => { 
+    await new Promise((res, rej) => {
+      let settled = false;
+      const safeRes = () => { if (!settled) { settled = true; res(); } };
+      const safeRej = (e) => { if (!settled) { settled = true; rej(e); } };
+
+      const tryPlay = () => video.play();
+
+      // iOS Safari and some other browsers can reject HTMLMediaElement.play()
+      // with NotAllowedError if autoplay is judged not user-initiated, even
+      // when `muted` and `playsinline` are set. Surface a tap-to-start overlay
+      // so the next call happens inside a real user gesture.
+      const showTapToStart = (err) => {
+        console.warn('[camera] video.play() blocked, awaiting user gesture:', err);
+        let tapBtn = document.getElementById('tapToStartCamera');
+        if (!tapBtn) {
+          tapBtn = document.createElement('button');
+          tapBtn.id = 'tapToStartCamera';
+          tapBtn.type = 'button';
+          tapBtn.setAttribute('aria-label', 'Tap to start camera');
+          tapBtn.className = 'absolute inset-0 z-30 flex flex-col items-center justify-center gap-2 bg-black/75 text-white text-sm font-semibold backdrop-blur-sm';
+          tapBtn.innerHTML = '<div class="text-4xl leading-none">▶</div><div class="uppercase tracking-widest text-xs">Tap to start camera</div>';
+          videoWrap.appendChild(tapBtn);
+        }
+        const onTap = () => {
+          tryPlay().then(() => {
+            tapBtn.remove();
+            safeRes();
+          }).catch((err2) => {
+            tapBtn.remove();
+            safeRej(err2);
+          });
+        };
+        tapBtn.addEventListener('click', onTap, { once: true });
+      };
+
+      const onReady = () => {
         videoWrap.style.minHeight = '0px';
-        video.play().then(res).catch(rej); 
+        tryPlay().then(safeRes).catch(showTapToStart);
       };
       if (video.readyState >= 1) {
         onReady();
       } else {
         video.onloadedmetadata = onReady;
-        video.onerror = rej;
-        setTimeout(() => rej(new Error("Camera feed timed out. Try reloading the page.")), 8000);
+        video.onerror = (e) => safeRej(e);
+        setTimeout(() => safeRej(new Error("Camera feed timed out. Try reloading the page.")), 8000);
       }
     });
     
@@ -1722,6 +2123,25 @@ async function initCamera() {
 // --- DATE PREP TIMER LOGIC ---
 let dateTimerInterval;
 
+// Format a Date as a "YYYY-MM-DDTHH:MM" string in the user's local time.
+// Uses local-time accessors directly so DST transitions are handled correctly
+// by the JS engine — no manual getTimezoneOffset() math (which silently
+// breaks across spring-forward / fall-back days).
+function toLocalInputValue(d) {
+  const pad = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+// Locale-aware human display of a stored ISO timestamp.
+function formatTargetWallClock(isoString) {
+  try {
+    return new Intl.DateTimeFormat(navigator.language || 'en-US', {
+      weekday: 'short', month: 'short', day: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    }).format(new Date(isoString));
+  } catch { return new Date(isoString).toLocaleString(); }
+}
+
 function updateDateTimerUI() {
   const targetStr = localStorage.getItem('datescan.date_timer');
   const setupView = $('timerSetupView');
@@ -1731,13 +2151,11 @@ function updateDateTimerUI() {
     setupView.classList.remove('hidden');
     activeView.classList.add('hidden');
     clearInterval(dateTimerInterval);
-    
-    // Set a good default time (e.g. today at 19:00, or tomorrow if late)
+
     const d = new Date();
     d.setHours(d.getHours() + 4);
     d.setMinutes(0);
-    const offset = d.getTimezoneOffset() * 60000;
-    $('dateTimerInput').value = (new Date(d - offset)).toISOString().slice(0, 16);
+    $('dateTimerInput').value = toLocalInputValue(d);
     return;
   }
 
@@ -1750,6 +2168,9 @@ function updateDateTimerUI() {
 
   setupView.classList.add('hidden');
   activeView.classList.remove('hidden');
+
+  const labelEl = $('targetDateLabel');
+  if (labelEl) labelEl.textContent = '🗓 ' + formatTargetWallClock(targetStr);
 
   function tick() {
     const now = new Date().getTime();
@@ -1817,8 +2238,8 @@ async function startAppFlow() {
   hideError();
   loadingOverlay.classList.remove("hidden");
 
-  if (!hasWebGL()) {
-    showError("WebGL not supported", "Your browser or device doesn't support WebGL, which is needed for analysis.");
+  if (!(window.dsPrivacy && window.dsPrivacy.isPrivateMode()) && !hasWebGL()) {
+    showError("WebGL not supported", "Your browser or device doesn't support WebGL, which is needed for analysis. You can also enable Private Mode (Privacy details) to use the slower CPU backend.");
     return;
   }
 
@@ -1838,10 +2259,18 @@ function setupPwaInstall() {
   const desc = document.getElementById('pwaInstallDesc');
   if (!card || !btn) return;
 
-  // Already installed / running as PWA → don't show
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches
                     || window.navigator.standalone === true;
-  if (isStandalone) return;
+                    
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+  if (isStandalone || !isMobile || window.innerWidth >= 1024) {
+      card.classList.add('hidden');
+      return;
+  }
+
+  // Force show the card for visibility on the loading screen
+  card.classList.remove('hidden');
 
   const ua = navigator.userAgent || '';
   const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
@@ -1850,27 +2279,16 @@ function setupPwaInstall() {
 
   let deferredPrompt = window._deferredInstallPrompt || null;
 
-  function showInstallable() {
-    card.classList.remove('hidden');
-    label.textContent = 'Install App';
-  }
-
-  if (deferredPrompt) showInstallable();
-
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
     window._deferredInstallPrompt = e;
-    showInstallable();
   });
   window.addEventListener('pwa-installable', () => {
     deferredPrompt = window._deferredInstallPrompt;
-    if (deferredPrompt) showInstallable();
   });
 
-  // iOS Safari has no beforeinstallprompt — show manual instructions instead
   if (isIOS && isSafari) {
-    card.classList.remove('hidden');
     label.textContent = 'How to install';
     desc.textContent = 'Tap the Share button in Safari, then "Add to Home Screen" to install.';
     btn.addEventListener('click', () => {
@@ -1883,7 +2301,6 @@ function setupPwaInstall() {
   btn.addEventListener('click', async () => {
     triggerHaptic('tap');
     if (!deferredPrompt) {
-      // Fallback message for browsers that don't support install prompt
       if (isAndroid) {
         alert('To install: tap the ⋮ menu in Chrome, then "Install app" or "Add to Home screen".');
       } else {
@@ -1927,7 +2344,7 @@ function boot() {
     startAppFlow();
   }
   
-  updateDateTimerUI(); // Initialize Timer
+  updateDateTimerUI(); 
 }
 
 retryBtn.addEventListener("click", () => { triggerHaptic('tap'); startAppFlow(); });
@@ -2675,7 +3092,8 @@ function renderStyleCoach(colorData, occasion, locked = false, items = null) {
 
     <div class="mt-6">
       <button id="saveOutfitBtn" onclick="window.saveCurrentOutfit()" class="w-full py-3.5 rounded-xl border border-white/20 bg-white/5 text-sm font-bold text-white hover:bg-white/10 transition-colors flex items-center justify-center gap-2 shadow-lg">
-        <span class="text-base">👕</span> Save to Digital Closet
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
+        Save to Digital Closet
       </button>
     </div>
   `;
@@ -2704,10 +3122,6 @@ function clearHUD() { hud.innerHTML = ""; hud.removeAttribute("viewBox"); }
 function drawHUD(landmarks, W, H) {
   hud.setAttribute("viewBox", `0 0 ${W} ${H}`);
   const NS = "http://www.w3.org/2000/svg";
-
-  // Note: captureFrame() already mirrors the video into analysisCanvas
-  // via ctx.scale(-1, 1), so landmarks from faceLandmarker.detect(analysisCanvas)
-  // are already in the mirrored/display coordinate space. Do NOT mirror again.
 
   function createReticle(cx, cy, rPx, labelText) {
     const R = Math.max(16, rPx * 2.5);
@@ -2741,6 +3155,42 @@ function drawHUD(landmarks, W, H) {
 }
 
 let weatherLoaded = false;
+
+// 30-minute cache for Open-Meteo responses, keyed by rounded coordinates.
+// Open-Meteo *does* support CORS so we can call it directly from the browser,
+// but we still cache + add a timeout so a slow/down API never hangs the UI,
+// and so we can serve a stale-but-useful response on transient failures.
+const WEATHER_CACHE_TTL = 30 * 60 * 1000;
+function weatherCacheKey(lat, lon) {
+  return `datescan.weatherCache.${lat.toFixed(2)}_${lon.toFixed(2)}`;
+}
+function readWeatherCache(lat, lon) {
+  try {
+    const raw = localStorage.getItem(weatherCacheKey(lat, lon));
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || !parsed.ts || !parsed.data) return null;
+    return parsed; // { ts, data }
+  } catch { return null; }
+}
+function writeWeatherCache(lat, lon, data) {
+  try {
+    localStorage.setItem(weatherCacheKey(lat, lon), JSON.stringify({ ts: Date.now(), data }));
+  } catch {}
+}
+async function fetchOpenMeteo(latitude, longitude) {
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude.toFixed(2)}&longitude=${longitude.toFixed(2)}&current=temperature_2m,wind_speed_10m,relative_humidity_2m&hourly=temperature_2m,precipitation_probability,wind_speed_10m&timezone=auto&forecast_days=2`;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 8000);
+  try {
+    const res = await fetch(url, { mode: 'cors', signal: controller.signal });
+    if (!res.ok) throw new Error('API error ' + res.status);
+    return await res.json();
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 async function loadWeather(forceRefresh = false) {
   const content = document.getElementById('weatherContent');
   const locEl = document.getElementById('weatherLoc');
@@ -2759,10 +3209,25 @@ async function loadWeather(forceRefresh = false) {
       navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10000, maximumAge: 600000 });
     });
     const { latitude, longitude } = pos.coords;
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude.toFixed(2)}&longitude=${longitude.toFixed(2)}&current=temperature_2m,wind_speed_10m,relative_humidity_2m&hourly=temperature_2m,precipitation_probability,wind_speed_10m&timezone=auto&forecast_days=2`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('API error');
-    const data = await res.json();
+
+    // Try fresh cache first (skip on forceRefresh)
+    let data = null;
+    let usedCache = false;
+    let cacheStale = false;
+    const cached = readWeatherCache(latitude, longitude);
+    if (!forceRefresh && cached && (Date.now() - cached.ts) < WEATHER_CACHE_TTL) {
+      data = cached.data;
+      usedCache = true;
+    } else {
+      try {
+        data = await fetchOpenMeteo(latitude, longitude);
+        writeWeatherCache(latitude, longitude, data);
+      } catch (netErr) {
+        console.warn('Weather fetch failed, falling back to cache if any:', netErr);
+        if (cached) { data = cached.data; usedCache = true; cacheStale = true; }
+        else throw netErr;
+      }
+    }
 
     const currentTemp = Math.round(data.current.temperature_2m);
     const currentWind = Math.round(data.current.wind_speed_10m);
@@ -2827,8 +3292,6 @@ async function loadWeather(forceRefresh = false) {
     if (locEl) {
       locEl.textContent = '…';
       try {
-        // IDEÁLIS MEGOLDÁS: Saját backend proxy használata a rate-limit elkerülése végett.
-        // Példa: const geoRes = await fetch(`/api/geocode?lat=${latitude}&lon=${longitude}`);
         const geoRes = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
         const geo = await geoRes.json();
         const name = geo.city || geo.locality || geo.principalSubdivision || geo.countryName || `${latitude.toFixed(1)}°, ${longitude.toFixed(1)}°`;
@@ -2852,7 +3315,7 @@ async function loadWeather(forceRefresh = false) {
         <div class="text-[10px] font-bold uppercase tracking-widest mb-1">${adviceTitle}</div>
         <div class="text-xs text-gray-200 leading-relaxed">${advice}</div>
       </div>
-      <button onclick="window.loadWeather(true)" class="mt-3 text-[10px] text-gray-500 hover:text-gray-300 uppercase tracking-widest">Refresh</button>
+      <button onclick="window.loadWeather(true)" class="mt-3 text-[10px] text-gray-500 hover:text-gray-300 uppercase tracking-widest">${cacheStale ? 'Offline · cached · Refresh' : 'Refresh'}</button>
     `;
     weatherLoaded = true;
   } catch (err) {
@@ -2944,6 +3407,7 @@ async function runScan() {
 
   flashOverlay.classList.add("active");
   setTimeout(() => flashOverlay.classList.remove("active"), 100);
+  triggerHaptic('success');
 
   const items = [];
   const lighting = analyzeBrightness(cap.w, cap.h);
@@ -2962,26 +3426,37 @@ async function runScan() {
   } else {
     const lm = result.faceLandmarks[0];
 
+    // Chunk 1: framing & geometry
     const camAngle = analyzeCameraAngle(lm); if(camAngle) items.push(camAngle);
     const yaw = analyzeHeadYaw(lm); if(yaw) items.push(yaw);
     const dist = analyzeFaceDistance(lm); if(dist) items.push(dist);
     const center = analyzeFaceCentering(lm); if(center) items.push(center);
+    await yieldToUI();
+
+    // Chunk 2: lighting, background & posture
     const dirLight = analyzeLightingDirection(lm, cap.w, cap.h); if(dirLight) items.push(dirLight);
     const bg = analyzeBackgroundBusy(lm, cap.w, cap.h); if(bg) items.push(bg);
     const posture = analyzePosture(lm); if(posture) items.push(posture);
+    await yieldToUI();
+
+    // Chunk 3: facial expression & proportions
     const eyesOpen = analyzeEyeOpenness(lm); if(eyesOpen) items.push(eyesOpen);
     const smile = analyzeSmile(lm); if(smile) items.push(smile);
     const prop = analyzeProportions(lm); if(prop) items.push(prop);
     const shave = analyzeShavingIrritation(lm, cap.w, cap.h); if(shave) items.push(shave);
-    
+    await yieldToUI();
+
+    // Chunk 4: mouth & symmetry
     const mouth = analyzeMouth(lm, cap.w, cap.h);
     if (mouth && mouth.teethVisible && !mouth.concern) {
       items.push({ category: "grooming", tone:"good", icon:"✨", title:"Great smile", text:"Teeth look clean.", action:"Flash that smile tonight." });
     }
-    
+
     const sym = analyzeSymmetry(lm);
     if (sym.ratio > 0.10) items.push({ category: "grooming", tone:"warn", icon:"✂️", title:"Mirror check", text:"Small imbalance detected.", action:"Check hair/collar alignment." });
+    await yieldToUI();
 
+    // Chunk 5: eye redness & skin shine
     const eyes = analyzeEyeRedness(lm, cap.w, cap.h);
     if (eyes) {
       if (eyes.tired) items.push({ category: "grooming", tone:"alert", icon:"👁️", title:"Tired eyes", text:"Visible redness.", action:"Use eye drops or cold water." });
@@ -2993,12 +3468,17 @@ async function runScan() {
       if (skin.veryShiny) items.push({ category: "grooming", tone:"alert", icon:"💧", title:"Oily T-zone", text:"High shine detected.", action:"Dab forehead/nose with dry tissue." });
       else if (skin.shiny) items.push({ category: "grooming", tone:"warn", icon:"✨", title:"Slight shine", text:"Minor reflection.", action:"A quick dab with a towel." });
     }
+    await yieldToUI();
 
+    // Chunk 6: outfit color (heaviest – pixel sampling)
     detectedOutfitColor = analyzeOutfitColor(lm, cap.w, cap.h);
+    await yieldToUI();
   }
 
+  // Chunk 7: shoulders / lint (runs even without face landmarks)
   const sh = analyzeShoulders(cap.w, cap.h);
   if (sh?.possibleLint) items.push({ category: "style", tone:"warn", icon:"🧥", title:"Lint detected", text:"Specks visible on shoulders.", action:"Use a lint roller right now." });
+  await yieldToUI();
 
   store.set({ lastItems: items, lastColor: detectedOutfitColor });
 
@@ -3264,6 +3744,11 @@ boot();
   (function() {
     const params = new URLSearchParams(window.location.search);
     const action = params.get('action');
+    const occasion = params.get('occasion');
+    const validOccasions = ['casual', 'first_date', 'night_out', 'fancy'];
+    if (occasion && validOccasions.includes(occasion)) {
+      try { store.dispatch({ type: 'SET_OCCASION', payload: occasion }); } catch (e) {}
+    }
     if (!action) return;
     window.addEventListener('load', () => {
       setTimeout(() => {
@@ -3295,15 +3780,12 @@ boot();
   const pickerClose = document.getElementById('coachClosetPickerClose');
   if (!form || !input || !messagesEl) return;
 
-  // Pending image attachments (compressed data URLs) for the next outgoing message
   let pendingAttachments = [];
-  // OpenAI-format message history (content may be string OR array of parts)
   const history = [];
 
-  // ---------- Response cache (localStorage) ----------
   const CACHE_KEY = 'datescan.chatCache';
-  const CACHE_MAX = 50;          // max entries
-  const CACHE_TTL = 7 * 24 * 3600 * 1000; // 7 days
+  const CACHE_MAX = 50;          
+  const CACHE_TTL = 7 * 24 * 3600 * 1000; 
 
   function djb2(str) {
     let h = 5381;
@@ -3320,7 +3802,6 @@ boot();
   }
 
   function makeCacheKey(text, attachments, systemPrompt) {
-    // Hash attachment data URLs (expensive but deterministic)
     const attHashes = attachments.map(a => djb2(a.url)).join('|');
     const sysHash = djb2(systemPrompt);
     return djb2((text || '').trim().toLowerCase() + '::' + attHashes + '::' + sysHash);
@@ -3335,7 +3816,6 @@ boot();
       saveCache(cache);
       return null;
     }
-    // Touch: move to front by updating ts slightly (keeps LRU-ish)
     entry.ts = Date.now();
     cache[key] = entry;
     saveCache(cache);
@@ -3345,7 +3825,6 @@ boot();
   function setCached(key, reply) {
     const cache = loadCache();
     cache[key] = { reply: reply, ts: Date.now() };
-    // Evict oldest if over cap
     const keys = Object.keys(cache);
     if (keys.length > CACHE_MAX) {
       keys.sort((a, b) => cache[a].ts - cache[b].ts);
@@ -3355,7 +3834,6 @@ boot();
     saveCache(cache);
   }
 
-  // ---------- Image compression ----------
   function compressImage(fileOrDataUrl, maxSize = 768, quality = 0.8) {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -3369,7 +3847,6 @@ boot();
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = 'high';
         ctx.drawImage(img, 0, 0, w, h);
-        // JPEG is more universally supported by vision APIs than WebP
         resolve(canvas.toDataURL('image/jpeg', quality));
       };
       img.onerror = reject;
@@ -3384,7 +3861,6 @@ boot();
     });
   }
 
-  // ---------- Attachment chips ----------
   function renderAttachments() {
     if (pendingAttachments.length === 0) {
       attachBox.classList.add('hidden');
@@ -3407,16 +3883,17 @@ boot();
     });
   }
 
-  // ---------- Chat bubbles ----------
   function scrollDown(){ messagesEl.scrollTop = messagesEl.scrollHeight; }
 
   function addMessage(role, text, imageUrls) {
     const wrap = document.createElement('div');
     wrap.className = 'flex gap-2.5' + (role === 'user' ? ' flex-row-reverse' : '');
     const avatar = document.createElement('div');
-    avatar.className = 'shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm ' +
+    avatar.className = 'shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white ' +
       (role === 'user' ? 'bg-white/10 border border-white/10' : 'bg-gradient-to-br from-brand-500 to-purple-500');
-    avatar.textContent = role === 'user' ? '🧑' : '✨';
+    avatar.innerHTML = role === 'user'
+      ? '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>'
+      : '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.6 4.6L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.4z"/><path d="M19 14l.7 1.9 1.8.6-1.8.6L19 19l-.7-1.9-1.8-.6 1.8-.6z"/></svg>';
     const bubble = document.createElement('div');
     bubble.className = 'rounded-2xl px-4 py-2.5 text-sm max-w-[85%] whitespace-pre-wrap break-words ' +
       (role === 'user'
@@ -3446,11 +3923,9 @@ boot();
     return bubble;
   }
 
-  // ---------- Read context from other modules ----------
   function getModuleContext() {
     const lines = [];
 
-    // Countdown
     try {
       const timerActive = document.getElementById('timerActiveView');
       if (timerActive && !timerActive.classList.contains('hidden')) {
@@ -3461,13 +3936,11 @@ boot();
       }
     } catch(e){}
 
-    // Weather
     try {
       const wLoc = (document.getElementById('weatherLoc')?.textContent || '').trim();
       const wContent = document.getElementById('weatherContent');
       if (wContent) {
         const enableBtn = document.getElementById('weatherEnableBtn');
-        // Only include weather if the enable-button is gone (i.e. loaded)
         if (!enableBtn || enableBtn.offsetParent === null) {
           const wText = (wContent.innerText || '').replace(/\s+/g, ' ').trim();
           if (wText) {
@@ -3477,7 +3950,6 @@ boot();
       }
     } catch(e){}
 
-    // Grooming & Presence
     try {
       const fb = document.getElementById('feedbackPanel');
       if (fb) {
@@ -3486,7 +3958,6 @@ boot();
       }
     } catch(e){}
 
-    // Latest Style Coach scan result
     try {
       const sc = document.getElementById('styleCoachResult');
       if (sc) {
@@ -3524,10 +3995,8 @@ boot();
     return ctx ? base + "\n\n=== LIVE APP CONTEXT ===\n" + ctx : base;
   }
 
-  // ---------- Closet picker ----------
   function openClosetPicker() {
-    const closet = JSON.parse(localStorage.getItem('datescan.closet') || '{"outfits":[]}');
-    const outfits = closet.outfits || [];
+    const outfits = (typeof userCloset !== 'undefined' && userCloset.outfits) ? userCloset.outfits : [];
     if (outfits.length === 0) {
       pickerGrid.innerHTML = '<div class="col-span-full text-center text-gray-500 py-10 text-sm">Your closet is empty. Scan and save an outfit first!</div>';
     } else {
@@ -3556,14 +4025,27 @@ boot();
     picker.classList.remove('hidden');
   }
 
-  closetBtn?.addEventListener('click', openClosetPicker);
+  closetBtn?.addEventListener('click', async () => {
+    const ok = await window.dsPrivacy.requestChatImagePermission();
+    if (!ok) return;
+    openClosetPicker();
+  });
   pickerClose?.addEventListener('click', () => picker.classList.add('hidden'));
   picker?.addEventListener('click', e => { if (e.target === picker) picker.classList.add('hidden'); });
 
-  // ---------- File upload ----------
-  uploadBtn?.addEventListener('click', () => fileInput.click());
+  uploadBtn?.addEventListener('click', async () => {
+    const ok = await window.dsPrivacy.requestChatImagePermission();
+    if (!ok) return;
+    fileInput.click();
+  });
   fileInput?.addEventListener('change', async e => {
     const files = Array.from(e.target.files || []);
+    // Defensive re-check in case Private Mode was toggled mid-flow
+    if (window.dsPrivacy.isPrivateMode()) {
+      window.dsPrivacy.showToast('Private Mode is on — image uploads in chat are disabled.');
+      fileInput.value = '';
+      return;
+    }
     for (const f of files) {
       try {
         const compressed = await compressImage(f);
@@ -3574,9 +4056,7 @@ boot();
     fileInput.value = '';
   });
 
-  // ---------- Send ----------
   async function sendMessage(text, attachments) {
-    // Build user message content
     let userContent;
     if (attachments.length > 0) {
       userContent = [];
@@ -3594,20 +4074,17 @@ boot();
     const thinking = addMessage('assistant', '…');
     thinking.classList.add('animate-pulse');
 
-    // Fresh system prompt (with current module context) on every send
     const systemPrompt = buildSystemPrompt();
     const messagesForApi = [
       { role: 'system', content: systemPrompt },
       ...history
     ];
 
-    // Check cache first
     const cacheKey = makeCacheKey(text, attachments, systemPrompt);
     const cachedReply = getCached(cacheKey);
     if (cachedReply) {
       thinking.classList.remove('animate-pulse');
       thinking.textContent = cachedReply;
-      // Small "cached" indicator
       const badge = document.createElement('div');
       badge.className = 'text-[9px] uppercase tracking-widest text-purple-300/60 mt-1.5 font-bold';
       badge.textContent = '⚡ cached';
@@ -3635,7 +4112,6 @@ boot();
       const finalReply = (reply || '').trim() || "Hmm, I didn't catch that. Try again?";
       thinking.textContent = finalReply;
       history.push({ role: 'assistant', content: finalReply });
-      // Only cache successful non-error replies
       if (reply && !finalReply.startsWith('⚠️')) {
         setCached(cacheKey, finalReply);
       }

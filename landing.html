@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#09090b">
+
+<title>DateScan — AI Style Coach for First Dates, Interviews & Nights Out</title>
+<meta name="description" content="Get an instant, on-device AI style and grooming check before you walk into a first date, job interview, or night out. 100% private — your camera never leaves your phone.">
+<link rel="canonical" href="https://datescan.app/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://datescan.app/">
+<meta property="og:title" content="DateScan — AI Style Coach in Your Pocket">
+<meta property="og:description" content="Outfit, grooming, posture and lighting analysis in 5 seconds — all on-device. Free to try.">
+<meta property="og:image" content="https://datescan.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DateScan — AI Style Coach in Your Pocket">
+<meta name="twitter:description" content="On-device AI checks your outfit, grooming, posture and lighting in 5 seconds. Nothing uploaded.">
+<meta name="twitter:image" content="https://datescan.app/og.png">
+
+<!-- Favicon (matches index.html) -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='40' y2='40' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%23ec4899'/%3E%3Cstop offset='1' stop-color='%239333ea'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M20 13.5C20 13.5 16 9 11.5 9C7.5 9 5 12.5 5 16.5C5 22 13 28 20 32C27 28 35 22 35 16.5C35 12.5 32.5 9 28.5 9C24 9 20 13.5 20 13.5Z' fill='url(%23bg)' fill-opacity='0.2' stroke='url(%23bg)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='4' y1='20' x2='36' y2='20' stroke='%23f472b6' stroke-width='1.5' stroke-dasharray='2 2' opacity='0.8'/%3E%3C/svg%3E">
+
+<!-- JSON-LD: SoftwareApplication -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "DateScan",
+  "applicationCategory": "LifestyleApplication",
+  "operatingSystem": "Web",
+  "url": "https://datescan.app/",
+  "description": "On-device AI style coach. Analyzes your outfit, grooming, posture and lighting in seconds before a first date, job interview or night out. No data uploaded.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "ratingCount": "327"
+  }
+}
+</script>
+<!-- JSON-LD: FAQPage -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is my camera footage uploaded anywhere?",
+      "acceptedAnswer": {"@type":"Answer","text":"No. The face and outfit analysis runs entirely on your device using MediaPipe and WebAssembly. Your video frames never leave the browser."}
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to install anything?",
+      "acceptedAnswer": {"@type":"Answer","text":"No. DateScan runs in any modern browser. You can also add it to your home screen as a PWA for one-tap launch."}
+    },
+    {
+      "@type": "Question",
+      "name": "Is it free?",
+      "acceptedAnswer": {"@type":"Answer","text":"Yes — the core scanner, action plan and digital closet (up to three saved outfits) are free. Pro unlocks unlimited scans and an unlimited closet."}
+    },
+    {
+      "@type": "Question",
+      "name": "What devices does it work on?",
+      "acceptedAnswer": {"@type":"Answer","text":"Any modern phone, tablet or laptop with a camera and a recent version of Chrome, Safari, Firefox or Edge."}
+    }
+  ]
+}
+</script>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Inter', 'sans-serif'],
+          serif: ['Playfair Display', 'serif'],
+        },
+        colors: {
+          brand: { 400: '#f472b6', 500: '#ec4899', 600: '#db2777' },
+          dark:  { 900: '#18181b', 950: '#09090b' }
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: #09090b;
+    color: #fafafa;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .premium-glass {
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015));
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+  }
+  .ambient-glow {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .grad-text {
+    background: linear-gradient(135deg, #f472b6 0%, #c084fc 60%, #ec4899 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #ec4899 0%, #c026d3 100%);
+    color: white;
+    transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+    box-shadow: 0 10px 30px -10px rgba(236,72,153,0.55);
+  }
+  .btn-primary:hover { transform: translateY(-1px); filter: brightness(1.05); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-ghost {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #fff;
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.22); }
+
+  @keyframes floatUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: floatUp .8s ease-out both; }
+
+  /* Phone mockup */
+  .phone {
+    width: 280px;
+    height: 560px;
+    border-radius: 44px;
+    background: linear-gradient(180deg, #18181b, #09090b);
+    border: 2px solid rgba(255,255,255,0.12);
+    box-shadow:
+      0 60px 80px -30px rgba(236,72,153,0.35),
+      0 30px 60px -20px rgba(0,0,0,0.6),
+      inset 0 0 0 6px #000;
+    position: relative;
+    overflow: hidden;
+  }
+  .phone-notch {
+    position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
+    width: 100px; height: 26px; background: #000; border-radius: 14px; z-index: 5;
+  }
+  .phone-screen {
+    position: absolute; inset: 12px; border-radius: 36px; overflow: hidden;
+    background: radial-gradient(120% 80% at 50% 0%, rgba(236,72,153,0.18), transparent 60%), #0a0a0e;
+    padding: 56px 16px 16px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .scan-line {
+    position: absolute; left: 12px; right: 12px; height: 2px;
+    background: linear-gradient(90deg, transparent, #ec4899, transparent);
+    box-shadow: 0 0 12px #ec4899;
+    border-radius: 2px;
+    animation: scanY 2.6s ease-in-out infinite;
+  }
+  @keyframes scanY {
+    0%,100% { top: 70px; opacity: 0.2; }
+    50%     { top: 65%;  opacity: 1; }
+  }
+
+  /* Number badge for steps */
+  .step-num {
+    width: 44px; height: 44px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700;
+    background: linear-gradient(135deg, rgba(236,72,153,0.18), rgba(192,38,211,0.18));
+    border: 1px solid rgba(236,72,153,0.35);
+    color: #f472b6;
+  }
+
+  details > summary { list-style: none; cursor: pointer; }
+  details > summary::-webkit-details-marker { display: none; }
+  details[open] .faq-chev { transform: rotate(180deg); }
+  .faq-chev { transition: transform .2s ease; }
+</style>
+</head>
+<body class="relative">
+
+<!-- Ambient background glows -->
+<div aria-hidden="true" class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+  <div class="ambient-glow" style="top:-160px;left:-120px;width:480px;height:480px;background:rgba(236,72,153,0.18);"></div>
+  <div class="ambient-glow" style="top:30%;right:-160px;width:520px;height:520px;background:rgba(147,51,234,0.16);"></div>
+  <div class="ambient-glow" style="bottom:-200px;left:30%;width:560px;height:560px;background:rgba(236,72,153,0.10);"></div>
+</div>
+
+<!-- Header -->
+<header class="sticky top-0 z-50 backdrop-blur-xl bg-dark-950/70 border-b border-white/5">
+  <div class="max-w-7xl mx-auto flex items-center justify-between px-5 sm:px-8 py-4">
+    <a href="#" class="flex items-center gap-3 group">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-purple-600 flex items-center justify-center shadow-lg shadow-brand-500/30">
+        <svg class="w-5 h-5 text-white" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+          <path d="M20 13.5C20 13.5 16 9 11.5 9C7.5 9 5 12.5 5 16.5C5 22 13 28 20 32C27 28 35 22 35 16.5C35 12.5 32.5 9 28.5 9C24 9 20 13.5 20 13.5Z" fill="white" fill-opacity="0.25" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="flex flex-col leading-none">
+        <span class="font-bold text-lg tracking-tight">DateScan<span class="text-brand-500">.</span></span>
+        <span class="text-[10px] text-gray-400 font-medium uppercase tracking-widest mt-0.5">Personal Style Coach</span>
+      </div>
+    </a>
+    <nav class="hidden md:flex items-center gap-8 text-sm text-gray-300">
+      <a href="#use-cases" class="hover:text-white transition">Use cases</a>
+      <a href="#how" class="hover:text-white transition">How it works</a>
+      <a href="#privacy" class="hover:text-white transition">Privacy</a>
+      <a href="#faq" class="hover:text-white transition">FAQ</a>
+    </nav>
+    <a href="/index.html" class="btn-primary text-xs sm:text-sm font-bold px-4 sm:px-5 py-2.5 rounded-full">Open the app →</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="relative overflow-hidden">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 pt-16 sm:pt-24 pb-20 grid lg:grid-cols-12 gap-12 items-center">
+    <div class="lg:col-span-7 fade-up">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] uppercase tracking-widest text-brand-300 mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse"></span>
+        100% on-device · no data uploaded
+      </div>
+      <h1 class="font-serif text-[42px] sm:text-6xl lg:text-7xl leading-[1.05] tracking-tight font-medium mb-6">
+        Look <span class="italic grad-text">10/10</span><br>
+        before you walk in.
+      </h1>
+      <p class="text-gray-400 text-base sm:text-lg max-w-xl leading-relaxed mb-8">
+        DateScan is an AI style coach you open right before a first date, job interview or night out.
+        It scans your outfit, grooming, posture and lighting in five seconds — and tells you exactly
+        what to fix. Everything runs on your phone. Nothing is uploaded.
+      </p>
+      <div class="flex flex-wrap items-center gap-4 mb-8">
+        <a href="/index.html?action=scan" class="btn-primary text-base font-bold px-7 py-4 rounded-2xl inline-flex items-center gap-3">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V6a2 2 0 0 1 2-2h2"/><path d="M16 4h2a2 2 0 0 1 2 2v2"/><path d="M20 16v2a2 2 0 0 1-2 2h-2"/><path d="M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="11" r="2.4"/><path d="M8 17c1-1.5 2.4-2.3 4-2.3s3 .8 4 2.3"/></svg>
+          Scan me now
+        </a>
+        <a href="#how" class="btn-ghost text-sm font-semibold px-6 py-4 rounded-2xl inline-flex items-center gap-2">
+          See how it works
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+      <div class="flex items-center gap-6 text-xs text-gray-500">
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          On-device AI
+        </div>
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          5-second analysis
+        </div>
+        <div class="hidden sm:flex items-center gap-2">
+          <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6 6.6.95-4.78 4.66 1.13 6.58L12 17.6l-5.85 3.07L7.28 14.1 2.5 9.45l6.6-.95z"/></svg>
+          Free to try
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone mockup -->
+    <div class="lg:col-span-5 flex justify-center fade-up" style="animation-delay:.2s;">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="scan-line"></div>
+          <div class="text-[9px] uppercase tracking-widest text-brand-400 font-bold">Live Preview</div>
+          <div class="text-white font-serif text-lg leading-tight">First Date<br>Style Check</div>
+          <div class="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-3">
+            <div class="text-[9px] uppercase tracking-widest font-bold text-emerald-400 mb-1">Outfit Color</div>
+            <div class="text-xs text-gray-200">Navy + cream pairs cleanly. Strong contrast for evening.</div>
+          </div>
+          <div class="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-3">
+            <div class="text-[9px] uppercase tracking-widest font-bold text-amber-400 mb-1">Lighting</div>
+            <div class="text-xs text-gray-200">Slight side glare — face the window before you head out.</div>
+          </div>
+          <div class="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-3">
+            <div class="text-[9px] uppercase tracking-widest font-bold text-emerald-400 mb-1">Posture</div>
+            <div class="text-xs text-gray-200">Shoulders back, head centered. You're ready.</div>
+          </div>
+          <div class="mt-auto rounded-2xl bg-gradient-to-r from-brand-500 to-purple-600 text-white text-center text-xs font-bold py-3 shadow-lg">
+            Score: 87 / 100
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trust strip -->
+  <div class="border-y border-white/5 bg-white/[0.015]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 py-6 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+      <div>
+        <div class="font-serif text-2xl text-white">5 sec</div>
+        <div class="text-[10px] uppercase tracking-widest text-gray-500 mt-1">average scan</div>
+      </div>
+      <div>
+        <div class="font-serif text-2xl text-white">12+</div>
+        <div class="text-[10px] uppercase tracking-widest text-gray-500 mt-1">style checks</div>
+      </div>
+      <div>
+        <div class="font-serif text-2xl text-white">0 KB</div>
+        <div class="text-[10px] uppercase tracking-widest text-gray-500 mt-1">data uploaded</div>
+      </div>
+      <div>
+        <div class="font-serif text-2xl text-white">4.8★</div>
+        <div class="text-[10px] uppercase tracking-widest text-gray-500 mt-1">user rating</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USE CASES -->
+<section id="use-cases" class="relative py-20 sm:py-28">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="text-center max-w-2xl mx-auto mb-14">
+      <div class="text-[11px] uppercase tracking-widest text-brand-400 font-bold mb-3">Built for the moments that matter</div>
+      <h2 class="font-serif text-4xl sm:text-5xl font-medium tracking-tight mb-4">Three nights. One coach.</h2>
+      <p class="text-gray-400">Pick the situation you're getting ready for and DateScan tunes its feedback to it — colors, formality, energy and all.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+
+      <!-- First date -->
+      <article class="premium-glass rounded-3xl p-7 relative overflow-hidden group">
+        <div class="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-brand-500/20 blur-3xl pointer-events-none"></div>
+        <div class="relative z-10">
+          <div class="w-12 h-12 rounded-2xl bg-brand-500/10 border border-brand-500/30 flex items-center justify-center text-brand-300 mb-5">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <h3 class="font-serif text-2xl font-semibold mb-2">First Date</h3>
+          <p class="text-sm text-gray-400 leading-relaxed mb-5">You've been overthinking your outfit for an hour. Let an unbiased coach end the spiral in five seconds.</p>
+          <ul class="space-y-2.5 text-sm text-gray-300 mb-6">
+            <li class="flex gap-2.5"><span class="text-brand-400">→</span> Outfit color &amp; contrast read for evening lighting</li>
+            <li class="flex gap-2.5"><span class="text-brand-400">→</span> Grooming check: shine, redness, mirror-symmetry</li>
+            <li class="flex gap-2.5"><span class="text-brand-400">→</span> Posture &amp; smile cues so the first impression lands</li>
+          </ul>
+          <a href="/index.html?action=scan&amp;occasion=first_date" class="btn-primary inline-flex items-center gap-2 text-sm font-bold px-5 py-3 rounded-xl">
+            Prep for a date
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- Job interview -->
+      <article class="premium-glass rounded-3xl p-7 relative overflow-hidden group">
+        <div class="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-purple-500/20 blur-3xl pointer-events-none"></div>
+        <div class="relative z-10">
+          <div class="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-300 mb-5">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg>
+          </div>
+          <h3 class="font-serif text-2xl font-semibold mb-2">Job Interview</h3>
+          <p class="text-sm text-gray-400 leading-relaxed mb-5">Whether it's in-person or on Zoom, DateScan checks the formal-side details a hiring manager will register in three seconds.</p>
+          <ul class="space-y-2.5 text-sm text-gray-300 mb-6">
+            <li class="flex gap-2.5"><span class="text-purple-300">→</span> Formal palette + collar / lapel symmetry</li>
+            <li class="flex gap-2.5"><span class="text-purple-300">→</span> Lint, stray hair, tired-eye and shine detection</li>
+            <li class="flex gap-2.5"><span class="text-purple-300">→</span> Camera framing and background tidiness for video calls</li>
+          </ul>
+          <a href="/index.html?action=scan&amp;occasion=fancy" class="btn-primary inline-flex items-center gap-2 text-sm font-bold px-5 py-3 rounded-xl">
+            Prep for an interview
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- Night out -->
+      <article class="premium-glass rounded-3xl p-7 relative overflow-hidden group">
+        <div class="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-amber-500/20 blur-3xl pointer-events-none"></div>
+        <div class="relative z-10">
+          <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-300 mb-5">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+          </div>
+          <h3 class="font-serif text-2xl font-semibold mb-2">Night Out</h3>
+          <p class="text-sm text-gray-400 leading-relaxed mb-5">Bar, club, gallery opening — DateScan reads the energy of your fit and tells you if you're hitting the right note.</p>
+          <ul class="space-y-2.5 text-sm text-gray-300 mb-6">
+            <li class="flex gap-2.5"><span class="text-amber-300">→</span> Bold-color check: does the palette pop in low light?</li>
+            <li class="flex gap-2.5"><span class="text-amber-300">→</span> Live weather pairing — do you actually need that jacket?</li>
+            <li class="flex gap-2.5"><span class="text-amber-300">→</span> Date-prep countdown from "almost ready" to "walk in"</li>
+          </ul>
+          <a href="/index.html?action=scan&amp;occasion=night_out" class="btn-primary inline-flex items-center gap-2 text-sm font-bold px-5 py-3 rounded-xl">
+            Prep for a night out
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="relative py-20 sm:py-28 border-t border-white/5">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8">
+    <div class="text-center max-w-2xl mx-auto mb-14">
+      <div class="text-[11px] uppercase tracking-widest text-brand-400 font-bold mb-3">How it works</div>
+      <h2 class="font-serif text-4xl sm:text-5xl font-medium tracking-tight mb-4">From mirror to verdict in 5 seconds.</h2>
+      <p class="text-gray-400">No accounts, no installs, no waiting. Open the link, allow the camera, get an action plan.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="premium-glass rounded-3xl p-7 fade-up">
+        <div class="step-num mb-5">1</div>
+        <h3 class="font-serif text-xl font-semibold mb-2">Allow the camera</h3>
+        <p class="text-sm text-gray-400 leading-relaxed">One permission prompt. Nothing is uploaded — the AI engine loads as WebAssembly straight into your browser.</p>
+      </div>
+      <div class="premium-glass rounded-3xl p-7 fade-up" style="animation-delay:.1s;">
+        <div class="step-num mb-5">2</div>
+        <h3 class="font-serif text-xl font-semibold mb-2">Stand in good light</h3>
+        <p class="text-sm text-gray-400 leading-relaxed">Face a window or a lamp. DateScan tells you if the lighting will sabotage your shot before it even runs the analysis.</p>
+      </div>
+      <div class="premium-glass rounded-3xl p-7 fade-up" style="animation-delay:.2s;">
+        <div class="step-num mb-5">3</div>
+        <h3 class="font-serif text-xl font-semibold mb-2">Get your action plan</h3>
+        <p class="text-sm text-gray-400 leading-relaxed">Specific, ranked fixes — "tuck the back of your collar", "dab the T-zone", "swap the navy for the cream". Then walk in.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRIVACY -->
+<section id="privacy" class="relative py-20 sm:py-28 border-t border-white/5">
+  <div class="max-w-5xl mx-auto px-5 sm:px-8">
+    <div class="premium-glass rounded-[32px] p-8 sm:p-12 relative overflow-hidden">
+      <div class="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-brand-500/15 blur-3xl pointer-events-none"></div>
+      <div class="relative z-10 grid md:grid-cols-5 gap-10 items-center">
+        <div class="md:col-span-2 flex justify-center">
+          <div class="w-32 h-32 rounded-3xl bg-gradient-to-br from-brand-500/20 to-purple-500/20 border border-brand-500/30 flex items-center justify-center text-brand-300 shadow-xl shadow-brand-500/20">
+            <svg class="w-14 h-14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+        </div>
+        <div class="md:col-span-3">
+          <div class="text-[11px] uppercase tracking-widest text-brand-400 font-bold mb-2">Privacy by design</div>
+          <h2 class="font-serif text-3xl sm:text-4xl font-medium tracking-tight mb-4">Your camera never leaves your phone.</h2>
+          <p class="text-gray-300 leading-relaxed mb-5">
+            Most "AI selfie" apps quietly upload your face to a cloud GPU. DateScan doesn't.
+            The face landmarker, color analyzer and posture detector all run inside your browser
+            via MediaPipe and WebAssembly. Your saved closet sits in your device's IndexedDB.
+          </p>
+          <p class="text-gray-400 text-sm leading-relaxed mb-6">
+            The optional AI Chat is the only feature that talks to a server, and it asks for
+            explicit consent before sending an image. A built-in <em>Private Mode</em> disables
+            even that and forces the on-device AI onto the CPU backend so no GPU fingerprint
+            surface is touched.
+          </p>
+          <a href="/index.html#privacy" class="btn-ghost text-xs font-bold px-4 py-2.5 rounded-full inline-flex items-center gap-2">
+            Read the full privacy summary
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="relative py-20 sm:py-28 border-t border-white/5">
+  <div class="max-w-3xl mx-auto px-5 sm:px-8">
+    <div class="text-center mb-14">
+      <div class="text-[11px] uppercase tracking-widest text-brand-400 font-bold mb-3">Questions, answered</div>
+      <h2 class="font-serif text-4xl sm:text-5xl font-medium tracking-tight">FAQ</h2>
+    </div>
+
+    <div class="space-y-3">
+      <details class="premium-glass rounded-2xl p-5 group">
+        <summary class="flex items-center justify-between text-white font-semibold">
+          <span>Is my camera footage uploaded anywhere?</span>
+          <svg class="faq-chev w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </summary>
+        <p class="text-sm text-gray-400 mt-3 leading-relaxed">No. The face and outfit analysis runs entirely on your device using MediaPipe and WebAssembly. Your video frames never leave the browser. The only thing that ever talks to a server is the optional AI Style Coach Chat, and only after you consent.</p>
+      </details>
+
+      <details class="premium-glass rounded-2xl p-5 group">
+        <summary class="flex items-center justify-between text-white font-semibold">
+          <span>Do I need to install anything?</span>
+          <svg class="faq-chev w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </summary>
+        <p class="text-sm text-gray-400 mt-3 leading-relaxed">No. DateScan runs in any modern browser. You can also add it to your home screen as a PWA so it launches like a native app, fully offline-capable after the first visit.</p>
+      </details>
+
+      <details class="premium-glass rounded-2xl p-5 group">
+        <summary class="flex items-center justify-between text-white font-semibold">
+          <span>Is it free?</span>
+          <svg class="faq-chev w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </summary>
+        <p class="text-sm text-gray-400 mt-3 leading-relaxed">Yes — the core scanner, action plan and digital closet (up to three saved outfits) are completely free. Pro unlocks unlimited scans, an unlimited closet and a few extra goodies.</p>
+      </details>
+
+      <details class="premium-glass rounded-2xl p-5 group">
+        <summary class="flex items-center justify-between text-white font-semibold">
+          <span>What devices does it work on?</span>
+          <svg class="faq-chev w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </summary>
+        <p class="text-sm text-gray-400 mt-3 leading-relaxed">Any modern phone, tablet or laptop with a camera and a recent version of Chrome, Safari, Firefox or Edge. iOS Safari is fully supported including the home-screen install flow.</p>
+      </details>
+
+      <details class="premium-glass rounded-2xl p-5 group">
+        <summary class="flex items-center justify-between text-white font-semibold">
+          <span>Can I use it for video-call interviews?</span>
+          <svg class="faq-chev w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </summary>
+        <p class="text-sm text-gray-400 mt-3 leading-relaxed">Yes. Run DateScan right before you join the call — it specifically checks lighting direction, background tidiness, framing and posture, which is exactly what makes or breaks a Zoom-style first impression.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="relative py-24 border-t border-white/5">
+  <div class="max-w-4xl mx-auto px-5 sm:px-8 text-center">
+    <h2 class="font-serif text-4xl sm:text-6xl font-medium tracking-tight mb-6">
+      Walk in like you <span class="italic grad-text">own the place</span>.
+    </h2>
+    <p class="text-gray-400 text-base sm:text-lg max-w-xl mx-auto mb-10">
+      Five seconds. One camera. Zero excuses. Open DateScan in your browser and get your first action plan now.
+    </p>
+    <a href="/index.html?action=scan" class="btn-primary inline-flex items-center gap-3 text-base font-bold px-8 py-4 rounded-2xl">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V6a2 2 0 0 1 2-2h2"/><path d="M16 4h2a2 2 0 0 1 2 2v2"/><path d="M20 16v2a2 2 0 0 1-2 2h-2"/><path d="M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="11" r="2.4"/><path d="M8 17c1-1.5 2.4-2.3 4-2.3s3 .8 4 2.3"/></svg>
+      Open the app
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="border-t border-white/5 py-10">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
+    <div class="flex items-center gap-2">
+      <span class="font-bold text-white">DateScan<span class="text-brand-500">.</span></span>
+      <span>© 2026 — On-device style coaching.</span>
+    </div>
+    <div class="flex items-center gap-6">
+      <a href="#use-cases" class="hover:text-white transition">Use cases</a>
+      <a href="#how" class="hover:text-white transition">How it works</a>
+      <a href="#privacy" class="hover:text-white transition">Privacy</a>
+      <a href="/index.html" class="hover:text-white transition">Open the app</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
