@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#09090b" />
+<title>Manage Subscription — DateScan</title>
+<meta name="description" content="Manage your DateScan Pro subscription. Cancel, restore, or switch plans." />
+<link rel="canonical" href="https://datescan.app/subscription.html" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='40' y2='40' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%23ec4899'/%3E%3Cstop offset='1' stop-color='%239333ea'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M20 13.5C20 13.5 16 9 11.5 9C7.5 9 5 12.5 5 16.5C5 22 13 28 20 32C27 28 35 22 35 16.5C35 12.5 32.5 9 28.5 9C24 9 20 13.5 20 13.5Z' fill='url(%23bg)' fill-opacity='0.2' stroke='url(%23bg)' stroke-width='2'/%3E%3C/svg%3E">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = { theme: { extend: {
+    fontFamily: { sans: ['Inter','sans-serif'], serif: ['Playfair Display','serif'] },
+    colors: { brand: { 400:'#f472b6', 500:'#ec4899', 600:'#db2777' }, dark: { 900:'#18181b', 950:'#09090b' } }
+  }}}
+</script>
+<style>
+  body { background:#09090b; color:#fafafa; font-family: Inter, sans-serif; }
+  .prose-custom h2 { font-family: 'Playfair Display', serif; font-size: 1.75rem; font-weight: 600; color:#fff; margin-top: 2.5rem; margin-bottom: 1rem; }
+  .prose-custom h3 { font-family: Inter, sans-serif; font-size: 1.05rem; font-weight: 600; color:#f9fafb; margin-top: 1.75rem; margin-bottom: 0.5rem; }
+  .prose-custom p { color:#d1d5db; line-height: 1.75; margin-bottom: 1rem; font-size: 0.95rem; }
+  .prose-custom ul { color:#d1d5db; margin-bottom: 1rem; padding-left: 1.25rem; list-style: disc; }
+  .prose-custom li { margin-bottom: 0.5rem; line-height: 1.65; font-size: 0.95rem; }
+  .prose-custom a { color:#f472b6; text-decoration: underline; text-underline-offset: 3px; }
+  .prose-custom a:hover { color:#ec4899; }
+  .prose-custom strong { color:#fff; font-weight: 600; }
+  .ambient-glow { position: fixed; inset: 0; background:
+    radial-gradient(circle at 15% 10%, rgba(236,72,153,0.08) 0%, transparent 40%),
+    radial-gradient(circle at 85% 90%, rgba(139,92,246,0.08) 0%, transparent 40%);
+    pointer-events: none; z-index: 0; }
+</style>
+</head>
+<body class="antialiased">
+<div class="ambient-glow"></div>
+
+<header class="relative z-10 max-w-3xl mx-auto px-6 pt-10 pb-8">
+  <a href="/" class="inline-flex items-center gap-3 group">
+    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-500 to-purple-500 flex items-center justify-center shadow-lg">
+      <svg viewBox="0 0 40 40" class="w-5 h-5"><path d="M20 13.5C20 13.5 16 9 11.5 9C7.5 9 5 12.5 5 16.5C5 22 13 28 20 32C27 28 35 22 35 16.5C35 12.5 32.5 9 28.5 9C24 9 20 13.5 20 13.5Z" fill="#fff" fill-opacity="0.2" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="flex flex-col">
+      <h1 class="font-bold text-lg tracking-tight leading-none text-white group-hover:text-brand-400 transition">DateScan<span class="text-brand-500">.</span></h1>
+      <span class="text-[10px] text-gray-400 font-medium uppercase tracking-widest mt-1">Confidence Optimizer</span>
+    </div>
+  </a>
+</header>
+
+<main class="relative z-10 max-w-3xl mx-auto px-6 pb-20">
+  <div class="mb-10 pb-8 border-b border-white/10">
+    <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-3">Support</div>
+    <h1 class="font-serif text-4xl sm:text-5xl font-medium text-white mb-3">Manage Subscription</h1>
+    <p class="text-sm text-gray-500">Cancel, restore, or change your plan.</p>
+  </div>
+
+  <article class="prose-custom">
+    <p>DateScan offers four paid options. All payments are processed securely through <strong>Lemon Squeezy</strong> (<a href="https://lemonsqueezy.com" target="_blank" rel="noopener">lemonsqueezy.com</a>), our Merchant of Record. Your receipts, renewals, and billing questions go through Lemon Squeezy's customer portal.</p>
+
+    <h2>Your Plans</h2>
+
+    <h3>Single Scan — $1.99 one-time</h3>
+    <p>One full Pro scan. <em>"Know how you come across."</em> Perfect if you just want to check yourself before one specific date and aren't ready to commit to a subscription. One-time purchase — does not auto-renew.</p>
+
+    <h3>Weekly — $4.99 / 7 days</h3>
+    <p>Unlimited Pro scans for 7 days. <em>"Fix your profile, boost your chances."</em> Auto-renews every 7 days until you cancel.</p>
+
+    <h3>Monthly — $9.99 / month</h3>
+    <p>Unlimited Pro scans for a full month. <em>"More matches, better dates."</em> Auto-renews every 30 days until you cancel. Works out to roughly half the Weekly per-day price.</p>
+
+    <h3>Yearly — $24.99 / year <span class="text-yellow-500 text-xs font-bold uppercase tracking-wider ml-1">Best Value</span></h3>
+    <p>Unlimited Pro scans for 365 days. <em>"Play smarter all year long."</em> Auto-renews yearly until you cancel. By far the cheapest per-day rate — less than a Monthly gets you less than 3 months.</p>
+
+    <h2>How to Cancel</h2>
+    <p>All Weekly, Monthly, and Yearly plans are <strong>auto-renewing subscriptions</strong> managed by Lemon Squeezy. You can cancel at any time — cancellation takes effect at the end of the current billing period, and you keep Pro access until then.</p>
+    <p>To cancel:</p>
+    <ol class="list-decimal pl-5 text-gray-300 leading-relaxed mb-4 space-y-2 text-[0.95rem]">
+      <li>Open your original purchase email from Lemon Squeezy.</li>
+      <li>Click the "<strong>Manage your subscription</strong>" link.</li>
+      <li>Sign in using the email you bought with — Lemon Squeezy will send a one-time login code.</li>
+      <li>Click "Cancel subscription" on the plan you want to end.</li>
+    </ol>
+    <p>If you can't find your purchase email or the portal link, email <a href="mailto:info@datescan.app">info@datescan.app</a> and we'll help you cancel directly.</p>
+    <p>The <strong>Single Scan</strong> plan is a one-time purchase — there is nothing to cancel.</p>
+
+    <h2>How to Restore Pro on a New Device or Browser</h2>
+    <p>Since DateScan doesn't require an account, your Pro status is tied to your browser's local storage on the device where you purchased it. To restore Pro on a different device, browser, or after clearing site data:</p>
+    <ol class="list-decimal pl-5 text-gray-300 leading-relaxed mb-4 space-y-2 text-[0.95rem]">
+      <li>Email <a href="mailto:info@datescan.app">info@datescan.app</a> with the subject "<strong>Restore Pro</strong>".</li>
+      <li>Include the email address used at Lemon Squeezy checkout and any order ID from your receipt.</li>
+      <li>We'll verify the purchase and provide a one-time restore link or code.</li>
+    </ol>
+    <p>This is usually resolved within 1–2 business days.</p>
+
+    <h2>How to Change Your Plan</h2>
+    <p>To upgrade or downgrade (e.g. from Weekly to Monthly, or Monthly to Yearly):</p>
+    <ol class="list-decimal pl-5 text-gray-300 leading-relaxed mb-4 space-y-2 text-[0.95rem]">
+      <li>Cancel your current plan via the Lemon Squeezy customer portal.</li>
+      <li>Purchase the new plan on the DateScan homepage.</li>
+    </ol>
+    <p>If you're upgrading within 14 days of a recent purchase, email us first — we can often credit the unused portion of your current plan toward the new one.</p>
+
+    <h2>Billing and Receipts</h2>
+    <p>All receipts are sent automatically by Lemon Squeezy to the email address you provided at checkout. If you need a duplicate receipt or a VAT-compliant invoice for business expenses, you can download them directly from the Lemon Squeezy customer portal, or email us with "Receipt Request" in the subject line.</p>
+    <p>Lemon Squeezy handles all VAT/sales tax collection based on your billing location, and is responsible for remitting it to the appropriate authorities as a Merchant of Record.</p>
+
+    <h2>Refunds</h2>
+    <p>See our <a href="/refund.html">Refund Policy</a> for full details on when refunds are available and how to request one.</p>
+
+    <h2>Price Changes</h2>
+    <p>We reserve the right to change prices for new purchases at any time. Existing subscribers will be notified at least 30 days before any price change affects their plan, and will have the option to cancel before the new price takes effect.</p>
+
+    <h2>Service Availability</h2>
+    <p>While we intend to maintain DateScan indefinitely, we cannot guarantee the service will operate forever. In the unlikely event of permanent shutdown, we will provide at least 90 days of notice on the homepage, and annual subscribers within their first 6 months will be offered a pro-rated refund.</p>
+
+    <h2>Still Have Questions?</h2>
+    <p>Email <a href="mailto:info@datescan.app">info@datescan.app</a> with "<strong>Subscription Question</strong>" in the subject and we'll respond within 1–3 business days. For payment processor issues, you can also contact Lemon Squeezy support directly via their website.</p>
+  </article>
+</main>
+
+<footer class="relative z-10 border-t border-white/10 mt-10">
+  <div class="max-w-3xl mx-auto px-6 py-8 flex flex-col sm:flex-row sm:justify-between gap-4">
+    <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-400">
+      <a href="/privacy.html" class="hover:text-brand-400">Privacy Policy</a>
+      <a href="/terms.html" class="hover:text-brand-400">Terms of Service</a>
+      <a href="/refund.html" class="hover:text-brand-400">Refund Policy</a>
+      <a href="/contact.html" class="hover:text-brand-400">Contact</a>
+      <a href="/subscription.html" class="hover:text-brand-400">Manage Subscription</a>
+    </div>
+    <p class="text-xs text-gray-600">&copy; 2026 DateScan</p>
+  </div>
+</footer>
+</body>
+</html>

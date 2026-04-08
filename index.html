@@ -1,0 +1,2407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#09090b" />
+<title>DateScan — Your Personal Style Coach</title>
+<!-- Favicon Generated from the Logo SVG -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='40' y2='40' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%23ec4899'/%3E%3Cstop offset='1' stop-color='%239333ea'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M10 5 H5 V10' stroke='url(%23bg)' stroke-width='2'/%3E%3Cpath d='M30 5 H35 V10' stroke='url(%23bg)' stroke-width='2'/%3E%3Cpath d='M10 35 H5 V30' stroke='url(%23bg)' stroke-width='2'/%3E%3Cpath d='M30 35 H35 V30' stroke='url(%23bg)' stroke-width='2'/%3E%3Cpath d='M20 13.5C20 13.5 16 9 11.5 9C7.5 9 5 12.5 5 16.5C5 22 13 28 20 32C27 28 35 22 35 16.5C35 12.5 32.5 9 28.5 9C24 9 20 13.5 20 13.5Z' fill='url(%23bg)' fill-opacity='0.2' stroke='url(%23bg)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='4' y1='20' x2='36' y2='20' stroke='%23f472b6' stroke-width='1.5' stroke-dasharray='2 2' opacity='0.8'/%3E%3C/svg%3E">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Inter', 'sans-serif'],
+          serif: ['Playfair Display', 'serif'],
+        },
+        colors: {
+          brand: {
+            400: '#f472b6',
+            500: '#ec4899',
+            600: '#db2777',
+          },
+          dark: {
+            900: '#18181b',
+            950: '#09090b',
+          }
+        }
+      }
+    }
+  }
+</script>
+<style>
+  * { -webkit-tap-highlight-color: transparent; }
+  
+  body {
+    background-color: #09090b;
+    color: #fafafa;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Ambient Background Glow */
+  .ambient-glow {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120vw;
+    height: 120vh;
+    background: 
+      radial-gradient(circle at 20% 30%, rgba(236, 72, 153, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.08) 0%, transparent 40%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Glassmorphism Panels */
+  .premium-glass {
+    background: rgba(24, 24, 27, 0.6);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Gradient Text */
+  .text-gradient {
+    background: linear-gradient(135deg, #f472b6 0%, #db2777 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .text-gradient-gold {
+    background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Premium Buttons */
+  .btn-primary {
+    background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+    color: white;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 20px rgba(236, 72, 153, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  .btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(236, 72, 153, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  .btn-primary:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+  .btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    filter: grayscale(0.5);
+  }
+
+  /* Camera & Video Container */
+  .camera-container {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    background: #000;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
+    width: 100%;
+    min-height: 50vh; 
+    transition: min-height 0.3s ease;
+  }
+  @media (min-width: 1024px) {
+    .camera-container { min-height: 400px; }
+  }
+
+  video {
+    width: 100%;
+    height: auto;
+    transform: scaleX(-1);
+    display: block;
+    /* Safari specific fixes applied in JS too */
+  }
+
+  /* Scanner HUD & Flash */
+  .scanline {
+    position: absolute;
+    left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #ec4899, #ec4899, transparent);
+    box-shadow: 0 0 20px 4px rgba(236, 72, 153, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10;
+  }
+  .scanning .scanline {
+    opacity: 1;
+    animation: scan 2s ease-in-out infinite;
+  }
+  @keyframes scan {
+    0% { top: 0; }
+    50% { top: 100%; }
+    100% { top: 0; }
+  }
+
+  .flash-overlay {
+    position: absolute;
+    inset: 0;
+    background: white;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 50;
+    transition: opacity 0.4s ease-out;
+  }
+  .flash-overlay.active {
+    opacity: 0.85;
+    transition: none;
+  }
+
+  .hud {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+  }
+  .scanning .hud { opacity: 1; }
+  
+  .hud-element {
+    stroke: rgba(236, 72, 153, 0.8);
+    fill: none;
+    stroke-width: 1.5;
+  }
+  .hud-text {
+    fill: rgba(236, 72, 153, 0.9);
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    font-weight: 500;
+  }
+
+  /* Viewfinder corners */
+  .viewfinder {
+    position: absolute;
+    inset: 20px;
+    pointer-events: none;
+    z-index: 5;
+  }
+  .vf-corner {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-color: rgba(255, 255, 255, 0.4);
+    border-width: 0;
+    transition: border-color 0.3s;
+  }
+  .scanning .vf-corner { border-color: rgba(236, 72, 153, 0.8); }
+  .vf-tl { top: 0; left: 0; border-top-width: 2px; border-left-width: 2px; border-top-left-radius: 16px; }
+  .vf-tr { top: 0; right: 0; border-top-width: 2px; border-right-width: 2px; border-top-right-radius: 16px; }
+  .vf-bl { bottom: 0; left: 0; border-bottom-width: 2px; border-left-width: 2px; border-bottom-left-radius: 16px; }
+  .vf-br { bottom: 0; right: 0; border-bottom-width: 2px; border-right-width: 2px; border-bottom-right-radius: 16px; }
+
+  /* Custom Checkbox & Animations */
+  .custom-check input[type="checkbox"] {
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    background: rgba(0,0,0,0.2);
+  }
+  .custom-check input[type="checkbox"]:checked {
+    background: #ec4899;
+    border-color: #ec4899;
+  }
+  .custom-check input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -60%) rotate(45deg);
+    width: 6px;
+    height: 12px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+  }
+  .custom-check.done span.label-text {
+    color: rgba(255,255,255,0.4);
+    text-decoration: line-through;
+  }
+
+  @keyframes checklistPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.04); background-color: rgba(236, 72, 153, 0.15); border-color: rgba(236, 72, 153, 0.4); box-shadow: 0 0 15px rgba(236, 72, 153, 0.2); }
+    100% { transform: scale(1); }
+  }
+  .checklist-pop {
+    animation: checklistPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+
+  /* Loader & Bars */
+  .pulse-ring {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid rgba(236, 72, 153, 0.2);
+    border-top-color: #ec4899;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin { 100% { transform: rotate(360deg); } }
+
+  .xp-bar-fill {
+    transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Monetization Blur Elements */
+  .blur-content {
+    filter: blur(10px) grayscale(40%);
+    opacity: 0.5;
+    pointer-events: none;
+    user-select: none;
+    transition: all 0.5s ease;
+  }
+  .locked-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to bottom, rgba(24,24,27,0.1), rgba(9,9,11,0.95) 60%);
+    border-radius: inherit;
+  }
+
+  /* Animations */
+  .fade-up { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .scrollbar::-webkit-scrollbar { width: 4px; }
+  .scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+
+  #analysisCanvas { display: none; }
+</style>
+</head>
+<body class="relative antialiased text-gray-100">
+
+<div class="ambient-glow"></div>
+
+<!-- Onboarding Modal -->
+<div id="onboardingModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#09090b]/95 backdrop-blur-xl transition-opacity duration-500">
+  <div class="premium-glass border border-brand-500/20 rounded-[32px] p-8 max-w-md w-full relative overflow-hidden fade-up">
+    <!-- Decoration -->
+    <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-500 rounded-full mix-blend-screen filter blur-[60px] opacity-30 pointer-events-none"></div>
+
+    <div class="text-center relative z-10 mb-8 mt-2">
+      <div class="w-16 h-16 mx-auto bg-gradient-to-tr from-brand-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg shadow-brand-500/20 mb-5">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      </div>
+      <h2 class="font-serif text-3xl font-bold mb-2 text-white">Welcome to DateScan</h2>
+      <p class="text-sm text-gray-400">Your AI-powered wingman. Ready in 3 steps:</p>
+    </div>
+
+    <div class="space-y-6 relative z-10 mb-8">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-xl shrink-0">📸</div>
+        <div class="text-left">
+          <h4 class="font-medium text-white text-sm">1. Allow Camera</h4>
+          <p class="text-xs text-gray-500 mt-0.5">We need to see your outfit. 100% private.</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-xl shrink-0">💡</div>
+        <div class="text-left">
+          <h4 class="font-medium text-white text-sm">2. Stand in Good Light</h4>
+          <p class="text-xs text-gray-500 mt-0.5">Face a window or light source for accuracy.</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-xl shrink-0">✨</div>
+        <div class="text-left">
+          <h4 class="font-medium text-white text-sm">3. Get Your Action Plan</h4>
+          <p class="text-xs text-gray-500 mt-0.5">Instant grooming and style feedback.</p>
+        </div>
+      </div>
+    </div>
+
+    <button id="startOnboardingBtn" class="btn-primary w-full py-4 rounded-2xl text-base font-bold shadow-xl shadow-brand-500/20 flex justify-center items-center gap-2">
+      Enable Camera & Start
+    </button>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="relative z-20 px-6 py-5 flex items-center justify-between max-w-7xl mx-auto">
+  <div class="flex items-center gap-3">
+    <div class="w-12 h-12 flex items-center justify-center shrink-0">
+      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-[0_0_8px_rgba(236,72,153,0.4)]">
+        <defs>
+          <linearGradient id="logo-brand-grad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#ec4899"/>
+            <stop offset="1" stop-color="#9333ea"/>
+          </linearGradient>
+        </defs>
+        <path d="M10 5 H5 V10" stroke="url(#logo-brand-grad)" stroke-width="2"/>
+        <path d="M30 5 H35 V10" stroke="url(#logo-brand-grad)" stroke-width="2"/>
+        <path d="M10 35 H5 V30" stroke="url(#logo-brand-grad)" stroke-width="2"/>
+        <path d="M30 35 H35 V30" stroke="url(#logo-brand-grad)" stroke-width="2"/>
+        <path d="M20 13.5C20 13.5 16 9 11.5 9C7.5 9 5 12.5 5 16.5C5 22 13 28 20 32C27 28 35 22 35 16.5C35 12.5 32.5 9 28.5 9C24 9 20 13.5 20 13.5Z" fill="url(#logo-brand-grad)" fill-opacity="0.15" stroke="url(#logo-brand-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="4" y1="20" x2="36" y2="20" stroke="#f472b6" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.8"/>
+      </svg>
+    </div>
+    <div class="flex flex-col">
+      <h1 class="font-bold text-xl md:text-2xl tracking-tight leading-none text-white">DateScan<span class="text-brand-500">.</span></h1>
+      <span class="text-[10px] text-gray-400 font-medium uppercase tracking-widest mt-1">Personal Style Coach</span>
+    </div>
+  </div>
+  <div class="flex items-center gap-4">
+    <span id="usageBadge" class="hidden sm:inline-block text-xs font-medium px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-300 transition-all">
+      Loading...
+    </span>
+    <button id="upgradeBtn" class="text-xs font-bold px-4 py-2 rounded-full bg-white text-black hover:bg-gray-200 transition-colors shadow-lg">
+      Upgrade
+    </button>
+  </div>
+</header>
+
+<main class="relative z-20 px-4 sm:px-6 pb-12 max-w-7xl mx-auto overflow-hidden">
+  <div id="heroText" class="mb-10 text-center transition-all duration-500 w-full">
+    <h1 class="font-serif text-4xl md:text-[3.5rem] font-medium mb-4 leading-tight tracking-tight">
+      Perfect your <span class="italic text-[#ec4899]">first impression</span>
+    </h1>
+    <p class="text-gray-400 text-sm md:text-base max-w-lg mx-auto font-medium tracking-wide">
+      AI-driven style, grooming and posture analysis.
+    </p>
+  </div>
+
+  <!-- Dynamic Layout Grid: Starts centered, shifts to split view on success -->
+  <div id="mainLayout" class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start transition-all duration-700">
+    
+    <!-- Camera Section (Starts full width, shrinks to col-span-5) -->
+    <div id="cameraCol" class="lg:col-span-12 flex flex-col gap-6 max-w-2xl mx-auto w-full transition-all duration-700 ease-in-out">
+      
+      <!-- Camera View -->
+      <div class="premium-glass rounded-[32px] p-2 relative shadow-2xl">
+        <div class="absolute top-6 left-6 z-30 flex items-center gap-2 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 transition-colors" id="statusIndicator">
+          <div class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse" id="statusDot"></div>
+          <span class="text-[10px] uppercase tracking-wider font-semibold text-white/90" id="statusText">Loading...</span>
+        </div>
+
+        <div class="camera-container relative" id="videoWrap">
+          <!-- Safari Fixes applied via attributes: playsinline, webkit-playsinline -->
+          <video id="video" autoplay playsinline webkit-playsinline muted></video>
+          
+          <div class="scanline"></div>
+          <svg id="hud" class="hud" preserveAspectRatio="xMidYMid slice"></svg>
+          
+          <div class="viewfinder">
+            <div class="vf-corner vf-tl"></div>
+            <div class="vf-corner vf-tr"></div>
+            <div class="vf-corner vf-bl"></div>
+            <div class="vf-corner vf-br"></div>
+          </div>
+
+          <!-- Dynamic "AI Thinking" Overlay during scan -->
+          <div id="thinkingOverlay" class="absolute inset-x-0 bottom-10 z-40 flex flex-col items-center justify-center opacity-0 transition-opacity duration-300 pointer-events-none">
+            <div class="bg-black/70 backdrop-blur-md px-5 py-2.5 rounded-full border border-brand-500/40 flex items-center gap-3 shadow-[0_0_20px_rgba(236,72,153,0.3)]">
+              <div class="flex gap-1">
+                <div class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-bounce" style="animation-delay: 0ms;"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-bounce" style="animation-delay: 150ms;"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-bounce" style="animation-delay: 300ms;"></div>
+              </div>
+              <span id="thinkingText" class="text-[11px] uppercase tracking-widest font-bold text-white/90 w-48 text-left">Analyzing vibes...</span>
+            </div>
+          </div>
+
+          <!-- Success Flash overlay -->
+          <div id="flashOverlay" class="flash-overlay"></div>
+
+          <div id="loadingOverlay" class="hidden absolute inset-0 z-40 flex flex-col items-center justify-center bg-dark-950/80 backdrop-blur-sm">
+            <div class="pulse-ring mb-4"></div>
+            <p class="text-sm font-medium text-gray-300 tracking-wide" id="loadingText">Connecting...</p>
+          </div>
+
+          <div id="errorOverlay" class="hidden absolute inset-0 z-50 flex flex-col items-center justify-center bg-dark-950/95 p-6 text-center">
+            <div class="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center mb-4 text-2xl">📷</div>
+            <h3 class="font-serif text-xl font-semibold mb-2" id="errorTitle">Camera Blocked</h3>
+            <p class="text-sm text-gray-400 mb-6 max-w-[280px]" id="errorMsg">Please check your browser settings and try again.</p>
+            <button id="retryBtn" class="btn-primary px-6 py-2.5 rounded-full text-sm font-medium">Try Again</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scan Controls -->
+      <div>
+        <!-- Occasion Selector -->
+        <div class="mb-4 fade-up" style="animation-delay: 0.1s;">
+          <div class="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-2 ml-1">Target Occasion</div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="occasionSelector">
+            <button data-occ="casual" class="occ-btn border border-brand-500/50 bg-brand-500/20 text-white rounded-xl py-2.5 text-xs font-semibold transition-all">Casual</button>
+            <button data-occ="first_date" class="occ-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-2.5 text-xs font-semibold transition-all">First Date</button>
+            <button data-occ="fancy" class="occ-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-2.5 text-xs font-semibold transition-all">Fancy Dinner</button>
+            <button data-occ="night_out" class="occ-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-2.5 text-xs font-semibold transition-all">Night Out</button>
+          </div>
+        </div>
+
+        <button id="scanBtn" class="w-full btn-primary py-4 rounded-2xl text-lg font-bold shadow-xl shadow-brand-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-3 transition-all" disabled>
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+          <span id="scanBtnText">Initializing...</span>
+        </button>
+        <p class="text-center text-[11px] text-gray-500 mt-4 flex items-center justify-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+          Strictly private. Runs in your browser, no data is uploaded.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Results Section (Initially hidden, expands to col-span-7) -->
+    <div id="resultsCol" class="hidden lg:col-span-7 flex flex-col gap-6 w-full opacity-0 translate-y-8 transition-all duration-700 ease-out lg:sticky lg:top-6 pb-12">
+      
+      <!-- AI Style Coach Section (Advanced Upgrades) -->
+      <div class="premium-glass rounded-[32px] p-6 sm:p-8 relative overflow-hidden">
+        <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-brand-500/20 mix-blend-screen filter blur-[40px] pointer-events-none"></div>
+        <h2 class="font-serif text-2xl font-semibold mb-1 flex items-center justify-between relative z-10">
+          AI Style Coach
+          <span class="text-[10px] font-sans font-bold uppercase tracking-widest text-brand-400 border border-brand-500/30 bg-brand-500/10 px-2 py-0.5 rounded-full animate-pulse">Active</span>
+        </h2>
+        <p class="text-xs text-gray-400 mb-6 relative z-10">Deep analysis of your outfit's color, contrast, and coordination.</p>
+        
+        <div id="styleCoachResult" class="transition-all duration-300 min-h-[160px] relative z-10">
+           <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Action Plan (Grooming & Posture) -->
+      <div class="premium-glass rounded-[32px] p-6 sm:p-8 min-h-[250px] relative overflow-hidden">
+        <div class="flex items-center justify-between mb-6 pb-4 border-b border-white/5 relative z-10">
+          <h2 class="font-serif text-2xl font-semibold">Grooming & Presence</h2>
+          <span class="text-[10px] uppercase tracking-wider font-bold px-2.5 py-1 rounded-md bg-white/5 text-gray-400">Readiness</span>
+        </div>
+        
+        <div id="feedbackPanel" class="space-y-4 relative z-10">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Secondary Tools Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Checklist Section -->
+        <div class="premium-glass rounded-[32px] p-6 flex-1">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="font-serif text-xl font-semibold">Before You Leave</h2>
+            <span class="text-[10px] text-brand-400 bg-brand-500/10 px-2 py-1 rounded-md font-bold uppercase tracking-wider">+5 XP each</span>
+          </div>
+          <ul id="checklist" class="grid grid-cols-1 gap-4">
+            <!-- JS generated -->
+          </ul>
+        </div>
+
+        <!-- Gamification / Missions Counter Card -->
+        <div class="rounded-[32px] p-6 border border-brand-500/20 bg-gradient-to-b from-dark-900 to-dark-950 relative overflow-hidden shrink-0 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+          <div class="absolute -top-8 -right-8 w-28 h-28 rounded-full bg-brand-500/10 blur-3xl pointer-events-none"></div>
+          <div class="relative z-10">
+            
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <div class="text-[10px] uppercase tracking-widest font-bold text-brand-400 mb-1" id="levelName">Level 1: Rookie</div>
+                <div class="flex items-baseline gap-1.5">
+                  <span id="missionCount" class="font-serif font-bold text-3xl text-white">0</span>
+                  <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">XP</span>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="text-3xl filter drop-shadow-md" id="streakFlame">🔥</div>
+                <div id="missionStreak" class="text-[11px] font-bold text-orange-400 mt-1">0 Day Streak</div>
+              </div>
+            </div>
+
+            <!-- XP Progress Bar -->
+            <div class="w-full h-1.5 bg-white/10 rounded-full mb-5 overflow-hidden">
+               <div id="xpBar" class="h-full bg-gradient-to-r from-brand-500 to-purple-500 xp-bar-fill" style="width: 0%"></div>
+            </div>
+
+            <button id="logDateBtn" class="w-full text-xs font-semibold py-3 px-3 rounded-xl border border-brand-500/40 bg-brand-500/15 text-brand-400 hover:bg-brand-500/25 transition flex items-center justify-center gap-2">
+              <span>💕</span> Log tonight's date <span class="opacity-50 font-normal">(+50 XP)</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="relative z-20 w-full bg-[#09090b] border-t border-white/10 pt-10 pb-8 mt-4">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="grid grid-cols-2 gap-8 mb-8">
+      <!-- Legal Column -->
+      <div class="flex flex-col">
+        <h3 class="text-sm font-sans font-semibold text-white tracking-widest uppercase mb-4">Legal</h3>
+        <ul class="space-y-3 text-sm text-gray-400">
+          <li><a href="/privacy.html" class="hover:text-brand-500 transition-colors duration-200">Privacy Policy</a></li>
+          <li><a href="/terms.html" class="hover:text-brand-500 transition-colors duration-200">Terms of Service</a></li>
+          <li><a href="/refund.html" class="hover:text-brand-500 transition-colors duration-200">Refund Policy</a></li>
+        </ul>
+      </div>
+      <!-- Support Column -->
+      <div class="flex flex-col">
+        <h3 class="text-sm font-sans font-semibold text-white tracking-widest uppercase mb-4">Support</h3>
+        <ul class="space-y-3 text-sm text-gray-400">
+          <li><a href="/contact.html" class="hover:text-brand-500 transition-colors duration-200">Contact Support</a></li>
+          <li><a href="/subscription.html" class="hover:text-brand-500 transition-colors duration-200">Manage Subscription</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-white/5 pt-6 flex flex-col gap-4">
+      <p class="text-[11px] text-gray-500 italic leading-relaxed max-w-3xl">
+        Disclaimer: DateScan is an AI-powered tool designed for entertainment and confidence-boosting purposes only. We do not guarantee dating success or specific social outcomes.
+      </p>
+      <p class="text-xs text-gray-600">
+        &copy; 2026 DateScan. All rights reserved.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<canvas id="analysisCanvas"></canvas>
+
+<!-- Share Modal -->
+<div id="shareModal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl">
+  <div class="premium-glass border border-brand-500/30 rounded-[32px] p-5 sm:p-6 max-w-sm w-full relative overflow-hidden fade-up max-h-[95vh] overflow-y-auto scrollbar">
+    <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-500 rounded-full mix-blend-screen filter blur-[60px] opacity-30 pointer-events-none"></div>
+
+    <div class="text-center relative z-10 mb-4">
+      <div class="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-widest font-bold text-brand-400 mb-2">
+        <span>🔥</span> TikTok Ready
+      </div>
+      <h2 class="font-serif text-2xl font-bold text-white">Share your score</h2>
+      <p class="text-xs text-gray-400 mt-1">Your friends need to see this.</p>
+    </div>
+
+    <!-- Generated card preview -->
+    <div class="relative z-10 rounded-2xl overflow-hidden border border-white/10 bg-black mb-4 aspect-[9/16] max-h-[55vh] mx-auto flex items-center justify-center">
+      <canvas id="shareCanvas" class="w-full h-full object-contain"></canvas>
+    </div>
+
+    <div class="relative z-10 space-y-2.5">
+      <button id="shareNativeBtn" class="btn-primary w-full py-3.5 rounded-2xl text-sm font-bold flex justify-center items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+        Share
+      </button>
+      <button id="shareDownloadBtn" class="w-full py-3 rounded-2xl text-sm font-semibold bg-white/5 border border-white/10 text-white hover:bg-white/10 transition flex justify-center items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+        Download PNG
+      </button>
+      <button id="closeShareBtn" class="w-full text-xs font-medium text-gray-500 hover:text-white transition-colors py-2">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Paywall Modal -->
+<div id="paywallModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-lg">
+  <div class="premium-glass border border-brand-500/20 rounded-[32px] p-8 max-w-sm w-full relative overflow-hidden fade-up">
+    <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-500 rounded-full mix-blend-screen filter blur-[60px] opacity-30 pointer-events-none"></div>
+    
+    <div class="text-center relative z-10 mb-6">
+      <div class="w-16 h-16 mx-auto bg-gradient-to-tr from-brand-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg shadow-brand-500/20 mb-4">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+      </div>
+      <h2 class="font-serif text-3xl font-bold mb-2">Upgrade to Pro</h2>
+      <p class="text-sm text-gray-400">Unlock your full dating potential.</p>
+    </div>
+
+    <div class="relative z-10 bg-black/40 border border-white/5 rounded-2xl p-4 mb-6">
+      <ul class="text-left space-y-3">
+        <li class="flex items-center gap-3 text-sm text-gray-200 font-medium">
+          <div class="w-6 h-6 rounded-full bg-brand-500/20 flex items-center justify-center text-brand-400 shrink-0 text-xs">✨</div>
+          Advanced feedback & rules
+        </li>
+        <li class="flex items-center gap-3 text-sm text-gray-200 font-medium">
+          <div class="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 shrink-0 text-xs">🎨</div>
+          Color matching engine
+        </li>
+        <li class="flex items-center gap-3 text-sm text-gray-200 font-medium">
+          <div class="w-6 h-6 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400 shrink-0 text-xs">🔥</div>
+          Attractiveness boost tips
+        </li>
+        <li class="flex items-center gap-3 text-sm text-gray-200 font-medium">
+          <div class="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 shrink-0 text-xs">📸</div>
+          Saved outfits history
+        </li>
+      </ul>
+    </div>
+
+    <div class="space-y-2.5 relative z-10">
+      <button class="plan-btn w-full text-left bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-2xl p-3.5 transition-all flex items-center justify-between group">
+        <div class="pr-2">
+          <div class="font-semibold text-white text-sm">Single Scan</div>
+          <div class="text-[11px] text-gray-500 mt-0.5 leading-tight">Know how you come across</div>
+        </div>
+        <div class="font-bold text-base text-white shrink-0">$1.99</div>
+      </button>
+
+      <button class="plan-btn w-full text-left bg-gradient-to-r from-brand-500/10 to-purple-500/10 border border-brand-500/40 rounded-2xl p-3.5 transition-all flex items-center justify-between relative overflow-hidden hover:border-brand-500/70 shadow-lg">
+        <div class="absolute top-0 right-0 bg-brand-500 text-[9px] uppercase font-bold px-2 py-0.5 rounded-bl-lg text-white tracking-wider shadow-sm">Popular</div>
+        <div class="pr-2">
+          <div class="font-semibold text-white text-sm">Weekly</div>
+          <div class="text-[11px] text-brand-200/70 mt-0.5 leading-tight">Fix your profile, boost your chances</div>
+        </div>
+        <div class="font-bold text-base text-white shrink-0">$4.99</div>
+      </button>
+
+      <button class="plan-btn w-full text-left bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-2xl p-3.5 transition-all flex items-center justify-between group">
+        <div class="pr-2">
+          <div class="font-semibold text-white text-sm group-hover:text-brand-400 transition-colors">Monthly</div>
+          <div class="text-[11px] text-gray-500 mt-0.5 leading-tight">More matches, better dates</div>
+        </div>
+        <div class="font-bold text-base text-white shrink-0">$9.99</div>
+      </button>
+
+      <button class="plan-btn w-full text-left bg-white/5 hover:bg-white/10 border border-yellow-500/30 hover:border-yellow-500/60 rounded-2xl p-3.5 transition-all flex items-center justify-between relative overflow-hidden group">
+        <div class="absolute top-0 right-0 bg-gradient-to-r from-yellow-500 to-amber-600 text-[9px] uppercase font-bold px-2 py-0.5 rounded-bl-lg text-white tracking-wider shadow-sm">Best Value</div>
+        <div class="pr-2">
+          <div class="font-semibold text-white text-sm">Yearly</div>
+          <div class="text-[11px] text-gray-500 mt-0.5 leading-tight">Play smarter all year long</div>
+        </div>
+        <div class="font-bold text-base text-gradient-gold shrink-0">$24.99</div>
+      </button>
+    </div>
+
+    <div class="mt-4 flex items-center justify-center gap-1.5 text-[10px] text-gray-500 relative z-10">
+      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+      Secure checkout by <a href="https://lemonsqueezy.com" target="_blank" rel="noopener" class="text-brand-400 hover:text-brand-500 font-medium">Lemon Squeezy</a>
+    </div>
+
+    <button id="closePaywall" class="w-full mt-4 text-sm font-medium text-gray-500 hover:text-white transition-colors py-2 relative z-10">
+      Maybe later
+    </button>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="module">
+import { FilesetResolver, FaceLandmarker } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs";
+
+// --- SIMPLE STORE ARCHITECTURE (Zustand-like Vanilla implementation) ---
+const createStore = (initialState) => {
+  let state = { ...initialState };
+  const listeners = new Set();
+  
+  return {
+    get: () => state,
+    set: (newState) => {
+      state = { ...state, ...newState };
+      listeners.forEach(fn => fn(state));
+    },
+    subscribe: (fn) => {
+      listeners.add(fn);
+      fn(state); // Run immediately with current state
+      return () => listeners.delete(fn);
+    }
+  };
+};
+
+const store = createStore({
+  faceLandmarker: null, 
+  stream: null,
+  aiReady: false,
+  cameraReady: false,
+  isScanning: false, // Prevents rapid double clicks
+  occasion: 'casual', 
+  lastItems: null, 
+  lastColor: null
+});
+
+// --- DOM ELEMENTS ---
+const $ = (id) => document.getElementById(id);
+const video = $("video");
+const scanBtn = $("scanBtn");
+const scanBtnText = $("scanBtnText");
+const statusText = $("statusText");
+const statusDot = $("statusDot");
+const loadingOverlay = $("loadingOverlay");
+const loadingText = $("loadingText");
+const errorOverlay = $("errorOverlay");
+const errorTitle = $("errorTitle");
+const errorMsg = $("errorMsg");
+const retryBtn = $("retryBtn");
+const feedbackPanel = $("feedbackPanel");
+const videoWrap = $("videoWrap");
+const analysisCanvas = $("analysisCanvas");
+const ctx = analysisCanvas.getContext("2d", { willReadFrequently: true });
+const usageBadge = $("usageBadge");
+const paywall = $("paywallModal");
+const onboardingModal = $("onboardingModal");
+
+const flashOverlay = $("flashOverlay");
+const thinkingOverlay = $("thinkingOverlay");
+const thinkingTextEl = $("thinkingText");
+
+// --- UI SYNC VIA STORE ---
+store.subscribe((s) => {
+  // Sync Occasion Buttons
+  document.querySelectorAll('.occ-btn').forEach(btn => {
+    if (btn.dataset.occ === s.occasion) {
+      btn.classList.remove('border-white/10', 'bg-white/5', 'text-gray-400');
+      btn.classList.add('border-brand-500/50', 'bg-brand-500/20', 'text-white');
+    } else {
+      btn.classList.remove('border-brand-500/50', 'bg-brand-500/20', 'text-white');
+      btn.classList.add('border-white/10', 'bg-white/5', 'text-gray-400');
+    }
+  });
+
+  // Sync Scan Button state
+  if (s.isScanning) {
+    scanBtn.disabled = true;
+    scanBtnText.innerHTML = "Extracting vibes...";
+  } else if (s.aiReady && s.cameraReady) {
+    scanBtn.disabled = false;
+    scanBtnText.innerHTML = s.lastItems ? "Scan Again" : "Scan Outfit & Face";
+  } else {
+    scanBtn.disabled = true;
+    scanBtnText.innerHTML = "Initializing...";
+  }
+
+  // Sync Top Left Status Indicator
+  if (!s.cameraReady || !s.aiReady) {
+    statusText.textContent = s.aiReady ? "Waiting for Camera" : "Loading AI...";
+    statusDot.className = "w-2 h-2 rounded-full bg-yellow-500 animate-pulse";
+  } else if (s.isScanning) {
+    statusText.textContent = "Scanning...";
+    statusDot.className = "w-2 h-2 rounded-full bg-purple-500 animate-pulse";
+  } else {
+    statusText.textContent = "Ready";
+    statusDot.className = "w-2 h-2 rounded-full bg-brand-500";
+  }
+});
+
+// Gamification Variables
+const MISSIONS_KEY = "datescan.missions";
+const LEVELS = [
+  { name: "Level 1: Style Rookie", xp: 0 },
+  { name: "Level 2: Style Aware", xp: 100 },
+  { name: "Level 3: Sharp Dresser", xp: 300 },
+  { name: "Level 4: Trendsetter", xp: 600 },
+  { name: "Level 5: Style Icon", xp: 1000 },
+  { name: "Level 6: Casanova", xp: 1500 }
+];
+
+// Freemium Logic
+const FREE_DAILY = 10000;
+
+function isProUser() { return localStorage.getItem('datescan.pro') === 'true'; }
+function setProUser() { localStorage.setItem('datescan.pro', 'true'); }
+
+function getUsage() {
+  const d = new Date(), key = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+  try {
+    const raw = JSON.parse(localStorage.getItem("datescan.usage") || "{}");
+    if (raw.date !== key) return { date: key, count: 0 };
+    return raw;
+  } catch { return { date: key, count: 0 }; }
+}
+
+function incrementUsage() {
+  const u = getUsage();
+  u.count++; 
+  localStorage.setItem("datescan.usage", JSON.stringify(u));
+  updateUsageBadge();
+}
+
+function updateUsageBadge() {
+  if (isProUser()) {
+    usageBadge.innerHTML = `<span class="text-brand-400 font-bold">PRO Active</span>`;
+    usageBadge.classList.replace('bg-white/5', 'bg-brand-500/10');
+    usageBadge.classList.replace('border-white/10', 'border-brand-500/30');
+    usageBadge.classList.remove('hidden');
+    $("upgradeBtn").classList.add("hidden");
+  } else {
+    const left = Math.max(0, FREE_DAILY - getUsage().count);
+    if (left > 0) {
+      usageBadge.textContent = `${left} Free Scan Left`;
+      usageBadge.classList.remove('text-gray-500');
+    } else {
+      usageBadge.textContent = `0 Free Scans`;
+      usageBadge.classList.add('text-gray-500');
+    }
+  }
+}
+
+// Global UI functions
+window.openPaywall = function() {
+  paywall.classList.remove("hidden");
+  document.body.style.overflow = 'hidden';
+  triggerHaptic('tap');
+};
+
+function closePaywall() {
+  paywall.classList.add("hidden");
+  document.body.style.overflow = '';
+  triggerHaptic('tap');
+}
+
+// --- SHARE CARD (TikTok-ready 9:16) ---
+const shareModal = $("shareModal");
+const shareCanvas = $("shareCanvas");
+
+function getScoreLabel(s) {
+  if (s >= 90) return "ELITE";
+  if (s >= 80) return "SHARP";
+  if (s >= 70) return "SOLID";
+  if (s >= 60) return "DECENT";
+  return "NEEDS WORK";
+}
+function getScoreEmoji(s) {
+  if (s >= 90) return "🔥";
+  if (s >= 80) return "😎";
+  if (s >= 70) return "✨";
+  if (s >= 60) return "💫";
+  return "👀";
+}
+
+async function generateShareCard() {
+  const s = store.get();
+  const score = s.lastScore || 75;
+  const photoURL = s.lastCap;
+  const W = 1080, H = 1920;
+  shareCanvas.width = W; shareCanvas.height = H;
+  const g = shareCanvas.getContext('2d');
+
+  // Background gradient
+  const bg = g.createLinearGradient(0, 0, W, H);
+  bg.addColorStop(0, '#18181b');
+  bg.addColorStop(0.5, '#0a0a0f');
+  bg.addColorStop(1, '#1a0a1a');
+  g.fillStyle = bg; g.fillRect(0, 0, W, H);
+
+  // Pink glow blobs
+  const glow1 = g.createRadialGradient(W*0.2, H*0.15, 0, W*0.2, H*0.15, 600);
+  glow1.addColorStop(0, 'rgba(236,72,153,0.35)');
+  glow1.addColorStop(1, 'rgba(236,72,153,0)');
+  g.fillStyle = glow1; g.fillRect(0, 0, W, H);
+  const glow2 = g.createRadialGradient(W*0.85, H*0.85, 0, W*0.85, H*0.85, 700);
+  glow2.addColorStop(0, 'rgba(147,51,234,0.3)');
+  glow2.addColorStop(1, 'rgba(147,51,234,0)');
+  g.fillStyle = glow2; g.fillRect(0, 0, W, H);
+
+  // Header: brand
+  g.fillStyle = 'rgba(255,255,255,0.95)';
+  g.font = 'bold 44px Inter, sans-serif';
+  g.textAlign = 'center';
+  g.fillText('DateScan', W/2 - 12, 130);
+  g.fillStyle = '#ec4899';
+  g.fillText('.', W/2 + 130, 130);
+  g.font = 'bold 32px Inter, sans-serif';
+  g.fillStyle = 'rgba(236,72,153,1)';
+  g.fillText('CONFIDENCE OPTIMIZER FOR DATES', W/2, 185);
+
+  // Photo frame
+  const photoY = 230, photoH = 900, photoW = 760, photoX = (W-photoW)/2;
+  const drawPhotoFrame = () => {
+    g.save();
+    // Rounded rect clip
+    const r = 40;
+    g.beginPath();
+    g.moveTo(photoX+r, photoY);
+    g.arcTo(photoX+photoW, photoY, photoX+photoW, photoY+photoH, r);
+    g.arcTo(photoX+photoW, photoY+photoH, photoX, photoY+photoH, r);
+    g.arcTo(photoX, photoY+photoH, photoX, photoY, r);
+    g.arcTo(photoX, photoY, photoX+photoW, photoY, r);
+    g.closePath();
+    g.clip();
+    g.fillStyle = '#000'; g.fillRect(photoX, photoY, photoW, photoH);
+  };
+
+  const drawRest = () => {
+    // Photo border glow
+    g.strokeStyle = 'rgba(236,72,153,0.6)';
+    g.lineWidth = 4;
+    const r = 40;
+    g.beginPath();
+    g.moveTo(photoX+r, photoY);
+    g.arcTo(photoX+photoW, photoY, photoX+photoW, photoY+photoH, r);
+    g.arcTo(photoX+photoW, photoY+photoH, photoX, photoY+photoH, r);
+    g.arcTo(photoX, photoY+photoH, photoX, photoY, r);
+    g.arcTo(photoX, photoY, photoX+photoW, photoY, r);
+    g.closePath();
+    g.stroke();
+
+    // "AI RATED MY OUTFIT" tag top-left on photo
+    g.fillStyle = 'rgba(0,0,0,0.7)';
+    const tagX = photoX + 30, tagY = photoY + 30, tagW = 340, tagH = 60;
+    g.beginPath();
+    g.roundRect(tagX, tagY, tagW, tagH, 30);
+    g.fill();
+    g.strokeStyle = 'rgba(236,72,153,0.5)';
+    g.lineWidth = 2; g.stroke();
+    g.fillStyle = '#fff';
+    g.font = 'bold 22px Inter, sans-serif';
+    g.textAlign = 'left';
+    g.fillText('🤖  AI RATED MY OUTFIT', tagX + 24, tagY + 38);
+
+    // Score circle (big, bottom right of photo)
+    const cx = photoX + photoW - 140, cy = photoY + photoH - 140, rad = 110;
+    g.fillStyle = 'rgba(0,0,0,0.85)';
+    g.beginPath(); g.arc(cx, cy, rad, 0, Math.PI*2); g.fill();
+    // Ring
+    g.strokeStyle = 'rgba(255,255,255,0.1)';
+    g.lineWidth = 12;
+    g.beginPath(); g.arc(cx, cy, rad-14, 0, Math.PI*2); g.stroke();
+    const grad = g.createLinearGradient(cx-rad, cy-rad, cx+rad, cy+rad);
+    grad.addColorStop(0, '#f472b6'); grad.addColorStop(1, '#9333ea');
+    g.strokeStyle = grad;
+    g.lineWidth = 12;
+    g.lineCap = 'round';
+    g.beginPath();
+    g.arc(cx, cy, rad-14, -Math.PI/2, -Math.PI/2 + (Math.PI*2 * score/100));
+    g.stroke();
+    // Score text
+    g.fillStyle = '#fff';
+    g.font = 'bold 88px Playfair Display, Georgia, serif';
+    g.textAlign = 'center';
+    g.fillText(score, cx, cy + 20);
+    g.font = '500 18px Inter, sans-serif';
+    g.fillStyle = 'rgba(255,255,255,0.6)';
+    g.fillText('/ 100', cx, cy + 48);
+
+    // Big score label
+    g.textAlign = 'center';
+    g.font = '600 38px Inter, sans-serif';
+    g.fillStyle = 'rgba(255,255,255,0.6)';
+    g.fillText('MY SCORE', W/2, photoY + photoH + 90);
+    g.font = 'bold 120px Playfair Display, Georgia, serif';
+    const lg = g.createLinearGradient(W/2-200, 0, W/2+200, 0);
+    lg.addColorStop(0, '#f472b6'); lg.addColorStop(1, '#c084fc');
+    g.fillStyle = lg;
+    g.fillText(`${score}/100 ${getScoreEmoji(score)}`, W/2, photoY + photoH + 220);
+
+    g.font = 'bold 36px Inter, sans-serif';
+    g.fillStyle = '#f472b6';
+    g.fillText(getScoreLabel(score), W/2, photoY + photoH + 275);
+
+    // CTA bottom
+    g.fillStyle = 'rgba(255,255,255,0.75)';
+    g.font = 'bold 38px Inter, sans-serif';
+    g.fillText('Get your score → datescan.app', W/2, H - 80);
+  };
+
+  drawPhotoFrame();
+  if (photoURL) {
+    await new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        // cover fit
+        const ir = img.width/img.height, fr = photoW/photoH;
+        let sx=0, sy=0, sw=img.width, sh=img.height;
+        if (ir > fr) { sw = img.height*fr; sx = (img.width-sw)/2; }
+        else { sh = img.width/fr; sy = (img.height-sh)/2; }
+        g.drawImage(img, sx, sy, sw, sh, photoX, photoY, photoW, photoH);
+        g.restore();
+        drawRest();
+        resolve();
+      };
+      img.onerror = () => { g.restore(); drawRest(); resolve(); };
+      img.src = photoURL;
+    });
+  } else {
+    g.fillStyle = 'rgba(255,255,255,0.05)';
+    g.fillRect(photoX, photoY, photoW, photoH);
+    g.restore();
+    drawRest();
+  }
+}
+
+window.openShareModal = async function() {
+  triggerHaptic('tap');
+  shareModal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  await generateShareCard();
+};
+function closeShareModal() {
+  shareModal.classList.add('hidden');
+  document.body.style.overflow = '';
+}
+$("closeShareBtn").addEventListener('click', closeShareModal);
+shareModal.addEventListener('click', (e) => { if (e.target === shareModal) closeShareModal(); });
+
+$("shareDownloadBtn").addEventListener('click', () => {
+  triggerHaptic('success');
+  const link = document.createElement('a');
+  link.download = `datescan-score-${store.get().lastScore || 'result'}.png`;
+  link.href = shareCanvas.toDataURL('image/png');
+  link.click();
+});
+
+$("shareNativeBtn").addEventListener('click', async () => {
+  triggerHaptic('tap');
+  const score = store.get().lastScore || 75;
+  const shareText = `My DateScan score: ${score}/100 ${getScoreEmoji(score)}\nAI just rated my outfit. Get yours 👉`;
+  try {
+    const blob = await new Promise(res => shareCanvas.toBlob(res, 'image/png'));
+    const file = new File([blob], 'datescan-score.png', { type: 'image/png' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file], text: shareText, title: 'My DateScan Score' });
+      return;
+    }
+    if (navigator.share) {
+      await navigator.share({ text: shareText, title: 'My DateScan Score' });
+      return;
+    }
+    // Fallback: copy + download
+    await navigator.clipboard.writeText(shareText);
+    const link = document.createElement('a');
+    link.download = 'datescan-score.png';
+    link.href = shareCanvas.toDataURL('image/png');
+    link.click();
+    const btn = $("shareNativeBtn");
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓ Copied & Saved';
+    setTimeout(() => btn.innerHTML = orig, 2000);
+  } catch(e) { /* user cancelled */ }
+});
+
+// Haptic Feedback
+function triggerHaptic(type = 'tap') {
+  if (!navigator.vibrate) return;
+  try {
+    if (type === 'success') navigator.vibrate([40, 60, 40]);
+    else if (type === 'error') navigator.vibrate([100, 50, 100]);
+    else if (type === 'tap') navigator.vibrate(15);
+  } catch (e) {}
+}
+
+function showError(title, msg) {
+  errorTitle.textContent = title;
+  errorMsg.textContent = msg;
+  errorOverlay.classList.remove("hidden");
+  loadingOverlay.classList.add("hidden");
+}
+function hideError() { 
+  errorOverlay.classList.add("hidden"); 
+}
+
+function hasWebGL() {
+  try {
+    const c = document.createElement("canvas");
+    return !!(window.WebGLRenderingContext && (c.getContext("webgl") || c.getContext("experimental-webgl")));
+  } catch { return false; }
+}
+
+// --- LAZY LOAD & CORE INIT ---
+
+async function initFaceLandmarker() {
+  try {
+    loadingText.textContent = "Loading AI Coach...";
+    const fileset = await FilesetResolver.forVisionTasks(
+      "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm"
+    );
+    const landmarker = await FaceLandmarker.createFromOptions(fileset, {
+      baseOptions: {
+        modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
+        delegate: "GPU",
+      },
+      runningMode: "IMAGE",
+      numFaces: 1,
+    });
+    store.set({ faceLandmarker: landmarker, aiReady: true });
+  } catch (e) {
+    console.error(e);
+    throw new Error("The AI coach engine couldn't load. Check your connection.");
+  }
+}
+
+async function initCamera() {
+  if (!navigator.mediaDevices?.getUserMedia) throw new Error("Your browser doesn't support camera access.");
+  try {
+    loadingText.textContent = "Starting Camera...";
+    
+    // Explicit Safari mobile requirements
+    video.setAttribute('autoplay', '');
+    video.setAttribute('muted', '');
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 1280 } },
+      audio: false,
+    });
+    
+    store.set({ stream });
+    video.srcObject = stream;
+    
+    await new Promise((res, rej) => { 
+      const onReady = () => { 
+        videoWrap.style.minHeight = '0px';
+        video.play().then(res).catch(rej); 
+      };
+      if (video.readyState >= 1) {
+        // Metadata already loaded
+        onReady();
+      } else {
+        video.onloadedmetadata = onReady;
+        video.onerror = rej;
+        // Safety timeout — if metadata never fires, fail loud
+        setTimeout(() => rej(new Error("Camera feed timed out. Try reloading the page.")), 8000);
+      }
+    });
+    
+    store.set({ cameraReady: true });
+  } catch (e) {
+    if (e.name === "NotAllowedError") {
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      const msg = isIOS 
+        ? "Access denied. Please open Settings > Safari > Camera and set it to 'Allow' or 'Ask'." 
+        : "Camera access denied. Please allow it in the URL bar settings.";
+      throw new Error(msg);
+    }
+    if (e.name === "NotFoundError") throw new Error("No camera found on this device.");
+    if (e.name === "NotReadableError") throw new Error("Camera is currently in use by another app or tab.");
+    
+    throw new Error("Camera couldn't start: " + e.message);
+  }
+}
+
+async function startAppFlow() {
+  hideError();
+  loadingOverlay.classList.remove("hidden");
+
+  if (!hasWebGL()) {
+    showError("WebGL not supported", "Your browser or device doesn't support WebGL, which is needed for analysis.");
+    return;
+  }
+
+  try {
+    // 1. Get Camera permission FIRST (to unblock Safari fast)
+    if (!store.get().cameraReady) await initCamera();
+    
+    // 2. Lazy load AI after camera is approved
+    if (!store.get().aiReady) await initFaceLandmarker();
+    
+    loadingOverlay.classList.add("hidden");
+  } catch (e) {
+    showError("System Error", e.message || String(e));
+  }
+}
+
+function boot() {
+  const hasOnboarded = localStorage.getItem("datescan.onboarded");
+
+  if (!hasOnboarded) {
+    onboardingModal.classList.remove("hidden");
+    $("startOnboardingBtn").addEventListener("click", () => {
+      triggerHaptic('tap');
+      localStorage.setItem("datescan.onboarded", "true");
+      onboardingModal.style.opacity = "0";
+      setTimeout(() => {
+        onboardingModal.classList.add("hidden");
+        startAppFlow();
+      }, 500);
+    });
+  } else {
+    onboardingModal.classList.add("hidden");
+    startAppFlow();
+  }
+}
+
+retryBtn.addEventListener("click", () => { triggerHaptic('tap'); startAppFlow(); });
+
+function captureFrame() {
+  const w = video.videoWidth, h = video.videoHeight;
+  if (!w || !h) return null;
+  analysisCanvas.width = w; analysisCanvas.height = h;
+  ctx.save();
+  ctx.translate(w, 0); ctx.scale(-1, 1);
+  ctx.drawImage(video, 0, 0, w, h);
+  ctx.restore();
+  return { w, h };
+}
+
+const LIP_IDX = [61,146,91,181,84,17,314,405,321,375,291,409,270,269,267,0,37,39,40,185,78,95,88,178,87,14,317,402,318,324,308];
+const RIGHT_EYE_IDX = [33,7,163,144,145,153,154,155,133,246,161,160,159,158,157,173];
+const LEFT_EYE_IDX  = [263,249,390,373,374,380,381,382,362,466,388,387,386,385,384,398];
+const RIGHT_IRIS_IDX = [468,469,470,471,472];
+const LEFT_IRIS_IDX  = [473,474,475,476,477];
+
+function landmarkBBox(landmarks, idxs, w, h) {
+  let minX=1, minY=1, maxX=0, maxY=0;
+  for (const i of idxs) {
+    const p = landmarks[i]; if (!p) continue;
+    if (p.x < minX) minX = p.x;
+    if (p.y < minY) minY = p.y;
+    if (p.x > maxX) maxX = p.x;
+    if (p.y > maxY) maxY = p.y;
+  }
+  return { x: minX*w, y: minY*h, w: (maxX-minX)*w, h: (maxY-minY)*h };
+}
+
+// ------------------------------------------
+// DEEP ANALYSIS FUNCTIONS 
+// ------------------------------------------
+function analyzeCameraAngle(landmarks) {
+  const top = landmarks[10], bottom = landmarks[152], nose = landmarks[1];
+  if(!top || !bottom || !nose) return null;
+  const ratio = (nose.y - top.y) / (Math.abs(bottom.y - nose.y) || 0.001);
+  if (ratio > 1.4) return { category: "env", tone: "warn", icon: "📱", title: "Camera angle too high", text: "Looking up distorts your features.", action: "Lower your phone to eye level." };
+  if (ratio < 0.65) return { category: "env", tone: "alert", icon: "📱", title: "Camera angle too low", text: "Looking down creates unflattering shadows.", action: "Raise your phone to eye level." };
+  return null; 
+}
+
+function analyzeProportions(landmarks) {
+  const top = landmarks[10], mid = landmarks[9], nose = landmarks[2], chin = landmarks[152]; 
+  if(!top || !mid || !nose || !chin) return null;
+  const dMid = Math.abs(nose.y - mid.y), dLower = Math.abs(chin.y - nose.y);
+  if (dLower > dMid * 1.25) return { category: "presence", tone: "info", icon: "📐", title: "Strong jawline", text: "Prominent lower face proportions.", action: "Give your beard a quick brush." };
+  if (dLower < dMid * 0.8) return { category: "presence", tone: "info", icon: "📐", title: "Compact profile", text: "Lower face is relatively compact.", action: "Brush hair upwards for balance." };
+  return { category: "presence", tone: "good", icon: "📐", title: "Balanced Proportions", text: "Excellent facial symmetry.", action: "You're good to go." };
+}
+
+function analyzeLightingDirection(landmarks, W, H) {
+  const leftCheek = landmarks[50], rightCheek = landmarks[280];
+  if(!leftCheek || !rightCheek) return null;
+  const getLum = (pt) => {
+    const x = Math.max(0, Math.min(W-1, Math.floor(pt.x * W))), y = Math.max(0, Math.min(H-1, Math.floor(pt.y * H))), size = 10;
+    if(x < size || x > W-size || y < size || y > H-size) return -1;
+    const data = ctx.getImageData(x - size/2, y - size/2, size, size).data;
+    let sum = 0;
+    for(let i=0; i<data.length; i+=4) sum += 0.299*data[i] + 0.587*data[i+1] + 0.114*data[i+2];
+    return sum / (data.length/4);
+  };
+  const lumL = getLum(leftCheek), lumR = getLum(rightCheek);
+  if (lumL < 0 || lumR < 0) return null;
+  if (Math.abs(lumL - lumR) > 40) return { category: "env", tone: "warn", icon: "💡", title: "Uneven Lighting", text: "Half your face is shadowed.", action: `Rotate slightly to your ${lumL > lumR ? "left" : "right"}.` };
+  return null;
+}
+
+function analyzeShavingIrritation(landmarks, W, H) {
+  const chinIdx = [152, 148, 176, 149, 150, 136, 135, 396, 365, 377, 378, 367, 435];
+  const bb = landmarkBBox(landmarks, chinIdx, W, H);
+  if (bb.w < 10 || bb.h < 10) return null;
+  const data = ctx.getImageData(bb.x, bb.y, bb.w, bb.h).data;
+  let redSpots = 0, skinPixels = 0;
+  for(let i=0; i<data.length; i+=4) {
+    const r = data[i], g = data[i+1], b = data[i+2], lum = 0.299*r + 0.587*g + 0.114*b;
+    if (lum > 40 && lum < 220) { 
+      skinPixels++;
+      if (r > g * 1.3 && r > b * 1.3 && r > 100) redSpots++;
+    }
+  }
+  if(skinPixels < 50) return null;
+  if (redSpots / skinPixels > 0.08) return { category: "grooming", tone: "warn", icon: "🪒", title: "Skin Irritation", text: "Slight redness around your jaw.", action: "Apply a dab of soothing aftershave." };
+  return null;
+}
+
+function analyzePosture(landmarks) {
+  const leftEye = landmarks[33], rightEye = landmarks[263]; 
+  const angle = Math.abs(Math.atan2(rightEye.y - leftEye.y, rightEye.x - leftEye.x) * 180 / Math.PI);
+  const pitchRatio = Math.abs(landmarks[152].y - landmarks[2].y) / (Math.abs(landmarks[2].y - landmarks[10].y) || 0.001); 
+
+  if (pitchRatio < 0.8) return { category: "presence", tone: "alert", icon: "🧍", title: "Watch your posture", text: "Leaning forward or slumping.", action: "Roll shoulders back and stand tall." };
+  if (angle > 6) return { category: "presence", tone: "warn", icon: "🧍", title: "Head Tilt", text: "Head is slightly tilted.", action: "Straighten your neck to project strength." };
+  return { category: "presence", tone: "good", icon: "🧍", title: "Strong Body Language", text: "Head and shoulders well aligned.", action: "Keep this energy." };
+}
+
+function analyzeMouth(landmarks, W, H) {
+  const bb = landmarkBBox(landmarks, LIP_IDX, W, H);
+  if (bb.w < 4 || bb.h < 4) return null;
+  const data = ctx.getImageData(bb.x, bb.y, bb.w, bb.h).data;
+  let bright = 0, darkSpots = 0, yellowish = 0, total = 0;
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i], g = data[i+1], b = data[i+2], lum = 0.299*r + 0.587*g + 0.114*b;
+    total++;
+    if (lum > 150) bright++;
+    if (lum < 80 && r < 120 && g < 120) darkSpots++;
+    if (r > 140 && g > 130 && b < 110) yellowish++;
+  }
+  const brightRatio = bright / total;
+  return { teethVisible: brightRatio > 0.06, concern: brightRatio > 0.06 && (darkSpots/total > 0.04 || yellowish/total > 0.08) };
+}
+
+function analyzeSymmetry(landmarks) {
+  const pairs = [[234,454],[127,356],[162,389],[21,251],[54,284],[103,332],[67,297],[109,338]];
+  let diffs = 0, count = 0, maxFace = 0;
+  const midX = landmarks[1]?.x ?? 0.5;
+  for (const [a,b] of pairs) {
+    if (!landmarks[a] || !landmarks[b]) continue;
+    const da = Math.abs(landmarks[a].x - midX), db = Math.abs(landmarks[b].x - midX);
+    diffs += Math.abs(da - db);
+    count++;
+    maxFace = Math.max(maxFace, da, db);
+  }
+  return { ratio: (!count || !maxFace) ? 0 : (diffs / count) / maxFace };
+}
+
+function analyzeSkinShine(landmarks, W, H) {
+  const top = landmarks[10], bottom = landmarks[4], left = landmarks[67], right = landmarks[297];
+  if (!top || !bottom || !left || !right) return null;
+  const x = Math.max(0, Math.floor(Math.min(left.x, right.x) * W)), y = Math.max(0, Math.floor(top.y * H));
+  const w = Math.min(W - x, Math.ceil(Math.abs(right.x - left.x) * W)), h = Math.min(H - y, Math.ceil((bottom.y - top.y) * H));
+  if (w < 8 || h < 8) return null;
+
+  const data = ctx.getImageData(x, y, w, h).data;
+  let skin = 0, shiny = 0;
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i], g = data[i+1], b = data[i+2], lum = 0.299*r + 0.587*g + 0.114*b;
+    if (lum < 60 || r < g - 10) continue; 
+    skin++;
+    const maxC = Math.max(r,g,b), minC = Math.min(r,g,b), sat = maxC === 0 ? 0 : (maxC - minC) / maxC;
+    if (lum > 215 && sat < 0.18) shiny++;
+  }
+  if (skin < 80) return null;
+  const ratio = shiny / skin;
+  return { veryShiny: ratio > 0.06, shiny: ratio > 0.025 };
+}
+
+function analyzeEyeRedness(landmarks, W, H) {
+  function eyeStats(eyeIdx, irisIdx) {
+    const bb = landmarkBBox(landmarks, eyeIdx, W, H);
+    if (bb.w < 6 || bb.h < 4) return null;
+    const iris = irisIdx.map(i => landmarks[i]).filter(Boolean);
+    if (iris.length < 5) return null;
+    const cx = iris[0].x * W, cy = iris[0].y * H;
+    let rPx2 = 0;
+    for (let k = 1; k < iris.length; k++) rPx2 = Math.max(rPx2, (iris[k].x*W - cx)**2 + (iris[k].y*H - cy)**2);
+    rPx2 *= 1.32; 
+
+    const x = Math.max(0, Math.floor(bb.x)), y = Math.max(0, Math.floor(bb.y));
+    const w = Math.min(W - x, Math.ceil(bb.w)), h = Math.min(H - y, Math.ceil(bb.h));
+    if (w < 4 || h < 4) return null;
+    const data = ctx.getImageData(x, y, w, h).data;
+
+    let sclera = 0, reddish = 0;
+    for (let py = 0; py < h; py++) {
+      for (let px = 0; px < w; px++) {
+        if ((x + px - cx)**2 + (y + py - cy)**2 < rPx2) continue; 
+        const i = (py * w + px) * 4;
+        const r = data[i], g = data[i+1], b = data[i+2];
+        if (0.299*r + 0.587*g + 0.114*b < 120) continue; 
+        sclera++;
+        if (r > 140 && r > g + 14 && r > b + 14) reddish++;
+      }
+    }
+    return sclera < 30 ? null : reddish / sclera;
+  }
+  const right = eyeStats(RIGHT_EYE_IDX, RIGHT_IRIS_IDX), left = eyeStats(LEFT_EYE_IDX, LEFT_IRIS_IDX);
+  if (right === null && left === null) return null;
+  const avg = ((right||0) + (left||0)) / ((right!==null?1:0) + (left!==null?1:0));
+  return { tired: avg > 0.18, slightly: avg > 0.10 };
+}
+
+function analyzeBrightness(W, H) {
+  const x = Math.floor(W*0.2), y = Math.floor(H*0.15), w = Math.floor(W*0.6), h = Math.floor(H*0.6);
+  if (w<4 || h<4) return null;
+  const data = ctx.getImageData(x,y,w,h).data;
+  let sum = 0;
+  for (let i = 0; i < data.length; i += 16) sum += 0.299*data[i] + 0.587*data[i+1] + 0.114*data[i+2];
+  const mean = sum / (data.length/16);
+  return { tooDark: mean < 60, dim: mean < 90 };
+}
+
+function analyzeHeadYaw(lm) {
+  const nose = lm[1], left = lm[234], right = lm[454];
+  if (!nose || !left || !right) return null;
+  const dl = nose.x - left.x, dr = right.x - nose.x;
+  const ratio = dl / (dr || 0.001);
+  if (ratio > 1.45 || ratio < 0.69) {
+    return { category:"presence", tone:"warn", icon:"🔄", title:"Face turned away", text:"You're angled to the side.", action:"Square your face to the camera." };
+  }
+  return null;
+}
+
+function analyzeFaceDistance(lm) {
+  const top = lm[10], bottom = lm[152];
+  if (!top || !bottom) return null;
+  const h = Math.abs(bottom.y - top.y);
+  if (h < 0.22) return { category:"env", tone:"warn", icon:"📏", title:"Too far from camera", text:"You're small in the frame.", action:"Step closer so we can read your look." };
+  if (h > 0.64) return { category:"env", tone:"warn", icon:"📏", title:"Too close", text:"We can't see your outfit.", action:"Take one step back." };
+  return null;
+}
+
+function analyzeFaceCentering(lm) {
+  const nose = lm[1];
+  if (!nose) return null;
+  const dx = nose.x - 0.5;
+  if (Math.abs(dx) > 0.18) {
+    return { category:"env", tone:"warn", icon:"🎯", title:"Off-center", text:"You're not in the middle of the frame.", action:`Shift ${dx > 0 ? "left" : "right"} slightly.` };
+  }
+  return null;
+}
+
+function analyzeEyeOpenness(lm) {
+  const p = (i) => lm[i];
+  const need = [159,145,33,133,386,374,263,362];
+  for (const i of need) if (!p(i)) return null;
+  const lEar = Math.abs(p(159).y - p(145).y) / (Math.abs(p(33).x - p(133).x) || 0.001);
+  const rEar = Math.abs(p(386).y - p(374).y) / (Math.abs(p(263).x - p(362).x) || 0.001);
+  const ear = (lEar + rEar) / 2;
+  if (ear < 0.19) return { category:"presence", tone:"warn", icon:"😴", title:"Half-closed eyes", text:"You look tired or squinting.", action:"Open your eyes — project alert energy." };
+  if (ear > 0.40) return { category:"presence", tone:"good", icon:"👁️", title:"Engaged gaze", text:"Eyes wide and alert.", action:"That's the look. Hold it." };
+  return null;
+}
+
+function analyzeSmile(lm) {
+  const lC = lm[61], rC = lm[291], topLip = lm[13], botLip = lm[14];
+  if (!lC || !rC || !topLip || !botLip) return null;
+  const midY = (topLip.y + botLip.y) / 2;
+  const cornersY = (lC.y + rC.y) / 2;
+  const mouthWidth = Math.abs(rC.x - lC.x);
+  if (mouthWidth < 0.01) return null;
+  const curl = (midY - cornersY) / mouthWidth;
+  if (curl > 0.07) return { category:"presence", tone:"good", icon:"😊", title:"Natural smile", text:"Corners lifted — reads as warm.", action:"Bring this exact expression tonight." };
+  if (curl < -0.05) return { category:"presence", tone:"warn", icon:"😐", title:"Tense mouth", text:"Corners pulled down.", action:"Relax your jaw. Soft half-smile." };
+  return null;
+}
+
+function analyzeBackgroundBusy(lm, W, H) {
+  const sample = (x, y, w, h) => {
+    x = Math.max(0, Math.floor(x)); y = Math.max(0, Math.floor(y));
+    w = Math.min(W - x, Math.floor(w)); h = Math.min(H - y, Math.floor(h));
+    if (w < 8 || h < 8) return null;
+    const data = ctx.getImageData(x, y, w, h).data;
+    const lums = [];
+    let sum = 0;
+    for (let i = 0; i < data.length; i += 16) {
+      const l = 0.299*data[i] + 0.587*data[i+1] + 0.114*data[i+2];
+      lums.push(l); sum += l;
+    }
+    if (!lums.length) return null;
+    const mean = sum / lums.length;
+    let v = 0;
+    for (const l of lums) v += (l - mean) ** 2;
+    return Math.sqrt(v / lums.length);
+  };
+  const topL = sample(0, 0, W*0.22, H*0.30);
+  const topR = sample(W*0.78, 0, W*0.22, H*0.30);
+  const vals = [topL, topR].filter(v => v !== null);
+  if (!vals.length) return null;
+  const avgStd = vals.reduce((a,b)=>a+b,0) / vals.length;
+  if (avgStd > 58) return { category:"env", tone:"warn", icon:"🖼️", title:"Busy background", text:"Cluttered scene behind you.", action:"Move to a cleaner wall — it's distracting." };
+  if (avgStd < 9) return { category:"env", tone:"good", icon:"🖼️", title:"Clean background", text:"Nothing distracting behind you.", action:"This frames you perfectly." };
+  return null;
+}
+
+function analyzeShoulders(W, H) {
+  const x = Math.floor(W*0.1), y = Math.floor(H*0.75), w = Math.floor(W*0.8), h = Math.floor(H*0.24);
+  if (w<4 || h<4) return null;
+  const data = ctx.getImageData(x,y,w,h).data;
+  let sum = 0, n = 0;
+  const lums = new Float32Array((data.length/4)|0);
+  for (let i=0,j=0;i<data.length;i+=4,j++) {
+    const l = 0.299*data[i] + 0.587*data[i+1] + 0.114*data[i+2];
+    lums[j] = l; sum += l; n++;
+  }
+  const mean = sum/n;
+  let varSum = 0;
+  for (let j=0;j<n;j++) varSum += (lums[j]-mean)**2;
+  const std = Math.sqrt(varSum/n);
+  let outliers = 0;
+  for (let j=0;j<n;j++) if (Math.abs(lums[j]-mean) > std*2.6) outliers++;
+  return { possibleLint: (outliers/n) > 0.012 };
+}
+
+// Color & Outfit Logic
+const OUTFIT_COLORS = [
+  { id: "black", name: "Dark / Black", hex: "#18181b", rgb: [30, 30, 35] },
+  { id: "white", name: "Light / White", hex: "#f8fafc", rgb: [230, 230, 235] },
+  { id: "navy",  name: "Navy Blue", hex: "#1e3a8a", rgb: [30, 58, 138] },
+  { id: "red",   name: "Bold Red", hex: "#dc2626", rgb: [220, 38, 38] },
+  { id: "green", name: "Emerald", hex: "#065f46", rgb: [6, 95, 70] },
+  { id: "earth", name: "Earth Tones", hex: "#92400e", rgb: [146, 64, 14] },
+  { id: "pink",  name: "Soft Pink", hex: "#f472b6", rgb: [244, 114, 182] },
+  { id: "gray",  name: "Neutral Gray", hex: "#64748b", rgb: [100, 116, 139] }
+];
+
+function analyzeOutfitColor(landmarks, W, H) {
+  const chin = landmarks[152];
+  if (!chin) return null;
+  const yStart = Math.min(H - 1, Math.floor(chin.y * H + H * 0.15)), roiH = Math.floor(H * 0.20), actualH = Math.min(H, yStart + roiH) - yStart;
+  const xCenter = chin.x * W, roiW = Math.floor(W * 0.35), xStart = Math.max(0, Math.floor(xCenter - roiW / 2)), actualW = Math.min(W - xStart, roiW);
+
+  if (actualW < 10 || actualH < 10) return null;
+  const data = ctx.getImageData(xStart, yStart, actualW, actualH).data;
+  const votes = {}; OUTFIT_COLORS.forEach(c => votes[c.id] = 0);
+
+  for (let i = 0; i < data.length; i += 40) {
+    const r = data[i], g = data[i+1], b = data[i+2];
+    if (r < 15 && g < 15 && b < 15) continue;
+    let minDist = Infinity, bestId = null;
+    OUTFIT_COLORS.forEach(c => {
+      const dist = (r-c.rgb[0])**2 + (g-c.rgb[1])**2 + (b-c.rgb[2])**2;
+      if (dist < minDist) { minDist = dist; bestId = c.id; }
+    });
+    if (bestId) votes[bestId]++;
+  }
+
+  let maxVotes = -1, winningId = null;
+  Object.entries(votes).forEach(([id, count]) => { if (count > maxVotes) { maxVotes = count; winningId = id; } });
+  if (!winningId || maxVotes === 0) return null;
+
+  return OUTFIT_COLORS.find(c => c.id === winningId);
+}
+
+// ------------------------------------------
+// GAMIFICATION / HABIT LOOP
+// ------------------------------------------
+function addXP(amount) {
+  try {
+    const m = JSON.parse(localStorage.getItem(MISSIONS_KEY) || '{"count":0,"log":[],"xp":0}');
+    m.xp = (m.xp || 0) + amount;
+    localStorage.setItem(MISSIONS_KEY, JSON.stringify(m));
+    updateMissionBadge();
+  } catch {}
+}
+
+function logMission() {
+  try {
+    const m = JSON.parse(localStorage.getItem(MISSIONS_KEY) || '{"count":0,"log":[],"xp":0}');
+    m.count = (m.count || 0) + 1;
+    m.log = m.log || []; m.log.push(Date.now());
+    localStorage.setItem(MISSIONS_KEY, JSON.stringify(m));
+    addXP(50); // Logging a date gives 50 XP
+  } catch {}
+}
+
+function updateMissionBadge() {
+  try {
+    const m = JSON.parse(localStorage.getItem(MISSIONS_KEY) || '{"count":0,"log":[],"xp":0}');
+    const xp = m.xp || 0;
+    $("missionCount").textContent = xp;
+
+    // Calculate Level
+    let currLevel = LEVELS[0], nextLevel = LEVELS[1];
+    for (let i = 0; i < LEVELS.length; i++) {
+       if (xp >= LEVELS[i].xp) { 
+         currLevel = LEVELS[i]; 
+         nextLevel = LEVELS[i+1] || LEVELS[i]; 
+       }
+    }
+    $("levelName").textContent = currLevel.name;
+
+    // Calculate Progress Bar
+    let progress = 100;
+    if (nextLevel !== currLevel) {
+       progress = ((xp - currLevel.xp) / (nextLevel.xp - currLevel.xp)) * 100;
+    }
+    $("xpBar").style.width = progress + "%";
+
+    // Calculate Streak
+    let streak = 0;
+    if (m.log && m.log.length > 0) {
+        const uniqueDays = [...new Set(m.log.map(t => {
+            const d = new Date(t);
+            return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+        }))].sort((a, b) => new Date(b) - new Date(a));
+
+        const todayDate = new Date();
+        const todayStr = `${todayDate.getFullYear()}-${todayDate.getMonth()+1}-${todayDate.getDate()}`;
+        
+        const yesterdayDate = new Date(todayDate);
+        yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+        const yesterdayStr = `${yesterdayDate.getFullYear()}-${yesterdayDate.getMonth()+1}-${yesterdayDate.getDate()}`;
+
+        if (uniqueDays[0] === todayStr || uniqueDays[0] === yesterdayStr) {
+            streak = 1;
+            let checkDate = new Date(uniqueDays[0]);
+            for (let i = 1; i < uniqueDays.length; i++) {
+                checkDate.setDate(checkDate.getDate() - 1);
+                const checkStr = `${checkDate.getFullYear()}-${checkDate.getMonth()+1}-${checkDate.getDate()}`;
+                if (uniqueDays[i] === checkStr) {
+                    streak++;
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+    $("missionStreak").textContent = `${streak} Day Streak`;
+    $("streakFlame").style.opacity = streak > 0 ? 1 : 0.3;
+    $("streakFlame").style.filter = streak > 0 ? "drop-shadow(0 0 8px rgba(249, 115, 22, 0.6))" : "none";
+
+  } catch(e) {}
+}
+
+
+// ------------------------------------------
+// STYLE COACH LOGIC (Score & Upgrades)
+// ------------------------------------------
+// --- IMPROVEMENTS ENGINE ---
+// Categorized pool of actionable tips. generateImprovements picks 3 based on real signals.
+const IMPROVEMENTS_POOL = {
+  lighting: [
+    { text: "Move closer to a natural light source", points: 7 },
+    { text: "Avoid harsh overhead lighting — it casts shadows", points: 6 },
+    { text: "Face a window, don't backlight yourself", points: 8 },
+    { text: "Turn on a warm lamp to soften your skin tone", points: 5 },
+    { text: "Step away from mixed color-temperature lights", points: 4 }
+  ],
+  posture: [
+    { text: "Stand straighter, chest slightly out", points: 6 },
+    { text: "Roll your shoulders back and down", points: 5 },
+    { text: "Square your torso to the camera", points: 5 },
+    { text: "Lift your chin just a touch — not up, not down", points: 4 },
+    { text: "Plant both feet, weight evenly distributed", points: 4 }
+  ],
+  style: [
+    { text: "Add a simple accessory — watch, bracelet, or ring", points: 6 },
+    { text: "Try cleaner, more fitted pieces next time", points: 7 },
+    { text: "Tuck in the shirt for a sharper silhouette", points: 6 },
+    { text: "Roll sleeves to your forearms for a relaxed edge", points: 5 },
+    { text: "Layer a jacket or overshirt for visual depth", points: 7 },
+    { text: "Switch to clean white sneakers to anchor the fit", points: 5 },
+    { text: "Add one statement piece — don't overdo it", points: 5 },
+    { text: "Match your belt to your shoes", points: 4 }
+  ],
+  grooming: [
+    { text: "Quick hair fix — smooth down any stray strands", points: 5 },
+    { text: "Check facial grooming, trim any stray hairs", points: 5 },
+    { text: "Dab your T-zone with a dry tissue to kill shine", points: 6 },
+    { text: "Brush your teeth one more time — confidence matters", points: 4 },
+    { text: "Splash cold water on your face for a fresh look", points: 4 },
+    { text: "Apply a light moisturizer for glow, not grease", points: 5 }
+  ],
+  color: [
+    { text: "Add silver accessories to break up a dark monochrome", points: 4 },
+    { text: "Introduce one warm neutral to soften cool tones", points: 5 },
+    { text: "Layer a dark piece to anchor a light outfit", points: 6 },
+    { text: "Swap in brown leather to warm up navy", points: 5 }
+  ]
+};
+
+function pickRandom(arr, used) {
+  const pool = arr.filter(x => !used.has(x.text));
+  if (!pool.length) return null;
+  // Prefer items not recently used across scans
+  const seen = _recent['imp'] || [];
+  const fresh = pool.filter(x => !seen.includes(x.text));
+  const chosen = (fresh.length ? fresh : pool)[Math.floor(Math.random() * (fresh.length ? fresh.length : pool.length))];
+  _recent['imp'] = [chosen.text, ...seen].slice(0, 8);
+  return chosen;
+}
+
+function generateImprovements(items, colorData, occasion) {
+  const used = new Set();
+  const result = [];
+  const add = (cat) => {
+    const pick = pickRandom(IMPROVEMENTS_POOL[cat], used);
+    if (pick) { used.add(pick.text); result.push(pick); }
+  };
+
+  // Flag what's wrong from detected items
+  const hasIssue = (category, titleRegex) =>
+    (items || []).some(it =>
+      it.category === category &&
+      (it.tone === 'warn' || it.tone === 'alert') &&
+      (!titleRegex || titleRegex.test(it.title || ""))
+    );
+
+  const lightingBad = hasIssue('env', /light|dark|lighting/i);
+  const postureBad  = hasIssue('presence', /posture|tilt|turned|slump/i) ||
+                      hasIssue('env', /off-center|too far|too close|angle/i);
+  const groomingBad = hasIssue('grooming', null);
+
+  // Priority-driven picks
+  if (lightingBad) add('lighting');
+  if (postureBad)  add('posture');
+  if (groomingBad) add('grooming');
+
+  // Always include a style tip
+  add('style');
+
+  // Fill up to 3 — prefer style, then color, then whatever
+  while (result.length < 3) {
+    const before = result.length;
+    const remaining = ['style', 'color', 'grooming', 'posture', 'lighting']
+      .filter(c => IMPROVEMENTS_POOL[c].some(x => !used.has(x.text)));
+    if (!remaining.length) break;
+    add(remaining[Math.floor(Math.random() * remaining.length)]);
+    if (result.length === before) break;
+  }
+
+  // Occasion-specific nudge: swap in one tip if highly relevant
+  if (occasion === 'fancy' && !result.some(r => /tuck/i.test(r.text))) {
+    const tuck = IMPROVEMENTS_POOL.style.find(x => /tuck/i.test(x.text));
+    if (tuck && result.length >= 1) { result[result.length - 1] = tuck; used.add(tuck.text); }
+  }
+  if (occasion === 'night_out' && colorData?.id === 'black' && !result.some(r => /silver/i.test(r.text))) {
+    const silver = IMPROVEMENTS_POOL.color.find(x => /silver/i.test(x.text));
+    if (silver) { result[result.length - 1] = silver; used.add(silver.text); }
+  }
+
+  return result.slice(0, 3);
+}
+
+// Score computation — deterministic per scan, driven by real detected signals
+// Rules: hard cap 92 (never 100), floor 40 but rarely dips below 58
+function computeScore(items, colorData, occasion) {
+  // Base 72-82 with small jitter so identical scans don't look canned
+  let score = 72 + Math.random() * 10;
+
+  // Deduct for each detected issue by tone
+  const weights = { alert: 7, warn: 4, error: 10, info: 0, good: 0 };
+  let warnCount = 0, alertCount = 0, goodCount = 0;
+  for (const it of (items || [])) {
+    if (it.tone === 'alert') alertCount++;
+    else if (it.tone === 'warn') warnCount++;
+    else if (it.tone === 'good') goodCount++;
+    score -= (weights[it.tone] || 0);
+  }
+
+  // Reward positives (but gently — easier to lose points than gain)
+  score += goodCount * 2.2;
+
+  // Color × occasion chemistry bonus/penalty
+  if (colorData) {
+    if (occasion === 'fancy' && (colorData.id === 'black' || colorData.id === 'navy')) score += 4;
+    if (occasion === 'night_out' && colorData.id === 'black') score += 3;
+    if (occasion === 'first_date' && (colorData.id === 'navy' || colorData.id === 'white' || colorData.id === 'gray')) score += 3;
+    if (occasion === 'casual' && colorData.id === 'earth') score += 2;
+    if (occasion === 'fancy' && colorData.id === 'pink') score -= 3;
+  }
+
+  // Soft floor: if score is crashing below 58, pull it back up halfway
+  // (so "nagyon alacsony" is ritka but still possible in extreme cases)
+  if (score < 58) score = 58 - (58 - score) * 0.35;
+
+  // Hard caps
+  score = Math.max(42, Math.min(92, Math.round(score)));
+  return score;
+}
+
+function generateStyleAnalysis(colorData, occasion, items) {
+  const score = computeScore(items, colorData, occasion);
+  let rules = [];
+
+  const occMap = {
+    casual: "Casual", first_date: "First Date", fancy: "Fancy Dinner", night_out: "Night Out"
+  };
+
+  rules.push({ passed: true, text: "Color harmony: Max 3 dominant colors detected" });
+  rules.push({ passed: false, text: `Context Check: Tuning rules for ${occMap[occasion]} vibe` });
+  if (occasion === 'night_out' && colorData?.id === 'black') {
+    rules.push({ passed: true, text: "Contrast: Dark palette perfect for nightlife" });
+  }
+  if (occasion === 'first_date') {
+    rules.push({ passed: false, text: "Approachability: Soften any rigid edges" });
+  }
+
+  // Improvements engine — signal-driven, not hardcoded per occasion
+  let fixes = generateImprovements(items, colorData, occasion);
+
+  // Clamp points so target score ≤ 92
+  const maxGain = 92 - score;
+  let used = 0;
+  fixes = fixes.map(f => {
+    const remaining = Math.max(0, maxGain - used);
+    const pts = Math.max(1, Math.min(f.points, remaining));
+    used += pts;
+    return { ...f, points: pts };
+  });
+  
+  return { score, rules, fixes };
+}
+
+function renderStyleCoach(colorData, occasion, locked = false, items = null) {
+  const panel = $("styleCoachResult");
+  
+  if (!colorData) {
+    panel.innerHTML = `<div class="flex flex-col items-center opacity-60 text-center py-6"><svg class="w-8 h-8 text-yellow-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg><p class="font-serif italic text-gray-400 text-sm">Could not detect outfit clearly.</p></div>`;
+    return;
+  }
+
+  const analysis = generateStyleAnalysis(colorData, occasion, items || store.get().lastItems);
+  const targetScore = Math.min(100, analysis.score + analysis.fixes.reduce((acc, f) => acc + f.points, 0));
+  store.set({ lastScore: analysis.score, lastScoreLabel: colorData.name });
+
+  // Update history only if it's a new unique scan (wait at least 5s before saving a new one)
+  let hist = JSON.parse(localStorage.getItem('datescan.history') || '[]');
+  const lastHist = hist[hist.length - 1];
+  if (!locked && (!lastHist || (Date.now() - lastHist.time > 5000))) {
+      hist.push({ score: analysis.score, time: Date.now() });
+      if (hist.length > 10) hist = hist.slice(hist.length - 10);
+      localStorage.setItem('datescan.history', JSON.stringify(hist));
+  }
+
+  // Calculate history text logic
+  let historyText = "Your first scan. Keep it up!";
+  if (hist.length > 1) {
+      const current = analysis.score;
+      const todayStart = new Date().setHours(0,0,0,0);
+      let ref = hist.find(h => h.time >= todayStart);
+      if (!ref || ref === hist[hist.length - 1]) ref = hist[hist.length - 2];
+
+      const diff = current - ref.score;
+      if (diff > 0) historyText = `Trending up — +${diff} points since your scan earlier.`;
+      else if (diff < 0) historyText = `Slight dip — ${Math.abs(diff)} points lower than earlier.`;
+      else historyText = `Steady — within 0 points of your scan earlier today.`;
+  }
+
+  // Generate SVG Sparkline
+  const sparkSVG = (() => {
+      if (hist.length < 2) {
+          return `
+          <svg viewBox="0 0 100 30" class="w-full h-full overflow-visible" preserveAspectRatio="none">
+              <line x1="0" y1="15" x2="100" y2="15" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.4"/>
+              <circle cx="100" cy="15" r="2.5" fill="#fff" stroke="#ec4899" stroke-width="1.5" />
+          </svg>`;
+      }
+      const scores = hist.map(h => h.score);
+      const minS = Math.min(...scores);
+      const maxS = Math.max(...scores);
+      const range = Math.max(maxS - minS, 10);
+      const plotMin = Math.max(0, minS - range * 0.2);
+      const plotMax = Math.min(100, maxS + range * 0.2);
+      const plotRange = plotMax - plotMin;
+
+      const pts = scores.map((s, i) => {
+          const x = (i / (scores.length - 1)) * 100;
+          const y = 30 - (((s - plotMin) / plotRange) * 26 + 2);
+          return `${x},${y}`;
+      });
+      const dPath = `M ${pts.join(' L ')}`;
+      const dFill = `M ${pts[0].split(',')[0]} 30 L ${pts.join(' L ')} L 100 30 Z`;
+
+      return `
+      <svg viewBox="0 0 100 30" class="w-full h-full overflow-visible" preserveAspectRatio="none">
+          <defs>
+          <linearGradient id="glowGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#ec4899" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#ec4899" stop-opacity="0"/>
+          </linearGradient>
+          </defs>
+          <path d="${dFill}" fill="url(#glowGrad)" />
+          <path d="${dPath}" fill="none" stroke="#ec4899" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" />
+          <circle cx="${pts[pts.length-1].split(',')[0]}" cy="${pts[pts.length-1].split(',')[1]}" r="2" fill="#fff" stroke="#ec4899" stroke-width="1.5" />
+      </svg>`;
+  })();
+
+  let html = `
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-4">
+        <div class="relative w-16 h-16 shrink-0 drop-shadow-[0_0_8px_rgba(236,72,153,0.3)]">
+          <svg viewBox="0 0 100 100" class="w-full h-full transform -rotate-90">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8"></circle>
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#f472b6" stroke-width="8" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="${251.2 - (251.2 * analysis.score / 100)}"></circle>
+          </svg>
+          <div class="absolute inset-0 flex flex-col items-center justify-center">
+            <span class="font-serif font-bold text-xl text-white leading-none">${analysis.score}</span>
+            <span class="text-[8px] text-gray-400 mt-0.5">/ 100</span>
+          </div>
+        </div>
+        <div>
+          <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-0.5">Outfit Score</div>
+          <div class="font-serif italic text-lg font-medium text-white leading-tight">${generateVibe(analysis.score)}</div>
+        </div>
+      </div>
+      <div class="text-right">
+        <button id="openShareBtn" onclick="window.openShareModal()" class="group relative inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider px-3 py-2 rounded-full bg-gradient-to-r from-brand-500 to-purple-500 text-white shadow-[0_0_20px_rgba(236,72,153,0.4)] hover:scale-105 transition-transform mb-2">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+          Share Score
+        </button>
+        <div class="text-[10px] text-gray-500 uppercase tracking-widest">Base Color</div>
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-3.5 h-3.5 rounded-full border border-white/20" style="background-color: ${colorData.hex};"></div>
+          <span class="text-xs font-medium text-gray-300">${colorData.name}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-dark-950/40 rounded-xl p-4 border border-white/5 mb-6 space-y-3">
+      <div class="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-1 flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        AI Rule Checks
+      </div>
+      ${analysis.rules.map(r => `
+        <div class="flex items-start gap-2.5 text-xs">
+          ${r.passed 
+            ? '<span class="text-emerald-400 mt-0.5 font-bold">✓</span>' 
+            : '<span class="text-yellow-500 mt-0.5 font-bold">!</span>'}
+          <span class="${r.passed ? 'text-gray-400' : 'text-gray-300 font-medium'}">${r.text}</span>
+        </div>
+      `).join('')}
+    </div>
+
+    <div>
+      <div class="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-3 flex items-center justify-between">
+        <span>Suggested Upgrades</span>
+        <span class="text-gray-500 bg-white/5 px-2 py-0.5 rounded">Target: ${targetScore}</span>
+      </div>
+      <div class="space-y-2.5">
+        ${analysis.fixes.map(f => `
+          <div class="flex items-center justify-between bg-gradient-to-r from-white/5 to-transparent border border-white/10 rounded-xl p-3 hover:border-brand-500/30 transition-colors">
+            <div class="flex items-center gap-2">
+              <span class="text-brand-500">→</span>
+              <span class="text-sm font-medium text-gray-200">${f.text}</span>
+            </div>
+            <div class="shrink-0 bg-brand-500/20 text-brand-300 text-xs font-bold px-2 py-1 rounded-md shadow-[0_0_10px_rgba(236,72,153,0.1)]">
+              +${f.points}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    
+    <!-- Glow-Up History Chart -->
+    <div class="mt-8 pt-6 border-t border-white/5">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-[11px] font-bold uppercase tracking-[0.1em] text-gray-300">Glow-Up History</h3>
+        <span class="text-[11px] text-gray-500">Last 10 scans</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="flex-1 relative h-10">
+          ${sparkSVG}
+        </div>
+        <div class="text-gray-500 shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+        </div>
+      </div>
+      <p class="text-sm text-gray-300 mt-3 font-medium">${historyText}</p>
+    </div>
+  `;
+
+  if (locked) {
+    panel.innerHTML = `
+      <div class="blur-content">${html}</div>
+      <div class="locked-overlay p-6 text-center">
+         <div class="w-14 h-14 mx-auto bg-brand-500/20 text-brand-400 rounded-full flex items-center justify-center mb-4 backdrop-blur-md border border-brand-500/30">
+           <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
+         </div>
+         <h3 class="font-serif text-2xl font-bold text-white mb-2">Detailed Analysis Locked</h3>
+         <p class="text-sm text-gray-300 mb-6 max-w-[280px] mx-auto">You've used your free scan. Unlock Pro to see your style score, color matches, and advanced tips.</p>
+         <button onclick="window.openPaywall()" class="btn-primary px-8 py-3.5 rounded-xl font-bold shadow-lg shadow-brand-500/30 w-full max-w-[250px]">
+           Unlock Pro
+         </button>
+      </div>
+    `;
+  } else {
+    panel.innerHTML = html;
+  }
+}
+
+function clearHUD() { hud.innerHTML = ""; hud.removeAttribute("viewBox"); }
+
+function drawHUD(landmarks, W, H) {
+  hud.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const NS = "http://www.w3.org/2000/svg";
+
+  function createReticle(cx, cy, rPx, labelText) {
+    const R = Math.max(16, rPx * 2.5);
+    const g = document.createElementNS(NS, "g");
+    g.setAttribute("transform", `translate(${cx} ${cy})`);
+    const paths = [
+      `M ${-R} ${-R+R*0.4} L ${-R} ${-R} L ${-R+R*0.4} ${-R}`,
+      `M ${R-R*0.4} ${-R} L ${R} ${-R} L ${R} ${-R+R*0.4}`,
+      `M ${R} ${R-R*0.4} L ${R} ${R} L ${R-R*0.4} ${R}`,
+      `M ${-R+R*0.4} ${R} L ${-R} ${R} L ${-R} ${R-R*0.4}`
+    ];
+    paths.forEach(d => {
+      const p = document.createElementNS(NS, "path");
+      p.setAttribute("class", "hud-element"); p.setAttribute("d", d); g.appendChild(p);
+    });
+    const text = document.createElementNS(NS, "text");
+    text.setAttribute("class", "hud-text"); text.setAttribute("x", R + 8); text.setAttribute("y", -R + 8);
+    text.textContent = labelText;
+    g.appendChild(text);
+    hud.appendChild(g);
+  }
+
+  const rightBB = landmarkBBox(landmarks, RIGHT_EYE_IDX, W, H);
+  createReticle(rightBB.x+rightBB.w/2, rightBB.y+rightBB.h/2, rightBB.w*0.5, "FOCUS: EYES");
+  
+  const leftBB = landmarkBBox(landmarks, LEFT_EYE_IDX, W, H);
+  createReticle(leftBB.x+leftBB.w/2, leftBB.y+leftBB.h/2, leftBB.w*0.5, "FOCUS: EYES");
+
+  const chin = landmarks[152];
+  if (chin) createReticle(chin.x*W, chin.y*H + H*0.25, W*0.15, "FOCUS: OUTFIT");
+}
+
+function showResultsLayout() {
+  const camCol = $("cameraCol");
+  const resCol = $("resultsCol");
+  const heroText = $("heroText");
+
+  heroText.classList.add("hidden");
+  camCol.classList.remove("lg:col-span-12", "max-w-2xl", "mx-auto");
+  camCol.classList.add("lg:col-span-5", "xl:col-span-4");
+
+  resCol.classList.remove("hidden");
+  void resCol.offsetWidth;
+  
+  resCol.classList.remove("opacity-0", "translate-y-8");
+  resCol.classList.add("opacity-100", "translate-y-0");
+
+  if(window.innerWidth < 1024) {
+    setTimeout(() => resCol.scrollIntoView({ behavior: "smooth", block: "start" }), 300);
+  }
+}
+
+async function runScan() {
+  // Throttle check
+  const s = store.get();
+  if (s.isScanning || !s.aiReady || !s.cameraReady) return;
+  
+  triggerHaptic('tap');
+  store.set({ isScanning: true }); // Locks the button via store subscriber
+
+  // Evaluate if this scan will be shown blurred or not
+  const isLocked = !isProUser() && getUsage().count >= FREE_DAILY;
+
+  videoWrap.classList.add("scanning");
+  
+  // AI Thinking Illusion
+  thinkingOverlay.classList.remove("opacity-0", "pointer-events-none");
+  const phrases = [
+    "Analyzing face symmetry...", 
+    "Checking color harmony...", 
+    "Detecting grooming level...", 
+    "Evaluating posture...", 
+    "Finalizing style score..."
+  ];
+  let phraseIdx = 0;
+  thinkingTextEl.textContent = phrases[0];
+  const thinkInterval = setInterval(() => {
+    phraseIdx++;
+    if(phraseIdx < phrases.length) thinkingTextEl.textContent = phrases[phraseIdx];
+  }, 650);
+
+  const cap = captureFrame();
+  if (!cap) { 
+    clearInterval(thinkInterval);
+    triggerHaptic('error');
+    renderActionPlan([{ category:"env", tone:"error", title:"Camera Issue", text:"Couldn't capture your video feed.", action:"Reload page and allow permissions." }], false); 
+    endScan(); showResultsLayout(); return; 
+  }
+  try { store.set({ lastCap: analysisCanvas.toDataURL('image/jpeg', 0.85) }); } catch(e) {}
+
+  let result;
+  try { result = s.faceLandmarker.detect(analysisCanvas); }
+  catch (e) {
+    clearInterval(thinkInterval);
+    triggerHaptic('error');
+    renderActionPlan([{ category:"env", tone:"error", title:"Detection Error", text:"I couldn't see your face properly.", action:"Make sure your face is clearly visible." }], false);
+    endScan(); showResultsLayout(); return;
+  }
+
+  if (result.faceLandmarks?.length) drawHUD(result.faceLandmarks[0], cap.w, cap.h);
+  
+  // Extended wait for the "Thinking Illusion" to play out
+  await new Promise(r => setTimeout(r, 3000));
+  
+  clearInterval(thinkInterval);
+  thinkingOverlay.classList.add("opacity-0", "pointer-events-none");
+
+  // Success Flash Micro-interaction
+  flashOverlay.classList.add("active");
+  setTimeout(() => flashOverlay.classList.remove("active"), 100);
+
+  const items = [];
+  const lighting = analyzeBrightness(cap.w, cap.h);
+  
+  if (lighting?.tooDark) {
+    triggerHaptic('error');
+    items.push({ category: "env", tone:"alert", icon:"💡", title:"Too dark to coach", text:"The room is too dim to see clearly.", action:"Move closer to a window or turn on a light." });
+    renderActionPlan(items, false); endScan(); showResultsLayout(); return;
+  }
+  if (lighting?.dim) items.push({ category: "env", tone:"warn", icon:"💡", title:"Low lighting", text:"Results might not be perfect.", action:"Next time, face a bright window." });
+
+  let detectedOutfitColor = null;
+
+  if (!result.faceLandmarks?.length) {
+    items.push({ category: "env", tone:"warn", icon:"👤", title:"Where are you?", text:"Couldn't detect your face.", action:"Center your face and try again." });
+  } else {
+    const lm = result.faceLandmarks[0];
+
+    const camAngle = analyzeCameraAngle(lm); if(camAngle) items.push(camAngle);
+    const yaw = analyzeHeadYaw(lm); if(yaw) items.push(yaw);
+    const dist = analyzeFaceDistance(lm); if(dist) items.push(dist);
+    const center = analyzeFaceCentering(lm); if(center) items.push(center);
+    const dirLight = analyzeLightingDirection(lm, cap.w, cap.h); if(dirLight) items.push(dirLight);
+    const bg = analyzeBackgroundBusy(lm, cap.w, cap.h); if(bg) items.push(bg);
+    const posture = analyzePosture(lm); if(posture) items.push(posture);
+    const eyesOpen = analyzeEyeOpenness(lm); if(eyesOpen) items.push(eyesOpen);
+    const smile = analyzeSmile(lm); if(smile) items.push(smile);
+    const prop = analyzeProportions(lm); if(prop) items.push(prop);
+    const shave = analyzeShavingIrritation(lm, cap.w, cap.h); if(shave) items.push(shave);
+    
+    const mouth = analyzeMouth(lm, cap.w, cap.h);
+    if (mouth && mouth.teethVisible) {
+      if (mouth.concern) items.push({ category: "grooming", tone:"alert", icon:"🦷", title:"Check teeth", text:"Shadow or discoloration noticed.", action:"Drink water and mirror check." });
+      else items.push({ category: "grooming", tone:"good", icon:"✨", title:"Great smile", text:"Teeth look clean.", action:"Flash that smile tonight." });
+    }
+    
+    const sym = analyzeSymmetry(lm);
+    if (sym.ratio > 0.10) items.push({ category: "grooming", tone:"warn", icon:"✂️", title:"Mirror check", text:"Small imbalance detected.", action:"Check hair/collar alignment." });
+
+    const eyes = analyzeEyeRedness(lm, cap.w, cap.h);
+    if (eyes) {
+      if (eyes.tired) items.push({ category: "grooming", tone:"alert", icon:"👁️", title:"Tired eyes", text:"Visible redness.", action:"Use eye drops or cold water." });
+      else if (eyes.slightly) items.push({ category: "grooming", tone:"warn", icon:"👁️", title:"Slight redness", text:"A bit of fatigue.", action:"Rest eyes for 60 seconds." });
+    }
+
+    const skin = analyzeSkinShine(lm, cap.w, cap.h);
+    if (skin) {
+      if (skin.veryShiny) items.push({ category: "grooming", tone:"alert", icon:"💧", title:"Oily T-zone", text:"High shine detected.", action:"Dab forehead/nose with dry tissue." });
+      else if (skin.shiny) items.push({ category: "grooming", tone:"warn", icon:"✨", title:"Slight shine", text:"Minor reflection.", action:"A quick dab with a towel." });
+    }
+
+    detectedOutfitColor = analyzeOutfitColor(lm, cap.w, cap.h);
+  }
+
+  const sh = analyzeShoulders(cap.w, cap.h);
+  if (sh?.possibleLint) items.push({ category: "style", tone:"warn", icon:"🧥", title:"Lint detected", text:"Specks visible on shoulders.", action:"Use a lint roller right now." });
+
+  // Update store with new results to unlock components later if upgraded
+  store.set({ lastItems: items, lastColor: detectedOutfitColor });
+
+  triggerHaptic('success');
+  
+  // Render based on lock state
+  renderStyleCoach(detectedOutfitColor, store.get().occasion, isLocked, items);
+  renderActionPlan(items, isLocked);
+
+  incrementUsage();
+  endScan();
+  showResultsLayout();
+}
+
+function endScan() {
+  videoWrap.classList.remove("scanning");
+  store.set({ isScanning: false });
+  setTimeout(clearHUD, 500); 
+}
+
+// --- NO-REPEAT PICKER ---
+// Keeps last N picks per key so two scans in a row never land on the same line.
+const _recent = {};
+function pickFresh(key, pool, memory = 4) {
+  if (!pool || !pool.length) return null;
+  const seen = _recent[key] || [];
+  const fresh = pool.filter(item => !seen.includes(item.text || item));
+  const chosen = (fresh.length ? fresh : pool)[Math.floor(Math.random() * (fresh.length ? fresh.length : pool.length))];
+  const id = chosen.text || chosen;
+  _recent[key] = [id, ...seen].slice(0, memory);
+  return chosen;
+}
+
+// --- VIBE GENERATOR (edge, not flattery) ---
+const VIBES_MID = [
+  "clean but forgettable",
+  "safe. too safe.",
+  "trying, not landing",
+  "put together, not turned on",
+  "showing up, not showing off",
+  "decent. that's the ceiling.",
+  "passes, doesn't pop",
+  "fine. fine is not the goal."
+];
+const VIBES_LOW = [
+  "not date-ready yet",
+  "rough. fix the basics.",
+  "this won't do it tonight",
+  "hoping won't cut it — fix it",
+  "you know this isn't it"
+];
+const VIBES_HIGH = [
+  "sharp. keep this energy.",
+  "dialed in",
+  "this works. don't overthink it.",
+  "you're the one they'll remember",
+  "locked in — go."
+];
+function generateVibe(score) {
+  const pool = score >= 82 ? VIBES_HIGH : score >= 66 ? VIBES_MID : VIBES_LOW;
+  return pickFresh(`vibe_${score >= 82 ? 'hi' : score >= 66 ? 'mid' : 'lo'}`, pool);
+}
+
+// --- CONFIDENCE BOOSTS — the "coach" layer (honest, not nice) ---
+const CONFIDENCE_BOOSTERS = [
+  { icon: "🎯", text: "Slow the hell down. Hold eye contact until it's almost uncomfortable." },
+  { icon: "🚪", text: "Walk in like you belong there. Nobody's going to grant you permission." },
+  { icon: "🧘", text: "Stop fidgeting. Every twitch leaks whatever confidence you have left." },
+  { icon: "⏸️", text: "Pause before you speak. Rushing to fill silence is a tell." },
+  { icon: "👂", text: "Shut up and listen. You're not as interesting as you think yet." },
+  { icon: "😌", text: "Drop your voice half a notch. Excited-sounding is losing-sounding." },
+  { icon: "🙂", text: "If your smile isn't reaching your eyes, don't bother faking it." },
+  { icon: "✋", text: "Hands out of your pockets. Hidden hands read as hiding." },
+  { icon: "🔥", text: "You've spent all day preparing. Don't blow it by second-guessing now." },
+  { icon: "💬", text: "Ask something they didn't see coming. Small talk is a trap." },
+  { icon: "🫱", text: "Commit to the greeting — handshake or hug. Hesitation kills it." },
+  { icon: "👀", text: "Stop scanning the room. Being present beats looking available." },
+  { icon: "🪞", text: "Whatever you're insecure about — nobody's noticing it until you do." },
+  { icon: "⚡", text: "Energy in first. If you walk in low, you won't recover." }
+];
+function randomBooster() { return pickFresh('booster', CONFIDENCE_BOOSTERS); }
+
+const CATEGORY_META = {
+  "grooming": { label: "Hair & Face", icon: "💈" },
+  "style": { label: "Outfit Detail", icon: "✨" },
+  "presence": { label: "Body Language", icon: "🚶" },
+  "env": { label: "Camera Check", icon: "📸" }
+};
+
+function renderActionPlan(items, locked = false) {
+  const tones = { good: "border-emerald-500/30 bg-emerald-500/5", warn: "border-yellow-500/30 bg-yellow-500/5", alert: "border-red-500/40 bg-red-500/10", info: "border-blue-500/30 bg-blue-500/5", error: "border-red-600/50 bg-red-600/10" };
+  let html = "";
+  const booster = randomBooster();
+  
+  html += `
+    <div class="fade-up relative overflow-hidden rounded-2xl p-5 mb-5 border border-brand-500/20 bg-gradient-to-br from-brand-500/10 via-purple-500/5 to-transparent">
+      <div class="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-brand-500/20 blur-2xl pointer-events-none"></div>
+      <div class="relative z-10 flex items-start gap-4">
+        <div class="text-2xl">${booster.icon}</div>
+        <div class="flex-1">
+          <div class="text-[10px] uppercase tracking-widest font-bold text-brand-400 mb-1">Coach's Pep Talk</div>
+          <p class="font-serif italic text-sm text-white/90 leading-relaxed">${booster.text}</p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const grouped = { grooming: [], style: [], presence: [], env: [] };
+  let hasActions = false;
+  items.forEach(it => { if(it.category && grouped[it.category]) { grouped[it.category].push(it); if (it.tone !== 'good') hasActions = true; } });
+
+  if(!hasActions) {
+    html += `<div class="p-4 text-center text-sm text-emerald-400 bg-emerald-500/10 rounded-xl border border-emerald-500/20">All grooming & presence checks passed!</div>`;
+  }
+  
+  for (const cat of Object.keys(grouped)) {
+    if (grouped[cat].length === 0) continue;
+    html += `<div class="mb-5 fade-up"><div class="text-xs font-semibold text-gray-500 mb-2 flex items-center gap-1.5 uppercase tracking-wider"><span>${CATEGORY_META[cat].icon}</span> ${CATEGORY_META[cat].label}</div><div class="space-y-3">`;
+    grouped[cat].forEach(it => {
+      const isGood = it.tone === 'good';
+      html += `
+        <div class="rounded-xl p-3.5 sm:p-4 border ${tones[it.tone]} bg-white/5 relative overflow-hidden transition-all">
+          <div class="flex gap-3">
+            <div class="text-xl pt-0.5 shrink-0">${it.icon}</div>
+            <div class="flex-1 min-w-0">
+              <h4 class="font-serif font-medium text-white mb-1 truncate text-sm sm:text-base">${it.title}</h4>
+              <p class="text-xs text-gray-400 leading-relaxed mb-2 hidden sm:block">${it.text}</p>
+              ${it.action && !isGood ? `
+                <div class="bg-brand-500/10 border border-brand-500/30 rounded-lg p-2.5 flex gap-2 items-start mt-1">
+                  <svg class="w-3.5 h-3.5 text-brand-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  <span class="text-[11px] sm:text-xs font-medium text-brand-100">${it.action}</span>
+                </div>
+              ` : isGood && it.action ? `<p class="text-[11px] text-emerald-300 font-medium flex items-center gap-1.5 mt-1">✓ ${it.action}</p>` : ""}
+            </div>
+          </div>
+        </div>
+      `;
+    });
+    html += `</div></div>`;
+  }
+  
+  if (locked) {
+    feedbackPanel.innerHTML = `
+      <div class="blur-content">${html}</div>
+      <div class="locked-overlay p-6 text-center">
+         <h3 class="font-serif text-xl font-bold text-white mb-2">Premium Feedback</h3>
+         <p class="text-sm text-gray-300 mb-5 max-w-[250px] mx-auto">Get personalized grooming tips and attractiveness boosts to stand out.</p>
+         <button onclick="window.openPaywall()" class="text-sm font-bold text-brand-400 bg-brand-500/10 border border-brand-500/30 px-6 py-2.5 rounded-xl hover:bg-brand-500/20 transition shadow-lg">View Action Plan</button>
+      </div>
+    `;
+  } else {
+    feedbackPanel.innerHTML = html;
+  }
+}
+
+$("closePaywall").addEventListener("click", closePaywall);
+$("upgradeBtn").addEventListener("click", window.openPaywall);
+document.querySelectorAll(".plan-btn").forEach(b => b.addEventListener("click", () => {
+  triggerHaptic('success'); 
+  b.innerHTML = `<div class="w-full text-center text-brand-400 font-medium py-1">Purchased! Unlocking...</div>`; 
+  
+  setProUser();
+  
+  setTimeout(() => {
+    closePaywall();
+    const s = store.get();
+    if (s.lastItems) {
+      renderActionPlan(s.lastItems, false);
+      renderStyleCoach(s.lastColor, s.occasion, false);
+    }
+    updateUsageBadge();
+    setTimeout(() => { b.innerHTML = b.dataset.originalHTML || 'Plan'; }, 1000);
+  }, 1000);
+}));
+
+document.querySelectorAll(".plan-btn").forEach(b => b.dataset.originalHTML = b.innerHTML);
+
+const CHECKLIST_ITEMS = [{ id:"perfume", label:"Perfume", icon:"🌸" }, { id:"mints", label:"Mints / Gum", icon:"🍃" }, { id:"wallet", label:"Wallet / ID", icon:"💳" }, { id:"charge", label:"Phone charged", icon:"🔋" }];
+function renderChecklist() {
+  let st = {}; try { st = JSON.parse(localStorage.getItem("datescan.checklist") || "{}"); } catch {}
+  // Track which items already awarded XP today to prevent farming
+  const today = (() => { const d = new Date(); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; })();
+  let claimed = { date: today, ids: [] };
+  try {
+    const raw = JSON.parse(localStorage.getItem("datescan.checklist.claimed") || "null");
+    if (raw && raw.date === today && Array.isArray(raw.ids)) claimed = raw;
+  } catch {}
+
+  $("checklist").innerHTML = CHECKLIST_ITEMS.map(it => `
+    <li class="custom-check ${st[it.id]?"done":""} flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-3.5 transition-all duration-300">
+      <input type="checkbox" id="cl_${it.id}" ${st[it.id]?"checked":""} />
+      <label for="cl_${it.id}" class="flex-1 flex items-center gap-3 cursor-pointer select-none">
+        <span class="text-xl">${it.icon}</span><span class="label-text text-sm font-medium">${it.label}</span>
+      </label>
+    </li>
+  `).join("");
+  CHECKLIST_ITEMS.forEach(it => {
+    $("cl_"+it.id).addEventListener("change", (e) => {
+      triggerHaptic('tap'); 
+      st[it.id] = e.target.checked; 
+      localStorage.setItem("datescan.checklist", JSON.stringify(st)); 
+      
+      if (e.target.checked) {
+        const li = e.target.closest('li');
+        li.classList.add('checklist-pop');
+        // Only grant XP the first time this item is checked today
+        if (!claimed.ids.includes(it.id)) {
+          claimed.ids.push(it.id);
+          localStorage.setItem("datescan.checklist.claimed", JSON.stringify(claimed));
+          addXP(5);
+        }
+      }
+      
+      setTimeout(renderChecklist, 400); 
+    });
+  });
+}
+
+document.querySelectorAll('.occ-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    triggerHaptic('tap');
+    store.set({ occasion: btn.dataset.occ });
+  });
+});
+
+scanBtn.addEventListener("click", runScan);
+$("logDateBtn").addEventListener("click", () => {
+  triggerHaptic('success');
+  const btn = $("logDateBtn"), original = btn.innerHTML;
+  logMission(); 
+  btn.innerHTML = `<span>🎉</span> Logged! (+50 XP)`; btn.classList.add("bg-brand-500/30", "border-brand-500/60");
+  setTimeout(() => { btn.innerHTML = original; btn.classList.remove("bg-brand-500/30", "bg-brand-500/60"); }, 2500);
+});
+
+// --- INIT ---
+renderChecklist();
+updateUsageBadge();
+boot();
+</script>
+</body>
+</html>
