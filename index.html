@@ -185,6 +185,9 @@
     width: 100%;
     height: 100%;
   }
+
+  /* Hide the bottom nav while the onboarding modal is visible */
+  body.has-onboarding #mobileBottomNav { display: none !important; }
   .scanning .hud { opacity: 1; }
   
   .hud-element {
@@ -380,6 +383,21 @@
           <p class="text-xs text-gray-500 mt-0.5">Instant grooming and style feedback.</p>
         </div>
       </div>
+    </div>
+
+    <!-- Install as App card (shown only when installable / not already installed) -->
+    <div id="pwaInstallCard" class="hidden relative z-10 mb-5 rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/15 to-purple-500/10 p-4">
+      <div class="flex items-start gap-3">
+        <div class="shrink-0 w-10 h-10 rounded-xl bg-brand-500/20 border border-brand-500/40 flex items-center justify-center text-lg">📲</div>
+        <div class="flex-1 min-w-0">
+          <div class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-0.5">Recommended</div>
+          <h4 class="font-medium text-white text-sm mb-1">Install DateScan as an app</h4>
+          <p id="pwaInstallDesc" class="text-xs text-gray-400 leading-relaxed">Faster load, offline access, and full-screen camera — just like a native app.</p>
+        </div>
+      </div>
+      <button id="pwaInstallBtn" class="mt-3 w-full text-sm font-bold py-2.5 px-3 rounded-xl bg-brand-500/20 border border-brand-500/50 text-brand-300 hover:bg-brand-500/30 transition flex items-center justify-center gap-2">
+        <span>⬇️</span> <span id="pwaInstallBtnLabel">Install App</span>
+      </button>
     </div>
 
     <button id="startOnboardingBtn" class="btn-primary w-full py-4 rounded-2xl text-base font-bold shadow-xl shadow-brand-500/20 flex justify-center items-center gap-2">
@@ -757,7 +775,7 @@
 </footer>
 
 <!-- Mobile / Tablet Bottom Nav -->
-<nav class="lg:hidden fixed bottom-0 left-0 right-0 z-[80] px-3 pt-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] bg-gradient-to-t from-[#09090b] via-[#09090b]/95 to-transparent pointer-events-none">
+<nav id="mobileBottomNav" class="lg:hidden fixed bottom-0 left-0 right-0 z-[80] px-3 pt-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] bg-gradient-to-t from-[#09090b] via-[#09090b]/95 to-transparent pointer-events-none">
   <div class="max-w-md mx-auto grid grid-cols-3 gap-2 pointer-events-auto">
     <button id="mobileNavScan" class="mobile-nav-btn bg-dark-950/80 backdrop-blur-xl rounded-2xl p-3 border border-white/10 flex flex-col items-center gap-1 transition-all active:scale-95">
       <svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
@@ -954,22 +972,89 @@
 <script type="module">
 import { FilesetResolver, FaceLandmarker } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs";
 
-const createStore = (initialState) => {
+// Capture beforeinstallprompt as early as possible — Chrome fires it on page load
+// and we need it available later when the onboarding modal renders.
+window._deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  window._deferredInstallPrompt = e;
+  window.dispatchEvent(new CustomEvent('pwa-installable'));
+});
+
+const createStore = (initialState, reducer) => {
   let state = { ...initialState };
   const listeners = new Set();
-  
+  const actionLog = []; // last 30 actions for debugging
+
+  const notify = () => listeners.forEach(fn => fn(state));
+
   return {
     get: () => state,
     set: (newState) => {
+      // Low-level direct patch (still supported for backwards compat)
       state = { ...state, ...newState };
-      listeners.forEach(fn => fn(state));
+      notify();
+    },
+    // Flux-style: single entry point, all mutations flow through the reducer.
+    // Usage: store.dispatch({ type: 'SET_OCCASION', payload: 'fancy' });
+    dispatch: (action) => {
+      if (!action || !action.type) {
+        console.warn('[store] dispatch called without a type:', action);
+        return state;
+      }
+      const prev = state;
+      try {
+        state = reducer(state, action);
+      } catch (err) {
+        console.error('[store] reducer threw for action', action, err);
+        return prev;
+      }
+      actionLog.push({ type: action.type, payload: action.payload, ts: Date.now() });
+      if (actionLog.length > 30) actionLog.shift();
+      if (state !== prev) notify();
+      return state;
     },
     subscribe: (fn) => {
       listeners.add(fn);
-      fn(state); 
+      fn(state);
       return () => listeners.delete(fn);
-    }
+    },
+    // Debug helper: window.store.debug() in the console shows recent actions.
+    debug: () => ({ state, actions: actionLog.slice() })
   };
+};
+
+// Central reducer. Add new action types here as the app grows.
+// Keeping it exhaustive is optional — unknown actions fall through unchanged,
+// which means existing store.set() call sites continue to work untouched.
+const appReducer = (state, action) => {
+  switch (action.type) {
+    case 'AI_READY':
+      return { ...state, faceLandmarker: action.payload.landmarker, aiReady: true };
+    case 'CAMERA_STREAM_READY':
+      return { ...state, stream: action.payload };
+    case 'CAMERA_READY':
+      return { ...state, cameraReady: true };
+    case 'SET_VIEW':
+      return { ...state, activeView: action.payload };
+    case 'SET_OCCASION':
+      return { ...state, occasion: action.payload };
+    case 'SCAN_START':
+      return { ...state, isScanning: true };
+    case 'SCAN_END':
+      return { ...state, isScanning: false };
+    case 'SCAN_RESULT':
+      return {
+        ...state,
+        lastItems: action.payload.items ?? state.lastItems,
+        lastColor: action.payload.color ?? state.lastColor,
+        lastScore: action.payload.score ?? state.lastScore,
+        lastScoreLabel: action.payload.scoreLabel ?? state.lastScoreLabel,
+        lastCap: action.payload.cap ?? state.lastCap,
+      };
+    default:
+      return state; // unknown action — no-op
+  }
 };
 
 const store = createStore({
@@ -982,7 +1067,10 @@ const store = createStore({
   lastItems: null, 
   lastColor: null,
   activeView: 'scanner'
-});
+}, appReducer);
+
+// Expose for console debugging
+window.store = store;
 
 const $ = (id) => document.getElementById(id);
 const video = $("video");
@@ -1743,17 +1831,94 @@ async function startAppFlow() {
   }
 }
 
+function setupPwaInstall() {
+  const card = document.getElementById('pwaInstallCard');
+  const btn = document.getElementById('pwaInstallBtn');
+  const label = document.getElementById('pwaInstallBtnLabel');
+  const desc = document.getElementById('pwaInstallDesc');
+  if (!card || !btn) return;
+
+  // Already installed / running as PWA → don't show
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                    || window.navigator.standalone === true;
+  if (isStandalone) return;
+
+  const ua = navigator.userAgent || '';
+  const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+  const isSafari = /^((?!chrome|android|crios|fxios).)*safari/i.test(ua);
+  const isAndroid = /Android/.test(ua);
+
+  let deferredPrompt = window._deferredInstallPrompt || null;
+
+  function showInstallable() {
+    card.classList.remove('hidden');
+    label.textContent = 'Install App';
+  }
+
+  if (deferredPrompt) showInstallable();
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    window._deferredInstallPrompt = e;
+    showInstallable();
+  });
+  window.addEventListener('pwa-installable', () => {
+    deferredPrompt = window._deferredInstallPrompt;
+    if (deferredPrompt) showInstallable();
+  });
+
+  // iOS Safari has no beforeinstallprompt — show manual instructions instead
+  if (isIOS && isSafari) {
+    card.classList.remove('hidden');
+    label.textContent = 'How to install';
+    desc.textContent = 'Tap the Share button in Safari, then "Add to Home Screen" to install.';
+    btn.addEventListener('click', () => {
+      triggerHaptic('tap');
+      alert('To install DateScan:\n\n1. Tap the Share button (⬆️) at the bottom of Safari\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" in the top-right corner');
+    });
+    return;
+  }
+
+  btn.addEventListener('click', async () => {
+    triggerHaptic('tap');
+    if (!deferredPrompt) {
+      // Fallback message for browsers that don't support install prompt
+      if (isAndroid) {
+        alert('To install: tap the ⋮ menu in Chrome, then "Install app" or "Add to Home screen".');
+      } else {
+        alert('Your browser doesn\'t support direct install. Try the browser menu → "Install" or "Add to Home screen".');
+      }
+      return;
+    }
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      card.classList.add('hidden');
+    }
+    deferredPrompt = null;
+  });
+
+  window.addEventListener('appinstalled', () => {
+    card.classList.add('hidden');
+    deferredPrompt = null;
+  });
+}
+
 function boot() {
   const hasOnboarded = localStorage.getItem("datescan.onboarded");
 
   if (!hasOnboarded) {
+    document.body.classList.add('has-onboarding');
     onboardingModal.classList.remove("hidden");
+    setupPwaInstall();
     $("startOnboardingBtn").addEventListener("click", () => {
       triggerHaptic('tap');
       localStorage.setItem("datescan.onboarded", "true");
       onboardingModal.style.opacity = "0";
       setTimeout(() => {
         onboardingModal.classList.add("hidden");
+        document.body.classList.remove('has-onboarding');
         startAppFlow();
       }, 500);
     });
@@ -2540,6 +2705,10 @@ function drawHUD(landmarks, W, H) {
   hud.setAttribute("viewBox", `0 0 ${W} ${H}`);
   const NS = "http://www.w3.org/2000/svg";
 
+  // Note: captureFrame() already mirrors the video into analysisCanvas
+  // via ctx.scale(-1, 1), so landmarks from faceLandmarker.detect(analysisCanvas)
+  // are already in the mirrored/display coordinate space. Do NOT mirror again.
+
   function createReticle(cx, cy, rPx, labelText) {
     const R = Math.max(16, rPx * 2.5);
     const g = document.createElementNS(NS, "g");
@@ -2727,7 +2896,7 @@ async function runScan() {
   if (s.isScanning || !s.aiReady || !s.cameraReady) return;
   
   triggerHaptic('tap');
-  store.set({ isScanning: true }); 
+  store.dispatch({ type: 'SCAN_START' }); 
 
   const isLocked = !isProUser() && (userCloset.outfits.length >= 3) && getUsage().count >= FREE_DAILY;
 
@@ -2845,7 +3014,7 @@ async function runScan() {
 
 function endScan() {
   videoWrap.classList.remove("scanning");
-  store.set({ isScanning: false });
+  store.dispatch({ type: 'SCAN_END' });
   setTimeout(clearHUD, 500); 
 }
 
@@ -3044,7 +3213,7 @@ function renderChecklist() {
 document.querySelectorAll('.occ-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     triggerHaptic('tap');
-    store.set({ occasion: btn.dataset.occ });
+    store.dispatch({ type: 'SET_OCCASION', payload: btn.dataset.occ });
   });
 });
 
