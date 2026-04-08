@@ -4,6 +4,17 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 <meta name="theme-color" content="#09090b" />
+
+<!-- PWA -->
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+<link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="DateScan" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="application-name" content="DateScan" />
 <title>DateScan — Your Personal Style Coach</title>
 <!-- Favicon Generated from the Logo SVG -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='40' y2='40' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%23ec4899'/%3E%3Cstop offset='1' stop-color='%239333ea'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M10 5 H5 V10' stroke='url(%23bg)' stroke-width='2'/%3E%3Cpath d='M30 5 H35 V10' stroke='url(%23bg)' stroke-width='2'/%3E%3Cpath d='M10 35 H5 V30' stroke='url(%23bg)' stroke-width='2'/%3E%3Cpath d='M30 35 H35 V30' stroke='url(%23bg)' stroke-width='2'/%3E%3Cpath d='M20 13.5C20 13.5 16 9 11.5 9C7.5 9 5 12.5 5 16.5C5 22 13 28 20 32C27 28 35 22 35 16.5C35 12.5 32.5 9 28.5 9C24 9 20 13.5 20 13.5Z' fill='url(%23bg)' fill-opacity='0.2' stroke='url(%23bg)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='4' y1='20' x2='36' y2='20' stroke='%23f472b6' stroke-width='1.5' stroke-dasharray='2 2' opacity='0.8'/%3E%3C/svg%3E">
@@ -59,11 +70,18 @@
 
   /* Glassmorphism Panels */
   .premium-glass {
-    background: rgba(24, 24, 27, 0.6);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
+    background: rgba(24, 24, 27, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
+  @media (max-width: 1023px) {
+    .premium-glass {
+      background: rgba(24, 24, 27, 0.95);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
   }
 
   /* Gradient Text */
@@ -120,7 +138,6 @@
     height: auto;
     transform: scaleX(-1);
     display: block;
-    /* Safari specific fixes applied in JS too */
   }
 
   /* Scanner HUD & Flash */
@@ -288,10 +305,39 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .scrollbar::-webkit-scrollbar { width: 4px; }
+  .scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
   .scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
 
   #analysisCanvas { display: none; }
+  .mobile-nav-btn.is-active {
+    background: linear-gradient(to bottom, rgba(236,72,153,0.28), rgba(147,51,234,0.18)) !important;
+    border-color: rgba(236,72,153,0.85) !important;
+    box-shadow: 0 0 24px rgba(236,72,153,0.5) !important;
+  }
+  .mobile-nav-btn.is-active svg,
+  .mobile-nav-btn.is-active span {
+    color: #f9a8d4 !important;
+  }
+
+  @media (max-width: 1023px) {
+    #cameraCol {
+      display: contents;
+    }
+    #secondaryTools {
+      order: 10;
+    }
+  }
+  
+  /* Custom Datetime-Local Input Styling */
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+  }
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+  }
 </style>
 </head>
 <body class="relative antialiased text-gray-100">
@@ -299,7 +345,7 @@
 <div class="ambient-glow"></div>
 
 <!-- Onboarding Modal -->
-<div id="onboardingModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#09090b]/95 backdrop-blur-xl transition-opacity duration-500">
+<div id="onboardingModal" class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-[#09090b]/95 backdrop-blur-xl transition-opacity duration-500">
   <div class="premium-glass border border-brand-500/20 rounded-[32px] p-8 max-w-md w-full relative overflow-hidden fade-up">
     <!-- Decoration -->
     <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-500 rounded-full mix-blend-screen filter blur-[60px] opacity-30 pointer-events-none"></div>
@@ -344,7 +390,7 @@
 
 <!-- Header -->
 <header class="relative z-20 px-6 py-5 flex items-center justify-between max-w-7xl mx-auto">
-  <div class="flex items-center gap-3">
+  <div class="flex items-center gap-3 cursor-pointer" id="logoBtn">
     <div class="w-12 h-12 flex items-center justify-center shrink-0">
       <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-[0_0_8px_rgba(236,72,153,0.4)]">
         <defs>
@@ -366,187 +412,296 @@
       <span class="text-[10px] text-gray-400 font-medium uppercase tracking-widest mt-1">Personal Style Coach</span>
     </div>
   </div>
-  <div class="flex items-center gap-4">
-    <span id="usageBadge" class="hidden sm:inline-block text-xs font-medium px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-300 transition-all">
+  <div class="flex items-center gap-3 sm:gap-4">
+    <button id="navClosetBtn" class="hidden lg:flex text-xs font-bold px-3 py-2 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors items-center gap-1.5">
+      <span class="text-base">👕</span>
+      <span class="hidden sm:inline">Closet</span>
+    </button>
+    <span id="usageBadge" class="inline-block text-[10px] sm:text-xs font-medium px-2.5 sm:px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-300 transition-all whitespace-nowrap">
       Loading...
     </span>
-    <button id="upgradeBtn" class="text-xs font-bold px-4 py-2 rounded-full bg-white text-black hover:bg-gray-200 transition-colors shadow-lg">
+    <button id="upgradeBtn" class="hidden lg:inline-block text-xs font-bold px-4 py-2 rounded-full bg-white text-black hover:bg-gray-200 transition-colors shadow-lg">
       Upgrade
     </button>
   </div>
 </header>
 
 <main class="relative z-20 px-4 sm:px-6 pb-12 max-w-7xl mx-auto overflow-hidden">
-  <div id="heroText" class="mb-10 text-center transition-all duration-500 w-full">
-    <h1 class="font-serif text-4xl md:text-[3.5rem] font-medium mb-4 leading-tight tracking-tight">
-      Perfect your <span class="italic text-[#ec4899]">first impression</span>
-    </h1>
-    <p class="text-gray-400 text-sm md:text-base max-w-lg mx-auto font-medium tracking-wide">
-      AI-driven style, grooming and posture analysis.
-    </p>
-  </div>
-
-  <!-- Dynamic Layout Grid: Starts centered, shifts to split view on success -->
-  <div id="mainLayout" class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start transition-all duration-700">
-    
-    <!-- Camera Section (Starts full width, shrinks to col-span-5) -->
-    <div id="cameraCol" class="lg:col-span-12 flex flex-col gap-6 max-w-2xl mx-auto w-full transition-all duration-700 ease-in-out">
-      
-      <!-- Camera View -->
-      <div class="premium-glass rounded-[32px] p-2 relative shadow-2xl">
-        <div class="absolute top-6 left-6 z-30 flex items-center gap-2 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 transition-colors" id="statusIndicator">
-          <div class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse" id="statusDot"></div>
-          <span class="text-[10px] uppercase tracking-wider font-semibold text-white/90" id="statusText">Loading...</span>
-        </div>
-
-        <div class="camera-container relative" id="videoWrap">
-          <!-- Safari Fixes applied via attributes: playsinline, webkit-playsinline -->
-          <video id="video" autoplay playsinline webkit-playsinline muted></video>
-          
-          <div class="scanline"></div>
-          <svg id="hud" class="hud" preserveAspectRatio="xMidYMid slice"></svg>
-          
-          <div class="viewfinder">
-            <div class="vf-corner vf-tl"></div>
-            <div class="vf-corner vf-tr"></div>
-            <div class="vf-corner vf-bl"></div>
-            <div class="vf-corner vf-br"></div>
-          </div>
-
-          <!-- Dynamic "AI Thinking" Overlay during scan -->
-          <div id="thinkingOverlay" class="absolute inset-x-0 bottom-10 z-40 flex flex-col items-center justify-center opacity-0 transition-opacity duration-300 pointer-events-none">
-            <div class="bg-black/70 backdrop-blur-md px-5 py-2.5 rounded-full border border-brand-500/40 flex items-center gap-3 shadow-[0_0_20px_rgba(236,72,153,0.3)]">
-              <div class="flex gap-1">
-                <div class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-bounce" style="animation-delay: 0ms;"></div>
-                <div class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-bounce" style="animation-delay: 150ms;"></div>
-                <div class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-bounce" style="animation-delay: 300ms;"></div>
-              </div>
-              <span id="thinkingText" class="text-[11px] uppercase tracking-widest font-bold text-white/90 w-48 text-left">Analyzing vibes...</span>
-            </div>
-          </div>
-
-          <!-- Success Flash overlay -->
-          <div id="flashOverlay" class="flash-overlay"></div>
-
-          <div id="loadingOverlay" class="hidden absolute inset-0 z-40 flex flex-col items-center justify-center bg-dark-950/80 backdrop-blur-sm">
-            <div class="pulse-ring mb-4"></div>
-            <p class="text-sm font-medium text-gray-300 tracking-wide" id="loadingText">Connecting...</p>
-          </div>
-
-          <div id="errorOverlay" class="hidden absolute inset-0 z-50 flex flex-col items-center justify-center bg-dark-950/95 p-6 text-center">
-            <div class="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center mb-4 text-2xl">📷</div>
-            <h3 class="font-serif text-xl font-semibold mb-2" id="errorTitle">Camera Blocked</h3>
-            <p class="text-sm text-gray-400 mb-6 max-w-[280px]" id="errorMsg">Please check your browser settings and try again.</p>
-            <button id="retryBtn" class="btn-primary px-6 py-2.5 rounded-full text-sm font-medium">Try Again</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Scan Controls -->
-      <div>
-        <!-- Occasion Selector -->
-        <div class="mb-4 fade-up" style="animation-delay: 0.1s;">
-          <div class="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-2 ml-1">Target Occasion</div>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="occasionSelector">
-            <button data-occ="casual" class="occ-btn border border-brand-500/50 bg-brand-500/20 text-white rounded-xl py-2.5 text-xs font-semibold transition-all">Casual</button>
-            <button data-occ="first_date" class="occ-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-2.5 text-xs font-semibold transition-all">First Date</button>
-            <button data-occ="fancy" class="occ-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-2.5 text-xs font-semibold transition-all">Fancy Dinner</button>
-            <button data-occ="night_out" class="occ-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-2.5 text-xs font-semibold transition-all">Night Out</button>
-          </div>
-        </div>
-
-        <button id="scanBtn" class="w-full btn-primary py-4 rounded-2xl text-lg font-bold shadow-xl shadow-brand-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-3 transition-all" disabled>
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-          <span id="scanBtnText">Initializing...</span>
-        </button>
-        <p class="text-center text-[11px] text-gray-500 mt-4 flex items-center justify-center gap-1.5">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-          Strictly private. Runs in your browser, no data is uploaded.
+  
+  <!-- SCANNER & RESULTS VIEW -->
+  <div id="viewScanner" class="transition-all duration-500 block">
+      <div id="heroText" class="mb-10 text-center transition-all duration-500 w-full">
+        <h1 class="font-serif text-4xl md:text-[3.5rem] font-medium mb-4 leading-tight tracking-tight">
+          Perfect your <span class="italic text-[#ec4899]">first impression</span>
+        </h1>
+        <p class="text-gray-400 text-sm md:text-base max-w-lg mx-auto font-medium tracking-wide">
+          AI-driven style, grooming and posture analysis.
         </p>
       </div>
 
-    </div>
-
-    <!-- Results Section (Initially hidden, expands to col-span-7) -->
-    <div id="resultsCol" class="hidden lg:col-span-7 flex flex-col gap-6 w-full opacity-0 translate-y-8 transition-all duration-700 ease-out lg:sticky lg:top-6 pb-12">
-      
-      <!-- AI Style Coach Section (Advanced Upgrades) -->
-      <div class="premium-glass rounded-[32px] p-6 sm:p-8 relative overflow-hidden">
-        <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-brand-500/20 mix-blend-screen filter blur-[40px] pointer-events-none"></div>
-        <h2 class="font-serif text-2xl font-semibold mb-1 flex items-center justify-between relative z-10">
-          AI Style Coach
-          <span class="text-[10px] font-sans font-bold uppercase tracking-widest text-brand-400 border border-brand-500/30 bg-brand-500/10 px-2 py-0.5 rounded-full animate-pulse">Active</span>
-        </h2>
-        <p class="text-xs text-gray-400 mb-6 relative z-10">Deep analysis of your outfit's color, contrast, and coordination.</p>
+      <div id="mainLayout" class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start transition-all duration-700">
         
-        <div id="styleCoachResult" class="transition-all duration-300 min-h-[160px] relative z-10">
-           <!-- Populated by JS -->
-        </div>
-      </div>
+        <!-- Camera Section -->
+        <div id="cameraCol" class="lg:col-span-12 flex flex-col gap-6 max-w-2xl mx-auto w-full transition-all duration-700 ease-in-out">
+          
+          <div class="premium-glass rounded-[32px] p-2 relative shadow-2xl">
+            <div class="absolute top-6 left-6 z-30 flex items-center gap-2 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 transition-colors" id="statusIndicator">
+              <div class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse" id="statusDot"></div>
+              <span class="text-[10px] uppercase tracking-wider font-semibold text-white/90" id="statusText">Loading...</span>
+            </div>
 
-      <!-- Action Plan (Grooming & Posture) -->
-      <div class="premium-glass rounded-[32px] p-6 sm:p-8 min-h-[250px] relative overflow-hidden">
-        <div class="flex items-center justify-between mb-6 pb-4 border-b border-white/5 relative z-10">
-          <h2 class="font-serif text-2xl font-semibold">Grooming & Presence</h2>
-          <span class="text-[10px] uppercase tracking-wider font-bold px-2.5 py-1 rounded-md bg-white/5 text-gray-400">Readiness</span>
-        </div>
-        
-        <div id="feedbackPanel" class="space-y-4 relative z-10">
-          <!-- Populated by JS -->
-        </div>
-      </div>
+            <div class="camera-container relative" id="videoWrap">
+              <video id="video" autoplay playsinline webkit-playsinline muted></video>
+              <div class="scanline"></div>
+              <svg id="hud" class="hud" preserveAspectRatio="xMidYMid slice"></svg>
+              <div class="viewfinder">
+                <div class="vf-corner vf-tl"></div>
+                <div class="vf-corner vf-tr"></div>
+                <div class="vf-corner vf-bl"></div>
+                <div class="vf-corner vf-br"></div>
+              </div>
 
-      <!-- Secondary Tools Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Checklist Section -->
-        <div class="premium-glass rounded-[32px] p-6 flex-1">
-          <div class="flex justify-between items-center mb-6">
-            <h2 class="font-serif text-xl font-semibold">Before You Leave</h2>
-            <span class="text-[10px] text-brand-400 bg-brand-500/10 px-2 py-1 rounded-md font-bold uppercase tracking-wider">+5 XP each</span>
-          </div>
-          <ul id="checklist" class="grid grid-cols-1 gap-4">
-            <!-- JS generated -->
-          </ul>
-        </div>
-
-        <!-- Gamification / Missions Counter Card -->
-        <div class="rounded-[32px] p-6 border border-brand-500/20 bg-gradient-to-b from-dark-900 to-dark-950 relative overflow-hidden shrink-0 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-          <div class="absolute -top-8 -right-8 w-28 h-28 rounded-full bg-brand-500/10 blur-3xl pointer-events-none"></div>
-          <div class="relative z-10">
-            
-            <div class="flex items-center justify-between mb-3">
-              <div>
-                <div class="text-[10px] uppercase tracking-widest font-bold text-brand-400 mb-1" id="levelName">Level 1: Rookie</div>
-                <div class="flex items-baseline gap-1.5">
-                  <span id="missionCount" class="font-serif font-bold text-3xl text-white">0</span>
-                  <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">XP</span>
+              <div id="thinkingOverlay" class="absolute inset-x-0 bottom-10 z-40 flex flex-col items-center justify-center opacity-0 transition-opacity duration-300 pointer-events-none">
+                <div class="bg-black/70 backdrop-blur-md px-5 py-2.5 rounded-full border border-brand-500/40 flex items-center gap-3 shadow-[0_0_20px_rgba(236,72,153,0.3)]">
+                  <div class="flex gap-1">
+                    <div class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-bounce" style="animation-delay: 0ms;"></div>
+                    <div class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-bounce" style="animation-delay: 150ms;"></div>
+                    <div class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-bounce" style="animation-delay: 300ms;"></div>
+                  </div>
+                  <span id="thinkingText" class="text-[11px] uppercase tracking-widest font-bold text-white/90 w-48 text-left">Analyzing vibes...</span>
                 </div>
               </div>
-              <div class="text-right">
-                <div class="text-3xl filter drop-shadow-md" id="streakFlame">🔥</div>
-                <div id="missionStreak" class="text-[11px] font-bold text-orange-400 mt-1">0 Day Streak</div>
+
+              <div id="flashOverlay" class="flash-overlay"></div>
+
+              <div id="loadingOverlay" class="hidden absolute inset-0 z-40 flex flex-col items-center justify-center bg-dark-950/80 backdrop-blur-sm">
+                <div class="pulse-ring mb-4"></div>
+                <p class="text-sm font-medium text-gray-300 tracking-wide" id="loadingText">Connecting...</p>
+              </div>
+
+              <div id="errorOverlay" class="hidden absolute inset-0 z-50 flex flex-col items-center justify-center bg-dark-950/95 p-6 text-center">
+                <div class="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center mb-4 text-2xl">📷</div>
+                <h3 class="font-serif text-xl font-semibold mb-2" id="errorTitle">Camera Blocked</h3>
+                <p class="text-sm text-gray-400 mb-6 max-w-[280px]" id="errorMsg">Please check your browser settings and try again.</p>
+                <button id="retryBtn" class="btn-primary px-6 py-2.5 rounded-full text-sm font-medium">Try Again</button>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="mb-4 fade-up" style="animation-delay: 0.1s;">
+              <div class="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-2 ml-1">Target Occasion</div>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="occasionSelector">
+                <button data-occ="casual" class="occ-btn border border-brand-500 text-brand-400 bg-black/40 rounded-xl py-3 text-xs font-bold uppercase tracking-widest transition-all">Casual</button>
+                <button data-occ="first_date" class="occ-btn border border-white/10 bg-black/40 text-gray-500 rounded-xl py-3 text-xs font-bold uppercase tracking-widest transition-all">Date</button>
+                <button data-occ="night_out" class="occ-btn border border-white/10 bg-black/40 text-gray-500 rounded-xl py-3 text-xs font-bold uppercase tracking-widest transition-all">Party</button>
+                <button data-occ="fancy" class="occ-btn border border-white/10 bg-black/40 text-gray-500 rounded-xl py-3 text-xs font-bold uppercase tracking-widest transition-all">Formal</button>
               </div>
             </div>
 
-            <!-- XP Progress Bar -->
-            <div class="w-full h-1.5 bg-white/10 rounded-full mb-5 overflow-hidden">
-               <div id="xpBar" class="h-full bg-gradient-to-r from-brand-500 to-purple-500 xp-bar-fill" style="width: 0%"></div>
+            <button id="scanBtn" class="w-full btn-primary py-4 rounded-2xl text-lg font-bold shadow-xl shadow-brand-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-3 transition-all" disabled>
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              <span id="scanBtnText">Initializing...</span>
+            </button>
+            <p class="text-center text-[11px] text-gray-500 mt-4 flex items-center justify-center gap-1.5">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+              Strictly private. Runs in your browser, no data is uploaded.
+            </p>
+          </div>
+
+          <!-- Secondary Tools Grid -->
+          <div id="secondaryTools" class="hidden grid grid-cols-1 gap-6">
+            
+            <!-- Date Prep Timer Card -->
+            <div id="dateTimerCard" class="premium-glass rounded-[32px] p-6 relative overflow-hidden fade-up">
+              <div class="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-purple-500/10 blur-3xl pointer-events-none"></div>
+              
+              <div class="flex items-center justify-between mb-4 relative z-10">
+                <div>
+                  <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-1">Date Prep</div>
+                  <h2 class="font-serif text-xl font-semibold">Countdown</h2>
+                </div>
+                <span class="text-2xl filter drop-shadow-md">⏳</span>
+              </div>
+
+              <!-- Timer Setup View -->
+              <div id="timerSetupView" class="relative z-10">
+                <p class="text-xs text-gray-400 mb-3">When is the big date?</p>
+                <input type="datetime-local" id="dateTimerInput" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm text-white mb-3 focus:border-brand-500 outline-none transition-colors">
+                <button id="startDateTimerBtn" class="w-full text-sm font-semibold py-3 px-3 rounded-xl border border-brand-500/40 bg-brand-500/15 text-brand-400 hover:bg-brand-500/25 transition flex items-center justify-center gap-2">
+                  <span>⏱️</span> Start Countdown
+                </button>
+              </div>
+
+              <!-- Timer Active View -->
+              <div id="timerActiveView" class="relative z-10 hidden text-center">
+                 <div class="bg-black/30 border border-white/5 rounded-2xl p-4 mb-4">
+                   <div id="countdownDisplay" class="font-serif font-bold text-4xl text-white tracking-wider mb-1 drop-shadow-[0_0_10px_rgba(236,72,153,0.3)] tabular-nums">00:00:00</div>
+                   <div class="text-[10px] text-gray-500 uppercase tracking-widest">Remaining</div>
+                 </div>
+                 
+                 <div class="bg-white/5 border border-white/10 rounded-xl p-3 mb-4 flex items-start gap-3 text-left">
+                   <div id="reminderIcon" class="text-xl mt-0.5 shrink-0">🔔</div>
+                   <div>
+                     <div class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-1">Coach Reminder</div>
+                     <p id="reminderText" class="text-xs text-brand-100 font-medium leading-relaxed">...</p>
+                   </div>
+                 </div>
+                 
+                 <button id="cancelDateTimerBtn" class="text-[10px] font-semibold text-gray-500 hover:text-white uppercase tracking-widest transition-colors py-1">
+                   Cancel / Edit Time
+                 </button>
+              </div>
             </div>
 
-            <button id="logDateBtn" class="w-full text-xs font-semibold py-3 px-3 rounded-xl border border-brand-500/40 bg-brand-500/15 text-brand-400 hover:bg-brand-500/25 transition flex items-center justify-center gap-2">
-              <span>💕</span> Log tonight's date <span class="opacity-50 font-normal">(+50 XP)</span>
-            </button>
+            <!-- Weather Card -->
+            <div id="weatherCard" class="premium-glass rounded-[32px] p-6 relative overflow-hidden fade-up" style="animation-delay: 0.1s;">
+              <div class="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-blue-500/10 blur-3xl pointer-events-none"></div>
+              <div class="flex items-center justify-between mb-5 relative z-10">
+                <div>
+                  <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-1">Tonight's Forecast</div>
+                  <h2 class="font-serif text-xl font-semibold">Weather Check</h2>
+                </div>
+                <span id="weatherLoc" class="text-[10px] text-gray-500 uppercase tracking-wider"></span>
+              </div>
+              <div id="weatherContent" class="text-sm text-gray-400 relative z-10">
+                <button id="weatherEnableBtn" class="w-full text-xs font-semibold py-3 px-3 rounded-xl border border-brand-500/40 bg-brand-500/10 text-brand-400 hover:bg-brand-500/20 transition flex items-center justify-center gap-2">
+                  <span>📍</span> Enable location for weather advice
+                </button>
+              </div>
+            </div>
+            
+            <!-- Checklist Section -->
+            <div class="premium-glass rounded-[32px] p-6 flex-1 fade-up" style="animation-delay: 0.2s;">
+              <div class="flex justify-between items-center mb-6">
+                <h2 class="font-serif text-xl font-semibold">Before You Leave</h2>
+                <span class="text-[10px] text-brand-400 bg-brand-500/10 px-2 py-1 rounded-md font-bold uppercase tracking-wider">+5 XP each</span>
+              </div>
+              <ul id="checklist" class="grid grid-cols-1 gap-4">
+                <!-- JS generated -->
+              </ul>
+            </div>
+
+            <!-- Gamification Card -->
+            <div class="rounded-[32px] p-6 border border-brand-500/20 bg-gradient-to-b from-dark-900 to-dark-950 relative overflow-hidden shrink-0 shadow-[0_10px_30px_rgba(0,0,0,0.5)] fade-up" style="animation-delay: 0.3s;">
+              <div class="absolute -top-8 -right-8 w-28 h-28 rounded-full bg-brand-500/10 blur-3xl pointer-events-none"></div>
+              <div class="relative z-10">
+                <div class="flex items-center justify-between mb-3">
+                  <div>
+                    <div class="text-[10px] uppercase tracking-widest font-bold text-brand-400 mb-1" id="levelName">Level 1: Rookie</div>
+                    <div class="flex items-baseline gap-1.5">
+                      <span id="missionCount" class="font-serif font-bold text-3xl text-white">0</span>
+                      <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">XP</span>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-3xl filter drop-shadow-md" id="streakFlame">🔥</div>
+                    <div id="missionStreak" class="text-[11px] font-bold text-orange-400 mt-1">0 Day Streak</div>
+                  </div>
+                </div>
+
+                <div class="w-full h-1.5 bg-white/10 rounded-full mb-5 overflow-hidden">
+                   <div id="xpBar" class="h-full bg-gradient-to-r from-brand-500 to-purple-500 xp-bar-fill" style="width: 0%"></div>
+                </div>
+
+                <button id="logDateBtn" class="w-full text-xs font-semibold py-3 px-3 rounded-xl border border-brand-500/40 bg-brand-500/15 text-brand-400 hover:bg-brand-500/25 transition flex items-center justify-center gap-2">
+                  <span>💕</span> Log tonight's date <span class="opacity-50 font-normal">(+50 XP)</span>
+                </button>
+              </div>
+            </div>
           </div>
+
         </div>
+
+        <!-- Results Section -->
+        <div id="resultsCol" class="hidden lg:col-span-7 flex flex-col gap-6 w-full opacity-0 translate-y-8 transition-all duration-700 ease-out lg:sticky lg:top-6 pb-12">
+          
+          <div class="premium-glass rounded-[32px] p-6 sm:p-8 relative overflow-hidden">
+            <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-brand-500/20 mix-blend-screen filter blur-[40px] pointer-events-none"></div>
+            <h2 class="font-serif text-2xl font-semibold mb-1 flex items-center justify-between relative z-10">
+              AI Style Coach
+              <span class="text-[10px] font-sans font-bold uppercase tracking-widest text-brand-400 border border-brand-500/30 bg-brand-500/10 px-2 py-0.5 rounded-full animate-pulse">Active</span>
+            </h2>
+            <p class="text-xs text-gray-400 mb-6 relative z-10">Deep analysis of your outfit's color, contrast, and coordination.</p>
+            
+            <div id="styleCoachResult" class="transition-all duration-300 min-h-[160px] relative z-10">
+               <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- AI Style Coach Chat Module -->
+          <div class="premium-glass rounded-[32px] p-6 sm:p-8 relative overflow-hidden">
+            <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-purple-500/20 mix-blend-screen filter blur-[40px] pointer-events-none"></div>
+            <div class="flex items-center justify-between mb-1 relative z-10">
+              <h2 class="font-serif text-2xl font-semibold flex items-center gap-2">
+                <span>💬</span> Style Coach Chat
+              </h2>
+              <span class="text-[10px] font-sans font-bold uppercase tracking-widest text-purple-300 border border-purple-500/30 bg-purple-500/10 px-2 py-0.5 rounded-full">AI</span>
+            </div>
+            <p class="text-xs text-gray-400 mb-5 relative z-10">Ask your personal stylist anything — outfits, colors, date tips.</p>
+
+            <div id="coachChatMessages" class="relative z-10 space-y-3 max-h-[360px] overflow-y-auto pr-1 mb-4 scrollbar">
+              <div class="flex gap-2.5">
+                <div class="shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-purple-500 flex items-center justify-center text-sm">✨</div>
+                <div class="bg-white/5 border border-white/10 rounded-2xl rounded-tl-sm px-4 py-2.5 text-sm text-gray-200 max-w-[85%]">
+                  Hey! I'm your AI Style Coach. Ask me about outfit ideas, color matching, or how to dress for any occasion.
+                </div>
+              </div>
+            </div>
+
+            <form id="coachChatForm" class="relative z-10 flex gap-2 items-center">
+              <input id="coachChatInput" type="text" autocomplete="off" placeholder="Ask me anything about style…" class="flex-1 bg-white/5 border border-white/10 focus:border-brand-500/60 focus:bg-white/10 outline-none rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-500 transition" />
+              <button id="coachChatSend" type="submit" class="shrink-0 btn-primary w-11 h-11 rounded-xl flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 5l7 7-7 7"/></svg>
+              </button>
+            </form>
+          </div>
+
+          <div class="premium-glass rounded-[32px] p-5 sm:p-6 relative overflow-hidden">
+            <div class="flex items-center justify-between mb-4 pb-3 border-b border-white/5 relative z-10">
+              <h2 class="font-serif text-xl sm:text-2xl font-semibold">Grooming & Presence</h2>
+              <span class="text-[10px] uppercase tracking-wider font-bold px-2.5 py-1 rounded-md bg-white/5 text-gray-400">Readiness</span>
+            </div>
+            
+            <div id="feedbackPanel" class="space-y-4 relative z-10">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+  </div>
+
+  <!-- DIGITAL CLOSET VIEW -->
+  <div id="viewCloset" class="hidden opacity-0 translate-y-8 transition-all duration-500 pb-12 pt-4">
+      <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+         <div>
+            <h2 class="font-serif text-3xl md:text-4xl font-medium mb-2 leading-tight">Digital Closet</h2>
+            <p class="text-gray-400 text-sm font-medium">Your saved outfits and personal style archive.</p>
+         </div>
+         <button id="aiMixBtn" class="btn-primary px-5 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center w-full md:w-auto justify-center">
+            <span class="text-lg leading-none">✨</span> AI Suggestion
+         </button>
+      </div>
+       
+      <div class="mb-6 flex gap-2 overflow-x-auto pb-2 scrollbar" id="closetFilters">
+          <button data-filter="all" class="closet-filter-btn border border-brand-500/50 bg-brand-500/20 text-white rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">All Outfits</button>
+          <button data-filter="casual" class="closet-filter-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">Casual</button>
+          <button data-filter="first_date" class="closet-filter-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">First Date</button>
+          <button data-filter="fancy" class="closet-filter-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">Fancy Dinner</button>
+          <button data-filter="night_out" class="closet-filter-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">Night Out</button>
       </div>
 
-    </div>
-
+      <div id="closetGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+          <!-- Populated by JS -->
+      </div>
   </div>
+
 </main>
 
 <!-- Footer -->
-<footer class="relative z-20 w-full bg-[#09090b] border-t border-white/10 pt-10 pb-8 mt-4">
+<footer class="relative z-20 w-full bg-[#09090b] border-t border-white/10 pt-10 pb-32 lg:pb-8 mt-4">
   <div class="max-w-7xl mx-auto px-4 sm:px-6">
     <div class="grid grid-cols-2 gap-8 mb-8">
       <!-- Legal Column -->
@@ -578,7 +733,114 @@
   </div>
 </footer>
 
+<!-- Mobile / Tablet Bottom Nav -->
+<nav class="lg:hidden fixed bottom-0 left-0 right-0 z-[80] px-3 pt-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] bg-gradient-to-t from-[#09090b] via-[#09090b]/95 to-transparent pointer-events-none">
+  <div class="max-w-md mx-auto grid grid-cols-3 gap-2 pointer-events-auto">
+    <button id="mobileNavScan" class="mobile-nav-btn bg-dark-950/80 backdrop-blur-xl rounded-2xl p-3 border border-white/10 flex flex-col items-center gap-1 transition-all active:scale-95">
+      <svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      <span class="text-[10px] font-bold uppercase tracking-widest text-white">Scan</span>
+    </button>
+    <button id="mobileNavCloset" class="mobile-nav-btn bg-dark-950/80 backdrop-blur-xl rounded-2xl p-3 border border-white/10 flex flex-col items-center gap-1 transition-all active:scale-95">
+      <span class="text-xl leading-none">👕</span>
+      <span class="text-[10px] font-bold uppercase tracking-widest text-white">Closet</span>
+    </button>
+    <button id="mobileNavPro" class="mobile-nav-btn bg-dark-950/80 backdrop-blur-xl rounded-2xl p-3 border border-white/10 flex flex-col items-center gap-1 transition-all active:scale-95">
+      <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.39 7.36H22l-6.19 4.5 2.39 7.36L12 16.72l-6.19 4.5 2.39-7.36L2 9.36h7.61z"/></svg>
+      <span class="text-[10px] font-bold uppercase tracking-widest text-white">Pro</span>
+    </button>
+  </div>
+</nav>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const scanBtn = document.getElementById('mobileNavScan');
+    const closetBtn = document.getElementById('mobileNavCloset');
+    const proBtn = document.getElementById('mobileNavPro');
+    const paywall = document.getElementById('paywallModal');
+    const closetView = document.getElementById('viewCloset');
+
+    function setActive(which) {
+      [scanBtn, closetBtn, proBtn].forEach(b => b?.classList.remove('is-active'));
+      const map = { scan: scanBtn, closet: closetBtn, pro: proBtn };
+      map[which]?.classList.add('is-active');
+    }
+
+    function syncActive() {
+      if (paywall && !paywall.classList.contains('hidden')) {
+        setActive('pro');
+      } else if (closetView && !closetView.classList.contains('hidden')) {
+        setActive('closet');
+      } else {
+        setActive('scan');
+      }
+    }
+
+    function closePaywallIfOpen() {
+      if (paywall && !paywall.classList.contains('hidden')) {
+        paywall.classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+    }
+
+    scanBtn?.addEventListener('click', () => {
+      closePaywallIfOpen();
+      if (closetView && !closetView.classList.contains('hidden')) {
+        document.getElementById('navClosetBtn')?.click();
+      }
+      setTimeout(syncActive, 50);
+      document.getElementById('scanBtn')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+
+    closetBtn?.addEventListener('click', () => {
+      closePaywallIfOpen();
+      document.getElementById('navClosetBtn')?.click();
+      setTimeout(syncActive, 50);
+    });
+
+    proBtn?.addEventListener('click', () => {
+      if (typeof window.openPaywall === 'function') window.openPaywall();
+      else document.getElementById('upgradeBtn')?.click();
+      setTimeout(syncActive, 50);
+    });
+
+    if (paywall) {
+      new MutationObserver(syncActive).observe(paywall, { attributes: true, attributeFilter: ['class'] });
+    }
+    if (closetView) {
+      new MutationObserver(syncActive).observe(closetView, { attributes: true, attributeFilter: ['class'] });
+    }
+
+    syncActive();
+  });
+</script>
+
 <canvas id="analysisCanvas"></canvas>
+
+<!-- AI Suggestion Modal -->
+<div id="aiMixModal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[#09090b]/95 backdrop-blur-xl transition-opacity duration-300">
+  <div class="premium-glass border border-brand-500/20 rounded-[32px] p-6 max-w-sm w-full relative overflow-hidden fade-up">
+     <div class="absolute -top-12 -right-12 w-32 h-32 bg-purple-500 rounded-full mix-blend-screen filter blur-[50px] opacity-30 pointer-events-none"></div>
+     <div class="text-center mb-4">
+        <div class="text-4xl mb-3 filter drop-shadow-[0_0_10px_rgba(236,72,153,0.5)]">✨</div>
+        <h2 class="font-serif text-2xl font-bold text-white mb-2">AI Mix & Match</h2>
+     </div>
+     <div id="aiMixText" class="text-sm text-gray-300 mb-6 leading-relaxed bg-white/5 p-4 rounded-xl border border-white/5 text-center"></div>
+     <button onclick="document.getElementById('aiMixModal').classList.add('hidden')" class="btn-primary w-full py-3.5 rounded-xl font-bold">Got it</button>
+  </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div id="deleteModal" class="hidden fixed inset-0 z-[80] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div class="premium-glass border border-red-500/30 rounded-[24px] p-6 max-w-sm w-full text-center fade-up">
+        <div class="text-3xl mb-3">🗑️</div>
+        <h3 class="text-xl font-serif font-bold text-white mb-2">Delete Outfit?</h3>
+        <p class="text-sm text-gray-400 mb-6">This action cannot be undone.</p>
+        <div class="flex gap-3">
+            <button id="cancelDeleteBtn" class="flex-1 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition">Cancel</button>
+            <button id="confirmDeleteBtn" class="flex-1 py-3 rounded-xl bg-red-500 text-white font-bold hover:bg-red-600 transition shadow-lg shadow-red-500/20">Delete</button>
+        </div>
+    </div>
+</div>
 
 <!-- Share Modal -->
 <div id="shareModal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl">
@@ -615,7 +877,7 @@
 </div>
 
 <!-- Paywall Modal -->
-<div id="paywallModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-lg">
+<div id="paywallModal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/80 backdrop-blur-lg">
   <div class="premium-glass border border-brand-500/20 rounded-[32px] p-8 max-w-sm w-full relative overflow-hidden fade-up">
     <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-500 rounded-full mix-blend-screen filter blur-[60px] opacity-30 pointer-events-none"></div>
     
@@ -627,36 +889,7 @@
       <p class="text-sm text-gray-400">Unlock your full dating potential.</p>
     </div>
 
-    <div class="relative z-10 bg-black/40 border border-white/5 rounded-2xl p-4 mb-6">
-      <ul class="text-left space-y-3">
-        <li class="flex items-center gap-3 text-sm text-gray-200 font-medium">
-          <div class="w-6 h-6 rounded-full bg-brand-500/20 flex items-center justify-center text-brand-400 shrink-0 text-xs">✨</div>
-          Advanced feedback & rules
-        </li>
-        <li class="flex items-center gap-3 text-sm text-gray-200 font-medium">
-          <div class="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 shrink-0 text-xs">🎨</div>
-          Color matching engine
-        </li>
-        <li class="flex items-center gap-3 text-sm text-gray-200 font-medium">
-          <div class="w-6 h-6 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400 shrink-0 text-xs">🔥</div>
-          Attractiveness boost tips
-        </li>
-        <li class="flex items-center gap-3 text-sm text-gray-200 font-medium">
-          <div class="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 shrink-0 text-xs">📸</div>
-          Saved outfits history
-        </li>
-      </ul>
-    </div>
-
     <div class="space-y-2.5 relative z-10">
-      <button class="plan-btn w-full text-left bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-2xl p-3.5 transition-all flex items-center justify-between group">
-        <div class="pr-2">
-          <div class="font-semibold text-white text-sm">Single Scan</div>
-          <div class="text-[11px] text-gray-500 mt-0.5 leading-tight">Know how you come across</div>
-        </div>
-        <div class="font-bold text-base text-white shrink-0">$1.99</div>
-      </button>
-
       <button class="plan-btn w-full text-left bg-gradient-to-r from-brand-500/10 to-purple-500/10 border border-brand-500/40 rounded-2xl p-3.5 transition-all flex items-center justify-between relative overflow-hidden hover:border-brand-500/70 shadow-lg">
         <div class="absolute top-0 right-0 bg-brand-500 text-[9px] uppercase font-bold px-2 py-0.5 rounded-bl-lg text-white tracking-wider shadow-sm">Popular</div>
         <div class="pr-2">
@@ -695,10 +928,9 @@
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="module">
+<script type="module">
 import { FilesetResolver, FaceLandmarker } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs";
 
-// --- SIMPLE STORE ARCHITECTURE (Zustand-like Vanilla implementation) ---
 const createStore = (initialState) => {
   let state = { ...initialState };
   const listeners = new Set();
@@ -711,7 +943,7 @@ const createStore = (initialState) => {
     },
     subscribe: (fn) => {
       listeners.add(fn);
-      fn(state); // Run immediately with current state
+      fn(state); 
       return () => listeners.delete(fn);
     }
   };
@@ -722,13 +954,13 @@ const store = createStore({
   stream: null,
   aiReady: false,
   cameraReady: false,
-  isScanning: false, // Prevents rapid double clicks
+  isScanning: false, 
   occasion: 'casual', 
   lastItems: null, 
-  lastColor: null
+  lastColor: null,
+  activeView: 'scanner'
 });
 
-// --- DOM ELEMENTS ---
 const $ = (id) => document.getElementById(id);
 const video = $("video");
 const scanBtn = $("scanBtn");
@@ -753,20 +985,17 @@ const flashOverlay = $("flashOverlay");
 const thinkingOverlay = $("thinkingOverlay");
 const thinkingTextEl = $("thinkingText");
 
-// --- UI SYNC VIA STORE ---
 store.subscribe((s) => {
-  // Sync Occasion Buttons
   document.querySelectorAll('.occ-btn').forEach(btn => {
     if (btn.dataset.occ === s.occasion) {
-      btn.classList.remove('border-white/10', 'bg-white/5', 'text-gray-400');
-      btn.classList.add('border-brand-500/50', 'bg-brand-500/20', 'text-white');
+      btn.classList.remove('border-white/10', 'text-gray-500');
+      btn.classList.add('border-brand-500', 'text-brand-400');
     } else {
-      btn.classList.remove('border-brand-500/50', 'bg-brand-500/20', 'text-white');
-      btn.classList.add('border-white/10', 'bg-white/5', 'text-gray-400');
+      btn.classList.remove('border-brand-500', 'text-brand-400');
+      btn.classList.add('border-white/10', 'text-gray-500');
     }
   });
 
-  // Sync Scan Button state
   if (s.isScanning) {
     scanBtn.disabled = true;
     scanBtnText.innerHTML = "Extracting vibes...";
@@ -778,7 +1007,6 @@ store.subscribe((s) => {
     scanBtnText.innerHTML = "Initializing...";
   }
 
-  // Sync Top Left Status Indicator
   if (!s.cameraReady || !s.aiReady) {
     statusText.textContent = s.aiReady ? "Waiting for Camera" : "Loading AI...";
     statusDot.className = "w-2 h-2 rounded-full bg-yellow-500 animate-pulse";
@@ -791,7 +1019,6 @@ store.subscribe((s) => {
   }
 });
 
-// Gamification Variables
 const MISSIONS_KEY = "datescan.missions";
 const LEVELS = [
   { name: "Level 1: Style Rookie", xp: 0 },
@@ -802,7 +1029,6 @@ const LEVELS = [
   { name: "Level 6: Casanova", xp: 1500 }
 ];
 
-// Freemium Logic
 const FREE_DAILY = 10000;
 
 function isProUser() { return localStorage.getItem('datescan.pro') === 'true'; }
@@ -832,8 +1058,12 @@ function updateUsageBadge() {
     usageBadge.classList.remove('hidden');
     $("upgradeBtn").classList.add("hidden");
   } else {
+    const closetFull = userCloset.outfits.length >= 3;
     const left = Math.max(0, FREE_DAILY - getUsage().count);
-    if (left > 0) {
+    if (!closetFull) {
+      usageBadge.textContent = `Unlimited Scans`;
+      usageBadge.classList.remove('text-gray-500');
+    } else if (left > 0) {
       usageBadge.textContent = `${left} Free Scan Left`;
       usageBadge.classList.remove('text-gray-500');
     } else {
@@ -843,7 +1073,6 @@ function updateUsageBadge() {
   }
 }
 
-// Global UI functions
 window.openPaywall = function() {
   paywall.classList.remove("hidden");
   document.body.style.overflow = 'hidden';
@@ -856,9 +1085,228 @@ function closePaywall() {
   triggerHaptic('tap');
 }
 
-// --- SHARE CARD (TikTok-ready 9:16) ---
+function toggleView(targetView) {
+    const viewScanner = $("viewScanner");
+    const viewCloset = $("viewCloset");
+    const navBtn = $("navClosetBtn");
+
+    if (targetView === 'closet') {
+        viewScanner.classList.replace("block", "hidden");
+        viewScanner.classList.remove("opacity-100");
+        
+        viewCloset.classList.replace("hidden", "block");
+        setTimeout(() => {
+            viewCloset.classList.replace("opacity-0", "opacity-100");
+            viewCloset.classList.replace("translate-y-8", "translate-y-0");
+        }, 50);
+
+        navBtn.innerHTML = `<span class="text-base">📸</span><span class="hidden sm:inline">Scanner</span>`;
+        navBtn.classList.replace("bg-white/5", "bg-brand-500/20");
+        navBtn.classList.replace("text-white", "text-brand-300");
+        navBtn.classList.replace("border-white/10", "border-brand-500/40");
+        
+        renderCloset(); 
+        store.set({ activeView: 'closet' });
+    } else {
+        viewCloset.classList.replace("opacity-100", "opacity-0");
+        viewCloset.classList.replace("translate-y-0", "translate-y-8");
+        setTimeout(() => {
+            viewCloset.classList.replace("block", "hidden");
+            viewScanner.classList.replace("hidden", "block");
+            setTimeout(() => viewScanner.classList.add("opacity-100"), 50);
+        }, 300);
+
+        navBtn.innerHTML = `<span class="text-base">👕</span><span class="hidden sm:inline">Closet</span>`;
+        navBtn.classList.replace("bg-brand-500/20", "bg-white/5");
+        navBtn.classList.replace("text-brand-300", "text-white");
+        navBtn.classList.replace("border-brand-500/40", "border-white/10");
+        
+        store.set({ activeView: 'scanner' });
+    }
+}
+
+$("navClosetBtn").addEventListener("click", () => {
+    triggerHaptic('tap');
+    const s = store.get();
+    toggleView(s.activeView === 'scanner' ? 'closet' : 'scanner');
+});
+
+$("logoBtn").addEventListener("click", () => {
+    if (store.get().activeView === 'closet') {
+        triggerHaptic('tap');
+        toggleView('scanner');
+    }
+});
+
+
+let userCloset = JSON.parse(localStorage.getItem('datescan.closet') || '{"outfits":[]}');
+
+function generateThumbnail(dataUrl, callback) {
+    const img = new Image();
+    img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const max = 800; // Csökkentve 1600-ról 800-ra a jobb mobil teljesítményért
+        let w = img.width, h = img.height;
+        if (w > h) { if (w > max) { h *= max / w; w = max; } }
+        else { if (h > max) { w *= max / h; h = max; } }
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img, 0, 0, w, h);
+        callback(canvas.toDataURL('image/webp', 0.85)); // JPEG helyett WebP használata
+    };
+    img.src = dataUrl;
+}
+
+window.renderCloset = function(filter = 'all') {
+    const grid = $("closetGrid");
+    if (!userCloset.outfits || userCloset.outfits.length === 0) {
+        grid.innerHTML = `<div class="col-span-full py-16 text-center text-gray-500"><div class="text-5xl mb-4 opacity-50">👻</div><h3 class="font-serif text-xl text-gray-300 mb-2">Your closet is empty.</h3><p class="text-sm">Scan and save your first outfit to start building your style archive.</p></div>`;
+        return;
+    }
+
+    const filtered = filter === 'all' ? userCloset.outfits : userCloset.outfits.filter(o => o.occasion === filter);
+
+    if (filtered.length === 0) {
+        grid.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500"><p>No saved outfits found for this category.</p></div>`;
+        return;
+    }
+
+    grid.innerHTML = filtered.map(outfit => `
+        <div class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-default relative">
+            <div class="aspect-[3/4] bg-black relative">
+                <img src="${outfit.image}" class="w-full h-full object-cover opacity-90 transition-opacity" alt="Saved Outfit" />
+                <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-xs font-bold ${outfit.score >= 80 ? 'text-emerald-400' : 'text-brand-400'} border border-white/10 z-10">
+                    ${outfit.score}/100
+                </div>
+                <div class="absolute bottom-3 right-3 flex gap-2.5 z-20">
+                     <button onclick="window.triggerDeleteOutfit('${outfit.id}')" class="w-12 h-12 rounded-full bg-black/70 hover:bg-red-500/90 active:scale-95 flex items-center justify-center backdrop-blur-md text-white transition-all border border-white/20 shadow-lg" title="Delete">
+                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                     </button>
+                     <button onclick="window.openShareModal(${outfit.score}, '${outfit.image}')" class="w-12 h-12 rounded-full bg-black/70 hover:bg-brand-500/90 active:scale-95 flex items-center justify-center backdrop-blur-md text-white transition-all border border-white/20 shadow-lg" title="Share">
+                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                     </button>
+                </div>
+            </div>
+            <div class="p-3.5 bg-gradient-to-t from-dark-900 to-transparent">
+                <div class="flex items-center justify-between mb-1">
+                  <div class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">${outfit.occasion.replace('_', ' ')}</div>
+                  <div class="text-[9px] text-gray-500">${new Date(outfit.date).toLocaleDateString()}</div>
+                </div>
+                <div class="text-sm text-white font-medium truncate flex items-center gap-1.5">
+                   <div class="w-2.5 h-2.5 rounded-full border border-white/20" style="background-color: ${outfit.colorHex || '#ccc'};"></div>
+                   ${outfit.color || 'Mixed'} Palette
+                </div>
+            </div>
+        </div>
+    `).join('');
+};
+
+document.querySelectorAll(".closet-filter-btn").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+        triggerHaptic('tap');
+        const filter = e.target.dataset.filter;
+        
+        document.querySelectorAll(".closet-filter-btn").forEach(b => {
+            b.classList.remove("border-brand-500/50", "bg-brand-500/20", "text-white");
+            b.classList.add("border-white/10", "bg-white/5", "text-gray-400");
+        });
+        e.target.classList.remove("border-white/10", "bg-white/5", "text-gray-400");
+        e.target.classList.add("border-brand-500/50", "bg-brand-500/20", "text-white");
+
+        renderCloset(filter);
+    });
+});
+
+let outfitToDelete = null;
+window.triggerDeleteOutfit = function(id) {
+    triggerHaptic('tap');
+    outfitToDelete = id;
+    $("deleteModal").classList.remove("hidden");
+};
+
+$("cancelDeleteBtn").addEventListener("click", () => {
+    triggerHaptic('tap');
+    outfitToDelete = null;
+    $("deleteModal").classList.add("hidden");
+});
+
+$("confirmDeleteBtn").addEventListener("click", () => {
+    triggerHaptic('success');
+    if (outfitToDelete) {
+        userCloset.outfits = userCloset.outfits.filter(o => o.id !== outfitToDelete);
+        localStorage.setItem('datescan.closet', JSON.stringify(userCloset));
+        
+        const activeFilterBtn = document.querySelector(".closet-filter-btn.border-brand-500\\/50");
+        const filter = activeFilterBtn ? activeFilterBtn.dataset.filter : 'all';
+        renderCloset(filter);
+        updateUsageBadge();
+    }
+    outfitToDelete = null;
+    $("deleteModal").classList.add("hidden");
+});
+
+window.saveCurrentOutfit = function() {
+    triggerHaptic('tap');
+    
+    if (!isProUser() && userCloset.outfits.length >= 3) {
+        window.openPaywall();
+        return;
+    }
+
+    const s = store.get();
+    if (!s.lastCap) return;
+
+    const btn = $("saveOutfitBtn");
+    btn.innerHTML = `<span class="animate-pulse">Saving...</span>`;
+    btn.disabled = true;
+
+    generateThumbnail(s.lastCap, (thumbBase64) => {
+        userCloset.outfits.unshift({
+            id: 'outfit_' + Date.now(),
+            image: thumbBase64,
+            score: s.lastScore || 75,
+            color: s.lastColor ? s.lastColor.name : 'Mixed',
+            colorHex: s.lastColor ? s.lastColor.hex : '#888',
+            occasion: s.occasion,
+            date: Date.now()
+        });
+
+        try {
+            localStorage.setItem('datescan.closet', JSON.stringify(userCloset));
+            btn.innerHTML = `<span>✓ Saved to Closet</span>`;
+            btn.classList.remove("bg-white/5", "border-white/20", "text-white");
+            btn.classList.add("bg-emerald-500/10", "border-emerald-500/40", "text-emerald-400");
+            
+            if(store.get().activeView === 'closet') renderCloset();
+        } catch(e) {
+            console.error(e);
+            alert("Storage full! Couldn't save outfit.");
+            btn.innerHTML = `<span>👕 Save to Digital Closet</span>`;
+            btn.disabled = false;
+        }
+    });
+};
+
+$("aiMixBtn").addEventListener("click", () => {
+    triggerHaptic('success');
+    const modal = $("aiMixModal");
+    const textEl = $("aiMixText");
+    
+    if (userCloset.outfits.length < 2) {
+        textEl.innerHTML = "You need to save at least <strong>2 outfits</strong> to your Digital Closet to get personalized AI mix & match suggestions.";
+    } else {
+        const best = userCloset.outfits.reduce((max, o) => o.score > max.score ? o : max, userCloset.outfits[0]);
+        textEl.innerHTML = `Based on your archive, your <strong>${best.color}</strong> pieces score the highest (${best.score}/100). <br><br><strong>Tip:</strong> Try pairing the jacket from your best <em>${best.occasion.replace('_',' ')}</em> outfit with a crisp white shirt for an instant 10% boost on your next date!`;
+    }
+    
+    modal.classList.remove("hidden");
+});
+
 const shareModal = $("shareModal");
 const shareCanvas = $("shareCanvas");
+let currentShareScore = 75; 
 
 function getScoreLabel(s) {
   if (s >= 90) return "ELITE";
@@ -875,22 +1323,23 @@ function getScoreEmoji(s) {
   return "👀";
 }
 
-async function generateShareCard() {
+async function generateShareCard(overrideScore, overrideImage) {
   const s = store.get();
-  const score = s.lastScore || 75;
-  const photoURL = s.lastCap;
+  const score = overrideScore !== undefined ? overrideScore : (s.lastScore || 75);
+  const photoURL = overrideImage !== undefined ? overrideImage : s.lastCap;
+  
+  currentShareScore = score;
+
   const W = 1080, H = 1920;
   shareCanvas.width = W; shareCanvas.height = H;
   const g = shareCanvas.getContext('2d');
 
-  // Background gradient
   const bg = g.createLinearGradient(0, 0, W, H);
   bg.addColorStop(0, '#18181b');
   bg.addColorStop(0.5, '#0a0a0f');
   bg.addColorStop(1, '#1a0a1a');
   g.fillStyle = bg; g.fillRect(0, 0, W, H);
 
-  // Pink glow blobs
   const glow1 = g.createRadialGradient(W*0.2, H*0.15, 0, W*0.2, H*0.15, 600);
   glow1.addColorStop(0, 'rgba(236,72,153,0.35)');
   glow1.addColorStop(1, 'rgba(236,72,153,0)');
@@ -900,7 +1349,6 @@ async function generateShareCard() {
   glow2.addColorStop(1, 'rgba(147,51,234,0)');
   g.fillStyle = glow2; g.fillRect(0, 0, W, H);
 
-  // Header: brand
   g.fillStyle = 'rgba(255,255,255,0.95)';
   g.font = 'bold 44px Inter, sans-serif';
   g.textAlign = 'center';
@@ -911,11 +1359,9 @@ async function generateShareCard() {
   g.fillStyle = 'rgba(236,72,153,1)';
   g.fillText('CONFIDENCE OPTIMIZER FOR DATES', W/2, 185);
 
-  // Photo frame
   const photoY = 230, photoH = 900, photoW = 760, photoX = (W-photoW)/2;
   const drawPhotoFrame = () => {
     g.save();
-    // Rounded rect clip
     const r = 40;
     g.beginPath();
     g.moveTo(photoX+r, photoY);
@@ -929,7 +1375,6 @@ async function generateShareCard() {
   };
 
   const drawRest = () => {
-    // Photo border glow
     g.strokeStyle = 'rgba(236,72,153,0.6)';
     g.lineWidth = 4;
     const r = 40;
@@ -942,7 +1387,6 @@ async function generateShareCard() {
     g.closePath();
     g.stroke();
 
-    // "AI RATED MY OUTFIT" tag top-left on photo
     g.fillStyle = 'rgba(0,0,0,0.7)';
     const tagX = photoX + 30, tagY = photoY + 30, tagW = 340, tagH = 60;
     g.beginPath();
@@ -955,11 +1399,9 @@ async function generateShareCard() {
     g.textAlign = 'left';
     g.fillText('🤖  AI RATED MY OUTFIT', tagX + 24, tagY + 38);
 
-    // Score circle (big, bottom right of photo)
     const cx = photoX + photoW - 140, cy = photoY + photoH - 140, rad = 110;
     g.fillStyle = 'rgba(0,0,0,0.85)';
     g.beginPath(); g.arc(cx, cy, rad, 0, Math.PI*2); g.fill();
-    // Ring
     g.strokeStyle = 'rgba(255,255,255,0.1)';
     g.lineWidth = 12;
     g.beginPath(); g.arc(cx, cy, rad-14, 0, Math.PI*2); g.stroke();
@@ -971,7 +1413,6 @@ async function generateShareCard() {
     g.beginPath();
     g.arc(cx, cy, rad-14, -Math.PI/2, -Math.PI/2 + (Math.PI*2 * score/100));
     g.stroke();
-    // Score text
     g.fillStyle = '#fff';
     g.font = 'bold 88px Playfair Display, Georgia, serif';
     g.textAlign = 'center';
@@ -980,7 +1421,6 @@ async function generateShareCard() {
     g.fillStyle = 'rgba(255,255,255,0.6)';
     g.fillText('/ 100', cx, cy + 48);
 
-    // Big score label
     g.textAlign = 'center';
     g.font = '600 38px Inter, sans-serif';
     g.fillStyle = 'rgba(255,255,255,0.6)';
@@ -995,7 +1435,6 @@ async function generateShareCard() {
     g.fillStyle = '#f472b6';
     g.fillText(getScoreLabel(score), W/2, photoY + photoH + 275);
 
-    // CTA bottom
     g.fillStyle = 'rgba(255,255,255,0.75)';
     g.font = 'bold 38px Inter, sans-serif';
     g.fillText('Get your score → datescan.app', W/2, H - 80);
@@ -1006,7 +1445,6 @@ async function generateShareCard() {
     await new Promise((resolve) => {
       const img = new Image();
       img.onload = () => {
-        // cover fit
         const ir = img.width/img.height, fr = photoW/photoH;
         let sx=0, sy=0, sw=img.width, sh=img.height;
         if (ir > fr) { sw = img.height*fr; sx = (img.width-sw)/2; }
@@ -1027,11 +1465,11 @@ async function generateShareCard() {
   }
 }
 
-window.openShareModal = async function() {
+window.openShareModal = async function(score, image) {
   triggerHaptic('tap');
   shareModal.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
-  await generateShareCard();
+  await generateShareCard(score, image);
 };
 function closeShareModal() {
   shareModal.classList.add('hidden');
@@ -1043,14 +1481,14 @@ shareModal.addEventListener('click', (e) => { if (e.target === shareModal) close
 $("shareDownloadBtn").addEventListener('click', () => {
   triggerHaptic('success');
   const link = document.createElement('a');
-  link.download = `datescan-score-${store.get().lastScore || 'result'}.png`;
+  link.download = `datescan-score-${currentShareScore}.png`;
   link.href = shareCanvas.toDataURL('image/png');
   link.click();
 });
 
 $("shareNativeBtn").addEventListener('click', async () => {
   triggerHaptic('tap');
-  const score = store.get().lastScore || 75;
+  const score = currentShareScore;
   const shareText = `My DateScan score: ${score}/100 ${getScoreEmoji(score)}\nAI just rated my outfit. Get yours 👉`;
   try {
     const blob = await new Promise(res => shareCanvas.toBlob(res, 'image/png'));
@@ -1063,7 +1501,6 @@ $("shareNativeBtn").addEventListener('click', async () => {
       await navigator.share({ text: shareText, title: 'My DateScan Score' });
       return;
     }
-    // Fallback: copy + download
     await navigator.clipboard.writeText(shareText);
     const link = document.createElement('a');
     link.download = 'datescan-score.png';
@@ -1073,10 +1510,9 @@ $("shareNativeBtn").addEventListener('click', async () => {
     const orig = btn.innerHTML;
     btn.innerHTML = '✓ Copied & Saved';
     setTimeout(() => btn.innerHTML = orig, 2000);
-  } catch(e) { /* user cancelled */ }
+  } catch(e) { }
 });
 
-// Haptic Feedback
 function triggerHaptic(type = 'tap') {
   if (!navigator.vibrate) return;
   try {
@@ -1102,8 +1538,6 @@ function hasWebGL() {
     return !!(window.WebGLRenderingContext && (c.getContext("webgl") || c.getContext("experimental-webgl")));
   } catch { return false; }
 }
-
-// --- LAZY LOAD & CORE INIT ---
 
 async function initFaceLandmarker() {
   try {
@@ -1131,7 +1565,6 @@ async function initCamera() {
   try {
     loadingText.textContent = "Starting Camera...";
     
-    // Explicit Safari mobile requirements
     video.setAttribute('autoplay', '');
     video.setAttribute('muted', '');
     video.setAttribute('playsinline', '');
@@ -1151,12 +1584,10 @@ async function initCamera() {
         video.play().then(res).catch(rej); 
       };
       if (video.readyState >= 1) {
-        // Metadata already loaded
         onReady();
       } else {
         video.onloadedmetadata = onReady;
         video.onerror = rej;
-        // Safety timeout — if metadata never fires, fail loud
         setTimeout(() => rej(new Error("Camera feed timed out. Try reloading the page.")), 8000);
       }
     });
@@ -1177,6 +1608,100 @@ async function initCamera() {
   }
 }
 
+// --- DATE PREP TIMER LOGIC ---
+let dateTimerInterval;
+
+function updateDateTimerUI() {
+  const targetStr = localStorage.getItem('datescan.date_timer');
+  const setupView = $('timerSetupView');
+  const activeView = $('timerActiveView');
+
+  if (!targetStr) {
+    setupView.classList.remove('hidden');
+    activeView.classList.add('hidden');
+    clearInterval(dateTimerInterval);
+    
+    // Set a good default time (e.g. today at 19:00, or tomorrow if late)
+    const d = new Date();
+    d.setHours(d.getHours() + 4);
+    d.setMinutes(0);
+    const offset = d.getTimezoneOffset() * 60000;
+    $('dateTimerInput').value = (new Date(d - offset)).toISOString().slice(0, 16);
+    return;
+  }
+
+  const targetDate = new Date(targetStr).getTime();
+  if (isNaN(targetDate)) {
+    localStorage.removeItem('datescan.date_timer');
+    updateDateTimerUI();
+    return;
+  }
+
+  setupView.classList.add('hidden');
+  activeView.classList.remove('hidden');
+
+  function tick() {
+    const now = new Date().getTime();
+    const diff = targetDate - now;
+
+    if (diff <= 0) {
+      $('countdownDisplay').textContent = "00:00:00";
+      $('reminderText').textContent = "It's date time! Put your phone away, be confident and have fun!";
+      $('reminderIcon').textContent = "🎉";
+      clearInterval(dateTimerInterval);
+      return;
+    }
+
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+    $('countdownDisplay').textContent =
+      String(hours).padStart(2, '0') + ':' +
+      String(mins).padStart(2, '0') + ':' +
+      String(secs).padStart(2, '0');
+
+    let msg = "", icon = "";
+    if (hours >= 24) { msg = "Plenty of time. Pick out your outfit and make sure it's ironed."; icon = "👕"; }
+    else if (hours >= 12) { msg = "Great time for a quick workout or to get a fresh haircut."; icon = "💈"; }
+    else if (hours >= 4) { msg = "Double check the logistics, the reservation, and the route."; icon = "📍"; }
+    else if (hours >= 2) { msg = "Time to take a shower and start getting ready."; icon = "🚿"; }
+    else if (hours >= 1) { msg = "Almost time! 2 hours left. Don't forget your perfume and mints."; icon = "🌸"; }
+    else if (mins >= 30) { msg = "Final mirror check. Do you have your keys and wallet?"; icon = "🪞"; }
+    else { msg = "You should be leaving soon. Walk in like you own the place. Good luck!"; icon = "🚀"; }
+
+    $('reminderText').textContent = msg;
+    $('reminderIcon').textContent = icon;
+  }
+
+  tick();
+  clearInterval(dateTimerInterval);
+  dateTimerInterval = setInterval(tick, 1000);
+}
+
+$('startDateTimerBtn').addEventListener('click', () => {
+  const val = $('dateTimerInput').value;
+  if (!val) return alert("Please select a date and time!");
+  const targetDate = new Date(val);
+  if (targetDate < new Date()) return alert("The date must be in the future!");
+
+  localStorage.setItem('datescan.date_timer', targetDate.toISOString());
+  
+  if ("Notification" in window && Notification.permission === "default") {
+    Notification.requestPermission();
+  }
+
+  triggerHaptic('success');
+  updateDateTimerUI();
+});
+
+$('cancelDateTimerBtn').addEventListener('click', () => {
+  triggerHaptic('tap');
+  localStorage.removeItem('datescan.date_timer');
+  updateDateTimerUI();
+});
+// ------------------------------
+
 async function startAppFlow() {
   hideError();
   loadingOverlay.classList.remove("hidden");
@@ -1187,12 +1712,8 @@ async function startAppFlow() {
   }
 
   try {
-    // 1. Get Camera permission FIRST (to unblock Safari fast)
     if (!store.get().cameraReady) await initCamera();
-    
-    // 2. Lazy load AI after camera is approved
     if (!store.get().aiReady) await initFaceLandmarker();
-    
     loadingOverlay.classList.add("hidden");
   } catch (e) {
     showError("System Error", e.message || String(e));
@@ -1217,6 +1738,8 @@ function boot() {
     onboardingModal.classList.add("hidden");
     startAppFlow();
   }
+  
+  updateDateTimerUI(); // Initialize Timer
 }
 
 retryBtn.addEventListener("click", () => { triggerHaptic('tap'); startAppFlow(); });
@@ -1250,9 +1773,6 @@ function landmarkBBox(landmarks, idxs, w, h) {
   return { x: minX*w, y: minY*h, w: (maxX-minX)*w, h: (maxY-minY)*h };
 }
 
-// ------------------------------------------
-// DEEP ANALYSIS FUNCTIONS 
-// ------------------------------------------
 function analyzeCameraAngle(landmarks) {
   const top = landmarks[10], bottom = landmarks[152], nose = landmarks[1];
   if(!top || !bottom || !nose) return null;
@@ -1514,7 +2034,6 @@ function analyzeShoulders(W, H) {
   return { possibleLint: (outliers/n) > 0.012 };
 }
 
-// Color & Outfit Logic
 const OUTFIT_COLORS = [
   { id: "black", name: "Dark / Black", hex: "#18181b", rgb: [30, 30, 35] },
   { id: "white", name: "Light / White", hex: "#f8fafc", rgb: [230, 230, 235] },
@@ -1554,9 +2073,6 @@ function analyzeOutfitColor(landmarks, W, H) {
   return OUTFIT_COLORS.find(c => c.id === winningId);
 }
 
-// ------------------------------------------
-// GAMIFICATION / HABIT LOOP
-// ------------------------------------------
 function addXP(amount) {
   try {
     const m = JSON.parse(localStorage.getItem(MISSIONS_KEY) || '{"count":0,"log":[],"xp":0}');
@@ -1572,7 +2088,7 @@ function logMission() {
     m.count = (m.count || 0) + 1;
     m.log = m.log || []; m.log.push(Date.now());
     localStorage.setItem(MISSIONS_KEY, JSON.stringify(m));
-    addXP(50); // Logging a date gives 50 XP
+    addXP(50);
   } catch {}
 }
 
@@ -1582,7 +2098,6 @@ function updateMissionBadge() {
     const xp = m.xp || 0;
     $("missionCount").textContent = xp;
 
-    // Calculate Level
     let currLevel = LEVELS[0], nextLevel = LEVELS[1];
     for (let i = 0; i < LEVELS.length; i++) {
        if (xp >= LEVELS[i].xp) { 
@@ -1592,14 +2107,12 @@ function updateMissionBadge() {
     }
     $("levelName").textContent = currLevel.name;
 
-    // Calculate Progress Bar
     let progress = 100;
     if (nextLevel !== currLevel) {
        progress = ((xp - currLevel.xp) / (nextLevel.xp - currLevel.xp)) * 100;
     }
     $("xpBar").style.width = progress + "%";
 
-    // Calculate Streak
     let streak = 0;
     if (m.log && m.log.length > 0) {
         const uniqueDays = [...new Set(m.log.map(t => {
@@ -1635,12 +2148,6 @@ function updateMissionBadge() {
   } catch(e) {}
 }
 
-
-// ------------------------------------------
-// STYLE COACH LOGIC (Score & Upgrades)
-// ------------------------------------------
-// --- IMPROVEMENTS ENGINE ---
-// Categorized pool of actionable tips. generateImprovements picks 3 based on real signals.
 const IMPROVEMENTS_POOL = {
   lighting: [
     { text: "Move closer to a natural light source", points: 7 },
@@ -1685,7 +2192,6 @@ const IMPROVEMENTS_POOL = {
 function pickRandom(arr, used) {
   const pool = arr.filter(x => !used.has(x.text));
   if (!pool.length) return null;
-  // Prefer items not recently used across scans
   const seen = _recent['imp'] || [];
   const fresh = pool.filter(x => !seen.includes(x.text));
   const chosen = (fresh.length ? fresh : pool)[Math.floor(Math.random() * (fresh.length ? fresh.length : pool.length))];
@@ -1701,7 +2207,6 @@ function generateImprovements(items, colorData, occasion) {
     if (pick) { used.add(pick.text); result.push(pick); }
   };
 
-  // Flag what's wrong from detected items
   const hasIssue = (category, titleRegex) =>
     (items || []).some(it =>
       it.category === category &&
@@ -1714,15 +2219,12 @@ function generateImprovements(items, colorData, occasion) {
                       hasIssue('env', /off-center|too far|too close|angle/i);
   const groomingBad = hasIssue('grooming', null);
 
-  // Priority-driven picks
   if (lightingBad) add('lighting');
   if (postureBad)  add('posture');
   if (groomingBad) add('grooming');
 
-  // Always include a style tip
   add('style');
 
-  // Fill up to 3 — prefer style, then color, then whatever
   while (result.length < 3) {
     const before = result.length;
     const remaining = ['style', 'color', 'grooming', 'posture', 'lighting']
@@ -1732,7 +2234,6 @@ function generateImprovements(items, colorData, occasion) {
     if (result.length === before) break;
   }
 
-  // Occasion-specific nudge: swap in one tip if highly relevant
   if (occasion === 'fancy' && !result.some(r => /tuck/i.test(r.text))) {
     const tuck = IMPROVEMENTS_POOL.style.find(x => /tuck/i.test(x.text));
     if (tuck && result.length >= 1) { result[result.length - 1] = tuck; used.add(tuck.text); }
@@ -1745,13 +2246,8 @@ function generateImprovements(items, colorData, occasion) {
   return result.slice(0, 3);
 }
 
-// Score computation — deterministic per scan, driven by real detected signals
-// Rules: hard cap 92 (never 100), floor 40 but rarely dips below 58
 function computeScore(items, colorData, occasion) {
-  // Base 72-82 with small jitter so identical scans don't look canned
   let score = 72 + Math.random() * 10;
-
-  // Deduct for each detected issue by tone
   const weights = { alert: 7, warn: 4, error: 10, info: 0, good: 0 };
   let warnCount = 0, alertCount = 0, goodCount = 0;
   for (const it of (items || [])) {
@@ -1761,10 +2257,8 @@ function computeScore(items, colorData, occasion) {
     score -= (weights[it.tone] || 0);
   }
 
-  // Reward positives (but gently — easier to lose points than gain)
   score += goodCount * 2.2;
 
-  // Color × occasion chemistry bonus/penalty
   if (colorData) {
     if (occasion === 'fancy' && (colorData.id === 'black' || colorData.id === 'navy')) score += 4;
     if (occasion === 'night_out' && colorData.id === 'black') score += 3;
@@ -1773,11 +2267,7 @@ function computeScore(items, colorData, occasion) {
     if (occasion === 'fancy' && colorData.id === 'pink') score -= 3;
   }
 
-  // Soft floor: if score is crashing below 58, pull it back up halfway
-  // (so "nagyon alacsony" is ritka but still possible in extreme cases)
   if (score < 58) score = 58 - (58 - score) * 0.35;
-
-  // Hard caps
   score = Math.max(42, Math.min(92, Math.round(score)));
   return score;
 }
@@ -1799,10 +2289,7 @@ function generateStyleAnalysis(colorData, occasion, items) {
     rules.push({ passed: false, text: "Approachability: Soften any rigid edges" });
   }
 
-  // Improvements engine — signal-driven, not hardcoded per occasion
   let fixes = generateImprovements(items, colorData, occasion);
-
-  // Clamp points so target score ≤ 92
   const maxGain = 92 - score;
   let used = 0;
   fixes = fixes.map(f => {
@@ -1827,7 +2314,6 @@ function renderStyleCoach(colorData, occasion, locked = false, items = null) {
   const targetScore = Math.min(100, analysis.score + analysis.fixes.reduce((acc, f) => acc + f.points, 0));
   store.set({ lastScore: analysis.score, lastScoreLabel: colorData.name });
 
-  // Update history only if it's a new unique scan (wait at least 5s before saving a new one)
   let hist = JSON.parse(localStorage.getItem('datescan.history') || '[]');
   const lastHist = hist[hist.length - 1];
   if (!locked && (!lastHist || (Date.now() - lastHist.time > 5000))) {
@@ -1836,7 +2322,6 @@ function renderStyleCoach(colorData, occasion, locked = false, items = null) {
       localStorage.setItem('datescan.history', JSON.stringify(hist));
   }
 
-  // Calculate history text logic
   let historyText = "Your first scan. Keep it up!";
   if (hist.length > 1) {
       const current = analysis.score;
@@ -1850,89 +2335,113 @@ function renderStyleCoach(colorData, occasion, locked = false, items = null) {
       else historyText = `Steady — within 0 points of your scan earlier today.`;
   }
 
-  // Generate SVG Sparkline
-  const sparkSVG = (() => {
+  const sparkData = (() => {
+      const W = 500, H = 100, PAD_Y = 14, PAD_X = 8;
       if (hist.length < 2) {
-          return `
-          <svg viewBox="0 0 100 30" class="w-full h-full overflow-visible" preserveAspectRatio="none">
-              <line x1="0" y1="15" x2="100" y2="15" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.4"/>
-              <circle cx="100" cy="15" r="2.5" fill="#fff" stroke="#ec4899" stroke-width="1.5" />
-          </svg>`;
+          return {
+            svg: `<svg viewBox="0 0 ${W} ${H}" class="w-full h-full" preserveAspectRatio="none"><line x1="0" y1="${H/2}" x2="${W}" y2="${H/2}" stroke="#ec4899" stroke-width="2" stroke-dasharray="4 6" opacity="0.25" vector-effect="non-scaling-stroke"/></svg>`,
+            endX: 98, endY: 50, currentScore: 0
+          };
       }
       const scores = hist.map(h => h.score);
       const minS = Math.min(...scores);
       const maxS = Math.max(...scores);
       const range = Math.max(maxS - minS, 10);
-      const plotMin = Math.max(0, minS - range * 0.2);
-      const plotMax = Math.min(100, maxS + range * 0.2);
+      const plotMin = Math.max(0, minS - range * 0.35);
+      const plotMax = Math.min(100, maxS + range * 0.35);
       const plotRange = plotMax - plotMin;
 
       const pts = scores.map((s, i) => {
-          const x = (i / (scores.length - 1)) * 100;
-          const y = 30 - (((s - plotMin) / plotRange) * 26 + 2);
-          return `${x},${y}`;
+          const x = PAD_X + (i / (scores.length - 1)) * (W - PAD_X * 2);
+          const y = H - PAD_Y - ((s - plotMin) / plotRange) * (H - PAD_Y * 2);
+          return { x, y };
       });
-      const dPath = `M ${pts.join(' L ')}`;
-      const dFill = `M ${pts[0].split(',')[0]} 30 L ${pts.join(' L ')} L 100 30 Z`;
 
-      return `
-      <svg viewBox="0 0 100 30" class="w-full h-full overflow-visible" preserveAspectRatio="none">
+      let dPath = `M ${pts[0].x.toFixed(2)} ${pts[0].y.toFixed(2)}`;
+      for (let i = 0; i < pts.length - 1; i++) {
+          const p0 = pts[i - 1] || pts[i];
+          const p1 = pts[i];
+          const p2 = pts[i + 1];
+          const p3 = pts[i + 2] || p2;
+          const cp1x = p1.x + (p2.x - p0.x) / 6;
+          const cp1y = p1.y + (p2.y - p0.y) / 6;
+          const cp2x = p2.x - (p3.x - p1.x) / 6;
+          const cp2y = p2.y - (p3.y - p1.y) / 6;
+          dPath += ` C ${cp1x.toFixed(2)} ${cp1y.toFixed(2)}, ${cp2x.toFixed(2)} ${cp2y.toFixed(2)}, ${p2.x.toFixed(2)} ${p2.y.toFixed(2)}`;
+      }
+      const dFill = `${dPath} L ${pts[pts.length-1].x.toFixed(2)} ${H} L ${pts[0].x.toFixed(2)} ${H} Z`;
+      const last = pts[pts.length - 1];
+
+      const svg = `
+      <svg viewBox="0 0 ${W} ${H}" class="w-full h-full" preserveAspectRatio="none">
           <defs>
-          <linearGradient id="glowGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#ec4899" stop-opacity="0.5"/>
-              <stop offset="100%" stop-color="#ec4899" stop-opacity="0"/>
-          </linearGradient>
+            <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ec4899" stop-opacity="0.22"/>
+                <stop offset="100%" stop-color="#ec4899" stop-opacity="0"/>
+            </linearGradient>
           </defs>
-          <path d="${dFill}" fill="url(#glowGrad)" />
-          <path d="${dPath}" fill="none" stroke="#ec4899" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" />
-          <circle cx="${pts[pts.length-1].split(',')[0]}" cy="${pts[pts.length-1].split(',')[1]}" r="2" fill="#fff" stroke="#ec4899" stroke-width="1.5" />
+          <path d="${dFill}" fill="url(#areaGrad)"/>
+          <path d="${dPath}" fill="none" stroke="#ec4899" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
       </svg>`;
+
+      return { svg, endX: (last.x / W) * 100, endY: (last.y / H) * 100, currentScore: scores[scores.length - 1], minScore: minS, maxScore: maxS };
   })();
 
+  const baseScore = analysis.score;
+  const faceScore = Math.max(0, Math.min(100, baseScore + ((baseScore * 7) % 5) - 2));
+  const outfitScore = baseScore;
+  const postureScore = Math.max(0, Math.min(100, baseScore + ((baseScore * 13) % 5) - 2));
+
+  const scoreLabel = baseScore >= 85 ? 'EXCELLENT' : baseScore >= 70 ? 'GREAT' : baseScore >= 55 ? 'GOOD' : baseScore >= 40 ? 'DECENT' : 'NEEDS WORK';
+
   let html = `
-    <div class="flex items-center justify-between mb-6">
-      <div class="flex items-center gap-4">
-        <div class="relative w-16 h-16 shrink-0 drop-shadow-[0_0_8px_rgba(236,72,153,0.3)]">
-          <svg viewBox="0 0 100 100" class="w-full h-full transform -rotate-90">
-            <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8"></circle>
-            <circle cx="50" cy="50" r="40" fill="none" stroke="#f472b6" stroke-width="8" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="${251.2 - (251.2 * analysis.score / 100)}"></circle>
-          </svg>
-          <div class="absolute inset-0 flex flex-col items-center justify-center">
-            <span class="font-serif font-bold text-xl text-white leading-none">${analysis.score}</span>
-            <span class="text-[8px] text-gray-400 mt-0.5">/ 100</span>
-          </div>
-        </div>
-        <div>
-          <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-0.5">Outfit Score</div>
-          <div class="font-serif italic text-lg font-medium text-white leading-tight">${generateVibe(analysis.score)}</div>
+    <div class="flex flex-col items-center mb-6">
+      <div class="relative w-44 h-44 drop-shadow-[0_0_24px_rgba(236,72,153,0.35)]">
+        <svg viewBox="0 0 100 100" class="w-full h-full transform -rotate-90">
+          <defs>
+            <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#a855f7"/>
+              <stop offset="100%" stop-color="#ec4899"/>
+            </linearGradient>
+          </defs>
+          <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5"></circle>
+          <circle cx="50" cy="50" r="45" fill="none" stroke="url(#scoreGrad)" stroke-width="5" stroke-linecap="round" stroke-dasharray="282.74" stroke-dashoffset="${282.74 - (282.74 * analysis.score / 100)}"></circle>
+        </svg>
+        <div class="absolute inset-0 flex flex-col items-center justify-center">
+          <span class="font-serif font-bold text-6xl text-white leading-none">${analysis.score}</span>
+          <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-400 mt-3">${scoreLabel}</span>
         </div>
       </div>
-      <div class="text-right">
-        <button id="openShareBtn" onclick="window.openShareModal()" class="group relative inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider px-3 py-2 rounded-full bg-gradient-to-r from-brand-500 to-purple-500 text-white shadow-[0_0_20px_rgba(236,72,153,0.4)] hover:scale-105 transition-transform mb-2">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
-          Share Score
-        </button>
+      <div class="font-serif italic text-base text-gray-300 mt-4 text-center">${generateVibe(analysis.score)}</div>
+    </div>
+
+    <div class="flex items-center justify-between mb-6">
+      <div>
         <div class="text-[10px] text-gray-500 uppercase tracking-widest">Base Color</div>
-        <div class="flex items-center justify-end gap-1.5 mt-1">
+        <div class="flex items-center gap-1.5 mt-1">
           <div class="w-3.5 h-3.5 rounded-full border border-white/20" style="background-color: ${colorData.hex};"></div>
           <span class="text-xs font-medium text-gray-300">${colorData.name}</span>
         </div>
       </div>
+      <button id="openShareBtn" onclick="window.openShareModal()" class="group relative inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider px-3 py-2 rounded-full bg-gradient-to-r from-brand-500 to-purple-500 text-white shadow-[0_0_20px_rgba(236,72,153,0.4)] hover:scale-105 transition-transform">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+        Share Score
+      </button>
     </div>
 
-    <div class="bg-dark-950/40 rounded-xl p-4 border border-white/5 mb-6 space-y-3">
-      <div class="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-1 flex items-center gap-1.5">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        AI Rule Checks
+    <div class="grid grid-cols-3 gap-3 mb-6">
+      <div class="bg-dark-950/40 rounded-xl p-4 border border-white/5 text-center">
+        <div class="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Face</div>
+        <div class="font-serif font-bold text-3xl text-white leading-none">${faceScore}</div>
       </div>
-      ${analysis.rules.map(r => `
-        <div class="flex items-start gap-2.5 text-xs">
-          ${r.passed 
-            ? '<span class="text-emerald-400 mt-0.5 font-bold">✓</span>' 
-            : '<span class="text-yellow-500 mt-0.5 font-bold">!</span>'}
-          <span class="${r.passed ? 'text-gray-400' : 'text-gray-300 font-medium'}">${r.text}</span>
-        </div>
-      `).join('')}
+      <div class="bg-dark-950/40 rounded-xl p-4 border border-white/5 text-center">
+        <div class="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Outfit</div>
+        <div class="font-serif font-bold text-3xl text-white leading-none">${outfitScore}</div>
+      </div>
+      <div class="bg-dark-950/40 rounded-xl p-4 border border-white/5 text-center">
+        <div class="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Posture</div>
+        <div class="font-serif font-bold text-3xl text-white leading-none">${postureScore}</div>
+      </div>
     </div>
 
     <div>
@@ -1955,21 +2464,31 @@ function renderStyleCoach(colorData, occasion, locked = false, items = null) {
       </div>
     </div>
     
-    <!-- Glow-Up History Chart -->
     <div class="mt-8 pt-6 border-t border-white/5">
-      <div class="flex items-center justify-between mb-3">
-        <h3 class="text-[11px] font-bold uppercase tracking-[0.1em] text-gray-300">Glow-Up History</h3>
-        <span class="text-[11px] text-gray-500">Last 10 scans</span>
-      </div>
-      <div class="flex items-center gap-4">
-        <div class="flex-1 relative h-10">
-          ${sparkSVG}
+      <div class="flex items-end justify-between mb-4">
+        <div>
+          <h3 class="text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-500 mb-1">Glow-Up History</h3>
+          <div class="flex items-baseline gap-2">
+            <span class="font-serif text-4xl font-semibold text-white tabular-nums leading-none">${sparkData.currentScore || '—'}</span>
+            <span class="text-xs text-gray-500 font-medium">current</span>
+          </div>
         </div>
-        <div class="text-gray-500 shrink-0">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+        <div class="text-right">
+          <div class="text-[10px] text-gray-500 tracking-wider">LAST ${hist.length} ${hist.length === 1 ? 'SCAN' : 'SCANS'}</div>
+          ${hist.length >= 2 ? `<div class="text-[11px] text-gray-400 mt-1 tabular-nums">${sparkData.minScore} – ${sparkData.maxScore}</div>` : ''}
         </div>
       </div>
-      <p class="text-sm text-gray-300 mt-3 font-medium">${historyText}</p>
+      <div class="relative w-full aspect-[5/1]">
+        ${sparkData.svg}
+        <div class="absolute w-2.5 h-2.5 rounded-full bg-pink-500 ring-2 ring-white/90 shadow-[0_0_0_4px_rgba(236,72,153,0.18)]" style="left: ${sparkData.endX}%; top: ${sparkData.endY}%; transform: translate(-50%, -50%);"></div>
+      </div>
+      <p class="text-xs text-gray-400 mt-4 font-normal">${historyText}</p>
+    </div>
+
+    <div class="mt-6">
+      <button id="saveOutfitBtn" onclick="window.saveCurrentOutfit()" class="w-full py-3.5 rounded-xl border border-white/20 bg-white/5 text-sm font-bold text-white hover:bg-white/10 transition-colors flex items-center justify-center gap-2 shadow-lg">
+        <span class="text-base">👕</span> Save to Digital Closet
+      </button>
     </div>
   `;
 
@@ -1981,7 +2500,7 @@ function renderStyleCoach(colorData, occasion, locked = false, items = null) {
            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
          </div>
          <h3 class="font-serif text-2xl font-bold text-white mb-2">Detailed Analysis Locked</h3>
-         <p class="text-sm text-gray-300 mb-6 max-w-[280px] mx-auto">You've used your free scan. Unlock Pro to see your style score, color matches, and advanced tips.</p>
+         <p class="text-sm text-gray-300 mb-6 max-w-[280px] mx-auto">You've used your free scan. Unlock Pro to see your style score, color matches, and save to Digital Closet.</p>
          <button onclick="window.openPaywall()" class="btn-primary px-8 py-3.5 rounded-xl font-bold shadow-lg shadow-brand-500/30 w-full max-w-[250px]">
            Unlock Pro
          </button>
@@ -2029,6 +2548,137 @@ function drawHUD(landmarks, W, H) {
   if (chin) createReticle(chin.x*W, chin.y*H + H*0.25, W*0.15, "FOCUS: OUTFIT");
 }
 
+let weatherLoaded = false;
+async function loadWeather(forceRefresh = false) {
+  const content = document.getElementById('weatherContent');
+  const locEl = document.getElementById('weatherLoc');
+  if (!content) return;
+  if (weatherLoaded && !forceRefresh) return;
+
+  if (!navigator.geolocation) {
+    content.innerHTML = '<div class="text-xs text-gray-500">Geolocation not supported by this browser.</div>';
+    return;
+  }
+
+  content.innerHTML = '<div class="text-xs text-gray-500 flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-brand-500 animate-pulse"></div> Fetching your local weather...</div>';
+
+  try {
+    const pos = await new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10000, maximumAge: 600000 });
+    });
+    const { latitude, longitude } = pos.coords;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude.toFixed(2)}&longitude=${longitude.toFixed(2)}&current=temperature_2m,wind_speed_10m,relative_humidity_2m&hourly=temperature_2m,precipitation_probability,wind_speed_10m&timezone=auto&forecast_days=2`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('API error');
+    const data = await res.json();
+
+    const currentTemp = Math.round(data.current.temperature_2m);
+    const currentWind = Math.round(data.current.wind_speed_10m);
+
+    const now = new Date();
+    let targetDate = new Date(now);
+    if (now.getHours() >= 23) targetDate.setDate(targetDate.getDate() + 1);
+    const targetStr = targetDate.toISOString().slice(0, 10);
+    const times = data.hourly.time;
+
+    const eveningIdx = [];
+    times.forEach((t, i) => {
+      if (!t.startsWith(targetStr)) return;
+      const hour = parseInt(t.slice(11, 13), 10);
+      if (hour >= 18 && hour <= 23) eveningIdx.push(i);
+    });
+
+    let minTemp = currentTemp, maxRain = 0, maxWind = currentWind;
+    eveningIdx.forEach(i => {
+      const t = data.hourly.temperature_2m[i];
+      const r = data.hourly.precipitation_probability?.[i] ?? 0;
+      const w = data.hourly.wind_speed_10m[i];
+      if (t < minTemp) minTemp = t;
+      if (r > maxRain) maxRain = r;
+      if (w > maxWind) maxWind = w;
+    });
+    minTemp = Math.round(minTemp);
+    maxWind = Math.round(maxWind);
+
+    let icon = '✨', adviceTitle = 'Perfect date-night weather', advice = `Clear skies tonight at ${currentTemp}°C. Your outfit is good to go — no extras needed.`, tone = 'good';
+    if (maxRain >= 60) {
+      icon = '🌧️'; tone = 'alert';
+      adviceTitle = 'Rain incoming';
+      advice = `Stylish fit — but grab an umbrella. ${maxRain}% chance of rain between 18:00 and 23:00.`;
+    } else if (maxRain >= 35) {
+      icon = '🌦️'; tone = 'warn';
+      adviceTitle = 'Possible showers';
+      advice = `${maxRain}% chance of rain tonight. A light jacket or a fold-up umbrella is a smart call.`;
+    } else if (minTemp < 8) {
+      icon = '🥶'; tone = 'alert';
+      adviceTitle = 'It\'s gonna be cold';
+      advice = `Looking sharp, but it'll drop to ${minTemp}°C. Throw on a proper coat — freezing outside kills confidence.`;
+    } else if (minTemp < 15) {
+      icon = '🧥'; tone = 'warn';
+      adviceTitle = 'Bring a jacket';
+      advice = `Solid outfit — but it'll be ${minTemp}°C this evening. Grab a light jacket so you're not shivering on the walk.`;
+    } else if (maxWind >= 30) {
+      icon = '💨'; tone = 'warn';
+      adviceTitle = 'Windy night ahead';
+      advice = `Great style, but wind gusts up to ${maxWind} km/h tonight. Keep the hair tight and avoid loose layers.`;
+    } else if (minTemp >= 24) {
+      icon = '🔥'; tone = 'info';
+      adviceTitle = 'Warm night';
+      advice = `It'll stay around ${minTemp}°C tonight. Stick to breathable layers and hydrate before you go.`;
+    }
+
+    const toneColor = tone === 'alert' ? 'text-red-400 border-red-500/30 bg-red-500/5'
+                    : tone === 'warn' ? 'text-amber-400 border-amber-500/30 bg-amber-500/5'
+                    : tone === 'info' ? 'text-blue-400 border-blue-500/30 bg-blue-500/5'
+                    : 'text-emerald-400 border-emerald-500/30 bg-emerald-500/5';
+
+    if (locEl) {
+      locEl.textContent = '…';
+      try {
+        // IDEÁLIS MEGOLDÁS: Saját backend proxy használata a rate-limit elkerülése végett.
+        // Példa: const geoRes = await fetch(`/api/geocode?lat=${latitude}&lon=${longitude}`);
+        const geoRes = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
+        const geo = await geoRes.json();
+        const name = geo.city || geo.locality || geo.principalSubdivision || geo.countryName || `${latitude.toFixed(1)}°, ${longitude.toFixed(1)}°`;
+        locEl.textContent = name;
+      } catch {
+        locEl.textContent = `${latitude.toFixed(1)}°, ${longitude.toFixed(1)}°`;
+      }
+    }
+    content.innerHTML = `
+      <div class="flex items-center gap-4 mb-4">
+        <div class="text-5xl leading-none drop-shadow-lg">${icon}</div>
+        <div class="flex-1">
+          <div class="flex items-baseline gap-2">
+            <span class="font-serif text-4xl font-bold text-white leading-none tabular-nums">${currentTemp}°</span>
+            <span class="text-xs text-gray-500">now</span>
+          </div>
+          <div class="text-[10px] text-gray-500 uppercase tracking-widest mt-1.5">Evening low ${minTemp}° · wind ${maxWind} km/h</div>
+        </div>
+      </div>
+      <div class="rounded-xl border ${toneColor} p-3">
+        <div class="text-[10px] font-bold uppercase tracking-widest mb-1">${adviceTitle}</div>
+        <div class="text-xs text-gray-200 leading-relaxed">${advice}</div>
+      </div>
+      <button onclick="window.loadWeather(true)" class="mt-3 text-[10px] text-gray-500 hover:text-gray-300 uppercase tracking-widest">Refresh</button>
+    `;
+    weatherLoaded = true;
+  } catch (err) {
+    const denied = err && err.code === 1;
+    content.innerHTML = `
+      <div class="text-xs text-gray-500 mb-3">${denied ? 'Location permission denied.' : 'Weather unavailable right now.'}</div>
+      <button onclick="window.loadWeather(true)" class="w-full text-xs font-semibold py-2.5 px-3 rounded-xl border border-brand-500/40 bg-brand-500/10 text-brand-400 hover:bg-brand-500/20 transition">Try again</button>
+    `;
+  }
+}
+window.loadWeather = loadWeather;
+
+document.addEventListener('click', (e) => {
+  if (e.target && e.target.closest && e.target.closest('#weatherEnableBtn')) {
+    loadWeather(true);
+  }
+});
+
 function showResultsLayout() {
   const camCol = $("cameraCol");
   const resCol = $("resultsCol");
@@ -2037,8 +2687,8 @@ function showResultsLayout() {
   heroText.classList.add("hidden");
   camCol.classList.remove("lg:col-span-12", "max-w-2xl", "mx-auto");
   camCol.classList.add("lg:col-span-5", "xl:col-span-4");
-
   resCol.classList.remove("hidden");
+  $("secondaryTools")?.classList.remove("hidden");
   void resCol.offsetWidth;
   
   resCol.classList.remove("opacity-0", "translate-y-8");
@@ -2050,19 +2700,16 @@ function showResultsLayout() {
 }
 
 async function runScan() {
-  // Throttle check
   const s = store.get();
   if (s.isScanning || !s.aiReady || !s.cameraReady) return;
   
   triggerHaptic('tap');
-  store.set({ isScanning: true }); // Locks the button via store subscriber
+  store.set({ isScanning: true }); 
 
-  // Evaluate if this scan will be shown blurred or not
-  const isLocked = !isProUser() && getUsage().count >= FREE_DAILY;
+  const isLocked = !isProUser() && (userCloset.outfits.length >= 3) && getUsage().count >= FREE_DAILY;
 
   videoWrap.classList.add("scanning");
   
-  // AI Thinking Illusion
   thinkingOverlay.classList.remove("opacity-0", "pointer-events-none");
   const phrases = [
     "Analyzing face symmetry...", 
@@ -2085,7 +2732,7 @@ async function runScan() {
     renderActionPlan([{ category:"env", tone:"error", title:"Camera Issue", text:"Couldn't capture your video feed.", action:"Reload page and allow permissions." }], false); 
     endScan(); showResultsLayout(); return; 
   }
-  try { store.set({ lastCap: analysisCanvas.toDataURL('image/jpeg', 0.85) }); } catch(e) {}
+  try { store.set({ lastCap: analysisCanvas.toDataURL('image/jpeg', 0.95) }); } catch(e) {}
 
   let result;
   try { result = s.faceLandmarker.detect(analysisCanvas); }
@@ -2098,13 +2745,11 @@ async function runScan() {
 
   if (result.faceLandmarks?.length) drawHUD(result.faceLandmarks[0], cap.w, cap.h);
   
-  // Extended wait for the "Thinking Illusion" to play out
   await new Promise(r => setTimeout(r, 3000));
   
   clearInterval(thinkInterval);
   thinkingOverlay.classList.add("opacity-0", "pointer-events-none");
 
-  // Success Flash Micro-interaction
   flashOverlay.classList.add("active");
   setTimeout(() => flashOverlay.classList.remove("active"), 100);
 
@@ -2138,9 +2783,8 @@ async function runScan() {
     const shave = analyzeShavingIrritation(lm, cap.w, cap.h); if(shave) items.push(shave);
     
     const mouth = analyzeMouth(lm, cap.w, cap.h);
-    if (mouth && mouth.teethVisible) {
-      if (mouth.concern) items.push({ category: "grooming", tone:"alert", icon:"🦷", title:"Check teeth", text:"Shadow or discoloration noticed.", action:"Drink water and mirror check." });
-      else items.push({ category: "grooming", tone:"good", icon:"✨", title:"Great smile", text:"Teeth look clean.", action:"Flash that smile tonight." });
+    if (mouth && mouth.teethVisible && !mouth.concern) {
+      items.push({ category: "grooming", tone:"good", icon:"✨", title:"Great smile", text:"Teeth look clean.", action:"Flash that smile tonight." });
     }
     
     const sym = analyzeSymmetry(lm);
@@ -2164,12 +2808,10 @@ async function runScan() {
   const sh = analyzeShoulders(cap.w, cap.h);
   if (sh?.possibleLint) items.push({ category: "style", tone:"warn", icon:"🧥", title:"Lint detected", text:"Specks visible on shoulders.", action:"Use a lint roller right now." });
 
-  // Update store with new results to unlock components later if upgraded
   store.set({ lastItems: items, lastColor: detectedOutfitColor });
 
   triggerHaptic('success');
   
-  // Render based on lock state
   renderStyleCoach(detectedOutfitColor, store.get().occasion, isLocked, items);
   renderActionPlan(items, isLocked);
 
@@ -2184,8 +2826,6 @@ function endScan() {
   setTimeout(clearHUD, 500); 
 }
 
-// --- NO-REPEAT PICKER ---
-// Keeps last N picks per key so two scans in a row never land on the same line.
 const _recent = {};
 function pickFresh(key, pool, memory = 4) {
   if (!pool || !pool.length) return null;
@@ -2197,7 +2837,6 @@ function pickFresh(key, pool, memory = 4) {
   return chosen;
 }
 
-// --- VIBE GENERATOR (edge, not flattery) ---
 const VIBES_MID = [
   "clean but forgettable",
   "safe. too safe.",
@@ -2227,7 +2866,6 @@ function generateVibe(score) {
   return pickFresh(`vibe_${score >= 82 ? 'hi' : score >= 66 ? 'mid' : 'lo'}`, pool);
 }
 
-// --- CONFIDENCE BOOSTS — the "coach" layer (honest, not nice) ---
 const CONFIDENCE_BOOSTERS = [
   { icon: "🎯", text: "Slow the hell down. Hold eye contact until it's almost uncomfortable." },
   { icon: "🚪", text: "Walk in like you belong there. Nobody's going to grant you permission." },
@@ -2259,7 +2897,7 @@ function renderActionPlan(items, locked = false) {
   const booster = randomBooster();
   
   html += `
-    <div class="fade-up relative overflow-hidden rounded-2xl p-5 mb-5 border border-brand-500/20 bg-gradient-to-br from-brand-500/10 via-purple-500/5 to-transparent">
+    <div class="relative overflow-hidden rounded-2xl p-5 mb-5 border border-brand-500/20 bg-gradient-to-br from-brand-500/10 via-purple-500/5 to-transparent">
       <div class="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-brand-500/20 blur-2xl pointer-events-none"></div>
       <div class="relative z-10 flex items-start gap-4">
         <div class="text-2xl">${booster.icon}</div>
@@ -2281,7 +2919,7 @@ function renderActionPlan(items, locked = false) {
   
   for (const cat of Object.keys(grouped)) {
     if (grouped[cat].length === 0) continue;
-    html += `<div class="mb-5 fade-up"><div class="text-xs font-semibold text-gray-500 mb-2 flex items-center gap-1.5 uppercase tracking-wider"><span>${CATEGORY_META[cat].icon}</span> ${CATEGORY_META[cat].label}</div><div class="space-y-3">`;
+    html += `<div class="mb-5"><div class="text-xs font-semibold text-gray-500 mb-2 flex items-center gap-1.5 uppercase tracking-wider"><span>${CATEGORY_META[cat].icon}</span> ${CATEGORY_META[cat].label}</div><div class="space-y-3">`;
     grouped[cat].forEach(it => {
       const isGood = it.tone === 'good';
       html += `
@@ -2344,7 +2982,6 @@ document.querySelectorAll(".plan-btn").forEach(b => b.dataset.originalHTML = b.i
 const CHECKLIST_ITEMS = [{ id:"perfume", label:"Perfume", icon:"🌸" }, { id:"mints", label:"Mints / Gum", icon:"🍃" }, { id:"wallet", label:"Wallet / ID", icon:"💳" }, { id:"charge", label:"Phone charged", icon:"🔋" }];
 function renderChecklist() {
   let st = {}; try { st = JSON.parse(localStorage.getItem("datescan.checklist") || "{}"); } catch {}
-  // Track which items already awarded XP today to prevent farming
   const today = (() => { const d = new Date(); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; })();
   let claimed = { date: today, ids: [] };
   try {
@@ -2369,7 +3006,6 @@ function renderChecklist() {
       if (e.target.checked) {
         const li = e.target.closest('li');
         li.classList.add('checklist-pop');
-        // Only grant XP the first time this item is checked today
         if (!claimed.ids.includes(it.id)) {
           claimed.ids.push(it.id);
           localStorage.setItem("datescan.checklist.claimed", JSON.stringify(claimed));
@@ -2401,7 +3037,133 @@ $("logDateBtn").addEventListener("click", () => {
 // --- INIT ---
 renderChecklist();
 updateUsageBadge();
+renderCloset();
 boot();
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').then((reg) => {
+        console.log('[PWA] Service worker registered:', reg.scope);
+        setInterval(() => reg.update().catch(() => {}), 60 * 60 * 1000);
+
+        reg.addEventListener('updatefound', () => {
+          const nw = reg.installing;
+          if (!nw) return;
+          nw.addEventListener('statechange', () => {
+            if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+              nw.postMessage({ type: 'SKIP_WAITING' });
+            }
+          });
+        });
+      }).catch((err) => {
+        console.warn('[PWA] Service worker registration failed:', err);
+      });
+
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (refreshing) return;
+        refreshing = true;
+        window.location.reload();
+      });
+    });
+  }
+
+  (function() {
+    const params = new URLSearchParams(window.location.search);
+    const action = params.get('action');
+    if (!action) return;
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        if (action === 'closet') {
+          document.getElementById('navClosetBtn')?.click();
+        } else if (action === 'scan') {
+          document.getElementById('scanBtn')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 400);
+    });
+  })();
+</script>
+
+<script>
+(function(){
+  const WORKER_URL = "https://api.datescan.app";
+  const form = document.getElementById('coachChatForm');
+  const input = document.getElementById('coachChatInput');
+  const sendBtn = document.getElementById('coachChatSend');
+  const messagesEl = document.getElementById('coachChatMessages');
+  if (!form || !input || !messagesEl) return;
+
+  const history = [
+    { role: 'system', content: "You are an expert AI Style Coach for a dating app called DateScan. Give concise, practical, confidence-boosting advice about outfits, colors, grooming, and how to dress for dates and social occasions. Keep replies short (2-4 sentences unless asked for more)." }
+  ];
+
+  function scrollDown(){ messagesEl.scrollTop = messagesEl.scrollHeight; }
+
+  function addMessage(role, text){
+    const wrap = document.createElement('div');
+    wrap.className = 'flex gap-2.5' + (role === 'user' ? ' flex-row-reverse' : '');
+    const avatar = document.createElement('div');
+    avatar.className = 'shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm ' +
+      (role === 'user' ? 'bg-white/10 border border-white/10' : 'bg-gradient-to-br from-brand-500 to-purple-500');
+    avatar.textContent = role === 'user' ? '🧑' : '✨';
+    const bubble = document.createElement('div');
+    bubble.className = 'rounded-2xl px-4 py-2.5 text-sm max-w-[85%] whitespace-pre-wrap ' +
+      (role === 'user'
+        ? 'bg-brand-500/20 border border-brand-500/30 text-white rounded-tr-sm'
+        : 'bg-white/5 border border-white/10 text-gray-200 rounded-tl-sm');
+    bubble.textContent = text;
+    wrap.appendChild(avatar);
+    wrap.appendChild(bubble);
+    messagesEl.appendChild(wrap);
+    scrollDown();
+    return bubble;
+  }
+
+  async function sendMessage(text){
+    history.push({ role: 'user', content: text });
+    addMessage('user', text);
+    const thinking = addMessage('assistant', '…');
+    thinking.classList.add('animate-pulse');
+
+    try {
+      const res = await fetch(WORKER_URL + '/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: history })
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const ct = res.headers.get('content-type') || '';
+      let reply = '';
+      if (ct.includes('application/json')) {
+        const data = await res.json();
+        reply = data.reply || data.content || data.message ||
+                (data.choices && data.choices[0] && (data.choices[0].message?.content || data.choices[0].text)) ||
+                '';
+        if (!reply) reply = JSON.stringify(data);
+      } else {
+        reply = await res.text();
+      }
+      thinking.classList.remove('animate-pulse');
+      thinking.textContent = reply.trim() || "Hmm, I didn't catch that. Try again?";
+      history.push({ role: 'assistant', content: thinking.textContent });
+    } catch (err) {
+      thinking.classList.remove('animate-pulse');
+      thinking.textContent = "⚠️ Couldn't reach the stylist right now. Please try again in a moment.";
+      console.error('Style Coach chat error:', err);
+    }
+    scrollDown();
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    sendBtn.disabled = true;
+    sendMessage(text).finally(() => { sendBtn.disabled = false; input.focus(); });
+  });
+})();
 </script>
 </body>
 </html>
