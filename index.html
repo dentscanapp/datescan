@@ -636,25 +636,48 @@
               <h2 class="font-serif text-2xl font-semibold flex items-center gap-2">
                 <span>💬</span> Style Coach Chat
               </h2>
-              <span class="text-[10px] font-sans font-bold uppercase tracking-widest text-purple-300 border border-purple-500/30 bg-purple-500/10 px-2 py-0.5 rounded-full">AI</span>
+              <span class="text-[10px] font-sans font-bold uppercase tracking-widest text-purple-300 border border-purple-500/30 bg-purple-500/10 px-2 py-0.5 rounded-full">Vision AI</span>
             </div>
-            <p class="text-xs text-gray-400 mb-5 relative z-10">Ask your personal stylist anything — outfits, colors, date tips.</p>
+            <p class="text-xs text-gray-400 mb-5 relative z-10">Upload an outfit photo, pick from your closet, or just ask — I'll see it and help.</p>
 
-            <div id="coachChatMessages" class="relative z-10 space-y-3 max-h-[360px] overflow-y-auto pr-1 mb-4 scrollbar">
+            <div id="coachChatMessages" class="relative z-10 space-y-3 max-h-[420px] overflow-y-auto pr-1 mb-4 scrollbar">
               <div class="flex gap-2.5">
                 <div class="shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-purple-500 flex items-center justify-center text-sm">✨</div>
                 <div class="bg-white/5 border border-white/10 rounded-2xl rounded-tl-sm px-4 py-2.5 text-sm text-gray-200 max-w-[85%]">
-                  Hey! I'm your AI Style Coach. Ask me about outfit ideas, color matching, or how to dress for any occasion.
+                  Hey! I'm your AI Style Coach with vision. Upload a photo or tap 👕 to pick from your closet, and I'll give you feedback on colors, fit, and how it works for your date tonight.
                 </div>
               </div>
             </div>
 
+            <!-- Attachment preview -->
+            <div id="coachChatAttachments" class="relative z-10 flex gap-2 flex-wrap mb-3 hidden"></div>
+
             <form id="coachChatForm" class="relative z-10 flex gap-2 items-center">
-              <input id="coachChatInput" type="text" autocomplete="off" placeholder="Ask me anything about style…" class="flex-1 bg-white/5 border border-white/10 focus:border-brand-500/60 focus:bg-white/10 outline-none rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-500 transition" />
+              <input id="coachChatFile" type="file" accept="image/*" class="hidden" />
+              <button id="coachChatUploadBtn" type="button" title="Upload photo" class="shrink-0 w-11 h-11 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 flex items-center justify-center transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              </button>
+              <button id="coachChatClosetBtn" type="button" title="Pick from closet" class="shrink-0 w-11 h-11 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 flex items-center justify-center transition text-lg">
+                👕
+              </button>
+              <input id="coachChatInput" type="text" autocomplete="off" placeholder="Ask me anything…" class="flex-1 min-w-0 bg-white/5 border border-white/10 focus:border-brand-500/60 focus:bg-white/10 outline-none rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-500 transition" />
               <button id="coachChatSend" type="submit" class="shrink-0 btn-primary w-11 h-11 rounded-xl flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 5l7 7-7 7"/></svg>
               </button>
             </form>
+          </div>
+
+          <!-- Closet Picker Modal for Chat -->
+          <div id="coachClosetPicker" class="hidden fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="premium-glass rounded-3xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col">
+              <div class="flex items-center justify-between p-5 border-b border-white/10">
+                <h3 class="font-serif text-xl font-semibold">Pick from your closet</h3>
+                <button id="coachClosetPickerClose" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center transition">✕</button>
+              </div>
+              <div id="coachClosetPickerGrid" class="p-5 grid grid-cols-2 sm:grid-cols-3 gap-3 overflow-y-auto scrollbar">
+                <!-- Populated by JS -->
+              </div>
+            </div>
           </div>
 
           <div class="premium-glass rounded-[32px] p-5 sm:p-6 relative overflow-hidden">
@@ -3088,19 +3111,82 @@ boot();
 <script>
 (function(){
   const WORKER_URL = "https://api.datescan.app";
+  const MODEL = "thudm/glm-4.1v-9b-thinking";
+
   const form = document.getElementById('coachChatForm');
   const input = document.getElementById('coachChatInput');
   const sendBtn = document.getElementById('coachChatSend');
   const messagesEl = document.getElementById('coachChatMessages');
+  const uploadBtn = document.getElementById('coachChatUploadBtn');
+  const fileInput = document.getElementById('coachChatFile');
+  const closetBtn = document.getElementById('coachChatClosetBtn');
+  const attachBox = document.getElementById('coachChatAttachments');
+  const picker = document.getElementById('coachClosetPicker');
+  const pickerGrid = document.getElementById('coachClosetPickerGrid');
+  const pickerClose = document.getElementById('coachClosetPickerClose');
   if (!form || !input || !messagesEl) return;
 
-  const history = [
-    { role: 'system', content: "You are an expert AI Style Coach for a dating app called DateScan. Give concise, practical, confidence-boosting advice about outfits, colors, grooming, and how to dress for dates and social occasions. Keep replies short (2-4 sentences unless asked for more)." }
-  ];
+  // Pending image attachments (compressed data URLs) for the next outgoing message
+  let pendingAttachments = [];
+  // OpenAI-format message history (content may be string OR array of parts)
+  const history = [];
 
+  // ---------- Image compression ----------
+  function compressImage(fileOrDataUrl, maxSize = 768, quality = 0.8) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > h) { if (w > maxSize) { h = Math.round(h * maxSize / w); w = maxSize; } }
+        else       { if (h > maxSize) { w = Math.round(w * maxSize / h); h = maxSize; } }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img, 0, 0, w, h);
+        // JPEG is more universally supported by vision APIs than WebP
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = reject;
+      if (typeof fileOrDataUrl === 'string') {
+        img.src = fileOrDataUrl;
+      } else {
+        const reader = new FileReader();
+        reader.onload = e => { img.src = e.target.result; };
+        reader.onerror = reject;
+        reader.readAsDataURL(fileOrDataUrl);
+      }
+    });
+  }
+
+  // ---------- Attachment chips ----------
+  function renderAttachments() {
+    if (pendingAttachments.length === 0) {
+      attachBox.classList.add('hidden');
+      attachBox.innerHTML = '';
+      return;
+    }
+    attachBox.classList.remove('hidden');
+    attachBox.innerHTML = '';
+    pendingAttachments.forEach((att, idx) => {
+      const chip = document.createElement('div');
+      chip.className = 'relative w-16 h-16 rounded-xl overflow-hidden border border-brand-500/40 bg-black/40';
+      chip.innerHTML =
+        '<img src="' + att.url + '" class="w-full h-full object-cover" />' +
+        '<button type="button" data-idx="' + idx + '" class="absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-black/80 text-white text-xs flex items-center justify-center hover:bg-red-500 transition">✕</button>';
+      chip.querySelector('button').addEventListener('click', () => {
+        pendingAttachments.splice(idx, 1);
+        renderAttachments();
+      });
+      attachBox.appendChild(chip);
+    });
+  }
+
+  // ---------- Chat bubbles ----------
   function scrollDown(){ messagesEl.scrollTop = messagesEl.scrollHeight; }
 
-  function addMessage(role, text){
+  function addMessage(role, text, imageUrls) {
     const wrap = document.createElement('div');
     wrap.className = 'flex gap-2.5' + (role === 'user' ? ' flex-row-reverse' : '');
     const avatar = document.createElement('div');
@@ -3108,11 +3194,27 @@ boot();
       (role === 'user' ? 'bg-white/10 border border-white/10' : 'bg-gradient-to-br from-brand-500 to-purple-500');
     avatar.textContent = role === 'user' ? '🧑' : '✨';
     const bubble = document.createElement('div');
-    bubble.className = 'rounded-2xl px-4 py-2.5 text-sm max-w-[85%] whitespace-pre-wrap ' +
+    bubble.className = 'rounded-2xl px-4 py-2.5 text-sm max-w-[85%] whitespace-pre-wrap break-words ' +
       (role === 'user'
         ? 'bg-brand-500/20 border border-brand-500/30 text-white rounded-tr-sm'
         : 'bg-white/5 border border-white/10 text-gray-200 rounded-tl-sm');
-    bubble.textContent = text;
+
+    if (imageUrls && imageUrls.length) {
+      const imgRow = document.createElement('div');
+      imgRow.className = 'flex gap-1.5 flex-wrap mb-2';
+      imageUrls.forEach(u => {
+        const i = document.createElement('img');
+        i.src = u;
+        i.className = 'w-24 h-24 object-cover rounded-lg border border-white/10';
+        imgRow.appendChild(i);
+      });
+      bubble.appendChild(imgRow);
+    }
+    if (text) {
+      const t = document.createElement('div');
+      t.textContent = text;
+      bubble.appendChild(t);
+    }
     wrap.appendChild(avatar);
     wrap.appendChild(bubble);
     messagesEl.appendChild(wrap);
@@ -3120,32 +3222,163 @@ boot();
     return bubble;
   }
 
-  async function sendMessage(text){
-    history.push({ role: 'user', content: text });
-    addMessage('user', text);
+  // ---------- Read context from other modules ----------
+  function getModuleContext() {
+    const lines = [];
+
+    // Countdown
+    try {
+      const timerActive = document.getElementById('timerActiveView');
+      if (timerActive && !timerActive.classList.contains('hidden')) {
+        const cd = (document.getElementById('countdownDisplay')?.textContent || '').trim();
+        const rem = (document.getElementById('reminderText')?.textContent || '').trim();
+        if (cd && cd !== '00:00:00') lines.push('Countdown to date: ' + cd + ' remaining.');
+        if (rem && rem !== '...') lines.push('Current coach reminder: ' + rem);
+      }
+    } catch(e){}
+
+    // Weather
+    try {
+      const wLoc = (document.getElementById('weatherLoc')?.textContent || '').trim();
+      const wContent = document.getElementById('weatherContent');
+      if (wContent) {
+        const enableBtn = document.getElementById('weatherEnableBtn');
+        // Only include weather if the enable-button is gone (i.e. loaded)
+        if (!enableBtn || enableBtn.offsetParent === null) {
+          const wText = (wContent.innerText || '').replace(/\s+/g, ' ').trim();
+          if (wText) {
+            lines.push('Weather' + (wLoc ? ' in ' + wLoc : '') + ': ' + wText);
+          }
+        }
+      }
+    } catch(e){}
+
+    // Grooming & Presence
+    try {
+      const fb = document.getElementById('feedbackPanel');
+      if (fb) {
+        const fbText = (fb.innerText || '').replace(/\s+/g, ' ').trim();
+        if (fbText) lines.push('Grooming & Presence analysis: ' + fbText);
+      }
+    } catch(e){}
+
+    // Latest Style Coach scan result
+    try {
+      const sc = document.getElementById('styleCoachResult');
+      if (sc) {
+        const scText = (sc.innerText || '').replace(/\s+/g, ' ').trim();
+        if (scText) lines.push('Latest Style Coach analysis: ' + scText);
+      }
+    } catch(e){}
+
+    return lines.join('\n');
+  }
+
+  function buildSystemPrompt() {
+    const base =
+      "You are the in-app AI Style Coach for DateScan, a dating-prep app. " +
+      "You are a warm, direct, confidence-boosting personal stylist with vision. " +
+      "When the user shares an image, analyze the outfit: colors, contrast, fit, formality, " +
+      "and how it suits the occasion. Give concrete, actionable advice. " +
+      "Keep answers concise (3-6 short sentences) unless the user asks for more detail. " +
+      "Use the LIVE APP CONTEXT below to personalize advice (weather, countdown, grooming status). " +
+      "Never mention that you are an AI or that you have context — just speak like a coach.";
+    const ctx = getModuleContext();
+    return ctx ? base + "\n\n=== LIVE APP CONTEXT ===\n" + ctx : base;
+  }
+
+  // ---------- Closet picker ----------
+  function openClosetPicker() {
+    const closet = JSON.parse(localStorage.getItem('datescan.closet') || '{"outfits":[]}');
+    const outfits = closet.outfits || [];
+    if (outfits.length === 0) {
+      pickerGrid.innerHTML = '<div class="col-span-full text-center text-gray-500 py-10 text-sm">Your closet is empty. Scan and save an outfit first!</div>';
+    } else {
+      pickerGrid.innerHTML = '';
+      outfits.forEach(o => {
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'relative aspect-[3/4] rounded-xl overflow-hidden border border-white/10 hover:border-brand-500/60 transition group';
+        card.innerHTML =
+          '<img src="' + o.image + '" class="w-full h-full object-cover" />' +
+          '<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-2">' +
+            '<span class="text-[10px] text-white font-bold uppercase">' + (o.occasion || '').replace('_',' ') + ' · ' + (o.score || '-') + '/100</span>' +
+          '</div>';
+        card.addEventListener('click', async () => {
+          picker.classList.add('hidden');
+          try {
+            const compressed = await compressImage(o.image);
+            pendingAttachments.push({ url: compressed, source: 'closet', meta: o });
+            renderAttachments();
+            input.focus();
+          } catch(e) { console.error(e); }
+        });
+        pickerGrid.appendChild(card);
+      });
+    }
+    picker.classList.remove('hidden');
+  }
+
+  closetBtn?.addEventListener('click', openClosetPicker);
+  pickerClose?.addEventListener('click', () => picker.classList.add('hidden'));
+  picker?.addEventListener('click', e => { if (e.target === picker) picker.classList.add('hidden'); });
+
+  // ---------- File upload ----------
+  uploadBtn?.addEventListener('click', () => fileInput.click());
+  fileInput?.addEventListener('change', async e => {
+    const files = Array.from(e.target.files || []);
+    for (const f of files) {
+      try {
+        const compressed = await compressImage(f);
+        pendingAttachments.push({ url: compressed, source: 'upload' });
+      } catch(err) { console.error('Compress failed:', err); }
+    }
+    renderAttachments();
+    fileInput.value = '';
+  });
+
+  // ---------- Send ----------
+  async function sendMessage(text, attachments) {
+    // Build user message content
+    let userContent;
+    if (attachments.length > 0) {
+      userContent = [];
+      if (text) userContent.push({ type: 'text', text: text });
+      attachments.forEach(a => {
+        userContent.push({ type: 'image_url', image_url: { url: a.url } });
+      });
+    } else {
+      userContent = text;
+    }
+
+    history.push({ role: 'user', content: userContent });
+    addMessage('user', text, attachments.map(a => a.url));
+
     const thinking = addMessage('assistant', '…');
     thinking.classList.add('animate-pulse');
+
+    // Fresh system prompt (with current module context) on every send
+    const messagesForApi = [
+      { role: 'system', content: buildSystemPrompt() },
+      ...history
+    ];
 
     try {
       const res = await fetch(WORKER_URL + '/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: history })
+        body: JSON.stringify({ model: MODEL, messages: messagesForApi })
       });
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const ct = res.headers.get('content-type') || '';
-      let reply = '';
-      if (ct.includes('application/json')) {
-        const data = await res.json();
-        reply = data.reply || data.content || data.message ||
-                (data.choices && data.choices[0] && (data.choices[0].message?.content || data.choices[0].text)) ||
-                '';
-        if (!reply) reply = JSON.stringify(data);
-      } else {
-        reply = await res.text();
+      if (!res.ok) {
+        const errText = await res.text().catch(() => '');
+        throw new Error('HTTP ' + res.status + ' ' + errText);
       }
+      const data = await res.json();
+      const reply = data.reply || data.content || data.message ||
+                    (data.choices && data.choices[0] && (data.choices[0].message?.content || data.choices[0].text)) ||
+                    '';
       thinking.classList.remove('animate-pulse');
-      thinking.textContent = reply.trim() || "Hmm, I didn't catch that. Try again?";
+      thinking.textContent = (reply || '').trim() || "Hmm, I didn't catch that. Try again?";
       history.push({ role: 'assistant', content: thinking.textContent });
     } catch (err) {
       thinking.classList.remove('animate-pulse');
@@ -3158,10 +3391,13 @@ boot();
   form.addEventListener('submit', function(e){
     e.preventDefault();
     const text = input.value.trim();
-    if (!text) return;
+    if (!text && pendingAttachments.length === 0) return;
+    const attachments = pendingAttachments.slice();
+    pendingAttachments = [];
+    renderAttachments();
     input.value = '';
     sendBtn.disabled = true;
-    sendMessage(text).finally(() => { sendBtn.disabled = false; input.focus(); });
+    sendMessage(text, attachments).finally(() => { sendBtn.disabled = false; input.focus(); });
   });
 })();
 </script>
