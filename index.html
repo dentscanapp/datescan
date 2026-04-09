@@ -468,7 +468,7 @@
     </div>
 
     <!-- Install as App card (Hidden on lg monitors via Tailwind lg:hidden) -->
-    <div id="pwaInstallCard" class="hidden lg:hidden relative z-10 mb-5 rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/15 to-purple-500/10 p-4">
+    <div id="pwaInstallCard" class="hidden relative z-10 mb-5 rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/15 to-purple-500/10 p-4">
       <div class="flex items-start gap-3">
         <div class="shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-brand-500/30">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M12 18h.01"/><path d="M9 6h6"/></svg>
@@ -515,6 +515,10 @@
     </div>
   </div>
   <div class="flex items-center gap-3 sm:gap-4">
+    <span id="offlineIndicator" class="hidden items-center gap-1.5 text-[10px] sm:text-xs font-medium px-2.5 sm:px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/40 text-amber-300 whitespace-nowrap" role="status" aria-live="polite" title="You're offline">
+      <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18M5 12.55a11 11 0 015.17-2.39M10.71 5.05A16 16 0 0122.58 9M16.72 11.06A10 10 0 0119 12.55M8.53 16.11a6 6 0 016.95 0M12 20h.01"/></svg>
+      <span class="hidden sm:inline">Offline</span>
+    </span>
     <button id="navClosetBtn" class="hidden lg:flex text-xs font-bold px-3 py-2 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors items-center gap-1.5">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
       <span class="hidden sm:inline">Closet</span>
@@ -565,11 +569,10 @@
 
               <div id="thinkingOverlay" class="absolute inset-x-0 bottom-10 z-40 flex flex-col items-center justify-center opacity-0 scale-95 transition-all duration-300 ease-out pointer-events-none">
                 <div class="bg-black/70 backdrop-blur-md px-5 py-2.5 rounded-full border border-brand-500/40 flex items-center gap-3 shadow-[0_0_20px_rgba(236,72,153,0.3)]">
-                  <div class="flex gap-1">
-                    <div class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-bounce" style="animation-delay: 0ms;"></div>
-                    <div class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-bounce" style="animation-delay: 150ms;"></div>
-                    <div class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-bounce" style="animation-delay: 300ms;"></div>
-                  </div>
+                  <svg class="w-6 h-6 -rotate-90 shrink-0" viewBox="0 0 36 36" aria-hidden="true">
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="3"/>
+                    <circle id="thinkingProgressCircle" cx="18" cy="18" r="15" fill="none" stroke="#ec4899" stroke-width="3" stroke-linecap="round" stroke-dasharray="94.25" stroke-dashoffset="94.25" style="transition: stroke-dashoffset 200ms ease-out;"/>
+                  </svg>
                   <span id="thinkingText" class="text-[11px] uppercase tracking-widest font-bold text-white/90 w-48 text-left">Analyzing vibes...</span>
                 </div>
               </div>
@@ -852,34 +855,71 @@
 </main>
 
 <!-- Footer -->
-<footer class="relative z-20 w-full bg-[#09090b] border-t border-white/10 pt-10 pb-32 lg:pb-8 mt-4">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6">
-    <div class="grid grid-cols-2 gap-8 mb-8">
-      <!-- Legal Column -->
-      <div class="flex flex-col">
-        <h3 class="text-sm font-sans font-semibold text-white tracking-widest uppercase mb-4">Legal</h3>
-        <ul class="space-y-3 text-sm text-gray-400">
-          <li><a href="/privacy.html" class="hover:text-brand-500 transition-colors duration-200">Privacy Policy</a></li>
-          <li><a href="/terms.html" class="hover:text-brand-500 transition-colors duration-200">Terms of Service</a></li>
-          <li><a href="/refund.html" class="hover:text-brand-500 transition-colors duration-200">Refund Policy</a></li>
+<footer class="relative z-20 w-full bg-[#09090b] border-t border-white/10 pt-14 pb-32 lg:pb-12 mt-8 overflow-hidden">
+  <!-- ambient gradient glow, matches the rest of the site -->
+  <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-500/40 to-transparent pointer-events-none"></div>
+  <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-brand-500/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+  <div class="relative max-w-7xl mx-auto px-6 sm:px-8">
+    <div class="grid grid-cols-2 lg:grid-cols-12 gap-x-8 gap-y-12 mb-12">
+
+      <!-- Brand column -->
+      <div class="col-span-2 lg:col-span-5">
+        <a href="/" class="inline-flex items-center gap-3 group mb-4">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-500 to-purple-500 flex items-center justify-center shadow-lg shadow-brand-500/20 group-hover:shadow-brand-500/40 transition-shadow">
+            <svg viewBox="0 0 40 40" class="w-6 h-6" aria-hidden="true">
+              <path d="M20 13.5C20 13.5 16 9 11.5 9C7.5 9 5 12.5 5 16.5C5 22 13 28 20 32C27 28 35 22 35 16.5C35 12.5 32.5 9 28.5 9C24 9 20 13.5 20 13.5Z" fill="#fff" fill-opacity="0.2" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="4" y1="20" x2="36" y2="20" stroke="#fff" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.8"/>
+            </svg>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-xl tracking-tight leading-none text-white group-hover:text-brand-400 transition-colors">DateScan<span class="text-brand-500">.</span></span>
+            <span class="text-[10px] text-gray-500 font-medium uppercase tracking-widest mt-1.5">Personal Style Coach</span>
+          </div>
+        </a>
+        <p class="text-sm text-gray-400 leading-relaxed max-w-sm mb-5">
+          Your AI-powered wingman. Scan your outfit, get instant style and grooming feedback, and walk into your date with confidence.
+        </p>
+        <div class="inline-flex items-center gap-2 text-[10px] text-gray-500 px-3 py-1.5 rounded-full border border-white/10 bg-white/5">
+          <svg class="w-3 h-3 text-brand-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          <span>100% private — runs in your browser</span>
+        </div>
+      </div>
+
+      <!-- Legal -->
+      <div class="lg:col-span-3 lg:col-start-7">
+        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4">Legal</h3>
+        <ul class="space-y-2.5 text-sm">
+          <li><a href="/privacy.html" class="text-gray-400 hover:text-brand-400 transition-colors">Privacy Policy</a></li>
+          <li><a href="/terms.html" class="text-gray-400 hover:text-brand-400 transition-colors">Terms of Service</a></li>
+          <li><a href="/refund.html" class="text-gray-400 hover:text-brand-400 transition-colors">Refund Policy</a></li>
         </ul>
       </div>
-      <!-- Support Column -->
-      <div class="flex flex-col">
-        <h3 class="text-sm font-sans font-semibold text-white tracking-widest uppercase mb-4">Support</h3>
-        <ul class="space-y-3 text-sm text-gray-400">
-          <li><a href="/contact.html" class="hover:text-brand-500 transition-colors duration-200">Contact Support</a></li>
-          <li><a href="/subscription.html" class="hover:text-brand-500 transition-colors duration-200">Manage Subscription</a></li>
+
+      <!-- Support -->
+      <div class="lg:col-span-3">
+        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4">Support</h3>
+        <ul class="space-y-2.5 text-sm">
+          <li><a href="/contact.html" class="text-gray-400 hover:text-brand-400 transition-colors">Contact Support</a></li>
+          <li><a href="/subscription.html" class="text-gray-400 hover:text-brand-400 transition-colors">Manage Subscription</a></li>
+          <li><a href="mailto:info@datescan.app" class="text-gray-400 hover:text-brand-400 transition-colors">info@datescan.app</a></li>
         </ul>
       </div>
     </div>
-    <div class="border-t border-white/5 pt-6 flex flex-col gap-4">
-      <p class="text-[11px] text-gray-500 italic leading-relaxed max-w-3xl">
+
+    <!-- Bottom strip -->
+    <div class="border-t border-white/5 pt-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <p class="text-[11px] text-gray-600 italic leading-relaxed max-w-2xl">
         Disclaimer: DateScan is an AI-powered tool designed for entertainment and confidence-boosting purposes only. We do not guarantee dating success or specific social outcomes.
       </p>
-      <p class="text-xs text-gray-600">
-        &copy; 2026 DateScan. All rights reserved.
-      </p>
+      <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 shrink-0">
+        <span class="text-[11px] text-gray-600">&copy; 2026 DateScan</span>
+        <span class="hidden sm:inline text-gray-700">·</span>
+        <span class="text-[11px] text-gray-600 inline-flex items-center gap-1.5">
+          Payments by
+          <a href="https://lemonsqueezy.com" target="_blank" rel="noopener" class="text-brand-400 hover:text-brand-500 font-medium transition-colors">Lemon Squeezy</a>
+        </span>
+      </div>
     </div>
   </div>
 </footer>
@@ -2153,9 +2193,19 @@ function triggerHaptic(type = 'tap') {
   } catch (e) {}
 }
 
-function showError(title, msg) {
+function showError(title, msg, { retryable = true } = {}) {
   errorTitle.textContent = title;
   errorMsg.textContent = msg;
+  if (retryBtn) {
+    if (retryable) {
+      retryBtn.textContent = 'Retry';
+      retryBtn.classList.remove('hidden');
+    } else {
+      retryBtn.textContent = 'Refresh page';
+      retryBtn.classList.remove('hidden');
+    }
+    retryBtn.dataset.mode = retryable ? 'retry' : 'refresh';
+  }
   errorOverlay.classList.remove("hidden");
   loadingOverlay.classList.add("hidden");
 }
@@ -2174,12 +2224,58 @@ function hasWebGL() {
   } catch { return false; }
 }
 
+// Marker class so the caller (startAppFlow) can decide whether the
+// "Retry" button should re-run the whole init flow (network/transient)
+// or whether retry is pointless (unsupported browser).
+class AIEngineError extends Error {
+  constructor(message, { kind = 'generic', retryable = true } = {}) {
+    super(message);
+    this.name = 'AIEngineError';
+    this.kind = kind;
+    this.retryable = retryable;
+  }
+}
+
+function browserSupportsAIEngine() {
+  // MediaPipe Tasks Vision needs: WebAssembly, fetch, and dynamic import
+  // (we already use it via the module script). It also needs SharedArrayBuffer
+  // on some builds, but the float16 face_landmarker bundle doesn't.
+  if (typeof WebAssembly !== 'object' || typeof WebAssembly.instantiate !== 'function') return false;
+  if (typeof fetch !== 'function') return false;
+  return true;
+}
+
 async function initFaceLandmarker() {
+  loadingText.textContent = "Loading AI Coach...";
+
+  if (!browserSupportsAIEngine()) {
+    throw new AIEngineError(
+      "Your browser is too old to run the AI engine. Please update your browser or try Chrome, Edge, Safari 15+, or Firefox.",
+      { kind: 'unsupported', retryable: false }
+    );
+  }
+
+  let fileset;
   try {
-    loadingText.textContent = "Loading AI Coach...";
-    const fileset = await FilesetResolver.forVisionTasks(
+    fileset = await FilesetResolver.forVisionTasks(
       "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm"
     );
+  } catch (e) {
+    console.error('[ai] WASM fileset fetch failed', e);
+    // Network-layer failures from fetch surface as TypeError in every browser.
+    if (e instanceof TypeError || /fetch|network|load/i.test(e?.message || '')) {
+      throw new AIEngineError(
+        "The AI engine couldn't load. Please check your connection and refresh.",
+        { kind: 'network', retryable: true }
+      );
+    }
+    throw new AIEngineError(
+      "The AI engine couldn't start on this browser. Please refresh, or try a different browser.",
+      { kind: 'generic', retryable: true }
+    );
+  }
+
+  try {
     const usePrivate = !!(window.dsPrivacy && window.dsPrivacy.isPrivateMode());
     const landmarker = await FaceLandmarker.createFromOptions(fileset, {
       baseOptions: {
@@ -2192,9 +2288,37 @@ async function initFaceLandmarker() {
     });
     store.set({ faceLandmarker: landmarker, aiReady: true });
   } catch (e) {
-    console.error(e);
-    throw new Error("The AI coach engine couldn't load. Check your connection.");
+    console.error('[ai] model load failed', e);
+    if (e instanceof TypeError || /fetch|network|download|load/i.test(e?.message || '')) {
+      throw new AIEngineError(
+        "The AI engine couldn't load. Please check your connection and refresh.",
+        { kind: 'network', retryable: true }
+      );
+    }
+    // GPU delegate can fail on locked-down browsers / virtualized GPUs.
+    if (/webgl|gpu|delegate|context/i.test(e?.message || '')) {
+      throw new AIEngineError(
+        "Your browser couldn't initialize the GPU for the AI engine. Try enabling Private Mode in Privacy details to use the slower CPU backend, or update your graphics drivers.",
+        { kind: 'unsupported', retryable: false }
+      );
+    }
+    throw new AIEngineError(
+      "The AI engine couldn't load. Please refresh and try again.",
+      { kind: 'generic', retryable: true }
+    );
   }
+}
+
+function friendlyCameraError(err) {
+  const name = err && err.name;
+  const msg = (err && err.message) || '';
+  if (name === 'NotAllowedError') return 'Camera access is blocked. Allow it from the lock icon in the address bar and tap Retry.';
+  if (name === 'NotFoundError') return 'No camera was found on this device.';
+  if (name === 'NotReadableError') return 'The camera is in use by another app or tab. Close it and tap Retry.';
+  if (name === 'OverconstrainedError') return 'Your camera doesn\'t support the requested resolution. Tap Retry.';
+  if (name === 'AbortError') return 'The camera was interrupted. Tap Retry.';
+  if (/timed out/i.test(msg)) return 'The camera feed timed out. Tap Retry.';
+  return msg || 'Something went wrong starting the camera. Tap Retry to try again.';
 }
 
 async function initCamera() {
@@ -2225,29 +2349,77 @@ async function initCamera() {
       // iOS Safari and some other browsers can reject HTMLMediaElement.play()
       // with NotAllowedError if autoplay is judged not user-initiated, even
       // when `muted` and `playsinline` are set. Surface a tap-to-start overlay
-      // so the next call happens inside a real user gesture.
-      const showTapToStart = (err) => {
-        console.warn('[camera] video.play() blocked, awaiting user gesture:', err);
+      // so the next call happens inside a real user gesture. The overlay has
+      // three states: idle (tap to start), loading (camera starting...), and
+      // error (inline message + retry), so the user never has to fall through
+      // to the global error screen for a transient autoplay block.
+      const showTapToStart = (initialErr) => {
+        console.warn('[camera] video.play() blocked, awaiting user gesture:', initialErr);
+
         let tapBtn = document.getElementById('tapToStartCamera');
         if (!tapBtn) {
-          tapBtn = document.createElement('button');
+          tapBtn = document.createElement('div');
           tapBtn.id = 'tapToStartCamera';
-          tapBtn.type = 'button';
-          tapBtn.setAttribute('aria-label', 'Tap to start camera');
-          tapBtn.className = 'absolute inset-0 z-30 flex flex-col items-center justify-center gap-2 bg-black/75 text-white text-sm font-semibold backdrop-blur-sm';
-          tapBtn.innerHTML = '<div class="text-4xl leading-none">▶</div><div class="uppercase tracking-widest text-xs">Tap to start camera</div>';
+          tapBtn.setAttribute('role', 'group');
+          tapBtn.setAttribute('aria-label', 'Camera permission required');
+          tapBtn.className = 'absolute inset-0 z-30 flex flex-col items-center justify-center gap-3 bg-black/80 text-white text-sm font-semibold backdrop-blur-sm p-6 text-center';
           videoWrap.appendChild(tapBtn);
         }
+
+        const renderIdle = () => {
+          tapBtn.innerHTML = `
+            <button type="button" data-role="start" class="flex flex-col items-center gap-2 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-2xl p-4 -m-4">
+              <div class="text-4xl leading-none">▶</div>
+              <div class="uppercase tracking-widest text-xs">Tap to start camera</div>
+            </button>
+          `;
+          const startBtn = tapBtn.querySelector('[data-role="start"]');
+          startBtn.addEventListener('click', onTap, { once: true });
+        };
+
+        const renderLoading = () => {
+          tapBtn.innerHTML = `
+            <div class="w-10 h-10 rounded-full border-2 border-white/20 border-t-brand-500 animate-spin" aria-hidden="true"></div>
+            <div class="uppercase tracking-widest text-xs text-gray-200" aria-live="polite">Camera starting…</div>
+          `;
+        };
+
+        const renderError = (err) => {
+          const friendly = friendlyCameraError(err);
+          const friendlySafe = friendly
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+          tapBtn.innerHTML = `
+            <div class="w-12 h-12 rounded-full bg-brand-500/20 border border-brand-500/40 flex items-center justify-center" aria-hidden="true">
+              <svg class="w-6 h-6 text-brand-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+            </div>
+            <div class="text-sm font-semibold text-white">Couldn't start the camera</div>
+            <div class="text-xs text-gray-300 max-w-[260px] leading-relaxed font-normal">${friendlySafe}</div>
+            <button type="button" data-role="retry" class="mt-2 px-5 py-2 rounded-full bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-brand-500">Retry</button>
+            <button type="button" data-role="cancel" class="text-[11px] text-gray-400 hover:text-white underline underline-offset-4 mt-1">More help</button>
+          `;
+          tapBtn.querySelector('[data-role="retry"]').addEventListener('click', onTap, { once: true });
+          // Escape hatch — if inline retry can't fix it, surface the failure
+          // through the normal error channel so the user gets the full
+          // troubleshooting screen instead of being stuck in this overlay.
+          tapBtn.querySelector('[data-role="cancel"]').addEventListener('click', () => {
+            tapBtn.remove();
+            safeRej(err);
+          }, { once: true });
+        };
+
         const onTap = () => {
+          renderLoading();
           tryPlay().then(() => {
             tapBtn.remove();
             safeRes();
           }).catch((err2) => {
-            tapBtn.remove();
-            safeRej(err2);
+            console.warn('[camera] retry play() failed', err2);
+            renderError(err2);
           });
         };
-        tapBtn.addEventListener('click', onTap, { once: true });
+
+        renderIdle();
       };
 
       const onReady = () => {
@@ -2421,7 +2593,11 @@ async function startAppFlow() {
     if (!store.get().aiReady) await initFaceLandmarker();
     loadingOverlay.classList.add("hidden");
   } catch (e) {
-    showError("System Error", e.message || String(e));
+    if (e && e.name === 'AIEngineError') {
+      showError("AI Engine Unavailable", e.message, { retryable: e.retryable });
+    } else {
+      showError("System Error", e.message || String(e));
+    }
   }
 }
 
@@ -2495,6 +2671,60 @@ function setupPwaInstall() {
   });
 }
 
+// --- OFFLINE / ONLINE STATE ---
+// Single source of truth for connectivity. Anything that needs to react
+// (chat, weather, future API calls) should subscribe via window event
+// 'datescan-offline-change' OR check window.dsIsOffline() at the moment
+// of use. We don't trust navigator.onLine alone — it lies on some
+// platforms (returns true even when there's no actual connectivity) —
+// but it's accurate enough for the "definitely offline" case, which is
+// what we care about for UX gating.
+const OFFLINE_CHAT_PLACEHOLDER = "You're offline. Style Coach chat requires internet.";
+let _chatOriginalPlaceholder = null;
+
+function applyOfflineState(isOffline) {
+  // Header indicator
+  const ind = document.getElementById('offlineIndicator');
+  if (ind) {
+    if (isOffline) {
+      ind.classList.remove('hidden');
+      ind.classList.add('inline-flex');
+    } else {
+      ind.classList.add('hidden');
+      ind.classList.remove('inline-flex');
+    }
+  }
+
+  // Chat input
+  const chatInput = document.getElementById('coachChatInput');
+  const chatSend = document.getElementById('coachChatSend');
+  if (chatInput) {
+    if (_chatOriginalPlaceholder == null) {
+      _chatOriginalPlaceholder = chatInput.placeholder || 'Ask me anything…';
+    }
+    if (isOffline) {
+      chatInput.disabled = true;
+      chatInput.placeholder = OFFLINE_CHAT_PLACEHOLDER;
+      chatInput.setAttribute('aria-disabled', 'true');
+    } else {
+      chatInput.disabled = false;
+      chatInput.placeholder = _chatOriginalPlaceholder;
+      chatInput.removeAttribute('aria-disabled');
+    }
+  }
+  if (chatSend) {
+    chatSend.disabled = isOffline;
+    chatSend.title = isOffline ? OFFLINE_CHAT_PLACEHOLDER : 'Send message';
+  }
+
+  window.dispatchEvent(new CustomEvent('datescan-offline-change', { detail: { offline: isOffline } }));
+}
+
+window.dsIsOffline = () => !navigator.onLine;
+
+window.addEventListener('online', () => applyOfflineState(false));
+window.addEventListener('offline', () => applyOfflineState(true));
+
 function boot() {
   const hasOnboarded = localStorage.getItem("datescan.onboarded");
 
@@ -2526,8 +2756,24 @@ function boot() {
   updateMissionBadge();
 }
 
-retryBtn.addEventListener("click", () => { triggerHaptic('tap'); startAppFlow(); });
+retryBtn.addEventListener("click", () => {
+  triggerHaptic('tap');
+  if (retryBtn.dataset.mode === 'refresh') {
+    window.location.reload();
+    return;
+  }
+  startAppFlow();
+});
 
+// captureFrame() intentionally does the minimum work: it sizes the analysis
+// canvas to match the video frame and draws a horizontally-mirrored copy of
+// the current video frame onto it. It does NOT call getImageData() or
+// allocate any ImageData buffer — the analyzer functions below pull only the
+// rectangles they actually need (eyes, lips, chin patch, etc.) via
+// ctx.getImageData(...).data, destructure the Uint8ClampedArray immediately,
+// and let the ImageData wrapper be garbage-collected at the end of the call.
+// Do not introduce a single full-frame ImageData here: it would allocate
+// width*height*4 bytes per scan and dominate the analyzer's memory profile.
 function captureFrame() {
   const w = video.videoWidth, h = video.videoHeight;
   if (!w || !h) return null;
@@ -3339,8 +3585,9 @@ let weatherLoaded = false;
 // but we still cache + add a timeout so a slow/down API never hangs the UI,
 // and so we can serve a stale-but-useful response on transient failures.
 const WEATHER_CACHE_TTL = 30 * 60 * 1000;
+const WEATHER_CACHE_PREFIX = 'datescan.weatherCache.';
 function weatherCacheKey(lat, lon) {
-  return `datescan.weatherCache.${lat.toFixed(2)}_${lon.toFixed(2)}`;
+  return `${WEATHER_CACHE_PREFIX}${lat.toFixed(2)}_${lon.toFixed(2)}`;
 }
 function readWeatherCache(lat, lon) {
   try {
@@ -3348,14 +3595,54 @@ function readWeatherCache(lat, lon) {
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (!parsed || !parsed.ts || !parsed.data) return null;
-    return parsed; // { ts, data }
+    return parsed; // { ts, data, lat, lon, locName? }
   } catch { return null; }
 }
-function writeWeatherCache(lat, lon, data) {
+function writeWeatherCache(lat, lon, data, locName) {
   try {
-    localStorage.setItem(weatherCacheKey(lat, lon), JSON.stringify({ ts: Date.now(), data }));
+    const payload = { ts: Date.now(), data, lat, lon };
+    if (locName) payload.locName = locName;
+    // If a previous entry exists with a locName but the new write doesn't
+    // include one yet (e.g. reverse-geocode hasn't completed), preserve it.
+    if (!locName) {
+      const prev = readWeatherCache(lat, lon);
+      if (prev && prev.locName) payload.locName = prev.locName;
+    }
+    localStorage.setItem(weatherCacheKey(lat, lon), JSON.stringify(payload));
   } catch {}
 }
+// Scan all cached weather entries and return the most recent one. Used as
+// a fallback when we're offline at boot and have no geolocation to compute
+// a specific cache key.
+function findMostRecentWeatherCache() {
+  let best = null;
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (!k || !k.startsWith(WEATHER_CACHE_PREFIX)) continue;
+      try {
+        const parsed = JSON.parse(localStorage.getItem(k));
+        if (!parsed || !parsed.ts || !parsed.data) continue;
+        if (!best || parsed.ts > best.ts) best = parsed;
+      } catch {}
+    }
+  } catch {}
+  return best;
+}
+
+// "5 minutes ago", "2 hours ago", "3 days ago" — minimal relative time
+// formatter so the offline weather card can show how stale the snapshot is.
+function formatRelativeTime(ts) {
+  const diff = Math.max(0, Date.now() - ts);
+  const min = Math.floor(diff / 60000);
+  if (min < 1) return 'just now';
+  if (min < 60) return `${min} minute${min === 1 ? '' : 's'} ago`;
+  const hr = Math.floor(min / 60);
+  if (hr < 24) return `${hr} hour${hr === 1 ? '' : 's'} ago`;
+  const d = Math.floor(hr / 24);
+  return `${d} day${d === 1 ? '' : 's'} ago`;
+}
+
 async function fetchOpenMeteo(latitude, longitude) {
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude.toFixed(2)}&longitude=${longitude.toFixed(2)}&current=temperature_2m,wind_speed_10m,relative_humidity_2m&hourly=temperature_2m,precipitation_probability,wind_speed_10m&timezone=auto&forecast_days=2`;
   const controller = new AbortController();
@@ -3375,6 +3662,43 @@ async function loadWeather(forceRefresh = false) {
   if (!content) return;
   if (weatherLoaded && !forceRefresh) return;
 
+  // OFFLINE EARLY-PATH:
+  // If we know we're offline, don't bother prompting for geolocation or
+  // attempting to fetch — go straight to whatever cached snapshot we
+  // have, however stale, and show a clear "Offline" banner. If there's
+  // nothing cached at all, surface a friendly placeholder instead of
+  // making the user wait through a guaranteed-fail fetch.
+  if (!navigator.onLine) {
+    const fallback = findMostRecentWeatherCache();
+    if (fallback && fallback.data) {
+      try {
+        renderWeatherCard({
+          data: fallback.data,
+          latitude: fallback.lat,
+          longitude: fallback.lon,
+          locName: fallback.locName,
+          cacheStale: true,
+          cacheTs: fallback.ts,
+        });
+        weatherLoaded = true;
+      } catch (e) {
+        console.warn('[weather] offline render failed', e);
+        content.innerHTML = `
+          <div class="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200 leading-relaxed">
+            You're offline and no cached weather is available. Reconnect to see tonight's forecast.
+          </div>
+        `;
+      }
+    } else {
+      content.innerHTML = `
+        <div class="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200 leading-relaxed">
+          You're offline and no cached weather is available. Reconnect to see tonight's forecast.
+        </div>
+      `;
+    }
+    return;
+  }
+
   if (!navigator.geolocation) {
     content.innerHTML = '<div class="text-xs text-gray-500">Geolocation not supported by this browser.</div>';
     return;
@@ -3390,111 +3714,30 @@ async function loadWeather(forceRefresh = false) {
 
     // Try fresh cache first (skip on forceRefresh)
     let data = null;
-    let usedCache = false;
     let cacheStale = false;
+    let cacheTs = null;
     const cached = readWeatherCache(latitude, longitude);
     if (!forceRefresh && cached && (Date.now() - cached.ts) < WEATHER_CACHE_TTL) {
       data = cached.data;
-      usedCache = true;
+      cacheTs = cached.ts;
     } else {
       try {
         data = await fetchOpenMeteo(latitude, longitude);
         writeWeatherCache(latitude, longitude, data);
+        cacheTs = Date.now();
       } catch (netErr) {
         console.warn('Weather fetch failed, falling back to cache if any:', netErr);
-        if (cached) { data = cached.data; usedCache = true; cacheStale = true; }
-        else throw netErr;
+        if (cached) {
+          data = cached.data;
+          cacheStale = true;
+          cacheTs = cached.ts;
+        } else {
+          throw netErr;
+        }
       }
     }
 
-    const currentTemp = Math.round(data.current.temperature_2m);
-    const currentWind = Math.round(data.current.wind_speed_10m);
-
-    const now = new Date();
-    let targetDate = new Date(now);
-    if (now.getHours() >= 23) targetDate.setDate(targetDate.getDate() + 1);
-    const targetStr = targetDate.toISOString().slice(0, 10);
-    const times = data.hourly.time;
-
-    const eveningIdx = [];
-    times.forEach((t, i) => {
-      if (!t.startsWith(targetStr)) return;
-      const hour = parseInt(t.slice(11, 13), 10);
-      if (hour >= 18 && hour <= 23) eveningIdx.push(i);
-    });
-
-    let minTemp = currentTemp, maxRain = 0, maxWind = currentWind;
-    eveningIdx.forEach(i => {
-      const t = data.hourly.temperature_2m[i];
-      const r = data.hourly.precipitation_probability?.[i] ?? 0;
-      const w = data.hourly.wind_speed_10m[i];
-      if (t < minTemp) minTemp = t;
-      if (r > maxRain) maxRain = r;
-      if (w > maxWind) maxWind = w;
-    });
-    minTemp = Math.round(minTemp);
-    maxWind = Math.round(maxWind);
-
-    let icon = '✨', adviceTitle = 'Perfect date-night weather', advice = `Clear skies tonight at ${currentTemp}°C. Your outfit is good to go — no extras needed.`, tone = 'good';
-    if (maxRain >= 60) {
-      icon = '🌧️'; tone = 'alert';
-      adviceTitle = 'Rain incoming';
-      advice = `Stylish fit — but grab an umbrella. ${maxRain}% chance of rain between 18:00 and 23:00.`;
-    } else if (maxRain >= 35) {
-      icon = '🌦️'; tone = 'warn';
-      adviceTitle = 'Possible showers';
-      advice = `${maxRain}% chance of rain tonight. A light jacket or a fold-up umbrella is a smart call.`;
-    } else if (minTemp < 8) {
-      icon = '🥶'; tone = 'alert';
-      adviceTitle = 'It\'s gonna be cold';
-      advice = `Looking sharp, but it'll drop to ${minTemp}°C. Throw on a proper coat — freezing outside kills confidence.`;
-    } else if (minTemp < 15) {
-      icon = '🧥'; tone = 'warn';
-      adviceTitle = 'Bring a jacket';
-      advice = `Solid outfit — but it'll be ${minTemp}°C this evening. Grab a light jacket so you're not shivering on the walk.`;
-    } else if (maxWind >= 30) {
-      icon = '💨'; tone = 'warn';
-      adviceTitle = 'Windy night ahead';
-      advice = `Great style, but wind gusts up to ${maxWind} km/h tonight. Keep the hair tight and avoid loose layers.`;
-    } else if (minTemp >= 24) {
-      icon = '🔥'; tone = 'info';
-      adviceTitle = 'Warm night';
-      advice = `It'll stay around ${minTemp}°C tonight. Stick to breathable layers and hydrate before you go.`;
-    }
-
-    const toneColor = tone === 'alert' ? 'text-red-400 border-red-500/30 bg-red-500/5'
-                    : tone === 'warn' ? 'text-amber-400 border-amber-500/30 bg-amber-500/5'
-                    : tone === 'info' ? 'text-blue-400 border-blue-500/30 bg-blue-500/5'
-                    : 'text-emerald-400 border-emerald-500/30 bg-emerald-500/5';
-
-    if (locEl) {
-      locEl.textContent = '…';
-      try {
-        const geoRes = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
-        const geo = await geoRes.json();
-        const name = geo.city || geo.locality || geo.principalSubdivision || geo.countryName || `${latitude.toFixed(1)}°, ${longitude.toFixed(1)}°`;
-        locEl.textContent = name;
-      } catch {
-        locEl.textContent = `${latitude.toFixed(1)}°, ${longitude.toFixed(1)}°`;
-      }
-    }
-    content.innerHTML = `
-      <div class="flex items-center gap-4 mb-4">
-        <div class="text-5xl leading-none drop-shadow-lg">${icon}</div>
-        <div class="flex-1">
-          <div class="flex items-baseline gap-2">
-            <span class="font-serif text-4xl font-bold text-white leading-none tabular-nums">${currentTemp}°</span>
-            <span class="text-xs text-gray-500">now</span>
-          </div>
-          <div class="text-[10px] text-gray-500 uppercase tracking-widest mt-1.5">Evening low ${minTemp}° · wind ${maxWind} km/h</div>
-        </div>
-      </div>
-      <div class="rounded-xl border ${toneColor} p-3">
-        <div class="text-[10px] font-bold uppercase tracking-widest mb-1">${adviceTitle}</div>
-        <div class="text-xs text-gray-200 leading-relaxed">${advice}</div>
-      </div>
-      <button onclick="window.loadWeather(true)" class="mt-3 text-[10px] text-gray-500 hover:text-gray-300 uppercase tracking-widest">${cacheStale ? 'Offline · cached · Refresh' : 'Refresh'}</button>
-    `;
+    renderWeatherCard({ data, latitude, longitude, cacheStale, cacheTs });
     weatherLoaded = true;
   } catch (err) {
     const denied = err && err.code === 1;
@@ -3504,7 +3747,142 @@ async function loadWeather(forceRefresh = false) {
     `;
   }
 }
+
+// Render path extracted so the offline early-path and the normal flow
+// share one source of truth. Also handles the prominent "Offline – last
+// updated X ago" banner when serving stale data.
+function renderWeatherCard({ data, latitude, longitude, locName, cacheStale, cacheTs }) {
+  const content = document.getElementById('weatherContent');
+  const locEl = document.getElementById('weatherLoc');
+  if (!content) return;
+
+  const currentTemp = Math.round(data.current.temperature_2m);
+  const currentWind = Math.round(data.current.wind_speed_10m);
+
+  const now = new Date();
+  let targetDate = new Date(now);
+  if (now.getHours() >= 23) targetDate.setDate(targetDate.getDate() + 1);
+  const targetStr = targetDate.toISOString().slice(0, 10);
+  const times = data.hourly.time;
+
+  const eveningIdx = [];
+  times.forEach((t, i) => {
+    if (!t.startsWith(targetStr)) return;
+    const hour = parseInt(t.slice(11, 13), 10);
+    if (hour >= 18 && hour <= 23) eveningIdx.push(i);
+  });
+
+  let minTemp = currentTemp, maxRain = 0, maxWind = currentWind;
+  eveningIdx.forEach(i => {
+    const t = data.hourly.temperature_2m[i];
+    const r = data.hourly.precipitation_probability?.[i] ?? 0;
+    const w = data.hourly.wind_speed_10m[i];
+    if (t < minTemp) minTemp = t;
+    if (r > maxRain) maxRain = r;
+    if (w > maxWind) maxWind = w;
+  });
+  minTemp = Math.round(minTemp);
+  maxWind = Math.round(maxWind);
+
+  let icon = '✨', adviceTitle = 'Perfect date-night weather', advice = `Clear skies tonight at ${currentTemp}°C. Your outfit is good to go — no extras needed.`, tone = 'good';
+  if (maxRain >= 60) {
+    icon = '🌧️'; tone = 'alert';
+    adviceTitle = 'Rain incoming';
+    advice = `Stylish fit — but grab an umbrella. ${maxRain}% chance of rain between 18:00 and 23:00.`;
+  } else if (maxRain >= 35) {
+    icon = '🌦️'; tone = 'warn';
+    adviceTitle = 'Possible showers';
+    advice = `${maxRain}% chance of rain tonight. A light jacket or a fold-up umbrella is a smart call.`;
+  } else if (minTemp < 8) {
+    icon = '🥶'; tone = 'alert';
+    adviceTitle = 'It\'s gonna be cold';
+    advice = `Looking sharp, but it'll drop to ${minTemp}°C. Throw on a proper coat — freezing outside kills confidence.`;
+  } else if (minTemp < 15) {
+    icon = '🧥'; tone = 'warn';
+    adviceTitle = 'Bring a jacket';
+    advice = `Solid outfit — but it'll be ${minTemp}°C this evening. Grab a light jacket so you're not shivering on the walk.`;
+  } else if (maxWind >= 30) {
+    icon = '💨'; tone = 'warn';
+    adviceTitle = 'Windy night ahead';
+    advice = `Great style, but wind gusts up to ${maxWind} km/h tonight. Keep the hair tight and avoid loose layers.`;
+  } else if (minTemp >= 24) {
+    icon = '🔥'; tone = 'info';
+    adviceTitle = 'Warm night';
+    advice = `It'll stay around ${minTemp}°C tonight. Stick to breathable layers and hydrate before you go.`;
+  }
+
+  const toneColor = tone === 'alert' ? 'text-red-400 border-red-500/30 bg-red-500/5'
+                  : tone === 'warn' ? 'text-amber-400 border-amber-500/30 bg-amber-500/5'
+                  : tone === 'info' ? 'text-blue-400 border-blue-500/30 bg-blue-500/5'
+                  : 'text-emerald-400 border-emerald-500/30 bg-emerald-500/5';
+
+  // Resolve a human-readable location label. If we already have one (from
+  // cache), use it. Otherwise reverse-geocode in the background — but only
+  // if we're online, since BigDataCloud is also a network call.
+  if (locEl) {
+    if (locName) {
+      locEl.textContent = locName;
+    } else if (navigator.onLine && latitude != null && longitude != null) {
+      locEl.textContent = '…';
+      (async () => {
+        try {
+          const geoRes = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
+          const geo = await geoRes.json();
+          const name = geo.city || geo.locality || geo.principalSubdivision || geo.countryName || `${latitude.toFixed(1)}°, ${longitude.toFixed(1)}°`;
+          locEl.textContent = name;
+          // Persist the resolved name into cache so the next offline boot
+          // can show "Vienna" instead of bare coordinates.
+          writeWeatherCache(latitude, longitude, data, name);
+        } catch {
+          locEl.textContent = `${latitude.toFixed(1)}°, ${longitude.toFixed(1)}°`;
+        }
+      })();
+    } else if (latitude != null && longitude != null) {
+      locEl.textContent = `${latitude.toFixed(1)}°, ${longitude.toFixed(1)}°`;
+    }
+  }
+
+  const offlineBanner = cacheStale && cacheTs ? `
+    <div class="mb-3 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 flex items-center gap-2">
+      <svg class="w-3.5 h-3.5 text-amber-300 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18M5 12.55a11 11 0 015.17-2.39M10.71 5.05A16 16 0 0122.58 9M16.72 11.06A10 10 0 0119 12.55M8.53 16.11a6 6 0 016.95 0M12 20h.01"/></svg>
+      <div class="text-[10px] font-semibold text-amber-200 leading-tight flex-1">
+        Offline · last updated ${formatRelativeTime(cacheTs)}
+      </div>
+    </div>
+  ` : '';
+
+  content.innerHTML = `
+    ${offlineBanner}
+    <div class="flex items-center gap-4 mb-4">
+      <div class="text-5xl leading-none drop-shadow-lg">${icon}</div>
+      <div class="flex-1">
+        <div class="flex items-baseline gap-2">
+          <span class="font-serif text-4xl font-bold text-white leading-none tabular-nums">${currentTemp}°</span>
+          <span class="text-xs text-gray-500">now</span>
+        </div>
+        <div class="text-[10px] text-gray-500 uppercase tracking-widest mt-1.5">Evening low ${minTemp}° · wind ${maxWind} km/h</div>
+      </div>
+    </div>
+    <div class="rounded-xl border ${toneColor} p-3">
+      <div class="text-[10px] font-bold uppercase tracking-widest mb-1">${adviceTitle}</div>
+      <div class="text-xs text-gray-200 leading-relaxed">${advice}</div>
+    </div>
+    <button onclick="window.loadWeather(true)" class="mt-3 text-[10px] text-gray-500 hover:text-gray-300 uppercase tracking-widest">Refresh</button>
+  `;
+}
 window.loadWeather = loadWeather;
+
+// When connectivity returns, automatically refresh the weather card so the
+// "Offline · last updated X" banner gets replaced with fresh data without
+// the user having to tap Refresh. Only fires if the card was already
+// displayed at least once (weatherLoaded is true), so we don't surprise
+// users who never opened it.
+window.addEventListener('online', () => {
+  if (weatherLoaded) {
+    weatherLoaded = false;
+    loadWeather(true).catch(() => {});
+  }
+});
 
 document.addEventListener('click', (e) => {
   if (e.target && e.target.closest && e.target.closest('#weatherEnableBtn')) {
@@ -3556,6 +3934,7 @@ async function runScan() {
 
   thinkingOverlay.classList.remove("opacity-0", "scale-95", "pointer-events-none");
   thinkingOverlay.classList.add("scale-100");
+  startScanProgress(4000);
   const phrases = [
     "Analyzing facial symmetry...",
     "Checking color harmony...",
@@ -3586,7 +3965,18 @@ async function runScan() {
       renderActionPlan([{ category: "env", tone: "error", title: "Camera Issue", text: "Couldn't capture your video feed.", action: "Reload page and allow permissions." }], false);
       return;
     }
-    try { store.set({ lastCap: analysisCanvas.toDataURL('image/jpeg', 0.95) }); } catch (e) {}
+    try {
+      // Replace the previous capture. lastCap is currently a data: URL string,
+      // so URL.revokeObjectURL is a no-op — but we call it anyway as a safety
+      // net so that if anyone later switches this to canvas.toBlob() + a blob:
+      // URL, the previous one is released instead of leaking. Always free
+      // before assigning the new capture.
+      const prev = store.get().lastCap;
+      if (typeof prev === 'string' && prev.startsWith('blob:')) {
+        try { URL.revokeObjectURL(prev); } catch {}
+      }
+      store.set({ lastCap: analysisCanvas.toDataURL('image/jpeg', 0.95) });
+    } catch (e) {}
 
     let result;
     try { result = s.faceLandmarker.detect(analysisCanvas); }
@@ -3603,6 +3993,7 @@ async function runScan() {
     // Hide the thinking overlay right before the reveal flash for snappy UX.
     // endScan() in finally will no-op on the already-hidden overlay.
     if (currentThinkInterval) { clearInterval(currentThinkInterval); currentThinkInterval = null; }
+    finishScanProgress();
     thinkingOverlay.classList.remove("scale-100");
     thinkingOverlay.classList.add("opacity-0", "scale-95", "pointer-events-none");
 
@@ -3725,12 +4116,61 @@ async function runScan() {
 // Module-level handle so endScan() can always kill the "thinking" ticker,
 // no matter which code path asks for the scan to end.
 let currentThinkInterval = null;
+let scanProgressRaf = null;
+const SCAN_RING_CIRCUMFERENCE = 94.25; // 2 * pi * 15
+
+// Animate the circular progress ring on the thinking overlay. We can't
+// know the exact MediaPipe processing time in advance — it varies with
+// device, lighting, and face complexity — so we ease toward 95% over the
+// estimated duration using a decaying exponential curve. The ring never
+// stalls visibly at 100% while we're still working, and never overshoots.
+// finishScanProgress() snaps it to 100% when the actual analysis completes.
+function startScanProgress(estMs = 4000) {
+  const c = document.getElementById('thinkingProgressCircle');
+  if (!c) return;
+  cancelAnimationFrame(scanProgressRaf);
+  c.style.transition = 'none';
+  c.style.strokeDashoffset = String(SCAN_RING_CIRCUMFERENCE);
+  void c.getBoundingClientRect();
+  c.style.transition = 'stroke-dashoffset 200ms ease-out';
+
+  const start = performance.now();
+  const tick = (t) => {
+    const elapsed = t - start;
+    // 1 - exp(-3x) reaches ~0.95 at x=1 and asymptotes to 1; cap at 0.95.
+    const eased = 1 - Math.exp(-3 * (elapsed / estMs));
+    const pct = Math.min(0.95, eased * 0.95);
+    c.style.strokeDashoffset = String(SCAN_RING_CIRCUMFERENCE * (1 - pct));
+    if (pct < 0.95) {
+      scanProgressRaf = requestAnimationFrame(tick);
+    }
+  };
+  scanProgressRaf = requestAnimationFrame(tick);
+}
+
+function finishScanProgress() {
+  const c = document.getElementById('thinkingProgressCircle');
+  cancelAnimationFrame(scanProgressRaf);
+  scanProgressRaf = null;
+  if (c) c.style.strokeDashoffset = '0';
+}
+
+function resetScanProgress() {
+  const c = document.getElementById('thinkingProgressCircle');
+  cancelAnimationFrame(scanProgressRaf);
+  scanProgressRaf = null;
+  if (c) {
+    c.style.transition = 'none';
+    c.style.strokeDashoffset = String(SCAN_RING_CIRCUMFERENCE);
+  }
+}
 
 function endScan() {
   if (currentThinkInterval) {
     clearInterval(currentThinkInterval);
     currentThinkInterval = null;
   }
+  resetScanProgress();
   if (thinkingOverlay) {
     thinkingOverlay.classList.remove("scale-100");
     thinkingOverlay.classList.add("opacity-0", "scale-95", "pointer-events-none");
@@ -4165,6 +4605,13 @@ $("logDateBtn").addEventListener("click", () => {
 // the browser / locks the phone, and Android keeps showing the persistent
 // "site is using your camera" notification. Stop tracks on hide, re-init
 // on return if the scan view is the active view.
+let cameraInitializing = false;
+
+function isOnScannerView() {
+  const v = document.getElementById('viewScanner');
+  return !!(v && !v.classList.contains('hidden'));
+}
+
 function stopCameraTracks() {
   try {
     const s = store.get().stream;
@@ -4177,18 +4624,63 @@ function stopCameraTracks() {
   } catch (e) { console.warn('[camera] stop failed', e); }
 }
 
+// Wait for every track on the given stream to actually reach readyState
+// 'ended', plus a small grace delay so the OS releases the camera handle
+// before we ask for it again. Resolves after `maxWait` ms either way.
+function waitForTracksEnded(stream, maxWait = 400) {
+  return new Promise((resolve) => {
+    if (!stream || typeof stream.getTracks !== 'function') {
+      setTimeout(resolve, 80);
+      return;
+    }
+    const tracks = stream.getTracks();
+    const start = Date.now();
+    const tick = () => {
+      const allEnded = tracks.every(t => t.readyState === 'ended');
+      if (allEnded || Date.now() - start >= maxWait) {
+        // Small grace delay so the underlying camera device is fully released.
+        setTimeout(resolve, 120);
+      } else {
+        setTimeout(tick, 40);
+      }
+    };
+    tick();
+  });
+}
+
+async function safeReinitCamera() {
+  if (cameraInitializing) {
+    console.log('[camera] re-init already in progress, skipping');
+    return;
+  }
+  if (!isOnScannerView()) return;
+
+  cameraInitializing = true;
+  try {
+    const oldStream = store.get().stream;
+    stopCameraTracks();
+    await waitForTracksEnded(oldStream);
+
+    // The user may have navigated away while we were waiting.
+    if (!isOnScannerView()) return;
+    if (document.hidden) return;
+
+    await initCamera();
+  } catch (err) {
+    console.warn('[camera] re-init failed', err);
+  } finally {
+    cameraInitializing = false;
+  }
+}
+
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
     stopCameraTracks();
   } else {
-    const scanView = document.getElementById('viewScanner');
-    const onScan = scanView && !scanView.classList.contains('hidden');
-    if (!onScan) return;
     // Some flows (share sheet, picker, brief tab switch) don't fire a 'hidden'
     // event, so the old stream may still be attached but frozen. Force a clean
     // restart whenever we come back to the scan view.
-    stopCameraTracks();
-    initCamera().catch(err => console.warn('[camera] re-init failed', err));
+    safeReinitCamera();
   }
 });
 window.addEventListener('pagehide', stopCameraTracks);
@@ -4198,6 +4690,9 @@ renderChecklist();
 updateUsageBadge();
 renderCloset();
 boot();
+// Apply initial offline state once the DOM is ready. The 'online'/'offline'
+// listeners attached above will keep it in sync from here on.
+applyOfflineState(!navigator.onLine);
 </script>
 <script>
   if ('serviceWorker' in navigator) {
@@ -4419,6 +4914,73 @@ boot();
     return bubble;
   }
 
+  // Build a typing indicator inside an empty assistant bubble: three
+  // bouncing dots, plus a rotating "thinking" hint that fades in after a
+  // short delay so quick (cached) replies don't make it flicker. The
+  // caller is responsible for calling stopTypingIndicator() before
+  // overwriting the bubble's text with the actual reply, otherwise the
+  // hint interval will keep running on a detached node.
+  const TYPING_HINTS = [
+    "Reading your message…",
+    "Looking at your photo…",
+    "Considering color harmony…",
+    "Thinking about your fit…",
+    "Finding the right advice…",
+  ];
+
+  function startTypingIndicator(bubble) {
+    bubble.classList.remove('animate-pulse');
+    bubble.innerHTML = `
+      <div class="flex items-center gap-1.5 py-1" aria-label="Style Coach is typing">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-400 animate-bounce" style="animation-delay:0ms"></span>
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-400 animate-bounce" style="animation-delay:150ms"></span>
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-400 animate-bounce" style="animation-delay:300ms"></span>
+      </div>
+      <div class="text-[10px] text-gray-500 mt-1 italic opacity-0 transition-opacity duration-500" data-typing-hint></div>
+    `;
+
+    const hintEl = bubble.querySelector('[data-typing-hint]');
+    // Pick a random starting hint so the same first one doesn't appear
+    // every single time the user sends a message.
+    let idx = Math.floor(Math.random() * TYPING_HINTS.length);
+
+    const swap = () => {
+      if (!hintEl.isConnected) return;
+      hintEl.textContent = TYPING_HINTS[idx % TYPING_HINTS.length];
+      hintEl.classList.remove('opacity-0');
+    };
+
+    // Show first hint only after 1.2s — most cached replies arrive before
+    // this, so the user never sees a hint flicker on instant responses.
+    const initialDelay = setTimeout(swap, 1200);
+
+    // Then rotate hints every 2.4s for as long as the assistant is still
+    // thinking. Each rotation fades the previous hint out for 400ms,
+    // swaps text, fades back in.
+    const rotation = setInterval(() => {
+      if (!hintEl.isConnected) return;
+      idx++;
+      hintEl.classList.add('opacity-0');
+      setTimeout(() => {
+        if (!hintEl.isConnected) return;
+        hintEl.textContent = TYPING_HINTS[idx % TYPING_HINTS.length];
+        hintEl.classList.remove('opacity-0');
+      }, 400);
+    }, 2400);
+
+    bubble._typingCleanup = () => {
+      clearTimeout(initialDelay);
+      clearInterval(rotation);
+    };
+  }
+
+  function stopTypingIndicator(bubble) {
+    if (bubble && typeof bubble._typingCleanup === 'function') {
+      bubble._typingCleanup();
+      bubble._typingCleanup = null;
+    }
+  }
+
   function getModuleContext() {
     const lines = [];
 
@@ -4571,8 +5133,8 @@ boot();
     history.push({ role: 'user', content: userContent });
     addMessage('user', text, attachments.map(a => a.url));
 
-    const thinking = addMessage('assistant', '…');
-    thinking.classList.add('animate-pulse');
+    const thinking = addMessage('assistant', '');
+    startTypingIndicator(thinking);
 
     const systemPrompt = buildSystemPrompt();
     const messagesForApi = [
@@ -4583,6 +5145,7 @@ boot();
     const cacheKey = makeCacheKey(text, attachments, systemPrompt);
     const cachedReply = getCached(cacheKey);
     if (cachedReply) {
+      stopTypingIndicator(thinking);
       thinking.classList.remove('animate-pulse');
       thinking.textContent = cachedReply;
       const badge = document.createElement('div');
@@ -4608,6 +5171,7 @@ boot();
       const reply = data.reply || data.content || data.message ||
                     (data.choices && data.choices[0] && (data.choices[0].message?.content || data.choices[0].text)) ||
                     '';
+      stopTypingIndicator(thinking);
       thinking.classList.remove('animate-pulse');
       const finalReply = (reply || '').trim() || "Hmm, I didn't catch that. Try again?";
       thinking.textContent = finalReply;
@@ -4616,6 +5180,7 @@ boot();
         setCached(cacheKey, finalReply);
       }
     } catch (err) {
+      stopTypingIndicator(thinking);
       thinking.classList.remove('animate-pulse');
       thinking.textContent = "⚠️ Couldn't reach the stylist right now. Please try again in a moment.";
       console.error('Style Coach chat error:', err);
@@ -4627,6 +5192,25 @@ boot();
     e.preventDefault();
     const text = input.value.trim();
     if (!text && pendingAttachments.length === 0) return;
+
+    // Offline gate. The input/button are already disabled by
+    // applyOfflineState(), but the form can still be submitted via
+    // Enter key on some browsers, or by JS. Bail out with an inline
+    // notice instead of letting fetch() throw a network error.
+    if (window.dsIsOffline && window.dsIsOffline()) {
+      const note = document.createElement('div');
+      note.className = 'mx-auto my-3 max-w-[85%] rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-center';
+      note.innerHTML = `
+        <div class="flex items-center justify-center gap-2 text-amber-300 text-xs font-semibold mb-1">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18M5 12.55a11 11 0 015.17-2.39M10.71 5.05A16 16 0 0122.58 9M16.72 11.06A10 10 0 0119 12.55M8.53 16.11a6 6 0 016.95 0M12 20h.01"/></svg>
+          You're offline
+        </div>
+        <p class="text-xs text-gray-300 leading-relaxed">Style Coach chat requires internet. Reconnect and try again.</p>
+      `;
+      messagesEl.appendChild(note);
+      messagesEl.scrollTo?.({ top: messagesEl.scrollHeight, behavior: 'smooth' });
+      return;
+    }
 
     // Free tier: 2 chat messages / 24h
     if (!window.isProUser?.()) {
@@ -4654,7 +5238,11 @@ boot();
     input.value = '';
     sendBtn.disabled = true;
     sendMessage(text, attachments).finally(() => {
-      sendBtn.disabled = false;
+      // Only re-enable if we're not offline; otherwise applyOfflineState
+      // owns the disabled state and we'd just be overriding it.
+      if (!(window.dsIsOffline && window.dsIsOffline())) {
+        sendBtn.disabled = false;
+      }
       input.focus();
       if (!window.isProUser?.()) {
         window.incrementChatUsage?.();
