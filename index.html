@@ -339,11 +339,16 @@
 
   /* Monetization Blur Elements */
   .blur-content {
-    filter: blur(10px) grayscale(40%);
-    opacity: 0.5;
+    filter: blur(0px) grayscale(0%);
+    opacity: 1;
     pointer-events: none;
     user-select: none;
-    transition: all 0.5s ease;
+    transition: filter 0.6s ease, opacity 0.6s ease, transform 0.6s ease;
+  }
+  .blur-content.blur-active {
+    filter: blur(10px) grayscale(40%);
+    opacity: 0.5;
+    transform: scale(0.985);
   }
   .locked-overlay {
     position: absolute;
@@ -395,6 +400,7 @@
     opacity: 1;
   }
 </style>
+<script src="https://app.lemonsqueezy.com/js/lemon.js" defer></script>
 </head>
 <body class="relative antialiased text-gray-100">
 
@@ -566,7 +572,19 @@
               </div>
 
               <div id="errorOverlay" class="hidden absolute inset-0 z-50 flex flex-col items-center justify-center bg-dark-950/95 p-6 text-center">
-                <div class="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center mb-4 text-2xl">📷</div>
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-brand-500/20 to-purple-500/10 border border-brand-500/30 flex items-center justify-center mb-4 shadow-lg shadow-brand-500/10">
+                  <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <linearGradient id="errIconGrad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#ec4899"/>
+                        <stop offset="1" stop-color="#9333ea"/>
+                      </linearGradient>
+                    </defs>
+                    <path d="M12 2 4 5v6c0 5 3.4 9.3 8 11 4.6-1.7 8-6 8-11V5l-8-3Z" stroke="url(#errIconGrad)" stroke-width="1.8" stroke-linejoin="round" fill="url(#errIconGrad)" fill-opacity="0.15"/>
+                    <rect x="9" y="11" width="6" height="5" rx="1.2" stroke="url(#errIconGrad)" stroke-width="1.8"/>
+                    <path d="M10.2 11V9.5a1.8 1.8 0 0 1 3.6 0V11" stroke="url(#errIconGrad)" stroke-width="1.8" stroke-linecap="round"/>
+                  </svg>
+                </div>
                 <h3 class="font-serif text-xl font-semibold mb-2" id="errorTitle">Camera Blocked</h3>
                 <p class="text-sm text-gray-400 mb-6 max-w-[280px]" id="errorMsg">Please check your browser settings and try again.</p>
                 <button id="retryBtn" class="btn-primary px-6 py-2.5 rounded-full text-sm font-medium">Try Again</button>
@@ -1158,11 +1176,17 @@ document.addEventListener('DOMContentLoaded', function () {
 <div id="dsToast" class="hidden fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] px-4 py-2.5 rounded-full bg-black/85 border border-white/15 backdrop-blur-md text-xs text-white shadow-xl pointer-events-none"></div>
 
 <!-- Share Modal -->
-<div id="shareModal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl">
-  <div class="premium-glass border border-brand-500/30 rounded-[32px] p-5 sm:p-6 max-w-sm w-full relative overflow-hidden fade-up max-h-[95vh] overflow-y-auto">
+<div id="shareModal" class="hidden fixed inset-0 z-[90] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl">
+  <div class="premium-glass border border-brand-500/30 rounded-[32px] p-5 sm:p-6 max-w-sm w-full relative overflow-hidden fade-up max-h-[92vh] overflow-y-auto" style="padding-bottom:calc(1.25rem + env(safe-area-inset-bottom));">
     <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-500 rounded-full mix-blend-screen filter blur-[60px] opacity-30 pointer-events-none"></div>
 
-    <div class="text-center relative z-10 mb-4">
+    <!-- Top-right X close (always visible, never behind mobile nav) -->
+    <button id="closeShareBtnX" type="button" aria-label="Close share dialog"
+      class="absolute top-3 right-3 z-20 w-9 h-9 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-gray-300 hover:text-white flex items-center justify-center transition">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+
+    <div class="text-center relative z-10 mb-4 mt-1">
       <div class="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-widest font-bold text-brand-400 mb-2">
         <span>🔥</span> TikTok Ready
       </div>
@@ -1179,6 +1203,7 @@ document.addEventListener('DOMContentLoaded', function () {
       <button id="shareNativeBtn" class="btn-primary w-full py-3.5 rounded-2xl text-sm font-bold flex justify-center items-center gap-2">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
         Share
+        <span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-white/20 text-white/90 ml-1">+5 XP</span>
       </button>
       <button id="shareDownloadBtn" class="w-full py-3 rounded-2xl text-sm font-semibold bg-white/5 border border-white/10 text-white hover:bg-white/10 transition flex justify-center items-center gap-2">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
@@ -1200,33 +1225,40 @@ document.addEventListener('DOMContentLoaded', function () {
       <div class="w-16 h-16 mx-auto bg-gradient-to-tr from-brand-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg shadow-brand-500/20 mb-4">
         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
       </div>
-      <h2 class="font-serif text-3xl font-bold mb-2">Upgrade to Pro</h2>
-      <p class="text-sm text-gray-400">Unlock your full dating potential.</p>
+      <h2 class="font-serif text-2xl sm:text-[26px] font-bold mb-2 leading-tight">You’re 1 tweak away from a better first impression.</h2>
+      <p class="text-sm text-gray-400">Most users improve +8–15 points with the full breakdown.</p>
+    </div>
+
+    <div class="relative z-10 mb-4 rounded-2xl border border-white/10 bg-white/5 p-3.5 space-y-1.5">
+      <div class="flex items-center gap-2 text-[12px] text-white"><span class="text-brand-400">✔</span> Unlimited scans</div>
+      <div class="flex items-center gap-2 text-[12px] text-white"><span class="text-brand-400">✔</span> Unlimited AI coaching</div>
+      <div class="flex items-center gap-2 text-[12px] text-white"><span class="text-brand-400">✔</span> Full improvement breakdown</div>
+      <div class="flex items-center gap-2 text-[12px] text-white"><span class="text-brand-400">✔</span> Track your progress</div>
     </div>
 
     <div class="space-y-2.5 relative z-10">
-      <button class="plan-btn w-full text-left bg-gradient-to-r from-brand-500/10 to-purple-500/10 border border-brand-500/40 rounded-2xl p-3.5 transition-all flex items-center justify-between relative overflow-hidden hover:border-brand-500/70 shadow-lg">
-        <div class="absolute top-0 right-0 bg-brand-500 text-[9px] uppercase font-bold px-2 py-0.5 rounded-bl-lg text-white tracking-wider shadow-sm">Popular</div>
+      <button data-plan="week" class="plan-btn w-full text-left bg-gradient-to-r from-brand-500/10 to-purple-500/10 border border-brand-500/40 rounded-2xl p-3.5 transition-all flex items-center justify-between relative overflow-hidden hover:border-brand-500/70 shadow-lg">
+        <div class="absolute top-0 right-0 bg-brand-500 text-[9px] uppercase font-bold px-2 py-0.5 rounded-bl-lg text-white tracking-wider shadow-sm">Try it out</div>
         <div class="pr-2">
           <div class="font-semibold text-white text-sm">Week</div>
-          <div class="text-[11px] text-brand-200/70 mt-0.5 leading-tight">Fix your profile, boost your chances</div>
+          <div class="text-[11px] text-gray-500 mt-0.5 leading-tight">Quick improvements before your next date</div>
         </div>
         <div class="font-bold text-base text-white shrink-0">$4.99</div>
       </button>
 
-      <button class="plan-btn w-full text-left bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-2xl p-3.5 transition-all flex items-center justify-between group">
+      <button data-plan="month" class="plan-btn w-full text-left bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-2xl p-3.5 transition-all flex items-center justify-between group">
         <div class="pr-2">
-          <div class="font-semibold text-white text-sm group-hover:text-brand-400 transition-colors">Month</div>
-          <div class="text-[11px] text-gray-500 mt-0.5 leading-tight">More matches, better dates</div>
+          <div class="font-semibold text-white text-sm group-hover:text-brand-400 transition-colors">Month — Build confidence fast</div>
+          <div class="text-[11px] text-gray-500 mt-0.5 leading-tight">Unlimited scans + coaching</div>
         </div>
         <div class="font-bold text-base text-white shrink-0">$9.99</div>
       </button>
 
-      <button class="plan-btn w-full text-left bg-white/5 hover:bg-white/10 border border-yellow-500/30 hover:border-yellow-500/60 rounded-2xl p-3.5 transition-all flex items-center justify-between relative overflow-hidden group">
-        <div class="absolute top-0 right-0 bg-gradient-to-r from-yellow-500 to-amber-600 text-[9px] uppercase font-bold px-2 py-0.5 rounded-bl-lg text-white tracking-wider shadow-sm">Best Value</div>
+      <button data-plan="year" class="plan-btn w-full text-left bg-white/5 hover:bg-white/10 border border-yellow-500/30 hover:border-yellow-500/60 rounded-2xl p-3.5 transition-all flex items-center justify-between relative overflow-hidden group">
+        <div class="absolute top-0 right-0 bg-gradient-to-r from-yellow-500 to-amber-600 text-[9px] uppercase font-bold px-2 py-0.5 rounded-bl-lg text-white tracking-wider shadow-sm">Best value — save 58%</div>
         <div class="pr-2">
-          <div class="font-semibold text-white text-sm">Year</div>
-          <div class="text-[11px] text-gray-500 mt-0.5 leading-tight">Play smarter all year long</div>
+          <div class="font-semibold text-white text-sm">Year — Become consistently attractive</div>
+          <div class="text-[11px] text-gray-500 mt-0.5 leading-tight">Everything, all year</div>
         </div>
         <div class="font-bold text-base text-gradient-gold shrink-0">$49.99</div>
       </button>
@@ -1238,7 +1270,7 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>
 
     <button id="closePaywall" class="w-full mt-4 text-sm font-medium text-gray-500 hover:text-white transition-colors py-2 relative z-10">
-      Maybe later
+      I’ll stay average
     </button>
   </div>
 </div>
@@ -1393,26 +1425,62 @@ const LEVELS = [
   { name: "Level 6: Casanova", xp: 1500 }
 ];
 
-const FREE_DAILY = 10000;
+const FREE_SCAN_LIMIT = 3;
+const FREE_CHAT_LIMIT = 2;
+const RESET_MS = 24 * 60 * 60 * 1000;
 
 function isProUser() { return localStorage.getItem('datescan.pro') === 'true'; }
 function setProUser() { localStorage.setItem('datescan.pro', 'true'); }
 
+// ---- Scan usage (rolling 24h window from first scan; resets 24h after block) ----
 function getUsage() {
-  const d = new Date(), key = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
   try {
     const raw = JSON.parse(localStorage.getItem("datescan.usage") || "{}");
-    if (raw.date !== key) return { date: key, count: 0 };
+    if (!raw || typeof raw.count !== 'number') return { count: 0, firstAt: 0, blockedAt: 0 };
+    // If a block was set and 24h has passed → full reset
+    if (raw.blockedAt && Date.now() - raw.blockedAt >= RESET_MS) return { count: 0, firstAt: 0, blockedAt: 0 };
+    // If no block but 24h has passed since first scan → reset
+    if (!raw.blockedAt && raw.firstAt && Date.now() - raw.firstAt >= RESET_MS) return { count: 0, firstAt: 0, blockedAt: 0 };
     return raw;
-  } catch { return { date: key, count: 0 }; }
+  } catch { return { count: 0, firstAt: 0, blockedAt: 0 }; }
 }
-
+function getTodayScans() { return getUsage().count; }
 function incrementUsage() {
   const u = getUsage();
-  u.count++; 
+  if (!u.firstAt) u.firstAt = Date.now();
+  u.count++;
+  if (u.count >= FREE_SCAN_LIMIT) u.blockedAt = Date.now();
   localStorage.setItem("datescan.usage", JSON.stringify(u));
   updateUsageBadge();
 }
+function getScanCooldownMs() {
+  const u = getUsage();
+  if (!u.blockedAt) return 0;
+  return Math.max(0, RESET_MS - (Date.now() - u.blockedAt));
+}
+
+// ---- Chat usage (same 24h logic) ----
+function getChatUsage() {
+  try {
+    const raw = JSON.parse(localStorage.getItem("datescan.chatUsage") || "{}");
+    if (!raw || typeof raw.count !== 'number') return { count: 0, firstAt: 0, blockedAt: 0 };
+    if (raw.blockedAt && Date.now() - raw.blockedAt >= RESET_MS) return { count: 0, firstAt: 0, blockedAt: 0 };
+    if (!raw.blockedAt && raw.firstAt && Date.now() - raw.firstAt >= RESET_MS) return { count: 0, firstAt: 0, blockedAt: 0 };
+    return raw;
+  } catch { return { count: 0, firstAt: 0, blockedAt: 0 }; }
+}
+function getChatCount() { return getChatUsage().count; }
+function incrementChatUsage() {
+  const u = getChatUsage();
+  if (!u.firstAt) u.firstAt = Date.now();
+  u.count++;
+  if (u.count >= FREE_CHAT_LIMIT) u.blockedAt = Date.now();
+  localStorage.setItem("datescan.chatUsage", JSON.stringify(u));
+}
+window.getChatCount = getChatCount;
+window.incrementChatUsage = incrementChatUsage;
+window.isProUser = isProUser;
+window.FREE_CHAT_LIMIT = FREE_CHAT_LIMIT;
 
 function updateUsageBadge() {
   if (isProUser()) {
@@ -1422,13 +1490,12 @@ function updateUsageBadge() {
     usageBadge.classList.remove('hidden');
     $("upgradeBtn").classList.add("hidden");
   } else {
-    const closetFull = userCloset.outfits.length >= 3;
-    const left = Math.max(0, FREE_DAILY - getUsage().count);
-    if (!closetFull) {
-      usageBadge.textContent = `Unlimited Scans`;
+    const left = Math.max(0, FREE_SCAN_LIMIT - getTodayScans());
+    if (left > 1) {
+      usageBadge.textContent = `${left} Free Scans Left`;
       usageBadge.classList.remove('text-gray-500');
-    } else if (left > 0) {
-      usageBadge.textContent = `${left} Free Scan Left`;
+    } else if (left === 1) {
+      usageBadge.textContent = `1 Free Scan Left`;
       usageBadge.classList.remove('text-gray-500');
     } else {
       usageBadge.textContent = `0 Free Scans`;
@@ -1512,6 +1579,9 @@ $("logoBtn").addEventListener("click", () => {
 // ===== IndexedDB-backed Closet (via idb) =====
 // In-memory mirror so existing sync reads (length checks, render, etc.) keep working.
 let userCloset = { outfits: [] };
+// Expose on window so classic <script> blocks (e.g. the chat IIFE) can read
+// the same live mirror — module-scope `let` is otherwise invisible to them.
+window.userCloset = userCloset;
 
 const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
 
@@ -1969,6 +2039,7 @@ function closeShareModal() {
   document.body.style.overflow = '';
 }
 $("closeShareBtn").addEventListener('click', closeShareModal);
+$("closeShareBtnX").addEventListener('click', closeShareModal);
 shareModal.addEventListener('click', (e) => { if (e.target === shareModal) closeShareModal(); });
 
 $("shareDownloadBtn").addEventListener('click', () => {
@@ -1977,34 +2048,91 @@ $("shareDownloadBtn").addEventListener('click', () => {
   link.download = `datescan-score-${currentShareScore}.png`;
   link.href = shareCanvas.toDataURL('image/png');
   link.click();
+  // No XP for a plain local download — XP is for actually sharing.
 });
 
 $("shareNativeBtn").addEventListener('click', async () => {
   triggerHaptic('tap');
   const score = currentShareScore;
   const shareText = `My DateScan score: ${score}/100 ${getScoreEmoji(score)}\nAI just rated my outfit. Get yours 👉`;
+  let didShare = false;
   try {
     const blob = await new Promise(res => shareCanvas.toBlob(res, 'image/png'));
     const file = new File([blob], 'datescan-score.png', { type: 'image/png' });
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
       await navigator.share({ files: [file], text: shareText, title: 'My DateScan Score' });
-      return;
-    }
-    if (navigator.share) {
+      didShare = true;
+    } else if (navigator.share) {
       await navigator.share({ text: shareText, title: 'My DateScan Score' });
+      didShare = true;
+    } else {
+      // No Web Share API → copy the text and save the image as a fallback.
+      await navigator.clipboard.writeText(shareText);
+      const link = document.createElement('a');
+      link.download = 'datescan-score.png';
+      link.href = shareCanvas.toDataURL('image/png');
+      link.click();
+      const btn = $("shareNativeBtn");
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✓ Copied & Saved';
+      setTimeout(() => btn.innerHTML = orig, 2000);
+      didShare = true;
+    }
+  } catch (e) {
+    // User cancelled the native share sheet (AbortError) or something failed.
+    // Either way, do not award XP for a non-event.
+    if (e && e.name !== 'AbortError') console.warn('[share] native share failed:', e);
+  }
+  if (didShare) rewardShare();
+});
+
+// Awards +5 XP for sharing the score card — but only ONCE per unique card.
+// Sharing or downloading the same image again (in this session or later) is
+// silently allowed but no longer gives XP. Uses a rolling list of djb2 hashes
+// of the rendered score-card dataURL, capped to the last 100.
+const REWARDED_SHARES_KEY = 'datescan.rewardedShares';
+const REWARDED_SHARES_MAX = 100;
+function _getRewardedShareHashes() {
+  try {
+    const arr = JSON.parse(localStorage.getItem(REWARDED_SHARES_KEY) || '[]');
+    return Array.isArray(arr) ? arr : [];
+  } catch { return []; }
+}
+function _markShareRewarded(hash) {
+  const arr = _getRewardedShareHashes();
+  if (arr.includes(hash)) return;
+  arr.push(hash);
+  while (arr.length > REWARDED_SHARES_MAX) arr.shift();
+  try { localStorage.setItem(REWARDED_SHARES_KEY, JSON.stringify(arr)); } catch {}
+}
+function _djb2(str) {
+  let h = 5381;
+  for (let i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) | 0;
+  return (h >>> 0).toString(36);
+}
+
+function rewardShare() {
+  try {
+    // Hash the rendered score card so the same card only earns +5 XP once.
+    let hash = null;
+    try { hash = _djb2(shareCanvas.toDataURL('image/png')); } catch (e) {}
+
+    if (hash && _getRewardedShareHashes().includes(hash)) {
+      triggerHaptic('tap');
+      if (window.dsPrivacy && window.dsPrivacy.showToast) {
+        window.dsPrivacy.showToast('Already rewarded for this one');
+      }
       return;
     }
-    await navigator.clipboard.writeText(shareText);
-    const link = document.createElement('a');
-    link.download = 'datescan-score.png';
-    link.href = shareCanvas.toDataURL('image/png');
-    link.click();
-    const btn = $("shareNativeBtn");
-    const orig = btn.innerHTML;
-    btn.innerHTML = '✓ Copied & Saved';
-    setTimeout(() => btn.innerHTML = orig, 2000);
-  } catch(e) { }
-});
+
+    if (hash) _markShareRewarded(hash);
+    addXP(5);
+    triggerHaptic('success');
+    if (window.dsPrivacy && window.dsPrivacy.showToast) {
+      window.dsPrivacy.showToast('Shared! +5 XP');
+    }
+  } catch (e) { console.warn('[share] rewardShare failed:', e); }
+}
 
 function triggerHaptic(type = 'tap') {
   if (!navigator.vibrate) return;
@@ -2367,7 +2495,11 @@ function boot() {
     startAppFlow();
   }
   
-  updateDateTimerUI(); 
+  updateDateTimerUI();
+  // Hydrate the gamification card from localStorage on load. Without this,
+  // the missionCount stays hardcoded at "0" until addXP() fires, which made
+  // any earned XP look like it appeared "all at once" on first action.
+  updateMissionBadge();
 }
 
 retryBtn.addEventListener("click", () => { triggerHaptic('tap'); startAppFlow(); });
@@ -3382,9 +3514,20 @@ async function runScan() {
   if (s.isScanning || !s.aiReady || !s.cameraReady) return;
 
   triggerHaptic('tap');
+
+  // ---- Free-tier gating: 3 scans / 24h ----
+  if (!isProUser()) {
+    const scans = getTodayScans();
+    if (scans >= FREE_SCAN_LIMIT) {
+      window.openPaywall();
+      return;
+    }
+  }
+
   store.dispatch({ type: 'SCAN_START' });
 
-  const isLocked = !isProUser() && (userCloset.outfits.length >= 3) && getUsage().count >= FREE_DAILY;
+  // 3rd scan (index 2) → render partial result with blurred action plan, then paywall
+  const isLocked = !isProUser() && getTodayScans() === FREE_SCAN_LIMIT - 1;
 
   videoWrap.classList.add("scanning");
 
@@ -3524,6 +3667,20 @@ async function runScan() {
     renderActionPlan(items, isLocked);
 
     incrementUsage();
+
+    // Peak-moment trigger: tease an improvement number 1s after the reveal
+    setTimeout(() => {
+      const n = 6 + Math.floor(Math.random() * 8); // 6–13
+      window.dsPrivacy?.showToast?.(`+${n} improvement possible`, 2400);
+    }, 1000);
+
+    // Animate the blur in for the partial 3rd scan, then open the paywall
+    if (isLocked) {
+      setTimeout(() => {
+        document.querySelector(".blur-content")?.classList.add("blur-active");
+      }, 300);
+      setTimeout(() => { window.openPaywall(); }, 800);
+    }
   } catch (err) {
     // Unexpected throw from any analyzer, MediaPipe call, or canvas op.
     // Surface a clean error card instead of leaving the UI mid-scan.
@@ -3743,24 +3900,74 @@ function renderActionPlan(items, locked = false) {
   }
 }
 
+// ============================================================
+// LEMON SQUEEZY CHECKOUT INTEGRATION
+// ============================================================
+// Replace the URLs below with your real Lemon Squeezy product
+// checkout links from: Store → Products → Share → Copy link
+// They look like: https://YOUR-STORE.lemonsqueezy.com/buy/UUID
+// ============================================================
+const LEMON_CHECKOUTS = {
+  week:  "https://datescan.lemonsqueezy.com/checkout/buy/1509528",
+  month: "https://datescan.lemonsqueezy.com/checkout/buy/1509643",
+  year:  "https://datescan.lemonsqueezy.com/checkout/buy/1509836",
+};
+
+function openLemonCheckout(plan) {
+  const baseUrl = LEMON_CHECKOUTS[plan];
+  if (!baseUrl || baseUrl.includes("REPLACE-WITH")) {
+    console.warn("[LemonSqueezy] No real checkout URL set for plan:", plan);
+    window.dsPrivacy?.showToast?.("Checkout not configured yet", 2400);
+    return;
+  }
+  // ?embed=1 makes Lemon.js open it as an overlay instead of navigating away
+  const url = baseUrl + (baseUrl.includes("?") ? "&" : "?") + "embed=1";
+  if (window.LemonSqueezy && window.LemonSqueezy.Url) {
+    window.LemonSqueezy.Url.Open(url);
+  } else {
+    // Fallback: Lemon.js not loaded yet → full-page redirect
+    window.location.href = baseUrl;
+  }
+}
+
+// Listen for successful checkout → unlock Pro
+window.addEventListener("load", () => {
+  if (window.createLemonSqueezy) window.createLemonSqueezy();
+  if (window.LemonSqueezy && window.LemonSqueezy.Setup) {
+    window.LemonSqueezy.Setup({
+      eventHandler: (event) => {
+        if (event.event === "Checkout.Success") {
+          setProUser();
+          updateUsageBadge();
+          closePaywall();
+          window.dsPrivacy?.showToast?.("🎉 Welcome to Pro!", 3000);
+          const s = store.get();
+          if (s.lastItems) {
+            renderActionPlan(s.lastItems, false);
+            renderStyleCoach(s.lastColor, s.occasion, false);
+          }
+        }
+      },
+    });
+  }
+
+  // Auto-open checkout if landed on /?premium=week|month|year
+  const params = new URLSearchParams(window.location.search);
+  const premium = params.get("premium");
+  if (premium && LEMON_CHECKOUTS[premium]) {
+    setTimeout(() => {
+      window.openPaywall?.();
+      setTimeout(() => openLemonCheckout(premium), 400);
+    }, 600);
+  }
+});
+
 $("closePaywall").addEventListener("click", closePaywall);
 $("upgradeBtn").addEventListener("click", window.openPaywall);
 document.querySelectorAll(".plan-btn").forEach(b => b.addEventListener("click", () => {
-  triggerHaptic('success'); 
-  b.innerHTML = `<div class="w-full text-center text-brand-400 font-medium py-1">Purchased! Unlocking...</div>`; 
-  
-  setProUser();
-  
-  setTimeout(() => {
-    closePaywall();
-    const s = store.get();
-    if (s.lastItems) {
-      renderActionPlan(s.lastItems, false);
-      renderStyleCoach(s.lastColor, s.occasion, false);
-    }
-    updateUsageBadge();
-    setTimeout(() => { b.innerHTML = b.dataset.originalHTML || 'Plan'; }, 1000);
-  }, 1000);
+  triggerHaptic('success');
+  const plan = b.dataset.plan || 'week';
+  openLemonCheckout(plan);
 }));
 
 document.querySelectorAll(".plan-btn").forEach(b => b.dataset.originalHTML = b.innerHTML);
@@ -3892,6 +4099,15 @@ boot();
   const picker = document.getElementById('coachClosetPicker');
   const pickerGrid = document.getElementById('coachClosetPickerGrid');
   const pickerClose = document.getElementById('coachClosetPickerClose');
+
+  // coachClosetPicker lives inside #resultsCol, which uses `translate-y-8`
+  // for its reveal animation. CSS transforms create a new containing block
+  // for descendants — meaning `position: fixed` inside it anchors to
+  // resultsCol instead of the viewport, pushing the modal off-screen on
+  // mobile. Move the element to <body> so fixed positioning works.
+  if (picker && picker.parentElement !== document.body) {
+    document.body.appendChild(picker);
+  }
   if (!form || !input || !messagesEl) return;
 
   let pendingAttachments = [];
@@ -4110,7 +4326,11 @@ boot();
   }
 
   function openClosetPicker() {
-    const outfits = (typeof userCloset !== 'undefined' && userCloset.outfits) ? userCloset.outfits : [];
+    // Read through window.userCloset — the chat IIFE lives in a classic
+    // script while userCloset is declared in the module script, so the
+    // bare name isn't in scope here.
+    const closet = window.userCloset;
+    const outfits = (closet && Array.isArray(closet.outfits)) ? closet.outfits : [];
     if (outfits.length === 0) {
       pickerGrid.innerHTML = '<div class="col-span-full text-center text-gray-500 py-10 text-sm">Your closet is empty. Scan and save an outfit first!</div>';
     } else {
@@ -4241,12 +4461,53 @@ boot();
     e.preventDefault();
     const text = input.value.trim();
     if (!text && pendingAttachments.length === 0) return;
+
+    // Free tier: 2 chat messages / 24h
+    if (!window.isProUser?.()) {
+      const used = window.getChatCount?.() || 0;
+      if (used >= window.FREE_CHAT_LIMIT) {
+        const lock = document.createElement('div');
+        lock.className = 'mx-auto my-3 max-w-[85%] rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/10 to-purple-500/10 p-4 text-center';
+        lock.innerHTML = `
+          <p class="text-sm text-white/90 leading-relaxed mb-1"><span class="font-semibold">You're asking the right questions.</span></p>
+          <p class="text-sm text-gray-400 leading-relaxed mb-3">Your next answer is where the real improvements happen.</p>
+          <button type="button" class="text-xs font-bold text-white bg-gradient-to-r from-brand-500 to-purple-500 px-5 py-2 rounded-xl shadow-lg shadow-brand-500/30">Unlock AI Coach</button>
+        `;
+        lock.querySelector('button').addEventListener('click', () => window.openPaywall?.());
+        const stream = document.getElementById('coachChatStream') || form.parentElement;
+        stream?.appendChild(lock);
+        stream?.scrollTo?.({ top: stream.scrollHeight, behavior: 'smooth' });
+        window.openPaywall?.();
+        return;
+      }
+    }
+
     const attachments = pendingAttachments.slice();
     pendingAttachments = [];
     renderAttachments();
     input.value = '';
     sendBtn.disabled = true;
-    sendMessage(text, attachments).finally(() => { sendBtn.disabled = false; input.focus(); });
+    sendMessage(text, attachments).finally(() => {
+      sendBtn.disabled = false;
+      input.focus();
+      if (!window.isProUser?.()) {
+        window.incrementChatUsage?.();
+        // After the 2nd (final) free message, append the soft-lock teaser
+        if ((window.getChatCount?.() || 0) >= window.FREE_CHAT_LIMIT) {
+          setTimeout(() => {
+            const soft = document.createElement('div');
+            soft.className = 'mx-auto my-3 max-w-[85%] rounded-2xl border border-white/10 bg-white/5 p-4 text-center';
+            soft.innerHTML = `
+              <p class="text-sm text-white/90 leading-relaxed mb-1"><span class="font-semibold">You're asking the right questions.</span></p>
+              <p class="text-xs text-gray-400 leading-relaxed">Your next answer is where the real improvements happen.</p>
+            `;
+            const stream = document.getElementById('coachChatStream') || form.parentElement;
+            stream?.appendChild(soft);
+            stream?.scrollTo?.({ top: stream.scrollHeight, behavior: 'smooth' });
+          }, 600);
+        }
+      }
+    });
   });
 })();
 </script>
