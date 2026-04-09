@@ -84,17 +84,27 @@
     }
   }
   
+  html {
+    overflow-x: clip;          /* kill any horizontal rubber-band from offscreen glows etc. */
+    overscroll-behavior-x: none;
+  }
   body {
     background-color: #09090b;
     color: #fafafa;
     min-height: 100vh;
-    overflow-x: hidden;
+    overflow-x: clip;
+    overscroll-behavior-x: none;
   }
 
   /* Lock body scrolling when onboarding is active */
+  html.has-onboarding,
   body.has-onboarding {
     overflow: hidden !important;
+    overscroll-behavior: none;
+  }
+  body.has-onboarding {
     position: fixed;
+    inset: 0;
     width: 100%;
     height: 100%;
     touch-action: none;
@@ -392,42 +402,49 @@
 
 <!-- Onboarding Modal -->
 <div id="onboardingModal" class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-[#09090b]/95 backdrop-blur-xl transition-opacity duration-500">
-  <div class="premium-glass border border-brand-500/20 rounded-[32px] p-8 max-w-md w-full relative max-h-[95vh] overflow-y-auto fade-up">
+  <div class="premium-glass border border-brand-500/20 rounded-[32px] p-8 max-w-md w-full relative max-h-[95vh] overflow-y-auto overflow-x-hidden fade-up">
     <!-- Decoration -->
     <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-500 rounded-full mix-blend-screen filter blur-[60px] opacity-30 pointer-events-none"></div>
 
     <div class="text-center relative z-10 mb-8 mt-2">
       <div class="w-16 h-16 mx-auto bg-gradient-to-tr from-brand-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg shadow-brand-500/20 mb-5">
-        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <svg class="w-9 h-9 text-white" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M10 5 H5 V10"/>
+          <path d="M30 5 H35 V10"/>
+          <path d="M10 35 H5 V30"/>
+          <path d="M30 35 H35 V30"/>
+          <path d="M20 13.5C20 13.5 16 9 11.5 9C7.5 9 5 12.5 5 16.5C5 22 13 28 20 32C27 28 35 22 35 16.5C35 12.5 32.5 9 28.5 9C24 9 20 13.5 20 13.5Z" fill="rgba(255,255,255,0.18)"/>
+          <line x1="4" y1="20" x2="36" y2="20" stroke-dasharray="2 2" opacity="0.85"/>
+        </svg>
       </div>
       <h2 class="font-serif text-3xl font-bold mb-2 text-white">Welcome to DateScan</h2>
       <p class="text-sm text-gray-400">Your AI-powered wingman. Ready in 3 steps:</p>
     </div>
 
-    <div class="space-y-6 relative z-10 mb-8">
+    <div class="space-y-5 relative z-10 mb-8">
       <div class="flex items-center gap-4">
-        <div class="w-12 h-12 rounded-full bg-brand-500/10 border border-brand-500/20 flex items-center justify-center shrink-0 text-brand-300">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3.5"/></svg>
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center shrink-0 text-white shadow-lg shadow-brand-500/30">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3.5"/></svg>
         </div>
-        <div class="text-left">
+        <div class="text-left min-w-0 flex-1">
           <h4 class="font-medium text-white text-sm">1. Allow Camera</h4>
           <p class="text-xs text-gray-500 mt-0.5">We need to see your outfit. 100% private.</p>
         </div>
       </div>
       <div class="flex items-center gap-4">
-        <div class="w-12 h-12 rounded-full bg-purple-500/10 border border-purple-500/20 flex items-center justify-center shrink-0 text-purple-300">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.7.6 1 1.4 1 2.3v1h6v-1c0-.9.3-1.7 1-2.3A7 7 0 0 0 12 2z"/></svg>
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shrink-0 text-white shadow-lg shadow-amber-500/30">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>
         </div>
-        <div class="text-left">
+        <div class="text-left min-w-0 flex-1">
           <h4 class="font-medium text-white text-sm">2. Stand in Good Light</h4>
           <p class="text-xs text-gray-500 mt-0.5">Face a window or light source for accuracy.</p>
         </div>
       </div>
       <div class="flex items-center gap-4">
-        <div class="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0 text-emerald-300">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.6 4.6L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.4z"/><path d="M19 14l.7 1.9 1.8.6-1.8.6L19 19l-.7-1.9-1.8-.6 1.8-.6z"/><path d="M5 16l.5 1.4L7 17.9l-1.5.5L5 19.8l-.5-1.4L3 17.9l1.5-.5z"/></svg>
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shrink-0 text-white shadow-lg shadow-emerald-500/30">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 13 2 2 4-4"/></svg>
         </div>
-        <div class="text-left">
+        <div class="text-left min-w-0 flex-1">
           <h4 class="font-medium text-white text-sm">3. Get Your Action Plan</h4>
           <p class="text-xs text-gray-500 mt-0.5">Instant grooming and style feedback.</p>
         </div>
@@ -437,7 +454,9 @@
     <!-- Install as App card (Hidden on lg monitors via Tailwind lg:hidden) -->
     <div id="pwaInstallCard" class="hidden lg:hidden relative z-10 mb-5 rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/15 to-purple-500/10 p-4">
       <div class="flex items-start gap-3">
-        <div class="shrink-0 w-10 h-10 rounded-xl bg-brand-500/20 border border-brand-500/40 flex items-center justify-center text-lg">📲</div>
+        <div class="shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-brand-500/30">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M12 18h.01"/><path d="M9 6h6"/></svg>
+        </div>
         <div class="flex-1 min-w-0">
           <div class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-0.5">Recommended</div>
           <h4 class="font-medium text-white text-sm mb-1">Install DateScan as an app</h4>
@@ -528,7 +547,7 @@
                 <div class="vf-corner vf-br"></div>
               </div>
 
-              <div id="thinkingOverlay" class="absolute inset-x-0 bottom-10 z-40 flex flex-col items-center justify-center opacity-0 transition-opacity duration-300 pointer-events-none">
+              <div id="thinkingOverlay" class="absolute inset-x-0 bottom-10 z-40 flex flex-col items-center justify-center opacity-0 scale-95 transition-all duration-300 ease-out pointer-events-none">
                 <div class="bg-black/70 backdrop-blur-md px-5 py-2.5 rounded-full border border-brand-500/40 flex items-center gap-3 shadow-[0_0_20px_rgba(236,72,153,0.3)]">
                   <div class="flex gap-1">
                     <div class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-bounce" style="animation-delay: 0ms;"></div>
@@ -1324,7 +1343,7 @@ const onboardingModal = $("onboardingModal");
 
 const flashOverlay = $("flashOverlay");
 const thinkingOverlay = $("thinkingOverlay");
-const thinkingTextEl = $("thinkingText");
+const thinkingText = $("thinkingText");
 
 store.subscribe((s) => {
   document.querySelectorAll('.occ-btn').forEach(btn => {
@@ -1350,12 +1369,14 @@ store.subscribe((s) => {
     scanBtnText.innerHTML = "Initializing...";
   }
 
-  if (!s.cameraReady || !s.aiReady) {
-    statusText.textContent = s.aiReady ? "Waiting for Camera" : "Loading AI...";
+  // statusText is ONLY for camera/AI system state (Loading / Ready / Error).
+  // It is never used as a scan progress indicator — thinkingOverlay owns that.
+  if (!s.aiReady) {
+    statusText.textContent = "Loading AI...";
     statusDot.className = "w-2 h-2 rounded-full bg-yellow-500 animate-pulse";
-  } else if (s.isScanning) {
-    statusText.textContent = "Scanning...";
-    statusDot.className = "w-2 h-2 rounded-full bg-purple-500 animate-pulse";
+  } else if (!s.cameraReady) {
+    statusText.textContent = "Waiting for Camera";
+    statusDot.className = "w-2 h-2 rounded-full bg-yellow-500 animate-pulse";
   } else {
     statusText.textContent = "Ready";
     statusDot.className = "w-2 h-2 rounded-full bg-brand-500";
@@ -2326,6 +2347,7 @@ function boot() {
   const hasOnboarded = localStorage.getItem("datescan.onboarded");
 
   if (!hasOnboarded) {
+    document.documentElement.classList.add('has-onboarding');
     document.body.classList.add('has-onboarding');
     onboardingModal.classList.remove("hidden");
     setupPwaInstall();
@@ -2335,6 +2357,7 @@ function boot() {
       onboardingModal.style.opacity = "0";
       setTimeout(() => {
         onboardingModal.classList.add("hidden");
+        document.documentElement.classList.remove('has-onboarding');
         document.body.classList.remove('has-onboarding');
         startAppFlow();
       }, 500);
@@ -3357,145 +3380,189 @@ function showResultsLayout() {
 async function runScan() {
   const s = store.get();
   if (s.isScanning || !s.aiReady || !s.cameraReady) return;
-  
+
   triggerHaptic('tap');
-  store.dispatch({ type: 'SCAN_START' }); 
+  store.dispatch({ type: 'SCAN_START' });
 
   const isLocked = !isProUser() && (userCloset.outfits.length >= 3) && getUsage().count >= FREE_DAILY;
 
   videoWrap.classList.add("scanning");
-  
-  thinkingOverlay.classList.remove("opacity-0", "pointer-events-none");
+
+  thinkingOverlay.classList.remove("opacity-0", "scale-95", "pointer-events-none");
+  thinkingOverlay.classList.add("scale-100");
   const phrases = [
-    "Analyzing face symmetry...", 
-    "Checking color harmony...", 
-    "Detecting grooming level...", 
-    "Evaluating posture...", 
+    "Analyzing facial symmetry...",
+    "Checking color harmony...",
+    "Detecting grooming level...",
+    "Evaluating posture...",
+    "Checking outfit balance...",
+    "Reading confidence signals...",
     "Finalizing style score..."
   ];
   let phraseIdx = 0;
-  thinkingTextEl.textContent = phrases[0];
-  const thinkInterval = setInterval(() => {
+  thinkingText.textContent = phrases[0];
+  // Defensive: kill any previous ticker that might have leaked.
+  if (currentThinkInterval) clearInterval(currentThinkInterval);
+  currentThinkInterval = setInterval(() => {
     phraseIdx++;
-    if(phraseIdx < phrases.length) thinkingTextEl.textContent = phrases[phraseIdx];
-  }, 650);
+    // Modulo cycling so the ticker keeps rotating if analysis runs long
+    // (slow devices, heavy chunks) instead of freezing on the last phrase.
+    thinkingText.textContent = phrases[phraseIdx % phrases.length];
+  }, 900);
 
-  const cap = captureFrame();
-  if (!cap) { 
-    clearInterval(thinkInterval);
-    triggerHaptic('error');
-    renderActionPlan([{ category:"env", tone:"error", title:"Camera Issue", text:"Couldn't capture your video feed.", action:"Reload page and allow permissions." }], false); 
-    endScan(); showResultsLayout(); return; 
-  }
-  try { store.set({ lastCap: analysisCanvas.toDataURL('image/jpeg', 0.95) }); } catch(e) {}
+  // Everything from here on MUST be inside try/finally so endScan() always
+  // runs — clearing the think ticker, hiding the overlay, re-enabling the
+  // scan button and resetting the status pill — even if an analyzer throws.
+  try {
+    const cap = captureFrame();
+    if (!cap) {
+      triggerHaptic('error');
+      renderActionPlan([{ category: "env", tone: "error", title: "Camera Issue", text: "Couldn't capture your video feed.", action: "Reload page and allow permissions." }], false);
+      return;
+    }
+    try { store.set({ lastCap: analysisCanvas.toDataURL('image/jpeg', 0.95) }); } catch (e) {}
 
-  let result;
-  try { result = s.faceLandmarker.detect(analysisCanvas); }
-  catch (e) {
-    clearInterval(thinkInterval);
-    triggerHaptic('error');
-    renderActionPlan([{ category:"env", tone:"error", title:"Detection Error", text:"I couldn't see your face properly.", action:"Make sure your face is clearly visible." }], false);
-    endScan(); showResultsLayout(); return;
-  }
-
-  if (result.faceLandmarks?.length) drawHUD(result.faceLandmarks[0], cap.w, cap.h);
-  
-  await new Promise(r => setTimeout(r, 3000));
-  
-  clearInterval(thinkInterval);
-  thinkingOverlay.classList.add("opacity-0", "pointer-events-none");
-
-  flashOverlay.classList.add("active");
-  setTimeout(() => flashOverlay.classList.remove("active"), 100);
-  triggerHaptic('success');
-
-  const items = [];
-  const lighting = analyzeBrightness(cap.w, cap.h);
-  
-  if (lighting?.tooDark) {
-    triggerHaptic('error');
-    items.push({ category: "env", tone:"alert", icon:"💡", title:"Too dark to coach", text:"The room is too dim to see clearly.", action:"Move closer to a window or turn on a light." });
-    renderActionPlan(items, false); endScan(); showResultsLayout(); return;
-  }
-  if (lighting?.dim) items.push({ category: "env", tone:"warn", icon:"💡", title:"Low lighting", text:"Results might not be perfect.", action:"Next time, face a bright window." });
-
-  let detectedOutfitColor = null;
-
-  if (!result.faceLandmarks?.length) {
-    items.push({ category: "env", tone:"warn", icon:"👤", title:"Where are you?", text:"Couldn't detect your face.", action:"Center your face and try again." });
-  } else {
-    const lm = result.faceLandmarks[0];
-
-    // Chunk 1: framing & geometry
-    const camAngle = analyzeCameraAngle(lm); if(camAngle) items.push(camAngle);
-    const yaw = analyzeHeadYaw(lm); if(yaw) items.push(yaw);
-    const dist = analyzeFaceDistance(lm); if(dist) items.push(dist);
-    const center = analyzeFaceCentering(lm); if(center) items.push(center);
-    await yieldToUI();
-
-    // Chunk 2: lighting, background & posture
-    const dirLight = analyzeLightingDirection(lm, cap.w, cap.h); if(dirLight) items.push(dirLight);
-    const bg = analyzeBackgroundBusy(lm, cap.w, cap.h); if(bg) items.push(bg);
-    const posture = analyzePosture(lm); if(posture) items.push(posture);
-    await yieldToUI();
-
-    // Chunk 3: facial expression & proportions
-    const eyesOpen = analyzeEyeOpenness(lm); if(eyesOpen) items.push(eyesOpen);
-    const smile = analyzeSmile(lm); if(smile) items.push(smile);
-    const prop = analyzeProportions(lm); if(prop) items.push(prop);
-    const shave = analyzeShavingIrritation(lm, cap.w, cap.h); if(shave) items.push(shave);
-    await yieldToUI();
-
-    // Chunk 4: mouth & symmetry
-    const mouth = analyzeMouth(lm, cap.w, cap.h);
-    if (mouth && mouth.teethVisible && !mouth.concern) {
-      items.push({ category: "grooming", tone:"good", icon:"✨", title:"Great smile", text:"Teeth look clean.", action:"Flash that smile tonight." });
+    let result;
+    try { result = s.faceLandmarker.detect(analysisCanvas); }
+    catch (e) {
+      triggerHaptic('error');
+      renderActionPlan([{ category: "env", tone: "error", title: "Detection Error", text: "I couldn't see your face properly.", action: "Make sure your face is clearly visible." }], false);
+      return;
     }
 
-    const sym = analyzeSymmetry(lm);
-    if (sym.ratio > 0.10) items.push({ category: "grooming", tone:"warn", icon:"✂️", title:"Mirror check", text:"Small imbalance detected.", action:"Check hair/collar alignment." });
-    await yieldToUI();
+    if (result.faceLandmarks?.length) drawHUD(result.faceLandmarks[0], cap.w, cap.h);
 
-    // Chunk 5: eye redness & skin shine
-    const eyes = analyzeEyeRedness(lm, cap.w, cap.h);
-    if (eyes) {
-      if (eyes.tired) items.push({ category: "grooming", tone:"alert", icon:"👁️", title:"Tired eyes", text:"Visible redness.", action:"Use eye drops or cold water." });
-      else if (eyes.slightly) items.push({ category: "grooming", tone:"warn", icon:"👁️", title:"Slight redness", text:"A bit of fatigue.", action:"Rest eyes for 60 seconds." });
+    await new Promise(r => setTimeout(r, 3000));
+
+    // Hide the thinking overlay right before the reveal flash for snappy UX.
+    // endScan() in finally will no-op on the already-hidden overlay.
+    if (currentThinkInterval) { clearInterval(currentThinkInterval); currentThinkInterval = null; }
+    thinkingOverlay.classList.remove("scale-100");
+    thinkingOverlay.classList.add("opacity-0", "scale-95", "pointer-events-none");
+
+    flashOverlay.classList.add("active");
+    setTimeout(() => flashOverlay.classList.remove("active"), 100);
+    triggerHaptic('success');
+
+    const items = [];
+    const lighting = analyzeBrightness(cap.w, cap.h);
+
+    if (lighting?.tooDark) {
+      triggerHaptic('error');
+      items.push({ category: "env", tone: "alert", icon: "💡", title: "Too dark to coach", text: "The room is too dim to see clearly.", action: "Move closer to a window or turn on a light." });
+      renderActionPlan(items, false);
+      return;
+    }
+    if (lighting?.dim) items.push({ category: "env", tone: "warn", icon: "💡", title: "Low lighting", text: "Results might not be perfect.", action: "Next time, face a bright window." });
+
+    let detectedOutfitColor = null;
+
+    if (!result.faceLandmarks?.length) {
+      items.push({ category: "env", tone: "warn", icon: "👤", title: "Where are you?", text: "Couldn't detect your face.", action: "Center your face and try again." });
+    } else {
+      const lm = result.faceLandmarks[0];
+
+      // Chunk 1: framing & geometry
+      const camAngle = analyzeCameraAngle(lm); if (camAngle) items.push(camAngle);
+      const yaw = analyzeHeadYaw(lm); if (yaw) items.push(yaw);
+      const dist = analyzeFaceDistance(lm); if (dist) items.push(dist);
+      const center = analyzeFaceCentering(lm); if (center) items.push(center);
+      await yieldToUI();
+
+      // Chunk 2: lighting, background & posture
+      const dirLight = analyzeLightingDirection(lm, cap.w, cap.h); if (dirLight) items.push(dirLight);
+      const bg = analyzeBackgroundBusy(lm, cap.w, cap.h); if (bg) items.push(bg);
+      const posture = analyzePosture(lm); if (posture) items.push(posture);
+      await yieldToUI();
+
+      // Chunk 3: facial expression & proportions
+      const eyesOpen = analyzeEyeOpenness(lm); if (eyesOpen) items.push(eyesOpen);
+      const smile = analyzeSmile(lm); if (smile) items.push(smile);
+      const prop = analyzeProportions(lm); if (prop) items.push(prop);
+      const shave = analyzeShavingIrritation(lm, cap.w, cap.h); if (shave) items.push(shave);
+      await yieldToUI();
+
+      // Chunk 4: mouth & symmetry
+      const mouth = analyzeMouth(lm, cap.w, cap.h);
+      if (mouth && mouth.teethVisible && !mouth.concern) {
+        items.push({ category: "grooming", tone: "good", icon: "✨", title: "Great smile", text: "Teeth look clean.", action: "Flash that smile tonight." });
+      }
+
+      const sym = analyzeSymmetry(lm);
+      if (sym.ratio > 0.10) items.push({ category: "grooming", tone: "warn", icon: "✂️", title: "Mirror check", text: "Small imbalance detected.", action: "Check hair/collar alignment." });
+      await yieldToUI();
+
+      // Chunk 5: eye redness & skin shine
+      const eyes = analyzeEyeRedness(lm, cap.w, cap.h);
+      if (eyes) {
+        if (eyes.tired) items.push({ category: "grooming", tone: "alert", icon: "👁️", title: "Tired eyes", text: "Visible redness.", action: "Use eye drops or cold water." });
+        else if (eyes.slightly) items.push({ category: "grooming", tone: "warn", icon: "👁️", title: "Slight redness", text: "A bit of fatigue.", action: "Rest eyes for 60 seconds." });
+      }
+
+      const skin = analyzeSkinShine(lm, cap.w, cap.h);
+      if (skin) {
+        if (skin.veryShiny) items.push({ category: "grooming", tone: "alert", icon: "💧", title: "Oily T-zone", text: "High shine detected.", action: "Dab forehead/nose with dry tissue." });
+        else if (skin.shiny) items.push({ category: "grooming", tone: "warn", icon: "✨", title: "Slight shine", text: "Minor reflection.", action: "A quick dab with a towel." });
+      }
+      await yieldToUI();
+
+      // Chunk 6: outfit color (heaviest – pixel sampling)
+      detectedOutfitColor = analyzeOutfitColor(lm, cap.w, cap.h);
+      await yieldToUI();
     }
 
-    const skin = analyzeSkinShine(lm, cap.w, cap.h);
-    if (skin) {
-      if (skin.veryShiny) items.push({ category: "grooming", tone:"alert", icon:"💧", title:"Oily T-zone", text:"High shine detected.", action:"Dab forehead/nose with dry tissue." });
-      else if (skin.shiny) items.push({ category: "grooming", tone:"warn", icon:"✨", title:"Slight shine", text:"Minor reflection.", action:"A quick dab with a towel." });
-    }
+    // Chunk 7: shoulders / lint (runs even without face landmarks)
+    const sh = analyzeShoulders(cap.w, cap.h);
+    if (sh?.possibleLint) items.push({ category: "style", tone: "warn", icon: "🧥", title: "Lint detected", text: "Specks visible on shoulders.", action: "Use a lint roller right now." });
     await yieldToUI();
 
-    // Chunk 6: outfit color (heaviest – pixel sampling)
-    detectedOutfitColor = analyzeOutfitColor(lm, cap.w, cap.h);
-    await yieldToUI();
+    store.set({ lastItems: items, lastColor: detectedOutfitColor });
+
+    triggerHaptic('success');
+
+    renderStyleCoach(detectedOutfitColor, store.get().occasion, isLocked, items);
+    renderActionPlan(items, isLocked);
+
+    incrementUsage();
+  } catch (err) {
+    // Unexpected throw from any analyzer, MediaPipe call, or canvas op.
+    // Surface a clean error card instead of leaving the UI mid-scan.
+    console.error('[runScan] unexpected error:', err);
+    triggerHaptic('error');
+    try {
+      renderActionPlan([{ category: "env", tone: "error", title: "Scan failed", text: "Something went wrong while analyzing.", action: "Try scanning again in a moment." }], false);
+    } catch (e2) {
+      console.error('[runScan] renderActionPlan also threw:', e2);
+    }
+  } finally {
+    // Single, authoritative cleanup path — guaranteed to run on every exit,
+    // including thrown exceptions from analyzers.
+    endScan();
+    showResultsLayout();
   }
-
-  // Chunk 7: shoulders / lint (runs even without face landmarks)
-  const sh = analyzeShoulders(cap.w, cap.h);
-  if (sh?.possibleLint) items.push({ category: "style", tone:"warn", icon:"🧥", title:"Lint detected", text:"Specks visible on shoulders.", action:"Use a lint roller right now." });
-  await yieldToUI();
-
-  store.set({ lastItems: items, lastColor: detectedOutfitColor });
-
-  triggerHaptic('success');
-  
-  renderStyleCoach(detectedOutfitColor, store.get().occasion, isLocked, items);
-  renderActionPlan(items, isLocked);
-
-  incrementUsage();
-  endScan();
-  showResultsLayout();
 }
 
+// Module-level handle so endScan() can always kill the "thinking" ticker,
+// no matter which code path asks for the scan to end.
+let currentThinkInterval = null;
+
 function endScan() {
+  if (currentThinkInterval) {
+    clearInterval(currentThinkInterval);
+    currentThinkInterval = null;
+  }
+  if (thinkingOverlay) {
+    thinkingOverlay.classList.remove("scale-100");
+    thinkingOverlay.classList.add("opacity-0", "scale-95", "pointer-events-none");
+  }
   videoWrap.classList.remove("scanning");
-  store.dispatch({ type: 'SCAN_END' });
-  setTimeout(clearHUD, 500); 
+  // SCAN_END flips isScanning back to false, which the store subscriber
+  // uses to re-enable the scan button and reset the statusText pill.
+  // This is the ONLY place that should be dispatched from runScan exits.
+  if (store.get().isScanning) {
+    store.dispatch({ type: 'SCAN_END' });
+  }
+  setTimeout(clearHUD, 500);
 }
 
 const _recent = {};
