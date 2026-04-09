@@ -3951,14 +3951,11 @@ window.addEventListener("load", () => {
     });
   }
 
-  // Auto-open checkout if landed on /?premium=week|month|year
+  // Auto-redirect to checkout if landed on /?premium=week|month|year
   const params = new URLSearchParams(window.location.search);
   const premium = params.get("premium");
   if (premium && LEMON_CHECKOUTS[premium]) {
-    setTimeout(() => {
-      window.openPaywall?.();
-      setTimeout(() => openLemonCheckout(premium), 400);
-    }, 600);
+    window.location.href = LEMON_CHECKOUTS[premium];
   }
 });
 
@@ -3967,7 +3964,7 @@ $("upgradeBtn").addEventListener("click", window.openPaywall);
 document.querySelectorAll(".plan-btn").forEach(b => b.addEventListener("click", () => {
   triggerHaptic('success');
   const plan = b.dataset.plan || 'week';
-  openLemonCheckout(plan);
+  window.location.href = LEMON_CHECKOUTS[plan];
 }));
 
 document.querySelectorAll(".plan-btn").forEach(b => b.dataset.originalHTML = b.innerHTML);
