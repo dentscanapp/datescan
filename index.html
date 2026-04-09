@@ -400,7 +400,6 @@
     opacity: 1;
   }
 </style>
-<script src="https://assets.lemonsqueezy.com/lemon.js" defer></script>
 </head>
 <body class="relative antialiased text-gray-100">
 
@@ -3901,61 +3900,172 @@ function renderActionPlan(items, locked = false) {
 }
 
 // ============================================================
-// LEMON SQUEEZY CHECKOUT INTEGRATION
+// LEMON SQUEEZY CHECKOUT INTEGRATION (with backend verification)
 // ============================================================
-// Replace the URLs below with your real Lemon Squeezy product
-// checkout links from: Store → Products → Share → Copy link
-// They look like: https://YOUR-STORE.lemonsqueezy.com/buy/UUID
-// ============================================================
+const WORKER_BASE_URL = "https://payment.datescan.app";
+
 const LEMON_CHECKOUTS = {
   week:  "https://datescan.lemonsqueezy.com/checkout/buy/ce5103de-486e-4cef-b48b-87b89330465b",
   month: "https://datescan.lemonsqueezy.com/checkout/buy/3acc0dcd-b5b6-4642-b553-849db696ee2a",
   year:  "https://datescan.lemonsqueezy.com/checkout/buy/d9654a21-87cd-4b7f-bdd6-34a1b1f01c3e",
 };
 
-function openLemonCheckout(plan) {
-  const baseUrl = LEMON_CHECKOUTS[plan];
-  if (!baseUrl || baseUrl.includes("REPLACE-WITH")) {
-    console.warn("[LemonSqueezy] No real checkout URL set for plan:", plan);
-    window.dsPrivacy?.showToast?.("Checkout not configured yet", 2400);
-    return;
+const CHECKOUT_ATTEMPT_KEY = "datescan.lastCheckoutAttempt";
+const CHECKOUT_ATTEMPT_TTL_MS = 30 * 60 * 1000; // 30 min
+
+function getOrCreateUserId() {
+  let id = localStorage.getItem("datescan.userId");
+  if (!id) {
+    id = "u_" + (crypto.randomUUID ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2)));
+    localStorage.setItem("datescan.userId", id);
   }
-  // ?embed=1 makes Lemon.js open it as an overlay instead of navigating away
-  const url = baseUrl + (baseUrl.includes("?") ? "&" : "?") + "embed=1";
-  if (window.LemonSqueezy && window.LemonSqueezy.Url) {
-    window.LemonSqueezy.Url.Open(url);
-  } else {
-    // Fallback: Lemon.js not loaded yet → full-page redirect
-    window.location.href = baseUrl;
+  return id;
+}
+
+function buildCheckoutUrl(plan) {
+  const base = LEMON_CHECKOUTS[plan];
+  if (!base) return null;
+  const userId = getOrCreateUserId();
+  const sep = base.includes("?") ? "&" : "?";
+  return `${base}${sep}checkout[custom][user_id]=${encodeURIComponent(userId)}`;
+}
+
+function markCheckoutAttempt(plan) {
+  localStorage.setItem(CHECKOUT_ATTEMPT_KEY, JSON.stringify({ plan, ts: Date.now() }));
+}
+function getRecentCheckoutAttempt() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(CHECKOUT_ATTEMPT_KEY) || "null");
+    if (!raw) return null;
+    if (Date.now() - raw.ts > CHECKOUT_ATTEMPT_TTL_MS) {
+      localStorage.removeItem(CHECKOUT_ATTEMPT_KEY);
+      return null;
+    }
+    return raw;
+  } catch { return null; }
+}
+function clearCheckoutAttempt() {
+  localStorage.removeItem(CHECKOUT_ATTEMPT_KEY);
+}
+
+// ---- Visible "Verifying payment" overlay ----
+function showVerifyingOverlay() {
+  let el = document.getElementById("verifyOverlay");
+  if (el) return el;
+  el = document.createElement("div");
+  el.id = "verifyOverlay";
+  el.className = "fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-lg p-4";
+  el.innerHTML = `
+    <div class="premium-glass border border-brand-500/30 rounded-[28px] p-8 max-w-sm w-full text-center fade-up">
+      <div class="w-14 h-14 mx-auto mb-4 rounded-full border-4 border-brand-500/30 border-t-brand-500 animate-spin"></div>
+      <h3 class="font-serif text-xl font-bold text-white mb-2">Verifying your payment…</h3>
+      <p id="verifyOverlayMsg" class="text-sm text-gray-400">Hang tight, this only takes a moment.</p>
+      <button id="verifyOverlayClose" class="hidden mt-5 text-xs text-gray-500 hover:text-white underline">Close</button>
+    </div>
+  `;
+  document.body.appendChild(el);
+  return el;
+}
+function hideVerifyingOverlay() {
+  document.getElementById("verifyOverlay")?.remove();
+}
+function setVerifyingMessage(msg, showClose = false) {
+  const m = document.getElementById("verifyOverlayMsg");
+  if (m) m.textContent = msg;
+  if (showClose) {
+    const b = document.getElementById("verifyOverlayClose");
+    if (b) {
+      b.classList.remove("hidden");
+      b.onclick = hideVerifyingOverlay;
+    }
   }
 }
 
-// Listen for successful checkout → unlock Pro
-window.addEventListener("load", () => {
-  if (window.createLemonSqueezy) window.createLemonSqueezy();
-  if (window.LemonSqueezy && window.LemonSqueezy.Setup) {
-    window.LemonSqueezy.Setup({
-      eventHandler: (event) => {
-        if (event.event === "Checkout.Success") {
+async function verifyProStatus({ poll = false, visible = false } = {}) {
+  const userId = getOrCreateUserId();
+  const url = `${WORKER_BASE_URL}/check?user_id=${encodeURIComponent(userId)}`;
+  const tries = poll ? 12 : 1; // up to ~24s
+  console.log("[DateScan] verifyProStatus:", { userId, url, poll, tries });
+
+  if (visible) showVerifyingOverlay();
+
+  for (let i = 0; i < tries; i++) {
+    try {
+      const r = await fetch(url, { cache: "no-store" });
+      console.log(`[DateScan] /check try #${i + 1} → status ${r.status}`);
+      if (r.ok) {
+        const data = await r.json();
+        console.log("[DateScan] /check response:", data);
+        if (data.pro) {
           setProUser();
-          updateUsageBadge();
-          closePaywall();
+          if (data.plan) localStorage.setItem("datescan.proPlan", data.plan);
+          clearCheckoutAttempt();
+          try { updateUsageBadge(); } catch {}
           window.dsPrivacy?.showToast?.("🎉 Welcome to Pro!", 3000);
           const s = store.get();
           if (s.lastItems) {
             renderActionPlan(s.lastItems, false);
             renderStyleCoach(s.lastColor, s.occasion, false);
           }
+          if (visible) {
+            setVerifyingMessage("✓ Payment confirmed!");
+            setTimeout(hideVerifyingOverlay, 1200);
+          }
+          return true;
         }
-      },
-    });
+      }
+    } catch (e) {
+      console.warn(`[DateScan] /check try #${i + 1} failed:`, e);
+    }
+    if (visible && poll) setVerifyingMessage(`Verifying your payment… (${i + 1}/${tries})`);
+    if (i < tries - 1) await new Promise((r) => setTimeout(r, 2000));
   }
 
-  // Auto-redirect to checkout if landed on /?premium=week|month|year
+  console.warn("[DateScan] verifyProStatus: gave up");
+  if (visible) {
+    setVerifyingMessage("Couldn't confirm payment yet. Refresh in a minute, or contact support if this persists.", true);
+  }
+  return false;
+}
+
+window.addEventListener("load", () => {
   const params = new URLSearchParams(window.location.search);
   const premium = params.get("premium");
-  if (premium && LEMON_CHECKOUTS[premium]) {
-    window.location.href = LEMON_CHECKOUTS[premium];
+  const cameFromLemon = document.referrer && document.referrer.includes("lemonsqueezy.com");
+  const recentAttempt = getRecentCheckoutAttempt();
+
+  console.log("[DateScan] page load checkout flow:", {
+    premium,
+    cameFromLemon,
+    referrer: document.referrer,
+    recentAttempt,
+    isProUser: isProUser(),
+  });
+
+  // CASE A: just returned from a checkout attempt → ALWAYS verify, never re-redirect
+  if (recentAttempt || cameFromLemon) {
+    console.log("[DateScan] → returning from checkout, verifying with backend");
+    // Strip any LS query params from the URL so refresh doesn't loop
+    if (params.toString()) {
+      const cleanUrl = window.location.pathname + window.location.hash;
+      window.history.replaceState({}, "", cleanUrl);
+    }
+    verifyProStatus({ poll: true, visible: true });
+    return;
+  }
+
+  // CASE B: fresh entry via /?premium=plan link → start checkout
+  if (premium && LEMON_CHECKOUTS[premium] && !isProUser()) {
+    console.log("[DateScan] → starting checkout for plan:", premium);
+    markCheckoutAttempt(premium);
+    window.location.href = buildCheckoutUrl(premium);
+    return;
+  }
+
+  // CASE C: normal page load → silent background check (in case Pro from another session)
+  if (!isProUser()) {
+    console.log("[DateScan] → silent pro status check");
+    verifyProStatus({ poll: false, visible: false });
   }
 });
 
@@ -3964,7 +4074,9 @@ $("upgradeBtn").addEventListener("click", window.openPaywall);
 document.querySelectorAll(".plan-btn").forEach(b => b.addEventListener("click", () => {
   triggerHaptic('success');
   const plan = b.dataset.plan || 'week';
-  window.location.href = LEMON_CHECKOUTS[plan];
+  console.log("[DateScan] plan-btn click → checkout:", plan);
+  markCheckoutAttempt(plan);
+  window.location.href = buildCheckoutUrl(plan);
 }));
 
 document.querySelectorAll(".plan-btn").forEach(b => b.dataset.originalHTML = b.innerHTML);
