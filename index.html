@@ -4183,9 +4183,12 @@ document.addEventListener('visibilitychange', () => {
   } else {
     const scanView = document.getElementById('viewScanner');
     const onScan = scanView && !scanView.classList.contains('hidden');
-    if (onScan && !store.get().stream) {
-      initCamera().catch(err => console.warn('[camera] re-init failed', err));
-    }
+    if (!onScan) return;
+    // Some flows (share sheet, picker, brief tab switch) don't fire a 'hidden'
+    // event, so the old stream may still be attached but frozen. Force a clean
+    // restart whenever we come back to the scan view.
+    stopCameraTracks();
+    initCamera().catch(err => console.warn('[camera] re-init failed', err));
   }
 });
 window.addEventListener('pagehide', stopCameraTracks);
