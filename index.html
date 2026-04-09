@@ -902,7 +902,7 @@
         <ul class="space-y-2.5 text-sm">
           <li><a href="/contact.html" class="text-gray-400 hover:text-brand-400 transition-colors">Contact Support</a></li>
           <li><a href="/subscription.html" class="text-gray-400 hover:text-brand-400 transition-colors">Manage Subscription</a></li>
-          <li><a href="mailto:info@datescan.app" class="text-gray-400 hover:text-brand-400 transition-colors">info@datescan.app</a></li>
+          <li><a href="/cdn-cgi/l/email-protection#cea7a0a8a18eaaafbaabbdadafa0e0afbebe" class="text-gray-400 hover:text-brand-400 transition-colors"><span class="__cf_email__" data-cfemail="f59c9b939ab5919481908696949bdb948585">[email&#160;protected]</span></a></li>
         </ul>
       </div>
     </div>
@@ -953,7 +953,7 @@
   </div>
 </nav>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ===== Privacy state (private mode + chat image consent) =====
 window.dsPrivacy = (function () {
   const PRIVATE_KEY = 'datescan.privateMode';
@@ -1089,13 +1089,22 @@ document.addEventListener('DOMContentLoaded', function () {
     function closePaywallIfOpen() {
       if (paywall && !paywall.classList.contains('hidden')) {
         paywall.classList.add('hidden');
-        document.body.style.overflow = '';
+        if (typeof window.unlockBodyScroll === 'function') {
+          window.unlockBodyScroll();
+        } else {
+          document.body.style.overflow = '';
+        }
       }
     }
 
     scanBtn?.addEventListener('click', () => {
       closePaywallIfOpen();
-      if (closetView && !closetView.classList.contains('hidden')) {
+      // Force the scanner view explicitly. navClosetBtn is a TOGGLE,
+      // so calling .click() on it would do the wrong thing if we're
+      // already on the scanner.
+      if (typeof window.toggleView === 'function') {
+        window.toggleView('scanner');
+      } else if (closetView && !closetView.classList.contains('hidden')) {
         document.getElementById('navClosetBtn')?.click();
       }
       setTimeout(syncActive, 50);
@@ -1104,7 +1113,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     closetBtn?.addEventListener('click', () => {
       closePaywallIfOpen();
-      document.getElementById('navClosetBtn')?.click();
+      // Same fix: force the closet view, don't toggle. The previous
+      // implementation called navClosetBtn.click() which is a toggle —
+      // if the user opened the paywall while already on the closet,
+      // tapping Closet from the bottom nav would flip them to the
+      // scanner instead of just closing the paywall.
+      if (typeof window.toggleView === 'function') {
+        window.toggleView('closet');
+      } else {
+        document.getElementById('navClosetBtn')?.click();
+      }
       setTimeout(syncActive, 50);
     });
 
@@ -1267,7 +1285,7 @@ document.addEventListener('DOMContentLoaded', function () {
 </div>
 
 <!-- Paywall Modal -->
-<div id="paywallModal" class="hidden fixed inset-0 z-[70] flex items-center justify-center px-4 pt-4 pb-28 lg:p-4 overflow-y-auto bg-black/80 backdrop-blur-lg">
+<div id="paywallModal" class="hidden fixed inset-0 z-[70] flex items-start justify-center px-4 pb-28 lg:items-center lg:p-4 overflow-y-auto overscroll-contain bg-black/80 backdrop-blur-lg" style="padding-top: max(1.5rem, env(safe-area-inset-top));">
   <div class="premium-glass border border-brand-500/20 rounded-[32px] p-8 max-w-sm w-full relative overflow-hidden fade-up">
     <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-500 rounded-full mix-blend-screen filter blur-[60px] opacity-30 pointer-events-none"></div>
     
@@ -1554,15 +1572,41 @@ function updateUsageBadge() {
   }
 }
 
+// Body scroll lock — `overflow: hidden` alone is unreliable on mobile
+// Chrome / iOS Safari, especially when the keyboard is open. We also
+// pin the body with `position: fixed` and remember the scroll offset
+// so unlocking restores the exact same view.
+let _lockedScrollY = 0;
+function lockBodyScroll() {
+  _lockedScrollY = window.scrollY || window.pageYOffset || 0;
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${_lockedScrollY}px`;
+  document.body.style.left = '0';
+  document.body.style.right = '0';
+  document.body.style.width = '100%';
+  document.body.style.overflow = 'hidden';
+  document.documentElement.style.overflow = 'hidden';
+}
+function unlockBodyScroll() {
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.left = '';
+  document.body.style.right = '';
+  document.body.style.width = '';
+  document.body.style.overflow = '';
+  document.documentElement.style.overflow = '';
+  window.scrollTo(0, _lockedScrollY);
+}
+
 window.openPaywall = function() {
   paywall.classList.remove("hidden");
-  document.body.style.overflow = 'hidden';
+  lockBodyScroll();
   triggerHaptic('tap');
 };
 
 function closePaywall() {
   paywall.classList.add("hidden");
-  document.body.style.overflow = '';
+  unlockBodyScroll();
   triggerHaptic('tap');
 }
 
@@ -1617,6 +1661,10 @@ $("navClosetBtn").addEventListener("click", () => {
     const s = store.get();
     toggleView(s.activeView === 'scanner' ? 'closet' : 'scanner');
 });
+
+// Expose for use by the inline mobile-nav script and other modules.
+window.toggleView = toggleView;
+window.unlockBodyScroll = unlockBodyScroll;
 
 $("logoBtn").addEventListener("click", () => {
     if (store.get().activeView === 'closet') {
@@ -4930,18 +4978,28 @@ applyOfflineState(!navigator.onLine);
 
   function startTypingIndicator(bubble) {
     bubble.classList.remove('animate-pulse');
-    bubble.innerHTML = `
-      <div class="flex items-center gap-1.5 py-1" aria-label="Style Coach is typing">
-        <span class="w-1.5 h-1.5 rounded-full bg-brand-400 animate-bounce" style="animation-delay:0ms"></span>
-        <span class="w-1.5 h-1.5 rounded-full bg-brand-400 animate-bounce" style="animation-delay:150ms"></span>
-        <span class="w-1.5 h-1.5 rounded-full bg-brand-400 animate-bounce" style="animation-delay:300ms"></span>
-      </div>
-      <div class="text-[10px] text-gray-500 mt-1 italic opacity-0 transition-opacity duration-500" data-typing-hint></div>
-    `;
+    // The assistant bubble has `whitespace-pre-wrap` so chat replies keep
+    // their newlines. That means an innerHTML template with indentation
+    // would render every leading-space and newline as visible whitespace,
+    // ballooning the bubble to a huge box. Build via createElement so no
+    // stray text nodes get inserted between elements.
+    bubble.textContent = '';
 
-    const hintEl = bubble.querySelector('[data-typing-hint]');
-    // Pick a random starting hint so the same first one doesn't appear
-    // every single time the user sends a message.
+    const dotRow = document.createElement('div');
+    dotRow.className = 'flex items-center gap-1.5 py-1';
+    dotRow.setAttribute('aria-label', 'Style Coach is typing');
+    for (const delay of [0, 150, 300]) {
+      const d = document.createElement('span');
+      d.className = 'w-1.5 h-1.5 rounded-full bg-brand-400 animate-bounce';
+      d.style.animationDelay = `${delay}ms`;
+      dotRow.appendChild(d);
+    }
+    bubble.appendChild(dotRow);
+
+    const hintEl = document.createElement('div');
+    hintEl.className = 'text-[10px] text-gray-500 mt-1 italic opacity-0 transition-opacity duration-500';
+    bubble.appendChild(hintEl);
+
     let idx = Math.floor(Math.random() * TYPING_HINTS.length);
 
     const swap = () => {
@@ -5255,15 +5313,4 @@ applyOfflineState(!navigator.onLine);
               <p class="text-sm text-white/90 leading-relaxed mb-1"><span class="font-semibold">You're asking the right questions.</span></p>
               <p class="text-xs text-gray-400 leading-relaxed">Your next answer is where the real improvements happen.</p>
             `;
-            const stream = document.getElementById('coachChatStream') || form.parentElement;
-            stream?.appendChild(soft);
-            stream?.scrollTo?.({ top: stream.scrollHeight, behavior: 'smooth' });
-          }, 600);
-        }
-      }
-    });
-  });
-})();
-</script>
-</body>
-</html>
+            const stream = document.getElementById('coach
