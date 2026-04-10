@@ -1,0 +1,96 @@
+<!--
+  ============================================================
+  DateScan Cookie Banner — drop-in snippet
+  ============================================================
+  HOW TO USE:
+    Paste this entire block just before the closing </body> tag
+    in your index.html (and landing.html if you want it there too).
+
+    It uses the same Tailwind classes and brand colors (brand-500,
+    Inter font) already loaded by your pages, so no extra CSS is
+    needed.
+
+    Logic:
+      • On load, checks localStorage.getItem('cookieConsent').
+      • If null → shows the banner.
+      • On "Accept" → saves 'accepted' + timestamp and hides banner.
+      • Banner never re-appears on the same device unless localStorage
+        is cleared.
+  ============================================================
+-->
+<div id="cookieBanner" class="hidden fixed inset-x-0 bottom-0 z-[100] px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pointer-events-none">
+  <div class="max-w-3xl mx-auto pointer-events-auto">
+    <div class="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0f0f14]/95 backdrop-blur-xl shadow-2xl shadow-black/50">
+      <!-- top accent line -->
+      <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-500/50 to-transparent pointer-events-none"></div>
+
+      <div class="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+        <!-- icon -->
+        <div class="shrink-0 w-11 h-11 rounded-xl bg-gradient-to-tr from-brand-500/20 to-purple-500/20 border border-brand-500/30 flex items-center justify-center">
+          <svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+        </div>
+
+        <!-- text -->
+        <div class="flex-1 min-w-0">
+          <p class="text-sm text-white font-medium mb-1">We respect your privacy.</p>
+          <p class="text-xs text-gray-400 leading-relaxed">
+            DateScan runs 100% in your browser — your photos never leave your device. We use strictly necessary cookies for security and payment processing. By continuing, you accept our
+            <a href="/privacy.html" class="text-brand-400 hover:text-brand-500 underline underline-offset-2">Privacy Policy</a>.
+          </p>
+        </div>
+
+        <!-- actions -->
+        <div class="flex items-center gap-2 shrink-0">
+          <a href="/privacy.html" class="hidden sm:inline-block text-xs text-gray-400 hover:text-white px-3 py-2 transition-colors">Learn more</a>
+          <button id="cookieAcceptBtn" type="button"
+            class="px-5 py-2.5 rounded-xl bg-gradient-to-tr from-brand-500 to-purple-500 text-white text-sm font-semibold shadow-lg shadow-brand-500/30 hover:shadow-brand-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all">
+            Accept
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  try {
+    var banner = document.getElementById('cookieBanner');
+    var acceptBtn = document.getElementById('cookieAcceptBtn');
+    if (!banner || !acceptBtn) return;
+
+    // Only show if user hasn't chosen yet
+    if (!localStorage.getItem('cookieConsent')) {
+      // small delay so it doesn't compete with first paint
+      setTimeout(function () {
+        banner.classList.remove('hidden');
+        banner.style.animation = 'ds-cookie-slide-up .4s ease-out';
+      }, 600);
+    }
+
+    acceptBtn.addEventListener('click', function () {
+      try {
+        localStorage.setItem('cookieConsent', 'accepted');
+        localStorage.setItem('cookieConsentTs', String(Date.now()));
+      } catch (e) { /* localStorage blocked — fail silently */ }
+      banner.style.animation = 'ds-cookie-slide-down .3s ease-in forwards';
+      setTimeout(function () { banner.classList.add('hidden'); }, 300);
+    });
+  } catch (e) {
+    console.warn('[DateScan] cookie banner init failed:', e);
+  }
+})();
+</script>
+
+<style>
+  @keyframes ds-cookie-slide-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes ds-cookie-slide-down {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(20px); }
+  }
+</style>
