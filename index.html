@@ -4616,10 +4616,28 @@ function renderActionPlan(items, locked = false) {
 }
 
 // ============================================================
-// LEMON SQUEEZY CHECKOUT INTEGRATION (with backend verification)
+// PAYMENT INTEGRATION — Google Play Billing (TWA) + Lemon Squeezy fallback
 // ============================================================
+// Flow:
+//   1. If the app is running inside a Trusted Web Activity on Android and
+//      the Digital Goods API is available, we try Google Play Billing first.
+//   2. On any Google Play error, or in a regular browser (Safari/Chrome/Firefox),
+//      we fall back to Lemon Squeezy hosted checkout.
+//   3. In both cases we verify the Pro status with our Cloudflare Worker at
+//      https://payment.datescan.app/check?user_id=...  which is updated by
+//      Lemon Squeezy webhooks and a Play purchase verification endpoint.
+// ============================================================
+
 const WORKER_BASE_URL = "https://payment.datescan.app";
 
+// Google Play product IDs (must match the SKUs you created in Play Console)
+const GOOGLE_SKUS = {
+  week:  "premium_week",
+  month: "premium_month",
+  year:  "premium_year",
+};
+
+// Lemon Squeezy hosted checkout URLs (used as web fallback)
 const LEMON_CHECKOUTS = {
   week:  "https://datescan.lemonsqueezy.com/checkout/buy/ce5103de-486e-4cef-b48b-87b89330465b",
   month: "https://datescan.lemonsqueezy.com/checkout/buy/3acc0dcd-b5b6-4642-b553-849db696ee2a",
@@ -4740,9 +4758,101 @@ async function verifyProStatus({ poll = false, visible = false } = {}) {
 
   console.warn("[DateScan] verifyProStatus: gave up");
   if (visible) {
-    setVerifyingMessage("Couldn't confirm payment yet. Refresh in a minute, or contact support if this persists.", true);
+    setVerifyingMessage("We couldn't confirm your payment yet. Please refresh in a minute, or contact support if this persists.", true);
   }
   return false;
+}
+
+// ---- Lemon Squeezy fallback (opens hosted checkout in the same tab) ----
+function startLemonSqueezyCheckout(plan) {
+  const url = buildCheckoutUrl(plan);
+  if (!url) {
+    console.error("[DateScan] Unknown plan for Lemon Squeezy fallback:", plan);
+    return;
+  }
+  console.log("[DateScan] → Lemon Squeezy checkout:", plan, url);
+  markCheckoutAttempt(plan);
+  window.location.href = url;
+}
+
+// ---- Main entry point: decides Google Play vs Lemon Squeezy ----
+async function handlePayment(plan) {
+  const productId = GOOGLE_SKUS[plan];
+  if (!productId) {
+    console.error("[DateScan] handlePayment: unknown plan:", plan);
+    return;
+  }
+
+  console.log("[DateScan] handlePayment:", { plan, productId });
+
+  // 1. Check if we're running inside a TWA / Android app with Digital Goods API
+  if (window.getDigitalGoodsService && window.PaymentRequest) {
+    try {
+      const service = await window.getDigitalGoodsService("https://play.google.com/billing");
+
+      const paymentMethods = [{
+        supportedMethods: "https://play.google.com/billing",
+        data: { sku: productId }
+      }];
+
+      const details = {
+        total: {
+          label: "Total",
+          amount: { currency: "USD", value: "0" } // Google Play overrides with the real price
+        }
+      };
+
+      const request = new PaymentRequest(paymentMethods, details);
+      const response = await request.show();
+      const { purchaseToken } = response.details;
+
+      // 2. Verify the purchase with our Cloudflare Worker
+      showVerifyingOverlay();
+      setVerifyingMessage("Verifying your Google Play purchase…");
+
+      const userId = getOrCreateUserId();
+      const verifyRes = await fetch(`${WORKER_BASE_URL}/verify`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          purchaseToken: purchaseToken,
+          productId: productId,
+          plan: plan,
+          user_id: userId
+        })
+      });
+
+      const result = await verifyRes.json();
+      console.log("[DateScan] /verify response:", result);
+
+      if (result && result.status === "success") {
+        await response.complete("success");
+        setProUser();
+        localStorage.setItem("datescan.proPlan", plan);
+        try { updateUsageBadge(); } catch {}
+        setVerifyingMessage("✓ Payment confirmed! Welcome to Pro.");
+        window.dsPrivacy?.showToast?.("🎉 Welcome to Pro!", 3000);
+        setTimeout(() => {
+          hideVerifyingOverlay();
+          location.reload();
+        }, 1500);
+      } else {
+        await response.complete("fail");
+        setVerifyingMessage("We couldn't verify your purchase. Please contact support at info@datescan.app.", true);
+      }
+      return;
+
+    } catch (e) {
+      console.error("[DateScan] Google Play billing error — falling back to Lemon Squeezy:", e);
+      // Any error (user cancelled, SKU not found, API unavailable) → fallback to web checkout
+      hideVerifyingOverlay();
+      startLemonSqueezyCheckout(plan);
+      return;
+    }
+  }
+
+  // 3. Regular browser (Safari / Chrome / Firefox / desktop) → Lemon Squeezy
+  startLemonSqueezyCheckout(plan);
 }
 
 window.addEventListener("load", () => {
@@ -4759,10 +4869,9 @@ window.addEventListener("load", () => {
     isProUser: isProUser(),
   });
 
-  // CASE A: just returned from a checkout attempt → ALWAYS verify, never re-redirect
+  // CASE A: just returned from a Lemon Squeezy checkout → ALWAYS verify, never re-redirect
   if (recentAttempt || cameFromLemon) {
     console.log("[DateScan] → returning from checkout, verifying with backend");
-    // Strip any LS query params from the URL so refresh doesn't loop
     if (params.toString()) {
       const cleanUrl = window.location.pathname + window.location.hash;
       window.history.replaceState({}, "", cleanUrl);
@@ -4771,11 +4880,10 @@ window.addEventListener("load", () => {
     return;
   }
 
-  // CASE B: fresh entry via /?premium=plan link → start checkout
-  if (premium && LEMON_CHECKOUTS[premium] && !isProUser()) {
+  // CASE B: fresh entry via /?premium=plan link → route through handlePayment
+  if (premium && GOOGLE_SKUS[premium] && !isProUser()) {
     console.log("[DateScan] → starting checkout for plan:", premium);
-    markCheckoutAttempt(premium);
-    window.location.href = buildCheckoutUrl(premium);
+    handlePayment(premium);
     return;
   }
 
@@ -4791,9 +4899,8 @@ $("upgradeBtn").addEventListener("click", window.openPaywall);
 document.querySelectorAll(".plan-btn").forEach(b => b.addEventListener("click", () => {
   triggerHaptic('success');
   const plan = b.dataset.plan || 'week';
-  console.log("[DateScan] plan-btn click → checkout:", plan);
-  markCheckoutAttempt(plan);
-  window.location.href = buildCheckoutUrl(plan);
+  console.log("[DateScan] plan-btn click → handlePayment:", plan);
+  handlePayment(plan);
 }));
 
 document.querySelectorAll(".plan-btn").forEach(b => b.dataset.originalHTML = b.innerHTML);
