@@ -1685,9 +1685,18 @@ function toggleView(targetView) {
         navBtn.classList.replace("text-white", "text-brand-300");
         navBtn.classList.replace("border-white/10", "border-brand-500/40");
         
-        renderCloset(); 
+        // Always reset to the "All Outfits" tab when entering the closet view,
+        // so navigating away (to Scan / Pro) and back never leaves the user
+        // stuck on a previously-selected category filter.
+        if (typeof window.setClosetFilter === 'function') {
+            window.setClosetFilter('all', { updateHash: false });
+        } else {
+            renderCloset();
+        }
         store.set({ activeView: 'closet' });
-        if (!/^#closet(\/|$)/.test(location.hash)) {
+        // Force the hash to plain #closet (strip any /filter suffix) so the
+        // hashchange handler won't re-apply an old filter on back/forward.
+        if (location.hash !== '#closet') {
             history.replaceState(null, '', '#closet');
         }
     } else {
