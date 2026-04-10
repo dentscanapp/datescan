@@ -959,7 +959,7 @@
         <ul class="space-y-2.5 text-sm">
           <li><a href="/contact.html" class="text-gray-400 hover:text-brand-400 transition-colors">Contact Support</a></li>
           <li><a href="/subscription.html" class="text-gray-400 hover:text-brand-400 transition-colors">Manage Subscription</a></li>
-          <li><a href="mailto:info@datescan.app" class="text-gray-400 hover:text-brand-400 transition-colors">info@datescan.app</a></li>
+          <li><a href="/cdn-cgi/l/email-protection#83eaede5ecc3e7e2f7e6f0e0e2edade2f3f3" class="text-gray-400 hover:text-brand-400 transition-colors"><span class="__cf_email__" data-cfemail="bbd2d5ddd4fbdfdacfdec8d8dad595dacbcb">[email&#160;protected]</span></a></li>
         </ul>
       </div>
     </div>
@@ -1014,7 +1014,7 @@
      at the edge when enabled. The hashed path rotates over time, so we
      do not hardcode it here — previously a stale version was baked in
      and 404'd. Leave this to Cloudflare. -->
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ===== Privacy state (private mode + chat image consent) =====
 window.dsPrivacy = (function () {
   const PRIVATE_KEY = 'datescan.privateMode';
@@ -4281,16 +4281,21 @@ async function runScan() {
 
       // Chunk 3: facial expression & proportions
       const eyesOpen = analyzeEyeOpenness(lm); if (eyesOpen) items.push(eyesOpen);
-      const smile = analyzeSmile(lm); if (smile) items.push(smile);
+      // analyzeSmile / analyzeMouth intentionally skipped — see note
+      // below in Chunk 4 for why we don't make claims about the mouth.
       const prop = analyzeProportions(lm); if (prop) items.push(prop);
       const shave = analyzeShavingIrritation(lm, cap.w, cap.h); if (shave) items.push(shave);
       await yieldToUI();
 
-      // Chunk 4: mouth & symmetry
-      const mouth = analyzeMouth(lm, cap.w, cap.h);
-      if (mouth && mouth.teethVisible && !mouth.concern) {
-        items.push({ category: "grooming", tone: "good", icon: "✨", title: "Great smile", text: "Teeth look clean.", action: "Flash that smile tonight." });
-      }
+      // Chunk 4: symmetry only.
+      //
+      // We intentionally do NOT analyze smile, teeth, or mouth here.
+      // The capture is a single frame — the user may or may not have
+      // their mouth open, and any positive claim ("Great smile", "Teeth
+      // look clean") would be misleading when the mouth is closed.
+      // Lip-curl math can also false-positive "Tense mouth" on a
+      // neutral expression. Keep this category honest: only comment on
+      // things we can actually measure from a still image.
 
       const sym = analyzeSymmetry(lm);
       if (sym.ratio > 0.10) items.push({ category: "grooming", tone: "warn", icon: "✂️", title: "Mirror check", text: "Small imbalance detected.", action: "Check hair/collar alignment." });
@@ -4482,7 +4487,6 @@ const CONFIDENCE_BOOSTERS = [
   { icon: "⏸️", text: "Pause before you speak. Rushing to fill silence is a tell." },
   { icon: "👂", text: "Shut up and listen. You're not as interesting as you think yet." },
   { icon: "😌", text: "Drop your voice half a notch. Excited-sounding is losing-sounding." },
-  { icon: "🙂", text: "If your smile isn't reaching your eyes, don't bother faking it." },
   { icon: "✋", text: "Hands out of your pockets. Hidden hands read as hiding." },
   { icon: "🔥", text: "You've spent all day preparing. Don't blow it by second-guessing now." },
   { icon: "💬", text: "Ask something they didn't see coming. Small talk is a trap." },
@@ -5532,10 +5536,10 @@ applyOfflineState(!navigator.onLine);
       if (!window.isProUser?.()) {
         window.incrementChatUsage?.();
         // Note: the post-2nd-message soft teaser used to live here but
-        // it duplicated the paywall lock that the submit handler already
-        // shows on the next send attempt. Removed to avoid two
-        // near-identical "You're asking the right questions" cards
-        // stacking on top of each other.
+        // it duplicated the paywall lock that the submit handler
+        // already shows on the next send attempt. Removed to avoid
+        // two near-identical "You're asking the right questions"
+        // cards stacking on top of each other.
       }
     });
   });
