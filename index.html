@@ -469,6 +469,13 @@
     background: rgba(236, 72, 153, 0.16);
     border-color: rgba(236, 72, 153, 0.6);
   }
+
+  /* Ha az app standalone módban fut, ne mutassa a cookie sávot */
+@media (display-mode: standalone) {
+  #cookie-notice, .cookie-bar-class {
+    display: none !important;
+  }
+}
 </style>
 </head>
 <body class="relative antialiased text-gray-100">
