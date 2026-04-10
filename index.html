@@ -187,7 +187,18 @@
     filter: grayscale(0.5);
   }
 
-  /* Camera & Video Container */
+  /* Camera & Video Container.
+   *
+   * The container locks itself to a 1:1 aspect ratio (matching the
+   * `{ width: 1280, height: 1280 }` constraints we ask getUserMedia for)
+   * so its height is determined purely by its width — independent of
+   * whether the <video> element currently has a stream attached. This
+   * is what prevents the layout from jumping when the camera is stopped
+   * (e.g. visibilitychange → stopCameraTracks) and the video element
+   * collapses to zero intrinsic size. The video itself is absolutely
+   * positioned and uses object-fit: cover so it always fills the box
+   * without distortion.
+   */
   .camera-container {
     position: relative;
     border-radius: 24px;
@@ -195,16 +206,29 @@
     background: #000;
     box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
     width: 100%;
-    min-height: 50vh; 
-    transition: min-height 0.3s ease;
+    aspect-ratio: 1 / 1;
+    /* min-height kept as a fallback for browsers without aspect-ratio
+       support (pre-2021 builds). Modern browsers ignore it because
+       aspect-ratio resolves a definite height. */
+    min-height: 50vh;
+  }
+  @supports (aspect-ratio: 1 / 1) {
+    .camera-container { min-height: 0; }
   }
   @media (min-width: 1024px) {
-    .camera-container { min-height: 400px; }
+    .camera-container {
+      /* Cap the desktop size so the square camera doesn't dominate the
+         results column on very wide viewports. */
+      max-height: 560px;
+    }
   }
 
   video {
+    position: absolute;
+    inset: 0;
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
     transform: scaleX(-1);
     display: block;
   }
@@ -2878,24 +2902,21 @@ function handleChipClick(text, btn) {
   }
 
   const input = document.getElementById('coachChatInput');
-  const form = document.getElementById('coachChatForm');
-  if (!input || !form) return;
+  if (!input) return;
 
-  // Bail out gracefully if the input is disabled (offline) — the chat
-  // form's own offline gate would still catch this, but skipping the
-  // submit avoids a flicker.
+  // Bail out gracefully if the input is disabled (offline state).
   if (input.disabled) return;
 
+  // Drop the chip's text into the input but DO NOT auto-submit.
+  // The user explicitly asked for this — they want a chance to read,
+  // edit, or cancel the question before sending.
   input.value = text;
-  // Use requestSubmit() so the existing 'submit' listener fires and
-  // every gate (offline, free-tier, trend, sendMessage, typing
-  // indicator) runs naturally — exactly as if the user had typed and
-  // tapped Send themselves.
-  if (typeof form.requestSubmit === 'function') {
-    form.requestSubmit();
-  } else {
-    form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-  }
+  input.focus();
+  // Move the caret to the end so editing feels natural.
+  try {
+    const len = input.value.length;
+    input.setSelectionRange(len, len);
+  } catch {}
 }
 
 // Make available to inline event handlers and other modules.
