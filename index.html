@@ -958,8 +958,6 @@
         <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4">Support</h3>
         <ul class="space-y-2.5 text-sm">
           <li><a href="/contact.html" class="text-gray-400 hover:text-brand-400 transition-colors">Contact Support</a></li>
-          <li><a href="/subscription.html" class="text-gray-400 hover:text-brand-400 transition-colors">Manage Subscription</a></li>
-          <li><a href="/cdn-cgi/l/email-protection#83eaede5ecc3e7e2f7e6f0e0e2edade2f3f3" class="text-gray-400 hover:text-brand-400 transition-colors"><span class="__cf_email__" data-cfemail="bbd2d5ddd4fbdfdacfdec8d8dad595dacbcb">[email&#160;protected]</span></a></li>
         </ul>
       </div>
     </div>
@@ -1010,30 +1008,7 @@
   </div>
 </nav>
 
-<!-- Cloudflare Email Obfuscation injects email-decode.min.js automatically
-     at the edge when enabled. The hashed path rotates over time, so we
-     do not hardcode it here — previously a stale version was baked in
-     and 404'd. Leave this to Cloudflare. -->
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-// ===== Privacy state (private mode + chat image consent) =====
-window.dsPrivacy = (function () {
-  const PRIVATE_KEY = 'datescan.privateMode';
-  const CONSENT_KEY = 'datescan.chatImageConsent';
-  const listeners = new Set();
-  function isPrivateMode() {
-    try { return localStorage.getItem(PRIVATE_KEY) === '1'; } catch { return false; }
-  }
-  function setPrivateMode(on) {
-    try { localStorage.setItem(PRIVATE_KEY, on ? '1' : '0'); } catch {}
-    listeners.forEach(fn => { try { fn(on); } catch (e) {} });
-  }
-  function hasChatImageConsent() {
-    try { return localStorage.getItem(CONSENT_KEY) === '1'; } catch { return false; }
-  }
-  function grantChatImageConsent() {
-    try { localStorage.setItem(CONSENT_KEY, '1'); } catch {}
-  }
-  function onChange(fn) { listeners.add(fn); return () => listeners.delete(fn); }
+
 
   // Returns Promise<boolean>: true if upload allowed, false if blocked.
   function requestChatImagePermission() {
@@ -3319,68 +3294,6 @@ const OUTFIT_COLORS = [
   { id: "gray",  name: "Neutral Gray", hex: "#64748b", rgb: [100, 116, 139] }
 ];
 
-// Convert 0..255 RGB to HSL with H in [0,360), S and L in [0,1].
-function _rgbToHsl(r, g, b) {
-  r /= 255; g /= 255; b /= 255;
-  const max = Math.max(r, g, b), min = Math.min(r, g, b);
-  const l = (max + min) / 2;
-  let h = 0, s = 0;
-  const d = max - min;
-  if (d > 0) {
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-    switch (max) {
-      case r: h = ((g - b) / d + (g < b ? 6 : 0)); break;
-      case g: h = ((b - r) / d + 2); break;
-      case b: h = ((r - g) / d + 4); break;
-    }
-    h *= 60;
-  }
-  return [h, s, l];
-}
-
-// Simple skin-tone heuristic so the neck/jaw doesn't poison the vote.
-function _isSkinPixel(r, g, b) {
-  if (r < 60) return false;
-  if (!(r > g && r > b)) return false;
-  if (r - Math.min(g, b) < 15) return false;
-  // Typical skin sits around hue 10-40 with modest saturation.
-  const [h, s, l] = _rgbToHsl(r, g, b);
-  return (h >= 0 && h <= 50) && s >= 0.12 && s <= 0.68 && l >= 0.25 && l <= 0.85;
-}
-
-// Classify one pixel into a palette id using HSL, not RGB distance.
-function _classifyPixelHSL(r, g, b) {
-  const [h, s, l] = _rgbToHsl(r, g, b);
-
-  // Reject pure noise / crushed blacks (unreliable hue).
-  if (l < 0.035) return 'black';
-
-  // Achromatic: decide black / gray / white by lightness only.
-  // Threshold is deliberately low so a slightly-tinted dark pixel (e.g. forest
-  // green at s≈0.15) still falls through to the hue branch below.
-  if (s < 0.13) {
-    if (l < 0.22) return 'black';
-    if (l > 0.80) return 'white';
-    return 'gray';
-  }
-
-  // Very dark + very low saturation → still effectively black (camera noise).
-  if (l < 0.07 && s < 0.25) return 'black';
-  // Very bright + low saturation → white.
-  if (l > 0.88 && s < 0.25) return 'white';
-
-  // Chromatic: bucket by hue. Ranges picked so dark/muted tones still land
-  // in the right family.
-  if (h < 15 || h >= 345) return 'red';
-  if (h < 45)  return l < 0.45 ? 'earth' : 'earth'; // orange/brown
-  if (h < 70)  return 'earth';                       // yellow → earth family
-  if (h < 170) return 'green';                       // includes dark forest/olive
-  if (h < 200) return l < 0.35 ? 'navy' : 'navy';    // teal → navy
-  if (h < 260) return 'navy';                        // blues
-  if (h < 300) return 'navy';                        // purple → navy
-  return 'pink';                                     // magenta/pink
-}
-
 function analyzeOutfitColor(landmarks, W, H) {
   const chin = landmarks[152];
   if (!chin) return null;
@@ -3390,19 +3303,17 @@ function analyzeOutfitColor(landmarks, W, H) {
   if (actualW < 10 || actualH < 10) return null;
   const data = ctx.getImageData(xStart, yStart, actualW, actualH).data;
   const votes = {}; OUTFIT_COLORS.forEach(c => votes[c.id] = 0);
-  let counted = 0;
 
   for (let i = 0; i < data.length; i += 40) {
     const r = data[i], g = data[i+1], b = data[i+2];
-    // Skip fully crushed blacks (sensor noise, no signal).
-    if (r < 8 && g < 8 && b < 8) continue;
-    // Skip obvious skin pixels so the neck doesn't win the vote.
-    if (_isSkinPixel(r, g, b)) continue;
-    const id = _classifyPixelHSL(r, g, b);
-    if (id) { votes[id]++; counted++; }
+    if (r < 15 && g < 15 && b < 15) continue;
+    let minDist = Infinity, bestId = null;
+    OUTFIT_COLORS.forEach(c => {
+      const dist = (r-c.rgb[0])**2 + (g-c.rgb[1])**2 + (b-c.rgb[2])**2;
+      if (dist < minDist) { minDist = dist; bestId = c.id; }
+    });
+    if (bestId) votes[bestId]++;
   }
-
-  if (counted < 20) return null;
 
   let maxVotes = -1, winningId = null;
   Object.entries(votes).forEach(([id, count]) => { if (count > maxVotes) { maxVotes = count; winningId = id; } });
@@ -4345,21 +4256,16 @@ async function runScan() {
 
       // Chunk 3: facial expression & proportions
       const eyesOpen = analyzeEyeOpenness(lm); if (eyesOpen) items.push(eyesOpen);
-      // analyzeSmile / analyzeMouth intentionally skipped — see note
-      // below in Chunk 4 for why we don't make claims about the mouth.
+      const smile = analyzeSmile(lm); if (smile) items.push(smile);
       const prop = analyzeProportions(lm); if (prop) items.push(prop);
       const shave = analyzeShavingIrritation(lm, cap.w, cap.h); if (shave) items.push(shave);
       await yieldToUI();
 
-      // Chunk 4: symmetry only.
-      //
-      // We intentionally do NOT analyze smile, teeth, or mouth here.
-      // The capture is a single frame — the user may or may not have
-      // their mouth open, and any positive claim ("Great smile", "Teeth
-      // look clean") would be misleading when the mouth is closed.
-      // Lip-curl math can also false-positive "Tense mouth" on a
-      // neutral expression. Keep this category honest: only comment on
-      // things we can actually measure from a still image.
+      // Chunk 4: mouth & symmetry
+      const mouth = analyzeMouth(lm, cap.w, cap.h);
+      if (mouth && mouth.teethVisible && !mouth.concern) {
+        items.push({ category: "grooming", tone: "good", icon: "✨", title: "Great smile", text: "Teeth look clean.", action: "Flash that smile tonight." });
+      }
 
       const sym = analyzeSymmetry(lm);
       if (sym.ratio > 0.10) items.push({ category: "grooming", tone: "warn", icon: "✂️", title: "Mirror check", text: "Small imbalance detected.", action: "Check hair/collar alignment." });
@@ -4551,6 +4457,7 @@ const CONFIDENCE_BOOSTERS = [
   { icon: "⏸️", text: "Pause before you speak. Rushing to fill silence is a tell." },
   { icon: "👂", text: "Shut up and listen. You're not as interesting as you think yet." },
   { icon: "😌", text: "Drop your voice half a notch. Excited-sounding is losing-sounding." },
+  { icon: "🙂", text: "If your smile isn't reaching your eyes, don't bother faking it." },
   { icon: "✋", text: "Hands out of your pockets. Hidden hands read as hiding." },
   { icon: "🔥", text: "You've spent all day preparing. Don't blow it by second-guessing now." },
   { icon: "💬", text: "Ask something they didn't see coming. Small talk is a trap." },
@@ -5600,10 +5507,10 @@ applyOfflineState(!navigator.onLine);
       if (!window.isProUser?.()) {
         window.incrementChatUsage?.();
         // Note: the post-2nd-message soft teaser used to live here but
-        // it duplicated the paywall lock that the submit handler
-        // already shows on the next send attempt. Removed to avoid
-        // two near-identical "You're asking the right questions"
-        // cards stacking on top of each other.
+        // it duplicated the paywall lock that the submit handler already
+        // shows on the next send attempt. Removed to avoid two
+        // near-identical "You're asking the right questions" cards
+        // stacking on top of each other.
       }
     });
   });
