@@ -959,7 +959,7 @@
         <ul class="space-y-2.5 text-sm">
           <li><a href="/contact.html" class="text-gray-400 hover:text-brand-400 transition-colors">Contact Support</a></li>
           <li><a href="/subscription.html" class="text-gray-400 hover:text-brand-400 transition-colors">Manage Subscription</a></li>
-          <li><a href="/cdn-cgi/l/email-protection#cea7a0a8a18eaaafbaabbdadafa0e0afbebe" class="text-gray-400 hover:text-brand-400 transition-colors"><span class="__cf_email__" data-cfemail="f59c9b939ab5919481908696949bdb948585">[email&#160;protected]</span></a></li>
+          <li><a href="mailto:info@datescan.app" class="text-gray-400 hover:text-brand-400 transition-colors">info@datescan.app</a></li>
         </ul>
       </div>
     </div>
@@ -1010,7 +1010,11 @@
   </div>
 </nav>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<!-- Cloudflare Email Obfuscation injects email-decode.min.js automatically
+     at the edge when enabled. The hashed path rotates over time, so we
+     do not hardcode it here — previously a stale version was baked in
+     and 404'd. Leave this to Cloudflare. -->
+<script>
 // ===== Privacy state (private mode + chat image consent) =====
 window.dsPrivacy = (function () {
   const PRIVATE_KEY = 'datescan.privateMode';
@@ -2430,41 +2434,63 @@ async function initCamera() {
   if (!navigator.mediaDevices?.getUserMedia) throw new Error("Your browser doesn't support camera access.");
   try {
     loadingText.textContent = "Starting Camera...";
+    console.log('[camera] initCamera: requesting stream');
 
     video.setAttribute('autoplay', '');
     video.setAttribute('muted', '');
     video.setAttribute('playsinline', '');
     video.setAttribute('webkit-playsinline', '');
-    // Also set the property, not just the attribute. Some browsers
-    // only honor the attribute on initial parse — changing the
-    // `muted` attribute after parse doesn't always propagate to the
-    // property, which means autoplay can be blocked on platforms that
-    // require muted+playsinline for silent autoplay.
     video.muted = true;
     video.playsInline = true;
 
-    const stream = await navigator.mediaDevices.getUserMedia({
+    // Wrap getUserMedia with a hard timeout. Without this, if the OS
+    // permission prompt is left undismissed (Chrome on desktop can do
+    // this) or the camera driver hangs, the promise sits forever and
+    // the user just sees "Starting Camera..." with no way out.
+    const gumPromise = navigator.mediaDevices.getUserMedia({
       video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 1280 } },
       audio: false,
     });
-    
+    const gumTimeout = new Promise((_, rej) =>
+      setTimeout(() => rej(new Error('Camera permission timed out. Please allow access and try again.')), 15000)
+    );
+    const stream = await Promise.race([gumPromise, gumTimeout]);
+    console.log('[camera] initCamera: stream acquired', stream?.getVideoTracks?.()[0]?.label);
+
     store.set({ stream });
     video.srcObject = stream;
-    
+
     await new Promise((res, rej) => {
       let settled = false;
-      const safeRes = () => { if (!settled) { settled = true; res(); } };
-      const safeRej = (e) => { if (!settled) { settled = true; rej(e); } };
+      const safeRes = (tag) => {
+        if (!settled) {
+          settled = true;
+          console.log('[camera] initCamera: ready via', tag);
+          res();
+        }
+      };
+      const safeRej = (e) => {
+        if (!settled) {
+          settled = true;
+          console.warn('[camera] initCamera: failed', e);
+          rej(e);
+        }
+      };
 
       const tryPlay = () => video.play();
 
-      // iOS Safari and some other browsers can reject HTMLMediaElement.play()
-      // with NotAllowedError if autoplay is judged not user-initiated, even
-      // when `muted` and `playsinline` are set. Surface a tap-to-start overlay
-      // so the next call happens inside a real user gesture. The overlay has
-      // three states: idle (tap to start), loading (camera starting...), and
-      // error (inline message + retry), so the user never has to fall through
-      // to the global error screen for a transient autoplay block.
+      // Previously we waited for `loadedmetadata` before calling play().
+      // That creates a deadlock on platforms (iOS Safari, some older
+      // Chromium builds) where `loadedmetadata` isn't dispatched until
+      // the element actually starts playing. Instead, we now:
+      //   - Kick off play() immediately. Modern browsers allow this
+      //     on a muted+playsinline video once srcObject is attached.
+      //   - In parallel, listen for loadedmetadata AND for the first
+      //     `playing` / `loadeddata` / `canplay` event. Whichever
+      //     comes first counts as "ready".
+      //   - If play() rejects with NotAllowedError, fall back to the
+      //     tap-to-start overlay.
+      //   - Hard 8s timeout to avoid wedging on a broken pipeline.
       const showTapToStart = (initialErr) => {
         console.warn('[camera] video.play() blocked, awaiting user gesture:', initialErr);
 
@@ -2511,9 +2537,6 @@ async function initCamera() {
             <button type="button" data-role="cancel" class="text-[11px] text-gray-400 hover:text-white underline underline-offset-4 mt-1">More help</button>
           `;
           tapBtn.querySelector('[data-role="retry"]').addEventListener('click', onTap, { once: true });
-          // Escape hatch — if inline retry can't fix it, surface the failure
-          // through the normal error channel so the user gets the full
-          // troubleshooting screen instead of being stuck in this overlay.
           tapBtn.querySelector('[data-role="cancel"]').addEventListener('click', () => {
             tapBtn.remove();
             safeRej(err);
@@ -2524,7 +2547,7 @@ async function initCamera() {
           renderLoading();
           tryPlay().then(() => {
             tapBtn.remove();
-            safeRes();
+            safeRes('tap');
           }).catch((err2) => {
             console.warn('[camera] retry play() failed', err2);
             renderError(err2);
@@ -2534,20 +2557,38 @@ async function initCamera() {
         renderIdle();
       };
 
-      const onReady = () => {
-        videoWrap.style.minHeight = '0px';
-        tryPlay().then(safeRes).catch(showTapToStart);
-      };
-      if (video.readyState >= 1) {
-        onReady();
-      } else {
-        video.onloadedmetadata = onReady;
-        video.onerror = (e) => safeRej(e);
-        setTimeout(() => safeRej(new Error("Camera feed timed out. Try reloading the page.")), 8000);
-      }
+      // Listen for any of the "I'm showing frames" events in parallel.
+      const markReady = (tag) => () => safeRes(tag);
+      video.addEventListener('loadedmetadata', markReady('loadedmetadata'), { once: true });
+      video.addEventListener('loadeddata', markReady('loadeddata'), { once: true });
+      video.addEventListener('playing', markReady('playing'), { once: true });
+      video.addEventListener('canplay', markReady('canplay'), { once: true });
+
+      video.onerror = (e) => safeRej(e);
+
+      // Kick off play() immediately. On Android Chrome this resolves
+      // right away and is what actually triggers `loadedmetadata` to
+      // fire on iOS Safari. On desktops where autoplay is fine, this
+      // is a no-op beyond the event cascade.
+      tryPlay().catch((err) => {
+        // NotAllowedError → needs a user gesture → show tap-to-start.
+        // Anything else → let the event listeners or timeout handle it.
+        if (err && err.name === 'NotAllowedError') {
+          showTapToStart(err);
+        } else {
+          console.warn('[camera] play() rejected (non-fatal):', err);
+        }
+      });
+
+      // Hard ceiling: 8s from here. If none of the ready events fired
+      // and play() didn't reject with NotAllowedError, something is
+      // deeply broken — surface the error and let the retry overlay
+      // take over.
+      setTimeout(() => safeRej(new Error("Camera feed timed out. Try reloading the page.")), 8000);
     });
-    
+
     store.set({ cameraReady: true });
+    console.log('[camera] initCamera: done');
   } catch (e) {
     if (e.name === "NotAllowedError") {
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
