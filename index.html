@@ -5474,4 +5474,15 @@ applyOfflineState(!navigator.onLine);
               <p class="text-sm text-white/90 leading-relaxed mb-1"><span class="font-semibold">You're asking the right questions.</span></p>
               <p class="text-xs text-gray-400 leading-relaxed">Your next answer is where the real improvements happen.</p>
             `;
-            const stream = document.getElementById('coach
+            const stream = document.getElementById('coachChatStream') || form.parentElement;
+            stream?.appendChild(soft);
+            stream?.scrollTo?.({ top: stream.scrollHeight, behavior: 'smooth' });
+          }, 600);
+        }
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
