@@ -15,6 +15,7 @@ const VERSION = 'v2';
 const SHELL_CACHE = `datescan-shell-${VERSION}`;
 const RUNTIME_CACHE = `datescan-runtime-${VERSION}`;
 const MODEL_CACHE = `datescan-models-${VERSION}`;
+const fresh = await fetch(request, { cache: 'no-store' });
 
 // Things we want available immediately after install.
 const SHELL_URLS = [
