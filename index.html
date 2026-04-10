@@ -17,16 +17,11 @@
     window._deferredInstallPrompt = e;
     window.dispatchEvent(new CustomEvent('pwa-installable'));
   });
-  // Register the service worker after the page has loaded so it doesn't
-  // compete with critical rendering. Required for Play's TWA wrapper to
-  // treat the app as installable/offline-capable.
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () {
-      navigator.serviceWorker.register('/service-worker.js').catch(function (err) {
-        console.warn('[DateScan] SW registration failed:', err);
-      });
-    });
-  }
+  // NOTE: The service worker is registered further down the page at /sw.js
+  // (single source of truth). Do NOT add a second registration here —
+  // having two SWs with different script URLs in the same scope triggers
+  // a controllerchange reload loop the moment the second one calls
+  // clients.claim(), and the camera re-initialises on every reload.
 </script>
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
