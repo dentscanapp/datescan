@@ -207,28 +207,25 @@
     box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
     width: 100%;
     aspect-ratio: 1 / 1;
-    /* min-height kept as a fallback for browsers without aspect-ratio
-       support (pre-2021 builds). Modern browsers ignore it because
-       aspect-ratio resolves a definite height. */
     min-height: 50vh;
   }
   @supports (aspect-ratio: 1 / 1) {
     .camera-container { min-height: 0; }
   }
-  @media (min-width: 1024px) {
-    .camera-container {
-      /* Cap the desktop size so the square camera doesn't dominate the
-         results column on very wide viewports. */
-      max-height: 560px;
-    }
-  }
 
-  video {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  /* High-specificity selector — without #video, a Tailwind preflight or
+     other browser UA rule can win and collapse the video to its
+     intrinsic size, leaving the box half-empty. Explicit top/right/
+     bottom/left are used instead of `inset` for maximum compat. */
+  .camera-container > #video {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
     transform: scaleX(-1);
     display: block;
   }
