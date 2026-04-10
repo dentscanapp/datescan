@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#09090b" />
+<title>Delete Your Account &amp; Data — DateScan</title>
+<meta name="description" content="Request deletion of your DateScan account and all associated data. No login required." />
+<meta name="robots" content="noindex, follow" />
+<link rel="canonical" href="https://datescan.app/delete-account.html" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+<link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = { theme: { extend: {
+    fontFamily: { sans: ['Inter','sans-serif'], serif: ['Playfair Display','serif'] },
+    colors: { brand: { 400:'#f472b6', 500:'#ec4899', 600:'#db2777' }, dark: { 900:'#18181b', 950:'#09090b' } }
+  }}}
+</script>
+<style>
+  body { background:#09090b; color:#fafafa; font-family: Inter, sans-serif; }
+  .prose-custom h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 600; color:#fff; margin-top: 2rem; margin-bottom: .75rem; }
+  .prose-custom p { color:#d1d5db; line-height: 1.7; margin-bottom: 1rem; font-size: 0.95rem; }
+  .prose-custom ul { color:#d1d5db; margin-bottom: 1rem; padding-left: 1.25rem; list-style: disc; }
+  .prose-custom li { margin-bottom: 0.5rem; line-height: 1.65; font-size: 0.95rem; }
+  .prose-custom strong { color:#fff; font-weight: 600; }
+  .prose-custom a { color:#f472b6; text-decoration: underline; text-underline-offset: 3px; }
+  .prose-custom a:hover { color:#ec4899; }
+  .ambient-glow { position: fixed; inset: 0; background:
+    radial-gradient(circle at 15% 10%, rgba(236,72,153,0.08) 0%, transparent 40%),
+    radial-gradient(circle at 85% 90%, rgba(139,92,246,0.08) 0%, transparent 40%);
+    pointer-events: none; z-index: 0; }
+  .form-input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border-radius: 0.75rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.10);
+    color: #fff;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color .15s, background .15s;
+  }
+  .form-input::placeholder { color: #6b7280; }
+  .form-input:focus { border-color: rgba(236,72,153,0.5); background: rgba(255,255,255,0.06); }
+  .form-label { display: block; font-size: 0.8rem; font-weight: 600; color: #e5e7eb; margin-bottom: 0.5rem; }
+  .checkbox-row {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    border-radius: 0.75rem;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.08);
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .checkbox-row:hover { background: rgba(255,255,255,0.04); }
+  .checkbox-row input[type="checkbox"] { accent-color: #ec4899; width: 1rem; height: 1rem; margin-top: 0.15rem; flex-shrink: 0; }
+  .btn-danger {
+    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+    color: white;
+    padding: 0.9rem 1.5rem;
+    border-radius: 0.875rem;
+    font-weight: 700;
+    font-size: 0.95rem;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(220, 38, 38, 0.25);
+    transition: all .2s;
+  }
+  .btn-danger:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(220, 38, 38, 0.35); }
+  .btn-danger:active:not(:disabled) { transform: translateY(1px); }
+  .btn-danger:disabled { opacity: 0.5; cursor: not-allowed; }
+</style>
+</head>
+<body class="antialiased">
+<div class="ambient-glow"></div>
+
+<header class="relative z-10 max-w-3xl mx-auto px-6 pt-10 pb-8">
+  <a href="/" class="inline-flex items-center gap-3 group">
+    <div class="w-12 h-12 flex items-center justify-center shrink-0">
+      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-[0_0_8px_rgba(236,72,153,0.4)]">
+        <defs>
+          <linearGradient id="logo-brand-grad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#ec4899"/>
+            <stop offset="1" stop-color="#9333ea"/>
+          </linearGradient>
+        </defs>
+        <path d="M10 5 H5 V10" stroke="url(#logo-brand-grad)" stroke-width="2"/>
+        <path d="M30 5 H35 V10" stroke="url(#logo-brand-grad)" stroke-width="2"/>
+        <path d="M10 35 H5 V30" stroke="url(#logo-brand-grad)" stroke-width="2"/>
+        <path d="M30 35 H35 V30" stroke="url(#logo-brand-grad)" stroke-width="2"/>
+        <path d="M20 13.5C20 13.5 16 9 11.5 9C7.5 9 5 12.5 5 16.5C5 22 13 28 20 32C27 28 35 22 35 16.5C35 12.5 32.5 9 28.5 9C24 9 20 13.5 20 13.5Z" fill="url(#logo-brand-grad)" fill-opacity="0.15" stroke="url(#logo-brand-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="4" y1="20" x2="36" y2="20" stroke="#f472b6" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.8"/>
+      </svg>
+    </div>
+    <div class="flex flex-col">
+      <h1 class="font-bold text-xl md:text-2xl tracking-tight leading-none text-white group-hover:text-brand-400 transition-colors">DateScan<span class="text-brand-500">.</span></h1>
+      <span class="text-[10px] text-gray-400 font-medium uppercase tracking-widest mt-1">Personal Style Coach</span>
+    </div>
+  </a>
+</header>
+
+<main class="relative z-10 max-w-2xl mx-auto px-6 pb-20">
+  <div class="mb-8 pb-8 border-b border-white/10">
+    <div class="text-[10px] uppercase tracking-widest text-red-400 font-bold mb-3">Account &amp; data deletion</div>
+    <h1 class="font-serif text-4xl sm:text-5xl font-medium text-white mb-3">Delete your account</h1>
+    <p class="text-sm text-gray-500">Permanent. No login required. We respond within 30 days.</p>
+  </div>
+
+  <article class="prose-custom">
+    <p>This page lets you request the permanent deletion of your DateScan account and all associated data. You do <strong>not</strong> need to log in or have an active subscription to use this form. This is the official account deletion URL we submit to the Google Play Store.</p>
+
+    <h2>What gets deleted</h2>
+    <p>When your request is processed (within 30 days), we will permanently erase:</p>
+    <ul>
+      <li>Your <strong>AI Style Coach chat history</strong>, including any photos you attached</li>
+      <li>Any <strong>content moderation reports</strong> you submitted</li>
+      <li>Your <strong>subscription and entitlement records</strong> linked to your email or device identifier</li>
+      <li>Server-side <strong>usage logs</strong> keyed to your account</li>
+    </ul>
+
+    <h2>What we can't delete from here</h2>
+    <ul>
+      <li><strong>On-device data</strong> (closet, scan history, local settings) — this lives only on your phone or browser. Open the DateScan app → Privacy panel → "Erase everything on this device", or uninstall the app.</li>
+      <li><strong>Google Play payment records</strong> — handled by Google under their own retention rules. You can cancel your subscription in the <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">Google Play Store subscriptions page</a>. Google keeps billing records as long as required by tax law.</li>
+      <li><strong>Lemon Squeezy billing records</strong> — if you subscribed via the web, your invoices are retained by Lemon Squeezy under their retention policy, typically 7 years for tax compliance.</li>
+      <li><strong>Backup snapshots</strong> — we keep encrypted backups for 35 days for disaster recovery. Your data will be purged from backups on the normal rotation schedule and will not be restored to any live system.</li>
+    </ul>
+
+    <h2>Cancel your subscription first</h2>
+    <p class="text-amber-300"><strong>Deleting your account does not cancel an active subscription.</strong> You will keep being charged. Please cancel first:</p>
+    <ul>
+      <li><strong>Google Play subscription:</strong> <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">play.google.com/store/account/subscriptions</a></li>
+      <li><strong>Web subscription:</strong> Use the "Manage subscription" link in your Lemon Squeezy receipt email, or see our <a href="/refund.html">Refund Policy</a>.</li>
+    </ul>
+  </article>
+
+  <!-- Deletion Request Form -->
+  <section class="mt-10 p-6 sm:p-7 rounded-2xl border border-red-500/20 bg-red-500/5">
+    <h2 class="font-serif text-2xl font-semibold text-white mb-2">Deletion request form</h2>
+    <p class="text-sm text-gray-400 mb-6">We'll send a confirmation email to the address you provide. You must click the link in that email within 48 hours to confirm the request. This prevents other people from deleting your account.</p>
+
+    <form id="deleteForm" class="space-y-5" novalidate>
+      <div>
+        <label class="form-label" for="email">Email address <span class="text-red-400">*</span></label>
+        <input type="email" id="email" name="email" required class="form-input" placeholder="you@example.com" autocomplete="email" />
+        <p class="text-[11px] text-gray-500 mt-1.5">Use the email you subscribed with, or — if you never subscribed — the address where we should send the confirmation link.</p>
+      </div>
+
+      <div>
+        <label class="form-label" for="deviceId">Device identifier (optional)</label>
+        <input type="text" id="deviceId" name="deviceId" class="form-input" placeholder="e.g. ds_7f3a..." />
+        <p class="text-[11px] text-gray-500 mt-1.5">If you know your DateScan device ID (visible in the app under Privacy → Advanced), include it so we can match you faster. Not required.</p>
+      </div>
+
+      <div>
+        <label class="form-label" for="purchase">Purchase source (if any)</label>
+        <select id="purchase" name="purchase" class="form-input">
+          <option value="">— Select one —</option>
+          <option value="google_play">Google Play Store</option>
+          <option value="web_lemon">Web (Lemon Squeezy)</option>
+          <option value="free">Never subscribed — free tier only</option>
+          <option value="unknown">I don't remember</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="form-label" for="orderId">Order ID (optional)</label>
+        <input type="text" id="orderId" name="orderId" class="form-input" placeholder="e.g. GPA.1234-5678-9012-34567 or #DS-0001" />
+        <p class="text-[11px] text-gray-500 mt-1.5">From your purchase receipt. Helps us find you more reliably.</p>
+      </div>
+
+      <div>
+        <label class="form-label" for="reason">Reason (optional)</label>
+        <textarea id="reason" name="reason" rows="3" class="form-input resize-none" placeholder="Any feedback you'd like to share — completely optional."></textarea>
+      </div>
+
+      <div class="space-y-2 pt-2">
+        <label class="checkbox-row">
+          <input type="checkbox" id="confirmDelete" required>
+          <span class="text-sm text-gray-200"><strong class="text-white">I understand</strong> this request is <strong class="text-white">permanent and irreversible</strong>. My AI chat history, reports, and server-side records will be erased within 30 days and cannot be recovered.</span>
+        </label>
+        <label class="checkbox-row">
+          <input type="checkbox" id="confirmCancel" required>
+          <span class="text-sm text-gray-200"><strong class="text-white">I have cancelled</strong> any active Pro subscription (or I am on the free tier). I understand that deleting my data does not cancel billing.</span>
+        </label>
+        <label class="checkbox-row">
+          <input type="checkbox" id="confirmAdult" required>
+          <span class="text-sm text-gray-200">I confirm that I am the owner of the email address above and that I am <strong class="text-white">18 years of age or older</strong>.</span>
+        </label>
+      </div>
+
+      <!-- Honeypot field — hidden from humans, bots fill it in -->
+      <div style="position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;" aria-hidden="true">
+        <label for="website">Leave this field blank</label>
+        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <button type="submit" id="submitBtn" class="btn-danger">
+        Request permanent deletion
+      </button>
+
+      <p class="text-[11px] text-gray-500 text-center">By submitting, you agree to our <a href="/terms.html">Terms</a> and <a href="/privacy.html">Privacy Policy</a>.</p>
+    </form>
+
+    <!-- Success state -->
+    <div id="successState" class="hidden mt-4 p-5 rounded-xl border border-emerald-500/30 bg-emerald-500/10">
+      <div class="flex items-start gap-3">
+        <svg class="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <div>
+          <h3 class="text-white font-semibold mb-1">Request received</h3>
+          <p class="text-sm text-gray-300 leading-relaxed">We've sent a confirmation link to <strong id="successEmail" class="text-white"></strong>. Click the link within 48 hours to finalize deletion. If you don't see the email, check your spam folder or email us at <a href="/contact.html" class="text-brand-400 underline">support</a>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="errorState" class="hidden mt-4 p-5 rounded-xl border border-red-500/30 bg-red-500/10">
+      <div class="flex items-start gap-3">
+        <svg class="w-6 h-6 text-red-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <div>
+          <h3 class="text-white font-semibold mb-1">Something went wrong</h3>
+          <p id="errorMessage" class="text-sm text-gray-300 leading-relaxed">Please try again or email <a href="/contact.html" class="text-brand-400 underline">support</a> with the subject "Data Deletion Request".</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="mt-10 text-center">
+    <p class="text-xs text-gray-500">Need help? <a href="/contact.html" class="text-brand-400 hover:text-brand-500 underline">Contact support</a></p>
+  </div>
+</main>
+
+<script>
+(function () {
+  var form = document.getElementById('deleteForm');
+  var submitBtn = document.getElementById('submitBtn');
+  var successState = document.getElementById('successState');
+  var errorState = document.getElementById('errorState');
+  var successEmail = document.getElementById('successEmail');
+  var errorMessage = document.getElementById('errorMessage');
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    errorState.classList.add('hidden');
+
+    // Honeypot — if filled, silently "succeed" without doing anything.
+    var hp = document.getElementById('website').value;
+    if (hp) {
+      form.classList.add('hidden');
+      successEmail.textContent = document.getElementById('email').value;
+      successState.classList.remove('hidden');
+      return;
+    }
+
+    // Validate required fields
+    var email = document.getElementById('email').value.trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showError("Please enter a valid email address.");
+      return;
+    }
+    if (!document.getElementById('confirmDelete').checked ||
+        !document.getElementById('confirmCancel').checked ||
+        !document.getElementById('confirmAdult').checked) {
+      showError("Please check all three confirmation boxes to continue.");
+      return;
+    }
+
+    var payload = {
+      email: email,
+      deviceId: document.getElementById('deviceId').value.trim() || null,
+      purchase: document.getElementById('purchase').value || null,
+      orderId: document.getElementById('orderId').value.trim() || null,
+      reason: document.getElementById('reason').value.trim() || null,
+      ts: Date.now(),
+      ua: navigator.userAgent.slice(0, 200)
+    };
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting…';
+
+    try {
+      var res = await fetch('/api/delete-account', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      form.classList.add('hidden');
+      successEmail.textContent = email;
+      successState.classList.remove('hidden');
+      // Scroll success into view on mobile
+      successState.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } catch (err) {
+      console.error('[DateScan] delete request failed:', err);
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Request permanent deletion';
+      showError("We couldn't submit your request automatically. Please email us directly at support@datescan.app with the subject \"Data Deletion Request\" and include your email address.");
+    }
+  });
+
+  function showError(msg) {
+    errorMessage.textContent = msg;
+    errorState.classList.remove('hidden');
+    errorState.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+})();
+</script>
+
+<footer class="relative z-10 border-t border-white/10 mt-10">
+  <div class="max-w-3xl mx-auto px-6 py-8 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+    <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-400">
+      <a href="/privacy.html" class="hover:text-brand-400">Privacy Policy</a>
+      <a href="/terms.html" class="hover:text-brand-400">Terms of Service</a>
+      <a href="/refund.html" class="hover:text-brand-400">Refund Policy</a>
+      <a href="/contact.html" class="hover:text-brand-400">Contact</a>
+      <a href="/delete-account.html" class="hover:text-brand-400">Delete Account</a>
+    </div>
+    <div class="flex items-center gap-2.5">
+      <img src="/apple-touch-icon.png" alt="DateScan logo" width="28" height="28" class="w-7 h-7 rounded-lg" />
+      <p class="text-xs text-gray-600">&copy; 2026 DateScan</p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

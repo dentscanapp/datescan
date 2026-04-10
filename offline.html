@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#09090b" />
+<title>DateScan — Offline</title>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #09090b; color: #fafafa; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  .wrap { min-height: 100%; display: flex; align-items: center; justify-content: center; padding: 24px; box-sizing: border-box; }
+  .card { max-width: 380px; text-align: center; }
+  .icon { width: 64px; height: 64px; margin: 0 auto 20px; border-radius: 20px; background: linear-gradient(135deg, #ec4899 0%, #9333ea 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 32px rgba(236, 72, 153, 0.3); }
+  h1 { font-size: 24px; font-weight: 700; margin: 0 0 8px; }
+  p { font-size: 14px; color: #a1a1aa; line-height: 1.6; margin: 0 0 24px; }
+  button { background: linear-gradient(135deg, #ec4899 0%, #be185d 100%); color: white; border: 0; padding: 12px 28px; border-radius: 12px; font-weight: 600; font-size: 14px; cursor: pointer; box-shadow: 0 4px 20px rgba(236, 72, 153, 0.3); }
+  button:active { transform: translateY(1px); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18M5 12.55a11 11 0 015.17-2.39M10.71 5.05A16 16 0 0122.58 9M16.72 11.06A10 10 0 0119 12.55M8.53 16.11a6 6 0 016.95 0M12 20h.01"/></svg>
+    </div>
+    <h1>You're offline</h1>
+    <p>DateScan needs an internet connection for the AI Style Coach and Pro features. Your camera scans will work again as soon as you're back online.</p>
+    <button onclick="location.reload()">Try again</button>
+  </div>
+</div>
+</body>
+</html>

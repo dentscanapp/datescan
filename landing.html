@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#09090b">
 
 <title>DateScan — AI Style Coach for First Dates, Interviews & Nights Out</title>
-<meta name="description" content="Get an instant, on-device AI style and grooming check before you walk into a first date, job interview, or night out. 100% private — your camera never leaves your phone.">
+<meta name="description" content="18+ AI style coach. Get an instant, on-device AI style and grooming check before a first date, job interview, or night out. Camera scans run on your device.">
 <link rel="canonical" href="https://datescan.app/">
 
 <!-- Open Graph -->
@@ -251,7 +251,7 @@
     <div class="lg:col-span-7 fade-up">
       <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] uppercase tracking-widest text-brand-300 mb-6">
         <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse"></span>
-        100% on-device · no data uploaded
+        18+ · Camera scans run on-device
       </div>
       <h1 class="font-serif text-[42px] sm:text-6xl lg:text-7xl leading-[1.05] tracking-tight font-medium mb-6">
         Look <span class="italic grad-text">10/10</span><br>
@@ -328,8 +328,8 @@
         <div class="text-[10px] uppercase tracking-widest text-gray-500 mt-1">style checks</div>
       </div>
       <div>
-        <div class="font-serif text-2xl text-white">0 KB</div>
-        <div class="text-[10px] uppercase tracking-widest text-gray-500 mt-1">data uploaded</div>
+        <div class="font-serif text-2xl text-white">On-device</div>
+        <div class="text-[10px] uppercase tracking-widest text-gray-500 mt-1">scan processing</div>
       </div>
       <div>
         <div class="font-serif text-2xl text-white">4.8★</div>
@@ -551,18 +551,30 @@
 
 <!-- FOOTER -->
 <footer class="border-t border-white/5 py-10">
-  <div class="max-w-7xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
-    <div class="flex items-center gap-2">
-      <img src="/apple-touch-icon.png" alt="DateScan logo" width="28" height="28" class="w-7 h-7 rounded-lg" />
-      <span class="font-bold text-white">DateScan<span class="text-brand-500">.</span></span>
-      <span>© 2026 — On-device style coaching.</span>
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 flex flex-col gap-6 text-xs text-gray-500">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <img src="/apple-touch-icon.png" alt="DateScan logo" width="28" height="28" class="w-7 h-7 rounded-lg" />
+        <span class="font-bold text-white">DateScan<span class="text-brand-500">.</span></span>
+        <span>© 2026 — 18+ only.</span>
+      </div>
+      <div class="flex items-center gap-6 flex-wrap">
+        <a href="#use-cases" class="hover:text-white transition">Use cases</a>
+        <a href="#how" class="hover:text-white transition">How it works</a>
+        <a href="#privacy" class="hover:text-white transition">Privacy</a>
+        <a href="/index.html" class="hover:text-white transition">Open the app</a>
+      </div>
     </div>
-    <div class="flex items-center gap-6">
-      <a href="#use-cases" class="hover:text-white transition">Use cases</a>
-      <a href="#how" class="hover:text-white transition">How it works</a>
-      <a href="#privacy" class="hover:text-white transition">Privacy</a>
-      <a href="/index.html" class="hover:text-white transition">Open the app</a>
+    <div class="flex flex-wrap gap-x-5 gap-y-2 pt-4 border-t border-white/5">
+      <a href="/privacy.html" class="hover:text-brand-400 transition">Privacy Policy</a>
+      <a href="/terms.html" class="hover:text-brand-400 transition">Terms of Service</a>
+      <a href="/refund.html" class="hover:text-brand-400 transition">Refund Policy</a>
+      <a href="/contact.html" class="hover:text-brand-400 transition">Contact</a>
+      <a href="/delete-account.html" class="hover:text-brand-400 transition">Delete Account</a>
     </div>
+    <p class="text-[10px] text-gray-600 italic leading-relaxed max-w-2xl">
+      DateScan is an AI-powered tool for adults (18+) designed for entertainment and confidence-boosting purposes only. AI responses may be inaccurate. We do not guarantee dating success or any specific social outcomes.
+    </p>
   </div>
 </footer>
 
@@ -583,12 +595,16 @@
         <div class="flex-1 min-w-0">
           <p class="text-sm text-white font-medium mb-1">We respect your privacy.</p>
           <p class="text-xs text-gray-400 leading-relaxed">
-            Your photos stay yours. 🔒 100% private, on-device AI analysis. We only use essential cookies to secure your Pro experience and payments. By continuing, you accept our
+            Camera scans run on your device. 🔒 Messages and photos you send to the AI Style Coach are processed on our server for that request only. We only use essential cookies to secure your Pro experience and payments. By continuing, you accept our
             <a href="/privacy.html" class="text-brand-400 hover:text-brand-500 underline underline-offset-2">Privacy Policy</a>.
           </p>
         </div>
         <div class="flex items-center gap-2 shrink-0">
           <a href="/privacy.html" class="hidden sm:inline-block text-xs text-gray-400 hover:text-white px-3 py-2 transition-colors">Learn more</a>
+          <button id="cookieRejectBtn" type="button"
+            class="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-300 text-sm font-semibold hover:bg-white/10 active:scale-[0.98] transition-all">
+            Reject
+          </button>
           <button id="cookieAcceptBtn" type="button"
             class="px-5 py-2.5 rounded-xl bg-gradient-to-tr from-brand-500 to-purple-500 text-white text-sm font-semibold shadow-lg shadow-brand-500/30 hover:shadow-brand-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all">
             Accept
@@ -615,6 +631,7 @@
   try {
     var banner = document.getElementById('cookieBanner');
     var acceptBtn = document.getElementById('cookieAcceptBtn');
+    var rejectBtn = document.getElementById('cookieRejectBtn');
     if (!banner || !acceptBtn) return;
 
     if (!localStorage.getItem('cookieConsent')) {
@@ -624,14 +641,29 @@
       }, 600);
     }
 
+    function hideBanner() {
+      banner.style.animation = 'ds-cookie-slide-down .3s ease-in forwards';
+      setTimeout(function () { banner.classList.add('hidden'); }, 300);
+    }
+
     acceptBtn.addEventListener('click', function () {
       try {
         localStorage.setItem('cookieConsent', 'accepted');
         localStorage.setItem('cookieConsentTs', String(Date.now()));
-      } catch (e) { /* localStorage blocked — fail silently */ }
-      banner.style.animation = 'ds-cookie-slide-down .3s ease-in forwards';
-      setTimeout(function () { banner.classList.add('hidden'); }, 300);
+      } catch (e) {}
+      hideBanner();
     });
+
+    if (rejectBtn) {
+      rejectBtn.addEventListener('click', function () {
+        try {
+          localStorage.setItem('cookieConsent', 'rejected');
+          localStorage.setItem('cookieConsentTs', String(Date.now()));
+        } catch (e) {}
+        window.dsConsent = { analytics: false, marketing: false };
+        hideBanner();
+      });
+    }
   } catch (e) {
     console.warn('[DateScan] cookie banner init failed:', e);
   }

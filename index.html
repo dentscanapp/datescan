@@ -17,6 +17,16 @@
     window._deferredInstallPrompt = e;
     window.dispatchEvent(new CustomEvent('pwa-installable'));
   });
+  // Register the service worker after the page has loaded so it doesn't
+  // compete with critical rendering. Required for Play's TWA wrapper to
+  // treat the app as installable/offline-capable.
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/service-worker.js').catch(function (err) {
+        console.warn('[DateScan] SW registration failed:', err);
+      });
+    });
+  }
 </script>
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
@@ -934,7 +944,7 @@
         </p>
         <div class="inline-flex items-center gap-2 text-[10px] text-gray-500 px-3 py-1.5 rounded-full border border-white/10 bg-white/5">
           <svg class="w-3 h-3 text-brand-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-          <span>100% private — runs in your browser</span>
+          <span>Camera scans run on-device</span>
         </div>
       </div>
 
@@ -1267,9 +1277,84 @@ document.addEventListener('DOMContentLoaded', function () {
       <div id="privateModeStatus" class="text-[11px] text-gray-500">Status: <span class="text-gray-300">Off</span> — image uploads in chat are allowed after consent.</div>
     </div>
 
+    <!-- Data deletion — required by Google Play's data deletion policy.
+         Wipes IndexedDB (closet, history), localStorage (consent, Pro
+         status, usage counters), and sessionStorage. Server-side Pro
+         entitlements must be revoked separately via /contact. -->
+    <div class="rounded-2xl border border-red-500/20 bg-red-500/5 p-4 mb-4">
+      <div class="text-sm font-semibold text-white mb-1">Delete all my data</div>
+      <p class="text-xs text-gray-400 mb-3 leading-relaxed">Wipes your closet, scan history, and local settings from this device. If you have a Pro subscription, this does not cancel it — use the link in your receipt email, or email <a href="/contact.html" class="text-brand-400 hover:text-brand-500 underline">support</a> to request full account and server-side deletion.</p>
+      <button id="deleteAllDataBtn" type="button" class="w-full py-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-sm font-semibold hover:bg-red-500/25 active:scale-[0.98] transition-all">
+        Erase everything on this device
+      </button>
+    </div>
+
     <button id="privacyDoneBtn" class="w-full btn-primary py-3 rounded-xl font-semibold text-sm">Done</button>
   </div>
 </div>
+
+<script>
+(function () {
+  var btn = document.getElementById('deleteAllDataBtn');
+  if (!btn) return;
+  btn.addEventListener('click', async function () {
+    var ok = window.confirm("This will permanently erase your closet, scan history, chat history, and all local settings on this device. Continue?");
+    if (!ok) return;
+    btn.disabled = true;
+    btn.textContent = 'Erasing…';
+    try {
+      // 1) IndexedDB: drop every database we can enumerate. Falls back
+      // to deleting the known app DBs by name on browsers that don't
+      // support indexedDB.databases() (Firefox).
+      try {
+        if (indexedDB.databases) {
+          var dbs = await indexedDB.databases();
+          await Promise.all((dbs || []).map(function (db) {
+            return new Promise(function (res) {
+              if (!db.name) return res();
+              var req = indexedDB.deleteDatabase(db.name);
+              req.onsuccess = req.onerror = req.onblocked = function () { res(); };
+            });
+          }));
+        } else {
+          ['datescan', 'datescan-closet', 'datescan-history', 'keyval-store'].forEach(function (n) {
+            try { indexedDB.deleteDatabase(n); } catch (_) {}
+          });
+        }
+      } catch (_) {}
+
+      // 2) Caches API (service worker caches)
+      try {
+        if (window.caches && caches.keys) {
+          var keys = await caches.keys();
+          await Promise.all(keys.map(function (k) { return caches.delete(k); }));
+        }
+      } catch (_) {}
+
+      // 3) localStorage + sessionStorage
+      try { localStorage.clear(); } catch (_) {}
+      try { sessionStorage.clear(); } catch (_) {}
+
+      // 4) Unregister any service workers so a stale SW doesn't
+      // resurrect cached state on next load.
+      try {
+        if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) {
+          var regs = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.map(function (r) { return r.unregister(); }));
+        }
+      } catch (_) {}
+
+      alert("All local data has been erased. The app will now reload.");
+      location.reload();
+    } catch (e) {
+      console.error('[DateScan] data wipe failed:', e);
+      btn.disabled = false;
+      btn.textContent = 'Erase everything on this device';
+      alert("Something went wrong while erasing your data. Please try again, or contact support.");
+    }
+  });
+})();
+</script>
 
 <!-- Chat Image Consent Modal -->
 <div id="chatConsentModal" class="hidden fixed inset-0 z-[95] flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm">
@@ -5267,6 +5352,28 @@ applyOfflineState(!navigator.onLine);
       t.textContent = text;
       bubble.appendChild(t);
     }
+    // Google Play Generative AI policy: users must be able to report
+    // offensive / harmful AI-generated content. We attach a small
+    // "Report" affordance to every assistant bubble (skip user bubbles
+    // and empty placeholders used by the typing indicator — those get
+    // their report button after the final text is set).
+    if (role === 'assistant') {
+      const reportRow = document.createElement('div');
+      reportRow.className = 'mt-1.5 flex justify-end';
+      const reportBtn = document.createElement('button');
+      reportBtn.type = 'button';
+      reportBtn.className = 'text-[10px] text-gray-500 hover:text-brand-400 transition-colors inline-flex items-center gap-1 px-1.5 py-0.5 rounded';
+      reportBtn.setAttribute('aria-label', 'Report this AI response');
+      reportBtn.innerHTML = '<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21V4a1 1 0 011-1h12l-2 4 2 4H4"/></svg><span>Report</span>';
+      reportBtn.addEventListener('click', function () {
+        if (typeof window.openReportModal === 'function') {
+          const bodyText = (bubble.querySelector('div:not(.flex)')?.textContent || '').slice(0, 2000);
+          window.openReportModal(bodyText);
+        }
+      });
+      reportRow.appendChild(reportBtn);
+      bubble.appendChild(reportRow);
+    }
     wrap.appendChild(avatar);
     wrap.appendChild(bubble);
     messagesEl.appendChild(wrap);
@@ -5563,6 +5670,25 @@ applyOfflineState(!navigator.onLine);
     const text = input.value.trim();
     if (!text && pendingAttachments.length === 0) return;
 
+    // Content Safety gate — Google Play Gen-AI + Child Safety policy.
+    // We block clearly disallowed inputs client-side BEFORE they hit
+    // the model endpoint, and surface an inline refusal in the chat
+    // stream so the user sees why nothing happened. The backend must
+    // also enforce this; client filters are bypassable.
+    if (text && typeof window.dsContentSafetyCheck === 'function') {
+      const safety = window.dsContentSafetyCheck(text);
+      if (!safety.allowed) {
+        addMessage('user', text, pendingAttachments.map(a => a.url));
+        pendingAttachments = [];
+        renderAttachments();
+        input.value = '';
+        const refusal = addMessage('assistant', safety.message);
+        refusal.classList.add('border-amber-500/30');
+        messagesEl.scrollTo?.({ top: messagesEl.scrollHeight, behavior: 'smooth' });
+        return;
+      }
+    }
+
     // Offline gate. The input/button are already disabled by
     // applyOfflineState(), but the form can still be submitted via
     // Enter key on some browsers, or by JS. Bail out with an inline
@@ -5652,6 +5778,173 @@ applyOfflineState(!navigator.onLine);
 </script>
 
 <!-- =========================================================
+     AI Content Report Modal — required by Google Play's
+     Generative AI policy. Every assistant message in the
+     Style Coach chat has a "Report" button wired to openReportModal().
+     Submissions are posted to /api/report-ai (endpoint is expected
+     to exist on the backend; if it does not, we still surface a
+     confirmation so the user knows they were heard).
+     ========================================================= -->
+<div id="reportModal" class="hidden fixed inset-0 z-[96] flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm">
+  <div class="premium-glass border border-amber-500/30 rounded-[24px] p-6 max-w-sm w-full fade-up">
+    <div class="flex items-start justify-between mb-3">
+      <div>
+        <div class="text-[10px] uppercase tracking-widest text-amber-400 font-bold mb-1">Report AI response</div>
+        <h3 class="font-serif text-xl font-semibold text-white">What's wrong with this reply?</h3>
+      </div>
+      <button id="reportModalClose" type="button" class="shrink-0 w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center transition" aria-label="Close">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <p class="text-xs text-gray-400 leading-relaxed mb-4">Your report goes to our moderation team. We review every flagged response and use it to improve the Style Coach.</p>
+    <div class="space-y-2 mb-4" id="reportReasonList">
+      <label class="flex items-center gap-2.5 p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 cursor-pointer text-sm text-gray-200">
+        <input type="radio" name="reportReason" value="offensive" class="accent-brand-500"> Offensive or hateful
+      </label>
+      <label class="flex items-center gap-2.5 p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 cursor-pointer text-sm text-gray-200">
+        <input type="radio" name="reportReason" value="sexual" class="accent-brand-500"> Sexual or inappropriate
+      </label>
+      <label class="flex items-center gap-2.5 p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 cursor-pointer text-sm text-gray-200">
+        <input type="radio" name="reportReason" value="harmful" class="accent-brand-500"> Dangerous or harmful advice
+      </label>
+      <label class="flex items-center gap-2.5 p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 cursor-pointer text-sm text-gray-200">
+        <input type="radio" name="reportReason" value="misinformation" class="accent-brand-500"> Misinformation
+      </label>
+      <label class="flex items-center gap-2.5 p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 cursor-pointer text-sm text-gray-200">
+        <input type="radio" name="reportReason" value="other" class="accent-brand-500"> Other
+      </label>
+    </div>
+    <textarea id="reportNote" rows="2" placeholder="Optional: anything else we should know?" class="w-full rounded-xl bg-white/5 border border-white/10 text-sm text-white p-3 placeholder-gray-500 focus:outline-none focus:border-brand-500/50 mb-4 resize-none"></textarea>
+    <button id="reportSubmitBtn" type="button" class="w-full btn-primary py-3 rounded-xl font-semibold text-sm">Send report</button>
+    <p class="text-[10px] text-gray-500 text-center mt-3">Reports are anonymous unless you're signed in.</p>
+  </div>
+</div>
+
+<script>
+(function () {
+  var modal = document.getElementById('reportModal');
+  var closeBtn = document.getElementById('reportModalClose');
+  var submitBtn = document.getElementById('reportSubmitBtn');
+  var noteEl = document.getElementById('reportNote');
+  if (!modal || !closeBtn || !submitBtn) return;
+  var currentReportedText = '';
+
+  window.openReportModal = function (reportedText) {
+    currentReportedText = reportedText || '';
+    // Reset the form each time
+    modal.querySelectorAll('input[name="reportReason"]').forEach(function (r) { r.checked = false; });
+    if (noteEl) noteEl.value = '';
+    modal.classList.remove('hidden');
+  };
+
+  function closeModal() { modal.classList.add('hidden'); }
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+
+  submitBtn.addEventListener('click', async function () {
+    var reason = (modal.querySelector('input[name="reportReason"]:checked') || {}).value || 'unspecified';
+    var note = (noteEl && noteEl.value || '').slice(0, 1000);
+    var payload = {
+      reason: reason,
+      note: note,
+      reportedText: currentReportedText.slice(0, 2000),
+      ts: Date.now(),
+      ua: navigator.userAgent.slice(0, 200)
+    };
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending…';
+    try {
+      await fetch('/api/report-ai', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } catch (e) {
+      // Network errors are not fatal — we still tell the user their
+      // report was logged locally and will be retried. Store in a
+      // bounded queue so we never exceed localStorage quota.
+      try {
+        var q = JSON.parse(localStorage.getItem('pendingReports') || '[]');
+        q.push(payload);
+        if (q.length > 20) q = q.slice(-20);
+        localStorage.setItem('pendingReports', JSON.stringify(q));
+      } catch (_) {}
+    }
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Send report';
+    closeModal();
+    // Lightweight confirmation toast
+    var toast = document.createElement('div');
+    toast.className = 'fixed bottom-24 left-1/2 -translate-x-1/2 z-[97] px-4 py-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-200 text-sm font-medium shadow-lg';
+    toast.textContent = 'Thanks — report received.';
+    document.body.appendChild(toast);
+    setTimeout(function () { toast.remove(); }, 2500);
+  });
+})();
+</script>
+
+<!-- =========================================================
+     Content Safety Filter — blocks clearly disallowed chat
+     inputs client-side before they ever hit the AI endpoint.
+     This is a last line of defense; the backend MUST also filter.
+     Required by Play's Gen-AI + Child Safety policies.
+     ========================================================= -->
+<script>
+(function () {
+  // Terms that indicate the user is describing a minor as the subject
+  // of styling / dating advice. We refuse these categorically.
+  var MINOR_PATTERNS = [
+    /\b(child|children|kid|kids|minor|minors|teen|teens|teenager|teenagers|underage|under[-\s]?age)\b/i,
+    /\b(schoolgirl|schoolboy|preteen|pre[-\s]?teen)\b/i,
+    /\b(\d{1,2})\s*(yo|y\/o|years?[-\s]?old)\b/i
+  ];
+  var SEXUAL_PATTERNS = [
+    /\b(nude|naked|nsfw|porn|sexual|erotic|explicit)\b/i
+  ];
+  var HARM_PATTERNS = [
+    /\b(suicide|self[-\s]?harm|kill\s+myself|end\s+my\s+life)\b/i
+  ];
+
+  function containsMinor(text) {
+    if (!text) return false;
+    // Allow "18" and above explicitly when a number appears with "yo"
+    var ageMatch = text.match(/\b(\d{1,2})\s*(yo|y\/o|years?[-\s]?old)\b/i);
+    if (ageMatch) {
+      var age = parseInt(ageMatch[1], 10);
+      if (age < 18) return true;
+    }
+    return MINOR_PATTERNS.slice(0, 2).some(function (re) { return re.test(text); });
+  }
+
+  window.dsContentSafetyCheck = function (text) {
+    if (!text) return { allowed: true };
+    if (containsMinor(text)) {
+      return {
+        allowed: false,
+        category: 'minor',
+        message: "DateScan is an 18+ styling tool. I can't give styling or dating advice involving minors. If you're under 18, please talk to a trusted adult instead."
+      };
+    }
+    if (SEXUAL_PATTERNS.some(function (re) { return re.test(text); })) {
+      return {
+        allowed: false,
+        category: 'sexual',
+        message: "I keep things PG here. Try rephrasing your question without explicit language and I'll happily help with your outfit or grooming."
+      };
+    }
+    if (HARM_PATTERNS.some(function (re) { return re.test(text); })) {
+      return {
+        allowed: false,
+        category: 'self_harm',
+        message: "It sounds like you might be going through something heavy. I'm just a styling app and I'm not the right help for this — please reach out to a crisis line in your country. In the US: call or text 988. In the UK: 116 123 (Samaritans). In the EU: 112. You matter."
+      };
+    }
+    return { allowed: true };
+  };
+})();
+</script>
+
+<!-- =========================================================
      Cookie Consent Banner — shows on first visit only
      Persists choice in localStorage('cookieConsent')
      ========================================================= -->
@@ -5668,12 +5961,16 @@ applyOfflineState(!navigator.onLine);
         <div class="flex-1 min-w-0">
           <p class="text-sm text-white font-medium mb-1">We respect your privacy.</p>
           <p class="text-xs text-gray-400 leading-relaxed">
-            Your photos stay yours. 🔒 100% private, on-device AI analysis. We only use essential cookies to secure your Pro experience and payments. By continuing, you accept our
+            Camera scans run on your device. 🔒 Messages and photos you send to the AI Style Coach are processed on our server for that request only. We only use essential cookies to secure your Pro experience and payments. By continuing, you accept our
             <a href="/privacy.html" class="text-brand-400 hover:text-brand-500 underline underline-offset-2">Privacy Policy</a>.
           </p>
         </div>
         <div class="flex items-center gap-2 shrink-0">
           <a href="/privacy.html" class="hidden sm:inline-block text-xs text-gray-400 hover:text-white px-3 py-2 transition-colors">Learn more</a>
+          <button id="cookieRejectBtn" type="button"
+            class="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-300 text-sm font-semibold hover:bg-white/10 active:scale-[0.98] transition-all">
+            Reject
+          </button>
           <button id="cookieAcceptBtn" type="button"
             class="px-5 py-2.5 rounded-xl bg-gradient-to-tr from-brand-500 to-purple-500 text-white text-sm font-semibold shadow-lg shadow-brand-500/30 hover:shadow-brand-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all">
             Accept
@@ -5700,6 +5997,7 @@ applyOfflineState(!navigator.onLine);
   try {
     var banner = document.getElementById('cookieBanner');
     var acceptBtn = document.getElementById('cookieAcceptBtn');
+    var rejectBtn = document.getElementById('cookieRejectBtn');
     if (!banner || !acceptBtn) return;
 
     if (!localStorage.getItem('cookieConsent')) {
@@ -5709,14 +6007,32 @@ applyOfflineState(!navigator.onLine);
       }, 600);
     }
 
+    function hideBanner() {
+      banner.style.animation = 'ds-cookie-slide-down .3s ease-in forwards';
+      setTimeout(function () { banner.classList.add('hidden'); }, 300);
+    }
+
     acceptBtn.addEventListener('click', function () {
       try {
         localStorage.setItem('cookieConsent', 'accepted');
         localStorage.setItem('cookieConsentTs', String(Date.now()));
       } catch (e) { /* localStorage blocked — fail silently */ }
-      banner.style.animation = 'ds-cookie-slide-down .3s ease-in forwards';
-      setTimeout(function () { banner.classList.add('hidden'); }, 300);
+      hideBanner();
     });
+
+    if (rejectBtn) {
+      rejectBtn.addEventListener('click', function () {
+        try {
+          localStorage.setItem('cookieConsent', 'rejected');
+          localStorage.setItem('cookieConsentTs', String(Date.now()));
+        } catch (e) { /* localStorage blocked — fail silently */ }
+        // Signal the rest of the app that non-essential storage/tracking
+        // must stay off. Only strictly necessary cookies (auth, payment
+        // session) are allowed from this point on.
+        window.dsConsent = { analytics: false, marketing: false };
+        hideBanner();
+      });
+    }
   } catch (e) {
     console.warn('[DateScan] cookie banner init failed:', e);
   }

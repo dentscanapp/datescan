@@ -71,76 +71,107 @@
 
   <article class="prose-custom">
     <div class="my-6 p-6 rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/10 to-purple-500/5">
-      <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-2">Our Promise</div>
-      <p class="text-white text-base mb-0"><strong>DateScan is 100% on-device AI.</strong> Your camera feed, photos, and style analysis never leave your browser. We don't operate an image server — there is literally nowhere for your photos to go.</p>
+      <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-2">Plain-English summary</div>
+      <p class="text-white text-base mb-3"><strong>Two things happen in DateScan, and they're treated very differently.</strong></p>
+      <ul class="text-gray-200 text-sm space-y-1.5 mb-0 list-disc pl-5">
+        <li><strong class="text-white">Camera scans</strong> (outfit, grooming, posture checks) run <strong>on your device</strong>. Video frames never leave your browser.</li>
+        <li><strong class="text-white">AI Style Coach chat</strong> (text messages and any photos you choose to attach) <strong>is sent to our server</strong> and forwarded to a third-party vision-language model so you can get a reply. We don't train models on your chats and we don't retain them beyond what's needed to operate the service.</li>
+      </ul>
     </div>
 
     <h2>1. Who We Are</h2>
-    <p>DateScan ("we", "us", "our") is a web-based AI style coach available at <a href="https://datescan.app/">https://datescan.app/</a>. For any privacy question, contact <a href="/cdn-cgi/l/email-protection#6801060e07280c091c0d1b0b090646091818"><span class="__cf_email__" data-cfemail="f29b9c949db2969386978191939cdc938282">[email&#160;protected]</span></a>.</p>
+    <p>DateScan ("we", "us", "our") is an AI-powered style coach available as a web app at <a href="https://datescan.app/">https://datescan.app/</a> and as an Android app distributed via the Google Play Store. For any privacy question, contact <a href="/cdn-cgi/l/email-protection#6801060e07280c091c0d1b0b090646091818"><span class="__cf_email__" data-cfemail="f29b9c949db2969386978191939cdc938282">[email&#160;protected]</span></a>.</p>
 
     <h2>2. Age Restriction — 18+ Only</h2>
-    <p><strong>DateScan is intended exclusively for users aged 18 or older.</strong> The Service is not directed at children, and we do not knowingly collect any data from anyone under 18. If you believe a minor has used DateScan, please contact us immediately and we will take appropriate action.</p>
+    <p><strong>DateScan is intended exclusively for users aged 18 or older.</strong> The Service is not directed at children or teenagers, and we do not knowingly collect any data from anyone under 18. By using DateScan you represent and warrant that you are at least 18 years of age. If we learn that we have collected data from a person under 18, we will delete it promptly. If you believe a minor has used DateScan, please contact us immediately at the address above.</p>
 
-    <h2>3. How On-Device AI Works</h2>
-    <p>When you run a scan, Google's MediaPipe face-landmark model is loaded into your browser and executes entirely on your device's own CPU and GPU via WebGL. This means:</p>
+    <h2>3. How Camera Scans Work (On-Device)</h2>
+    <p>When you run a scan, Google's MediaPipe face-landmark model is loaded into your browser and executes entirely on your device's own CPU and GPU via WebGL/WebAssembly. For the scan feature specifically, this means:</p>
     <ul>
       <li>Your camera feed is processed frame-by-frame <strong>on your device</strong>.</li>
-      <li>Only textual style suggestions are generated — no images are uploaded.</li>
       <li>Raw frames, biometric landmarks, and video are discarded the moment you leave the scan screen.</li>
-      <li>We have no "training data" pipeline fed by your photos, because we never receive them.</li>
+      <li>No image data from the scan feature is uploaded to our servers or to any third party.</li>
     </ul>
 
-    <h2>4. What Data We Do Process</h2>
+    <h2>4. How the AI Style Coach Chat Works (Server-Side)</h2>
+    <p>The AI Style Coach chat is a separate feature from the on-device scan. When you send a message to the Style Coach — with or without an attached photo — the following happens:</p>
+    <ul>
+      <li>Your message text, any attached image, and a short recent chat history are sent over HTTPS to our backend at <code>api.datescan.app</code>.</li>
+      <li>Our backend forwards the request to a third-party vision-language model provider (currently <strong>OpenAI</strong> and/or <strong>Anthropic</strong>, subject to change) so the model can generate a reply.</li>
+      <li>The reply is streamed back to your device.</li>
+      <li>We retain request logs (message content, image references, timestamp, anonymized user identifier) for up to <strong>30 days</strong> for abuse prevention, debugging, and moderation. After 30 days the content is automatically deleted.</li>
+      <li>We do <strong>not</strong> use your chat content to train AI models. Our third-party providers operate under zero-retention and no-training agreements where available; please consult their policies below for details.</li>
+      <li>If you attach a photo, you are asked for explicit consent via an in-app modal before the upload happens. You can turn off all image uploads in chat by enabling <strong>Private Mode</strong> in the Privacy panel.</li>
+    </ul>
+    <p><strong>Do not upload photos of other people without their consent, and never upload photos of anyone under 18.</strong> You are solely responsible for the content you submit to the Style Coach.</p>
 
-    <h3>Local storage on your device</h3>
-    <p>DateScan uses your browser's <code>localStorage</code> to remember your progress and preferences between visits. This data never leaves your device and includes:</p>
+    <h2>5. Data We Store</h2>
+
+    <h3>On your device (local)</h3>
+    <p>DateScan uses your browser's <code>localStorage</code> and <code>IndexedDB</code> to remember your progress and preferences between visits. This data never leaves your device and includes:</p>
     <ul>
       <li>Onboarding completion state</li>
       <li>Your XP, level, streak, and mission history</li>
+      <li>Your digital closet (photos you save yourself)</li>
       <li>Your daily free-tier counter (3 scans + 2 AI Coach messages, resets every 24 hours)</li>
-      <li>Whether you have purchased a Pro plan</li>
-      <li>Your cookie-banner consent choice</li>
+      <li>Whether you have an active Pro subscription</li>
+      <li>Your cookie-banner and privacy-panel choices</li>
     </ul>
-    <p>You can clear all of this at any time by clearing site data for datescan.app in your browser.</p>
+    <p>You can erase all of this at any time by opening the <strong>Privacy</strong> panel in the app and tapping <strong>"Erase everything on this device"</strong>, or by clearing site data for datescan.app in your browser.</p>
 
-    <h3>Account &amp; subscription data</h3>
-    <p>If you purchase a paid plan, our Merchant of Record <strong>Lemon Squeezy</strong> collects the data required for billing (name, email, billing address, payment method). DateScan itself never sees or stores your full card number. We receive only a webhook confirming your subscription status.</p>
+    <h3>On our server</h3>
+    <ul>
+      <li><strong>AI Style Coach chat logs</strong> — retained up to 30 days (see §4).</li>
+      <li><strong>Content moderation reports</strong> — when you tap "Report" on an AI response, we store the reported text, your chosen category, and any optional note, retained for up to 12 months for safety auditing.</li>
+      <li><strong>Server access logs</strong> — IP address, user agent, request path, timestamp, retained for up to 14 days for security, retained longer in aggregated/anonymized form for analytics.</li>
+      <li><strong>Subscription/entitlement records</strong> — we store a minimal record linking your anonymized device/account ID to your Pro status, plan type, and renewal date for the purpose of gating premium features.</li>
+    </ul>
+
+    <h3>Payment data</h3>
+    <p>We do not store full payment card details on our servers under any circumstance. Depending on how you subscribe, payment processing happens in one of two places:</p>
+    <ul>
+      <li><strong>Google Play Store (Android app users):</strong> subscriptions are processed by <strong>Google Play Billing</strong>. Google collects the billing data and shares only minimal entitlement information with us (plan, renewal date, anonymized purchase token). See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</li>
+      <li><strong>Web subscriptions:</strong> processed by our Merchant of Record <strong>Lemon Squeezy</strong>, which collects name, email, billing address, and payment method. See <a href="https://www.lemonsqueezy.com/privacy" target="_blank" rel="noopener">Lemon Squeezy's Privacy Policy</a>.</li>
+    </ul>
 
     <h3>Infrastructure &amp; server logs</h3>
-    <p>Our static files and service worker are hosted on <strong>GitHub Pages</strong>, and all traffic is routed through <strong>Cloudflare</strong> for TLS encryption, DDoS protection, caching, and abuse prevention. Both GitHub and Cloudflare may automatically record standard request metadata — IP address, user agent, timestamps — in their own server logs for security purposes. We do not operate our own analytics database on top of these logs.</p>
+    <p>Our static files are served via <strong>Cloudflare</strong>, which handles TLS termination, DDoS protection, caching, and abuse prevention. Cloudflare automatically records standard request metadata (IP address, user agent, timestamps) in its own server logs for security purposes.</p>
 
-    <h2>5. What We Do NOT Collect</h2>
+    <h2>6. What We Do NOT Collect</h2>
     <ul>
-      <li>We do <strong>not</strong> upload or store your photos, video frames, or scan results on any server.</li>
-      <li>We do <strong>not</strong> use biometric data to identify you.</li>
+      <li>We do <strong>not</strong> upload camera-scan frames, scan results, or on-device biometric landmarks to any server.</li>
+      <li>We do <strong>not</strong> use facial recognition or any other biometric data to identify you.</li>
       <li>We do <strong>not</strong> sell data to advertisers or data brokers.</li>
-      <li>We do <strong>not</strong> require an email or password to use the free tier.</li>
+      <li>We do <strong>not</strong> serve behavioural advertising inside the app.</li>
+      <li>We do <strong>not</strong> use your Style Coach messages or photos to train AI models.</li>
+      <li>We do <strong>not</strong> require an email or password to use the free tier on the web.</li>
     </ul>
 
-    <h2>6. Third-Party Services</h2>
-    <p>Your browser loads assets from a small number of vetted providers. None of them ever receive your photos.</p>
+    <h2>7. Third-Party Services</h2>
+    <p>The following third-party providers are involved in running DateScan:</p>
     <ul>
-      <li><strong>Lemon Squeezy</strong> — payments and Merchant of Record. <a href="https://www.lemonsqueezy.com/privacy" target="_blank" rel="noopener">Privacy policy</a></li>
-      <li><strong>Cloudflare</strong> — CDN, TLS, and security layer. <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Privacy policy</a></li>
-      <li><strong>GitHub Pages</strong> — static hosting of the app files. <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">Privacy policy</a></li>
+      <li><strong>Google Play Billing</strong> — subscription processing for the Android app. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Privacy policy</a></li>
+      <li><strong>Lemon Squeezy</strong> — Merchant of Record for web subscriptions. <a href="https://www.lemonsqueezy.com/privacy" target="_blank" rel="noopener">Privacy policy</a></li>
+      <li><strong>OpenAI</strong> and/or <strong>Anthropic</strong> — vision-language model providers for the AI Style Coach chat. Chat messages and attached images are forwarded to them to generate replies. We use API terms that prohibit training on user data where available. <a href="https://openai.com/policies/privacy-policy" target="_blank" rel="noopener">OpenAI privacy</a> · <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener">Anthropic privacy</a></li>
+      <li><strong>Cloudflare</strong> — CDN, TLS, DDoS protection, and security layer. <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Privacy policy</a></li>
       <li><strong>Google Fonts</strong> — Inter and Playfair Display typefaces. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Privacy policy</a></li>
       <li><strong>jsDelivr CDN</strong> — delivers the MediaPipe face-landmark library. <a href="https://www.jsdelivr.com/terms/privacy-policy-jsdelivr-net" target="_blank" rel="noopener">Privacy policy</a></li>
     </ul>
 
-    <h2>7. Cookies &amp; Local Storage</h2>
+    <h2>8. Cookies &amp; Local Storage</h2>
     <p>DateScan itself does not set any advertising or tracking cookies. We use:</p>
     <ul>
-      <li><strong>LocalStorage</strong> — to remember your progress, preferences, and cookie-consent choice.</li>
+      <li><strong>LocalStorage &amp; IndexedDB</strong> — to remember your progress, preferences, closet, and cookie-consent choice on your device.</li>
       <li><strong>Strictly necessary cookies</strong> — set by Cloudflare for security, bot detection, and load balancing.</li>
-      <li><strong>Payment cookies</strong> — set by Lemon Squeezy only when you proceed to checkout, for fraud prevention.</li>
+      <li><strong>Payment cookies</strong> — set by Lemon Squeezy only when you proceed to web checkout, for fraud prevention. The Google Play Store (Android app) handles payments without setting cookies on our domain.</li>
     </ul>
-    <p>On your first visit you will see a cookie banner. By clicking "Accept" you acknowledge the use of the categories above.</p>
+    <p>On your first visit you will see a cookie banner with both <strong>Accept</strong> and <strong>Reject</strong> options. Rejecting only disables non-essential storage; strictly necessary cookies (security, payments) remain active because the service cannot function without them.</p>
 
-    <h2>8. Your Rights (GDPR &amp; CCPA)</h2>
+    <h2>9. Your Rights (GDPR, UK GDPR &amp; CCPA)</h2>
     <p>If you are located in the European Economic Area, the United Kingdom, or California, you have the following rights regarding any personal data we hold:</p>
     <ul>
       <li><strong>Right of access</strong> — request a copy of your data.</li>
-      <li><strong>Right to erasure</strong> — request deletion.</li>
+      <li><strong>Right to erasure</strong> — request deletion (see §10 below).</li>
       <li><strong>Right to rectification</strong> — correct inaccurate data.</li>
       <li><strong>Right to object</strong> — object to how we process your data.</li>
       <li><strong>Right to portability</strong> — receive your data in a machine-readable format.</li>
@@ -148,16 +179,39 @@
     </ul>
     <p>To exercise any of these rights, email <a href="/cdn-cgi/l/email-protection#b8d1d6ded7f8dcd9ccddcbdbd9d696d9c8c8"><span class="__cf_email__" data-cfemail="c5acaba3aa85a1a4b1a0b6a6a4abeba4b5b5">[email&#160;protected]</span></a> with the subject "Privacy Request". We respond within 30 days.</p>
 
-    <h2>9. Data Retention</h2>
-    <p>Because we do not store your images or scan results server-side, there is nothing on our end to retain. LocalStorage data lives on your device until you clear it. Billing records held by Lemon Squeezy are retained as long as required by tax and accounting law.</p>
+    <h2>10. Data Deletion</h2>
+    <p>You have three ways to delete your data:</p>
+    <ul>
+      <li><strong>In-app wipe (local data only):</strong> Open the Privacy panel inside DateScan and tap <strong>"Erase everything on this device"</strong>. This wipes your closet, scan history, local settings, and cached service worker data from the current device.</li>
+      <li><strong>Web-based account deletion (local + server data):</strong> Visit <a href="/delete-account.html"><strong>https://datescan.app/delete-account.html</strong></a> and submit the form. No login is required. We will permanently delete your chat logs, moderation reports, and entitlement records associated with your email/device identifier within 30 days. This URL is also the account deletion link we submit to the Google Play Store, in compliance with Google Play's account deletion policy.</li>
+      <li><strong>Email request:</strong> Write to <a href="/cdn-cgi/l/email-protection#b8d1d6ded7f8dcd9ccddcbdbd9d696d9c8c8"><span class="__cf_email__" data-cfemail="c5acaba3aa85a1a4b1a0b6a6a4abeba4b5b5">[email&#160;protected]</span></a> with the subject "Data Deletion Request". Include your purchase email address if you have ever subscribed to Pro.</li>
+    </ul>
+    <p>Deleting your data does <strong>not</strong> cancel an active subscription. If you have Pro via Google Play, cancel it in the <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">Play Store subscriptions page</a>. If you have Pro via the web, use the cancellation link in your Lemon Squeezy receipt or see our <a href="/refund.html">Refund Policy</a>.</p>
 
-    <h2>10. Security</h2>
-    <p>All traffic to datescan.app is encrypted via HTTPS/TLS, terminated at Cloudflare. Because your sensitive data (camera feed) never leaves your device, the primary attack surface is your own device — please keep your browser and operating system up to date.</p>
+    <h2>11. Data Retention</h2>
+    <p>We retain different categories of data for different periods:</p>
+    <ul>
+      <li><strong>On-device data</strong> — kept on your device until you delete it.</li>
+      <li><strong>AI Style Coach chat logs</strong> — up to 30 days for abuse prevention and debugging, then automatically deleted.</li>
+      <li><strong>Content moderation reports</strong> — up to 12 months for safety auditing.</li>
+      <li><strong>Server access logs</strong> — up to 14 days in raw form.</li>
+      <li><strong>Subscription records</strong> — for the duration of the subscription plus the period required by applicable tax and accounting law (typically 7 years in the EU).</li>
+      <li><strong>Billing records held by Google Play and Lemon Squeezy</strong> — as long as required by their own policies and applicable tax law.</li>
+    </ul>
 
-    <h2>11. Changes to This Policy</h2>
-    <p>We may update this Privacy Policy from time to time. The "Last updated" date at the top of this page will always reflect the most recent version. Material changes will be announced on the homepage.</p>
+    <h2>12. International Data Transfers</h2>
+    <p>Our backend and AI model providers may process your data in the United States and other countries outside your country of residence. Where required, we rely on Standard Contractual Clauses (SCCs) and the EU-US Data Privacy Framework to transfer data lawfully out of the EEA/UK.</p>
 
-    <h2>12. Contact</h2>
+    <h2>13. Security</h2>
+    <p>All traffic to datescan.app and api.datescan.app is encrypted via HTTPS/TLS. We follow industry-standard security practices including encryption at rest, access controls, and regular security reviews. No system is 100% secure, however — please keep your device, browser, and Google account up to date and notify us immediately if you suspect a security issue.</p>
+
+    <h2>14. AI-Generated Content &amp; Content Moderation</h2>
+    <p>The AI Style Coach produces machine-generated responses and can make mistakes, including giving inaccurate or inappropriate advice. You can report any AI response by tapping the <strong>"Report"</strong> button below the message. We review every flagged response and use the feedback to improve the service and enforce our content policies. Certain categories of input are blocked client-side and server-side, including: content involving minors, sexually explicit content, and content encouraging self-harm. See our <a href="/terms.html">Terms of Service</a> for the full list.</p>
+
+    <h2>15. Changes to This Policy</h2>
+    <p>We may update this Privacy Policy from time to time. The "Last updated" date at the top of this page will always reflect the most recent version. Material changes will be announced inside the app and on the homepage. Continued use after the effective date of the new policy means you accept the update.</p>
+
+    <h2>16. Contact</h2>
     <p>Questions, concerns, or privacy requests? Email <a href="/cdn-cgi/l/email-protection#b6dfd8d0d9f6d2d7c2d3c5d5d7d898d7c6c6"><span class="__cf_email__" data-cfemail="f990979f96b99d988d9c8a9a9897d7988989">[email&#160;protected]</span></a>.</p>
   </article>
 </main>
@@ -181,7 +235,7 @@
         </p>
         <div class="inline-flex items-center gap-2 text-[10px] text-gray-500 px-3 py-1.5 rounded-full border border-white/10 bg-white/5">
           <svg class="w-3 h-3 text-brand-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-          <span>100% private — runs in your browser</span>
+          <span>Camera scans run on-device</span>
         </div>
       </div>
 
@@ -191,6 +245,7 @@
           <li><a href="/privacy.html" class="text-gray-400 hover:text-brand-400 transition-colors">Privacy Policy</a></li>
           <li><a href="/terms.html" class="text-gray-400 hover:text-brand-400 transition-colors">Terms of Service</a></li>
           <li><a href="/refund.html" class="text-gray-400 hover:text-brand-400 transition-colors">Refund Policy</a></li>
+          <li><a href="/delete-account.html" class="text-gray-400 hover:text-brand-400 transition-colors">Delete Account</a></li>
         </ul>
       </div>
 

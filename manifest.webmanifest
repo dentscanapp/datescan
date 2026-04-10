@@ -1,16 +1,18 @@
 {
   "name": "DateScan — Personal Style Coach",
   "short_name": "DateScan",
-  "description": "AI-driven style, grooming and posture analysis. Perfect your first impression.",
-  "start_url": "/",
+  "description": "AI-powered style and grooming coach. Scan your outfit, get instant feedback, and walk into your date with confidence.",
+  "id": "/",
+  "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "orientation": "portrait",
-  "background_color": "#09090b",
   "theme_color": "#09090b",
+  "background_color": "#09090b",
   "lang": "en",
   "dir": "ltr",
-  "categories": ["lifestyle", "social", "utilities"],
+  "categories": ["lifestyle", "beauty", "utilities"],
   "prefer_related_applications": false,
   "icons": [
     {
@@ -26,16 +28,53 @@
       "purpose": "any"
     },
     {
-      "src": "/icon-maskable-512.png",
-      "sizes": "512x512",
+      "src": "/icon-192-maskable.png",
+      "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/apple-touch-icon.png",
-      "sizes": "180x180",
+      "src": "/icon-512-maskable.png",
+      "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/scan-mobile.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Scan your outfit with your phone camera"
+    },
+    {
+      "src": "/screenshots/coach-mobile.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Get feedback from the AI Style Coach"
+    },
+    {
+      "src": "/screenshots/desktop.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "DateScan on desktop"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New scan",
+      "short_name": "Scan",
+      "url": "/?action=scan",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "My closet",
+      "short_name": "Closet",
+      "url": "/?action=closet",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }
