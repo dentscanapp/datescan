@@ -11,7 +11,7 @@
  *     weather / geocoding APIs:   network-only (never cache personal data)
  */
 
-const VERSION = 'v1';
+const VERSION = 'v2';
 const SHELL_CACHE = `datescan-shell-${VERSION}`;
 const RUNTIME_CACHE = `datescan-runtime-${VERSION}`;
 const MODEL_CACHE = `datescan-models-${VERSION}`;
