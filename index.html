@@ -410,6 +410,39 @@
   input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
     opacity: 1;
   }
+
+  /* Chat suggestion chips — rounded pill buttons that appear below the
+     messages so the user can tap a canned question instead of typing. */
+  .chip {
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    font-size: 12px;
+    font-weight: 500;
+    color: #e5e7eb;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    white-space: nowrap;
+    line-height: 1.2;
+  }
+  .chip:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.22);
+    transform: translateY(-1px);
+  }
+  .chip:active {
+    transform: translateY(0);
+  }
+  .chip.trend {
+    border-color: rgba(236, 72, 153, 0.4);
+    color: #f8a5c2;
+    background: rgba(236, 72, 153, 0.08);
+  }
+  .chip.trend:hover {
+    background: rgba(236, 72, 153, 0.16);
+    border-color: rgba(236, 72, 153, 0.6);
+  }
 </style>
 </head>
 <body class="relative antialiased text-gray-100">
@@ -807,6 +840,9 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>
               </button>
             </form>
+
+            <!-- Suggestion chips (populated dynamically after each scan) -->
+            <div id="chatChips" class="relative z-10 flex flex-wrap gap-2 mt-3 hidden"></div>
           </div>
 
           <!-- Closet Picker Modal for Chat -->
@@ -2773,6 +2809,100 @@ window.dsIsOffline = () => !navigator.onLine;
 window.addEventListener('online', () => applyOfflineState(false));
 window.addEventListener('offline', () => applyOfflineState(true));
 
+// --- CHAT SUGGESTION CHIPS ---
+// Renders 2–3 contextual quick-reply chips below the Style Coach chat
+// input. Reads the current occasion from the store so the chips stay in
+// sync with whatever the user selected on the scanner. Tapping a chip
+// fills the chat input with the chip's text and triggers the existing
+// form submit pipeline (which already handles offline gating, free-tier
+// limits, the typing indicator, and the trend paywall — see the chat
+// IIFE below for that submit handler).
+function clearChips() {
+  const c = document.getElementById('chatChips');
+  if (!c) return;
+  c.innerHTML = '';
+  c.classList.add('hidden');
+}
+
+function renderChips(occasion = 'casual') {
+  const container = document.getElementById('chatChips');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const chips = [
+    'How can I improve this?',
+    'What should I change first?',
+  ];
+
+  // Occasion-specific prompts. The store uses these enum strings — keep
+  // them in sync with the occasion buttons in the scanner toolbar
+  // (`first_date`, `night_out`, `fancy`, `casual`).
+  if (occasion === 'first_date') {
+    chips.push('Would this impress on a date?');
+  } else if (occasion === 'night_out') {
+    chips.push('Is this too basic for a party?');
+  } else if (occasion === 'fancy') {
+    chips.push('Is this formal enough?');
+  }
+
+  // Trend chip is always present and is the engagement hook.
+  chips.push('Is this trendy? 🔥');
+
+  chips.forEach((text) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'chip' + (text.includes('🔥') ? ' trend' : '');
+    btn.textContent = text;
+    btn.addEventListener('click', () => handleChipClick(text, btn));
+    container.appendChild(btn);
+  });
+
+  // Cap at 3 chips to keep the row visually clean — the first two
+  // generic ones are useful baseline, the third is the occasion- or
+  // trend-specific hook.
+  while (container.children.length > 3) {
+    container.removeChild(container.lastChild);
+  }
+
+  if (container.children.length > 0) {
+    container.classList.remove('hidden');
+  }
+}
+
+function handleChipClick(text, btn) {
+  // Remove the chip immediately so the user can't double-tap it.
+  if (btn && btn.parentNode) btn.remove();
+  const container = document.getElementById('chatChips');
+  if (container && container.children.length === 0) {
+    container.classList.add('hidden');
+  }
+
+  const input = document.getElementById('coachChatInput');
+  const form = document.getElementById('coachChatForm');
+  if (!input || !form) return;
+
+  // Bail out gracefully if the input is disabled (offline) — the chat
+  // form's own offline gate would still catch this, but skipping the
+  // submit avoids a flicker.
+  if (input.disabled) return;
+
+  input.value = text;
+  // Use requestSubmit() so the existing 'submit' listener fires and
+  // every gate (offline, free-tier, trend, sendMessage, typing
+  // indicator) runs naturally — exactly as if the user had typed and
+  // tapped Send themselves.
+  if (typeof form.requestSubmit === 'function') {
+    form.requestSubmit();
+  } else {
+    form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+  }
+}
+
+// Make available to inline event handlers and other modules.
+window.renderChips = renderChips;
+window.clearChips = clearChips;
+window.handleChipClick = handleChipClick;
+
 function boot() {
   const hasOnboarded = localStorage.getItem("datescan.onboarded");
 
@@ -3974,6 +4104,9 @@ async function runScan() {
   }
 
   store.dispatch({ type: 'SCAN_START' });
+  // Clear any chips from the previous scan so the user doesn't see
+  // stale suggestions while the new analysis is running.
+  clearChips();
 
   // 3rd scan (index 2) → render partial result with blurred action plan, then paywall
   const isLocked = !isProUser() && getTodayScans() === FREE_SCAN_LIMIT - 1;
@@ -4127,6 +4260,9 @@ async function runScan() {
 
     renderStyleCoach(detectedOutfitColor, store.get().occasion, isLocked, items);
     renderActionPlan(items, isLocked);
+    // Populate the chat suggestion chips with occasion-aware prompts so
+    // the user can tap a question instead of typing.
+    renderChips(store.get().occasion);
 
     incrementUsage();
 
@@ -4518,6 +4654,7 @@ async function verifyProStatus({ poll = false, visible = false } = {}) {
           if (s.lastItems) {
             renderActionPlan(s.lastItems, false);
             renderStyleCoach(s.lastColor, s.occasion, false);
+            renderChips(s.occasion);
           }
           if (visible) {
             setVerifyingMessage("✓ Payment confirmed!");
@@ -5267,6 +5404,30 @@ applyOfflineState(!navigator.onLine);
       `;
       messagesEl.appendChild(note);
       messagesEl.scrollTo?.({ top: messagesEl.scrollHeight, behavior: 'smooth' });
+      return;
+    }
+
+    // Trend paywall gate. The "Is this trendy? 🔥" chip (and any free-form
+    // message containing the word "trendy") is positioned as a Pro-only
+    // feature. We surface a short coach reply explaining why and open
+    // the paywall — without burning the user's free message counter,
+    // since we return BEFORE the free-tier check below.
+    if (/\btrendy\b/i.test(text) && !window.isProUser?.()) {
+      // Render the user message naturally so the conversation flow
+      // reads correctly even though we're short-circuiting sendMessage.
+      addMessage('user', text, pendingAttachments.map(a => a.url));
+      pendingAttachments = [];
+      renderAttachments();
+      input.value = '';
+      const teaser = addMessage(
+        'assistant',
+        '🔥 Trend insights are part of Pro analysis. Unlock to see what\'s actually trending right now and how your look stacks up.'
+      );
+      teaser.classList.add('border-brand-500/30');
+      messagesEl.scrollTo?.({ top: messagesEl.scrollHeight, behavior: 'smooth' });
+      // Open the paywall after a short beat so the user reads the
+      // teaser line first instead of being slammed with the modal.
+      setTimeout(() => { window.openPaywall?.(); }, 600);
       return;
     }
 
