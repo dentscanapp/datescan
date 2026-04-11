@@ -645,6 +645,13 @@
   }
   .ds-consent .dsc-fineprint a { color: #f472b6; text-decoration: underline; text-underline-offset: 2px; }
   body.dsc-locked { overflow: hidden !important; }
+
+  /* Specificity fix: the [hidden] HTML attribute's default `display: none`
+     has lower specificity than #age-gate / .ds-consent rules above, so
+     setting `el.hidden = true` alone wouldn't actually hide the modal.
+     These rules force it. */
+  #age-gate[hidden],
+  .ds-consent[hidden] { display: none !important; }
 </style>
 
 <!-- ===== AGE GATE (18+) ===== -->
