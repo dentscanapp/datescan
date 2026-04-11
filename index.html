@@ -652,6 +652,42 @@
      These rules force it. */
   #age-gate[hidden],
   .ds-consent[hidden] { display: none !important; }
+
+  /* ===== Pre-boot flicker guard =====
+     Until the age gate has been acknowledged, hide every other piece
+     of UI that would otherwise flash behind it (onboarding modal,
+     cookie banner, bottom nav, loading overlay). The class is added
+     synchronously by the compliance script below, before the browser
+     has a chance to paint the competing elements. */
+  html.datescan-age-pending #onboardingModal,
+  html.datescan-age-pending #cookieBanner,
+  html.datescan-age-pending #mobileBottomNav,
+  html.datescan-age-pending #loadingOverlay { display: none !important; }
+  html.datescan-age-pending body { overflow: hidden !important; }
+
+  /* ===== Cookie banner: mobile hide + desktop stability =====
+     The app already has #mobileBottomNav at the bottom on phones; a
+     second fixed bar there obscures it and is redundant. Hide the
+     cookie banner below the lg breakpoint (matches Tailwind lg:hidden
+     used elsewhere in the file). */
+  @media (max-width: 1023px) {
+    #cookieBanner { display: none !important; }
+  }
+  /* Desktop: some ancestor stacking contexts in this file were causing
+     the banner to disappear once the footer scrolled into view. Force
+     it to stay pinned to the viewport with a very high z-index and
+     explicit fixed positioning that no cascading rule can override. */
+  @media (min-width: 1024px) {
+    #cookieBanner:not(.hidden) {
+      position: fixed !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      z-index: 2147483640 !important;
+      transform: none !important;
+      will-change: auto !important;
+    }
+  }
 </style>
 
 <!-- ===== AGE GATE (18+) ===== -->
@@ -810,11 +846,23 @@
     }
   }
 
+  // ===== PRE-BOOT FLICKER GUARD =====
+  // Run synchronously at script parse time (before the browser paints
+  // the onboarding modal, cookie banner, or anything else that would
+  // otherwise flash behind the age gate). The matching CSS rule in the
+  // <style> block above hides those elements while the class is set.
+  if (!alreadyAck(AGE_KEY)) {
+    document.documentElement.classList.add('datescan-age-pending');
+  }
+  function clearPreBootGuard() {
+    document.documentElement.classList.remove('datescan-age-pending');
+  }
+
   // ===== AGE GATE (page-load) =====
   function initAgeGate() {
-    if (alreadyAck(AGE_KEY)) return;
+    if (alreadyAck(AGE_KEY)) { clearPreBootGuard(); return; }
     var modal = document.getElementById('age-gate');
-    if (!modal) return;
+    if (!modal) { clearPreBootGuard(); return; }
     modal.hidden = false;
     document.body.classList.add('ag-locked');
     var yes = document.getElementById('ag-yes');
@@ -823,6 +871,7 @@
       storeAck(AGE_KEY);
       modal.hidden = true;
       document.body.classList.remove('ag-locked');
+      clearPreBootGuard();
     }
     function onNo() {
       try { localStorage.removeItem(AGE_KEY); } catch (e) {}
