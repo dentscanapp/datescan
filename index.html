@@ -455,6 +455,12 @@
     body.coach-view #coachSubmenu {
       display: flex !important;
     }
+    /* On mobile/tablet the AI Style Coach Chat card lives exclusively in
+       the dedicated AI CHAT tab (coach-view). Hide it from the Scan view
+       so the user never sees it duplicated. */
+    body:not(.coach-view) #coachChatCard {
+      display: none !important;
+    }
   }
   #coachSubmenu { display: none; }
   body.coach-view main { padding-top: 0; }
@@ -1363,16 +1369,15 @@
             <!-- Submenu bar (only visible when body has .coach-view, i.e. on
                  mobile after tapping the AI CHAT tab). Gives the feature a
                  dedicated nav feel with a back button and section label. -->
-            <div id="coachSubmenu" class="relative z-10 mb-6 -mx-2 sm:mx-0 px-3 sm:px-4 py-4 rounded-2xl border border-white/10 bg-gradient-to-br from-brand-500/10 to-purple-500/10 items-center justify-between gap-3">
-              <button id="coachBackBtn" type="button" class="inline-flex items-center gap-2 text-sm font-semibold text-white bg-white/10 hover:bg-white/15 border border-white/15 px-4 py-2.5 rounded-full transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
-                Back
+            <div id="coachSubmenu" class="relative z-10 mb-6 -mx-2 sm:mx-0 px-3 sm:px-4 py-4 rounded-2xl border border-white/10 bg-gradient-to-br from-brand-500/10 to-purple-500/10 items-center justify-between gap-2">
+              <button id="coachBackBtn" type="button" aria-label="Back" class="shrink-0 inline-flex items-center justify-center w-11 h-11 text-white bg-white/10 hover:bg-white/15 border border-white/15 rounded-full transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
               </button>
-              <div class="flex flex-col items-center leading-tight text-center">
+              <div class="flex-1 min-w-0 flex flex-col items-center leading-tight text-center px-2">
                 <span class="text-[10px] uppercase tracking-[0.22em] text-brand-400 font-bold mb-1">AI Chat</span>
-                <span class="font-serif text-xl sm:text-2xl text-white font-semibold">Style Coach</span>
+                <span class="font-serif text-lg sm:text-2xl text-white font-semibold whitespace-nowrap">Style Coach</span>
               </div>
-              <div class="w-[72px]"></div>
+              <div class="shrink-0 w-11 h-11" aria-hidden="true"></div>
             </div>
 
             <div class="flex items-center justify-end mb-1 relative z-10">
@@ -1854,40 +1859,34 @@ document.addEventListener('DOMContentLoaded', function () {
   var btn = document.getElementById('deleteAllDataBtn');
   if (!btn) return;
   btn.addEventListener('click', async function () {
-    var ok = window.confirm("This will permanently erase your closet, scan history, chat history, and all local settings on this device. Continue?");
+    var ok = window.confirm("This will permanently erase your closet, scan history, chat history, and all local settings on this device.\n\nNOTE: Your daily point balance is protected against wipes — clearing data will NOT refill your points. Continue?");
     if (!ok) return;
     btn.disabled = true;
     btn.textContent = 'Erasing…';
     try {
-      // 0) Wipe the fingerprint-keyed point backup (see the POINT SYSTEM
-      // comment) BEFORE we clear localStorage — because we need the
-      // fingerprint value from LS to locate the IDB key. Then force a
-      // reset to MAX_POINTS in the backup so the next page load doesn't
-      // reconcile the user back down to a stale low balance.
-      try {
-        if (typeof _syncVisitorId === 'function') {
-          var id = _syncVisitorId();
-          if (id && typeof _fpIdbDel === 'function') {
-            await _fpIdbDel('points:' + id);
-          }
-        }
-      } catch (_) {}
+      // The fingerprint-keyed point backup in IndexedDB (`datescan-fp`
+      // database) is INTENTIONALLY preserved across this wipe. If we
+      // dropped it, users could game the system by clearing data to
+      // refill points. On next reload, _reconcilePointsFromBackup()
+      // restores whatever balance the fingerprint backup holds.
 
-      // 1) IndexedDB: drop every database we can enumerate. Falls back
-      // to deleting the known app DBs by name on browsers that don't
-      // support indexedDB.databases() (Firefox).
+      // 1) IndexedDB: drop every database we can enumerate EXCEPT
+      //    `datescan-fp`, which holds the anti-cheat point backup.
+      const FP_DB_PROTECTED = 'datescan-fp';
       try {
         if (indexedDB.databases) {
           var dbs = await indexedDB.databases();
           await Promise.all((dbs || []).map(function (db) {
             return new Promise(function (res) {
-              if (!db.name) return res();
+              if (!db.name || db.name === FP_DB_PROTECTED) return res();
               var req = indexedDB.deleteDatabase(db.name);
               req.onsuccess = req.onerror = req.onblocked = function () { res(); };
             });
           }));
         } else {
-          ['datescan', 'datescan-closet', 'datescan-history', 'datescan-fp', 'keyval-store'].forEach(function (n) {
+          // Firefox: no databases() enumeration → delete known app DBs
+          // by name, carefully skipping the anti-cheat store.
+          ['datescan', 'datescan-closet', 'datescan-history', 'keyval-store'].forEach(function (n) {
             try { indexedDB.deleteDatabase(n); } catch (_) {}
           });
         }
@@ -1901,12 +1900,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       } catch (_) {}
 
-      // 3) localStorage + sessionStorage
+      // 3) localStorage + sessionStorage — clear EVERYTHING including the
+      // local copy of the point state, then re-save the fingerprint cache
+      // so reconciliation has an anchor to look up the backup on reload.
+      var fpCache = null;
+      try { fpCache = localStorage.getItem('datescan.fp'); } catch (_) {}
       try { localStorage.clear(); } catch (_) {}
       try { sessionStorage.clear(); } catch (_) {}
+      try { if (fpCache) localStorage.setItem('datescan.fp', fpCache); } catch (_) {}
 
-      // 4) Unregister any service workers so a stale SW doesn't
-      // resurrect cached state on next load.
+      // 4) Unregister any service workers so a stale SW doesn't resurrect
+      // cached state on next load.
       try {
         if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) {
           var regs = await navigator.serviceWorker.getRegistrations();
@@ -1914,13 +1918,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       } catch (_) {}
 
-      // 5) Seed a fresh MAX_POINTS balance back into localStorage so the
-      // user lands on the default 5-point starter state after reload.
-      try {
-        localStorage.setItem('datescan.points', JSON.stringify({ points: 5, emptyAt: 0 }));
-      } catch (_) {}
+      // 5) DO NOT seed a fresh MAX_POINTS balance here. If we did, the
+      //    user could refill their points just by tapping this button.
+      //    On reload, _initFingerprint() → _reconcilePointsFromBackup()
+      //    pulls the real balance back in from the protected IDB store.
 
-      alert("All local data has been erased. Your points have been reset to 5. The app will now reload.");
+      alert("All local data has been erased. Your point balance and cooldown have been preserved. The app will now reload.");
       location.reload();
     } catch (e) {
       console.error('[DateScan] data wipe failed:', e);
@@ -2319,6 +2322,9 @@ async function _initFingerprint() {
           try { localStorage.setItem(FP_LS_CACHE, id); } catch {}
         }
         _fpVisitorId = id;
+        // Still reconcile — we have a stable (if weaker) id to key on.
+        try { await _reconcilePointsFromBackup(); } catch {}
+        _markReconciled();
         return id;
       }
       const fp = await window.FingerprintJS.load();
@@ -2338,6 +2344,9 @@ async function _initFingerprint() {
     } catch (e) {
       console.warn('[DateScan] fingerprint init failed:', e);
       _fpVisitorId = localStorage.getItem(FP_LS_CACHE) || 'anon';
+      // Can't reconcile without a trusted id, but we must still release
+      // the gate or every scan/chat action would hang for the 4s timeout.
+      _markReconciled();
       return _fpVisitorId;
     }
   })();
@@ -2350,14 +2359,38 @@ function _syncVisitorId() {
   return _fpVisitorId || localStorage.getItem(FP_LS_CACHE) || null;
 }
 
+// Tracks whether fingerprint reconciliation has completed. Until it has,
+// we don't trust the LS value — a cheater could have wiped LS seconds
+// before the page loaded, and the LS read would return the default 5.
+// Scan and chat gates check this flag and refuse to spend until reconcile
+// has pulled the authoritative balance from the IDB backup.
+let _pointsReconciled = false;
+let _pointsReconcileResolve;
+const _pointsReconcilePromise = new Promise(r => { _pointsReconcileResolve = r; });
+function _markReconciled() {
+  if (_pointsReconciled) return;
+  _pointsReconciled = true;
+  _pointsReconcileResolve?.();
+  try { updateUsageBadge(); } catch {}
+}
+async function _waitForReconcile(timeoutMs = 4000) {
+  if (_pointsReconciled) return true;
+  return await Promise.race([
+    _pointsReconcilePromise.then(() => true),
+    new Promise(res => setTimeout(() => res(false), timeoutMs)),
+  ]);
+}
+window._waitForReconcile = _waitForReconcile;
+
 async function _reconcilePointsFromBackup() {
   const id = _syncVisitorId();
-  if (!id) return;
+  if (!id) { _markReconciled(); return; }
   const lsState = _readLocalPointState();
   const backup = await _fpIdbGet('points:' + id);
   if (!backup) {
     // First time — seed IDB with whatever LS has.
     await _fpIdbPut('points:' + id, lsState);
+    _markReconciled();
     return;
   }
   // Prefer the lower balance. If backup says 2 and LS somehow says 5,
@@ -2373,7 +2406,7 @@ async function _reconcilePointsFromBackup() {
   }
   _writeLocalPointState(reconciled);
   await _fpIdbPut('points:' + id, reconciled);
-  try { updateUsageBadge(); } catch {}
+  _markReconciled();
 }
 
 function _todayKey() {
@@ -2433,19 +2466,14 @@ function addPoints(n) {
   updateUsageBadge();
 }
 
-// Called by the Erase Everything flow. Resets the balance to exactly
-// MAX_POINTS and mirrors that to both LS and the IDB backup — because
-// the user explicitly asked for a clean slate, we honour it even in
-// the backup. If cheating becomes a problem, remove this function and
-// let users keep whatever balance they had.
+// Previously this function was exposed to let the "Erase Everything"
+// flow reset both LS and the IDB backup to MAX_POINTS. That made the
+// whole backup pointless — users could game the system by wiping data
+// to refill points. We now forbid programmatic point refills entirely:
+// points can only come from the real daily refill (24h cooldown) or
+// from the earn-bonus flows (rating, sharing, rewarded ad).
 async function resetPoints() {
-  const fresh = { points: MAX_POINTS, emptyAt: 0 };
-  _writeLocalPointState(fresh);
-  const id = _syncVisitorId();
-  if (id) {
-    try { await _fpIdbPut('points:' + id, fresh); } catch {}
-  }
-  try { updateUsageBadge(); } catch {}
+  console.warn('[DateScan] resetPoints() is a no-op — point refills are not allowed programmatically.');
 }
 window.resetPoints = resetPoints;
 
@@ -5128,6 +5156,11 @@ async function runScan() {
   triggerHaptic('tap');
 
   // ---- Point-based gating: 1 point per scan ----
+  // Wait for the fingerprint-keyed backup to reconcile with local storage
+  // before trusting the balance. Without this, a user who wiped localStorage
+  // seconds before loading the page could burn through 5 "free" scans before
+  // reconcile pulls them back down.
+  await (window._waitForReconcile?.() ?? Promise.resolve());
   if (getPoints() <= 0) {
     window.openPaywall();
     return;
@@ -6586,7 +6619,7 @@ applyOfflineState(!navigator.onLine);
     scrollDown();
   }
 
-  form.addEventListener('submit', function(e){
+  form.addEventListener('submit', async function(e){
     e.preventDefault();
     const text = input.value.trim();
     if (!text && pendingAttachments.length === 0) return;
@@ -6634,6 +6667,9 @@ applyOfflineState(!navigator.onLine);
     // point budget below.
 
     // Point-based chat gate: 1 point per message, shared with scans.
+    // Wait for the fingerprint-keyed backup reconcile before trusting
+    // the balance (see runScan for the same guard).
+    await (window._waitForReconcile?.() ?? Promise.resolve());
     if ((window.getPoints?.() ?? 0) <= 0) {
       const stream = document.getElementById('coachChatStream') || form.parentElement;
       // Idempotent: if a lock card is already in the DOM, just re-open
