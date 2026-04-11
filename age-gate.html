@@ -1,0 +1,240 @@
+<!--
+  ============================================================
+  DateScan — 18+ Age Gate Modal
+  ------------------------------------------------------------
+  HOW TO INSTALL:
+  1. Paste the entire <style> + <div id="age-gate"> + <script>
+     block immediately after the opening <body> tag in
+     index.html (and any other entry-point page).
+  2. No dependencies. No framework. Vanilla JS + plain CSS.
+  3. Stores the confirmation in localStorage under the key
+     "datescan_age_ack_v1" together with a timestamp and a
+     random declaration ID (the "evidence" referenced in
+     Terms section 3.1).
+  4. If the visitor taps "I am under 18", they are redirected
+     away from the site entirely.
+  ============================================================
+-->
+
+<style>
+  #age-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483647; /* sit on top of everything */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+    background: rgba(9, 9, 11, 0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: #fafafa;
+    animation: ag-fade 220ms ease-out;
+  }
+  @keyframes ag-fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  #age-gate .ag-card {
+    width: 100%;
+    max-width: 440px;
+    background: linear-gradient(180deg, #18181b 0%, #09090b 100%);
+    border: 1px solid rgba(244, 114, 182, 0.18);
+    border-radius: 24px;
+    padding: 2rem 1.75rem 1.75rem;
+    box-shadow:
+      0 30px 80px -20px rgba(236, 72, 153, 0.25),
+      0 0 0 1px rgba(255, 255, 255, 0.04);
+    text-align: center;
+    animation: ag-pop 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes ag-pop {
+    from { transform: translateY(12px) scale(0.97); opacity: 0; }
+    to   { transform: translateY(0) scale(1); opacity: 1; }
+  }
+  #age-gate .ag-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(236, 72, 153, 0.12);
+    border: 1px solid rgba(236, 72, 153, 0.28);
+    color: #f472b6;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1.1rem;
+  }
+  #age-gate h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.65rem;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0 0 0.6rem;
+    color: #fff;
+  }
+  #age-gate p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #a1a1aa;
+    margin: 0 0 1.4rem;
+  }
+  #age-gate p.ag-fineprint {
+    font-size: 0.72rem;
+    color: #71717a;
+    margin: 1rem 0 0;
+    line-height: 1.55;
+  }
+  #age-gate p.ag-fineprint a {
+    color: #f472b6;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  #age-gate .ag-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  #age-gate button {
+    width: 100%;
+    padding: 0.95rem 1rem;
+    border-radius: 14px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: transform 120ms ease, box-shadow 200ms ease, background 200ms ease;
+  }
+  #age-gate button.ag-primary {
+    background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+    color: #fff;
+    box-shadow: 0 10px 30px -10px rgba(236, 72, 153, 0.55);
+  }
+  #age-gate button.ag-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 36px -10px rgba(236, 72, 153, 0.7);
+  }
+  #age-gate button.ag-secondary {
+    background: transparent;
+    color: #d4d4d8;
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+  #age-gate button.ag-secondary:hover {
+    background: rgba(255, 255, 255, 0.04);
+    color: #fff;
+  }
+  /* lock background scroll while modal is open */
+  body.ag-locked { overflow: hidden !important; }
+</style>
+
+<div id="age-gate" role="dialog" aria-modal="true" aria-labelledby="ag-title" hidden>
+  <div class="ag-card">
+    <span class="ag-badge">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="3" y="11" width="18" height="11" rx="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+      18+ Only
+    </span>
+    <h2 id="ag-title">Are you 18 or older?</h2>
+    <p>
+      DateScan is an adult service. Before you can use the camera scanner
+      or AI Style Coach, please confirm your age.
+    </p>
+    <div class="ag-actions">
+      <button type="button" class="ag-primary" id="ag-yes">
+        Yes, I'm 18 or older
+      </button>
+      <button type="button" class="ag-secondary" id="ag-no">
+        No, I'm under 18
+      </button>
+    </div>
+    <p class="ag-fineprint">
+      By tapping "Yes" you declare under our
+      <a href="/terms.html#age">Terms of Service</a> that you are at least
+      18 years old. False declarations are a material breach of our Terms.
+      We log the time of this confirmation as evidence. See our
+      <a href="/privacy.html">Privacy Policy</a>.
+    </p>
+  </div>
+</div>
+
+<script>
+(function () {
+  var KEY = 'datescan_age_ack_v1';
+  var UNDER18_REDIRECT = 'https://www.google.com/';
+
+  function uuid() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+  }
+
+  function alreadyConfirmed() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (!raw) return false;
+      var parsed = JSON.parse(raw);
+      return parsed && parsed.confirmed === true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function showGate() {
+    var el = document.getElementById('age-gate');
+    if (!el) return;
+    el.hidden = false;
+    document.body.classList.add('ag-locked');
+  }
+
+  function hideGate() {
+    var el = document.getElementById('age-gate');
+    if (!el) return;
+    el.hidden = true;
+    document.body.classList.remove('ag-locked');
+  }
+
+  function confirmAdult() {
+    try {
+      localStorage.setItem(KEY, JSON.stringify({
+        confirmed: true,
+        ts: new Date().toISOString(),
+        declarationId: uuid(),
+        v: 1
+      }));
+    } catch (e) { /* private mode etc. — still allow through */ }
+    hideGate();
+  }
+
+  function rejectMinor() {
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    window.location.replace(UNDER18_REDIRECT);
+  }
+
+  function init() {
+    if (alreadyConfirmed()) return;
+    showGate();
+    var yes = document.getElementById('ag-yes');
+    var no  = document.getElementById('ag-no');
+    if (yes) yes.addEventListener('click', confirmAdult);
+    if (no)  no.addEventListener('click', rejectMinor);
+    // block ESC from closing the modal
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !document.getElementById('age-gate').hidden) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, true);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>

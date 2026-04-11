@@ -473,6 +473,446 @@
 </head>
 <body class="relative antialiased text-gray-100">
 
+<!-- ============================================================
+     DateScan — Compliance Modals (Age Gate + Camera + Upload)
+     Injected 2026 to satisfy EU/AT minor protection,
+     biometric transparency, and likeness consent requirements.
+     ============================================================ -->
+<style>
+  /* Age gate */
+  #age-gate {
+    position: fixed; inset: 0; z-index: 2147483647;
+    display: flex; align-items: center; justify-content: center;
+    padding: 1.25rem;
+    background: rgba(9, 9, 11, 0.92);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: #fafafa;
+    animation: ag-fade 220ms ease-out;
+  }
+  @keyframes ag-fade { from { opacity: 0; } to { opacity: 1; } }
+  #age-gate .ag-card {
+    width: 100%; max-width: 440px;
+    background: linear-gradient(180deg, #18181b 0%, #09090b 100%);
+    border: 1px solid rgba(244, 114, 182, 0.18);
+    border-radius: 24px;
+    padding: 2rem 1.75rem 1.75rem;
+    box-shadow: 0 30px 80px -20px rgba(236, 72, 153, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.04);
+    text-align: center;
+    animation: ag-pop 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes ag-pop {
+    from { transform: translateY(12px) scale(0.97); opacity: 0; }
+    to   { transform: translateY(0) scale(1); opacity: 1; }
+  }
+  #age-gate .ag-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.35rem 0.75rem; border-radius: 999px;
+    background: rgba(236, 72, 153, 0.12);
+    border: 1px solid rgba(236, 72, 153, 0.28);
+    color: #f472b6;
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    margin-bottom: 1.1rem;
+  }
+  #age-gate h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.65rem; font-weight: 600; line-height: 1.2;
+    margin: 0 0 0.6rem; color: #fff;
+  }
+  #age-gate p {
+    font-size: 0.9rem; line-height: 1.6; color: #a1a1aa; margin: 0 0 1.4rem;
+  }
+  #age-gate p.ag-fineprint {
+    font-size: 0.72rem; color: #71717a; margin: 1rem 0 0; line-height: 1.55;
+  }
+  #age-gate p.ag-fineprint a { color: #f472b6; text-decoration: underline; text-underline-offset: 2px; }
+  #age-gate .ag-actions { display: flex; flex-direction: column; gap: 0.6rem; }
+  #age-gate button {
+    width: 100%; padding: 0.95rem 1rem; border-radius: 14px;
+    font-family: inherit; font-size: 0.95rem; font-weight: 600;
+    cursor: pointer; border: 1px solid transparent;
+    transition: transform 120ms ease, box-shadow 200ms ease, background 200ms ease;
+  }
+  #age-gate button.ag-primary {
+    background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+    color: #fff; box-shadow: 0 10px 30px -10px rgba(236, 72, 153, 0.55);
+  }
+  #age-gate button.ag-primary:hover { transform: translateY(-1px); box-shadow: 0 14px 36px -10px rgba(236, 72, 153, 0.7); }
+  #age-gate button.ag-secondary { background: transparent; color: #d4d4d8; border-color: rgba(255, 255, 255, 0.12); }
+  #age-gate button.ag-secondary:hover { background: rgba(255, 255, 255, 0.04); color: #fff; }
+  body.ag-locked { overflow: hidden !important; }
+
+  /* Camera + Upload consent */
+  .ds-consent {
+    position: fixed; inset: 0; z-index: 2147483646;
+    display: flex; align-items: center; justify-content: center;
+    padding: 1.25rem;
+    background: rgba(9, 9, 11, 0.92);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: #fafafa;
+    animation: dsc-fade 220ms ease-out;
+  }
+  @keyframes dsc-fade { from { opacity: 0; } to { opacity: 1; } }
+  .ds-consent .dsc-card {
+    width: 100%; max-width: 460px; max-height: calc(100vh - 2.5rem); overflow-y: auto;
+    background: linear-gradient(180deg, #18181b 0%, #09090b 100%);
+    border: 1px solid rgba(244, 114, 182, 0.18);
+    border-radius: 24px;
+    padding: 1.85rem 1.6rem 1.5rem;
+    box-shadow: 0 30px 80px -20px rgba(236, 72, 153, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.04);
+    animation: dsc-pop 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes dsc-pop {
+    from { transform: translateY(12px) scale(0.97); opacity: 0; }
+    to   { transform: translateY(0) scale(1); opacity: 1; }
+  }
+  .ds-consent .dsc-icon {
+    width: 52px; height: 52px; border-radius: 16px;
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.18), rgba(147, 51, 234, 0.12));
+    border: 1px solid rgba(244, 114, 182, 0.28);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1rem; color: #f472b6;
+  }
+  .ds-consent h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.55rem; font-weight: 600; line-height: 1.2;
+    margin: 0 0 0.5rem; color: #fff; text-align: center;
+  }
+  .ds-consent .dsc-lede {
+    font-size: 0.9rem; line-height: 1.6; color: #a1a1aa;
+    margin: 0 0 1.2rem; text-align: center;
+  }
+  .ds-consent ul.dsc-list {
+    list-style: none; padding: 0; margin: 0 0 1.2rem;
+    display: flex; flex-direction: column; gap: 0.65rem;
+  }
+  .ds-consent ul.dsc-list li {
+    display: flex; gap: 0.7rem; align-items: flex-start;
+    font-size: 0.85rem; line-height: 1.5; color: #d4d4d8;
+    padding: 0.7rem 0.85rem;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+  }
+  .ds-consent ul.dsc-list li svg { flex-shrink: 0; width: 16px; height: 16px; margin-top: 1px; }
+  .ds-consent ul.dsc-list li.dsc-good svg { color: #34d399; }
+  .ds-consent ul.dsc-list li.dsc-bad  svg { color: #f87171; }
+  .ds-consent ul.dsc-list li strong { color: #fff; font-weight: 600; }
+  .ds-consent .dsc-checkbox {
+    display: flex; align-items: flex-start; gap: 0.65rem;
+    padding: 0.75rem 0.85rem;
+    background: rgba(236, 72, 153, 0.06);
+    border: 1px solid rgba(236, 72, 153, 0.22);
+    border-radius: 12px; margin-bottom: 1rem;
+    cursor: pointer; user-select: none;
+  }
+  .ds-consent .dsc-checkbox input {
+    appearance: none; -webkit-appearance: none;
+    width: 18px; height: 18px; border-radius: 5px;
+    border: 1.5px solid rgba(244, 114, 182, 0.5);
+    background: transparent; flex-shrink: 0; margin-top: 1px;
+    cursor: pointer; position: relative; transition: all 150ms ease;
+  }
+  .ds-consent .dsc-checkbox input:checked { background: #ec4899; border-color: #ec4899; }
+  .ds-consent .dsc-checkbox input:checked::after {
+    content: ''; position: absolute; left: 5px; top: 1px;
+    width: 5px; height: 10px;
+    border: solid #fff; border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  .ds-consent .dsc-checkbox span { font-size: 0.82rem; line-height: 1.5; color: #e4e4e7; }
+  .ds-consent .dsc-actions { display: flex; flex-direction: column; gap: 0.55rem; }
+  .ds-consent button {
+    width: 100%; padding: 0.9rem 1rem; border-radius: 14px;
+    font-family: inherit; font-size: 0.95rem; font-weight: 600;
+    cursor: pointer; border: 1px solid transparent;
+    transition: transform 120ms ease, box-shadow 200ms ease, background 200ms ease, opacity 200ms ease;
+  }
+  .ds-consent button.dsc-primary {
+    background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+    color: #fff; box-shadow: 0 10px 30px -10px rgba(236, 72, 153, 0.55);
+  }
+  .ds-consent button.dsc-primary:hover:not(:disabled) {
+    transform: translateY(-1px); box-shadow: 0 14px 36px -10px rgba(236, 72, 153, 0.7);
+  }
+  .ds-consent button.dsc-primary:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
+  .ds-consent button.dsc-secondary { background: transparent; color: #a1a1aa; border-color: rgba(255, 255, 255, 0.1); }
+  .ds-consent button.dsc-secondary:hover { background: rgba(255, 255, 255, 0.04); color: #fff; }
+  .ds-consent .dsc-fineprint {
+    font-size: 0.7rem; color: #71717a; text-align: center;
+    margin: 0.9rem 0 0; line-height: 1.5;
+  }
+  .ds-consent .dsc-fineprint a { color: #f472b6; text-decoration: underline; text-underline-offset: 2px; }
+  body.dsc-locked { overflow: hidden !important; }
+</style>
+
+<!-- ===== AGE GATE (18+) ===== -->
+<div id="age-gate" role="dialog" aria-modal="true" aria-labelledby="ag-title" hidden>
+  <div class="ag-card">
+    <span class="ag-badge">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="3" y="11" width="18" height="11" rx="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+      18+ Only
+    </span>
+    <h2 id="ag-title">Are you 18 or older?</h2>
+    <p>DateScan is an adult service. Before you can use the camera scanner or AI Style Coach, please confirm your age.</p>
+    <div class="ag-actions">
+      <button type="button" class="ag-primary" id="ag-yes">Yes, I'm 18 or older</button>
+      <button type="button" class="ag-secondary" id="ag-no">No, I'm under 18</button>
+    </div>
+    <p class="ag-fineprint">
+      By tapping "Yes" you declare under our <a href="/terms.html">Terms of Service</a> that you are at least 18 years old. False declarations are a material breach of our Terms. We log the time of this confirmation as evidence. See our <a href="/privacy.html">Privacy Policy</a>.
+    </p>
+  </div>
+</div>
+
+<!-- ===== CAMERA CONSENT ===== -->
+<div id="dsc-camera" class="ds-consent" role="dialog" aria-modal="true" aria-labelledby="dsc-camera-title" hidden>
+  <div class="dsc-card">
+    <div class="dsc-icon">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+        <circle cx="12" cy="13" r="4"/>
+      </svg>
+    </div>
+    <h2 id="dsc-camera-title">Before we turn on your camera</h2>
+    <p class="dsc-lede">The live scanner runs entirely on your device. Here's what that means.</p>
+    <ul class="dsc-list">
+      <li class="dsc-good">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><strong>Live scanner = on-device.</strong> When you use the camera scanner, frames are analysed inside your browser by an on-device AI model. They are <strong>never uploaded</strong> to our servers and we never see them.</span>
+      </li>
+      <li class="dsc-good">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><strong>Nothing is saved.</strong> Frames live in your device's memory for a few seconds while the AI checks outfit, grooming, posture and lighting — then they're discarded.</span>
+      </li>
+      <li class="dsc-good">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><strong>You're in control.</strong> Stop the camera any time by closing the scanner. Your browser also lets you revoke camera permission at any moment.</span>
+      </li>
+      <li class="dsc-bad">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <span><strong>Self-scan only.</strong> Point the camera at <strong>yourself</strong>, not other people. Scanning anyone else without their consent is forbidden by our Terms.</span>
+      </li>
+      <li class="dsc-bad">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span><strong>Note:</strong> The AI Style Coach <strong>chat</strong> is different — if you upload a photo there, that image is sent to our vision model. You'll see a separate notice the first time.</span>
+      </li>
+    </ul>
+    <div class="dsc-actions">
+      <button type="button" class="dsc-primary" id="dsc-camera-yes">Got it — start the camera</button>
+      <button type="button" class="dsc-secondary" id="dsc-camera-no">Not now</button>
+    </div>
+    <p class="dsc-fineprint">
+      See our <a href="/privacy.html">Privacy Policy</a> and <a href="/terms.html">Terms of Service</a> for full details.
+    </p>
+  </div>
+</div>
+
+<!-- ===== UPLOAD CONSENT ===== -->
+<div id="dsc-upload" class="ds-consent" role="dialog" aria-modal="true" aria-labelledby="dsc-upload-title" hidden>
+  <div class="dsc-card">
+    <div class="dsc-icon">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+    </div>
+    <h2 id="dsc-upload-title">Before you upload an image</h2>
+    <p class="dsc-lede">Two things to know — what we do with your image, and what you must not upload.</p>
+    <ul class="dsc-list">
+      <li class="dsc-good">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        <span><strong>Your image is sent to our AI vision model</strong> via <code style="font-size:0.78rem;background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;">api.datescan.app</code> so the Style Coach can "see" it and reply. It's processed for that single message and <strong>not retained</strong> on our server beyond the response.</span>
+      </li>
+      <li class="dsc-good">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><strong>No training.</strong> Chat images are not used to train any AI model.</span>
+      </li>
+      <li class="dsc-good">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><strong>Only upload pictures of yourself.</strong> DateScan is a self-coaching tool, not a way to analyse other people.</span>
+      </li>
+      <li class="dsc-bad">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <span><strong>No other people.</strong> No friends, ex-partners, colleagues, strangers, celebrities or public figures — even if the photo is publicly available online.</span>
+      </li>
+      <li class="dsc-bad">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <span><strong>Absolutely no minors.</strong> Zero tolerance. Any image containing a person under 18 — including yourself as a child — is forbidden and will result in immediate termination.</span>
+      </li>
+      <li class="dsc-bad">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <span><strong>No nudity, sexual or harmful content.</strong> See our Acceptable Use policy for the full list.</span>
+      </li>
+    </ul>
+    <label class="dsc-checkbox">
+      <input type="checkbox" id="dsc-upload-confirm">
+      <span>I understand my image will be sent to the AI vision model, and I confirm it is <strong>of myself only</strong>, that I'm 18 or older, and that it doesn't contain any other person or any minor.</span>
+    </label>
+    <div class="dsc-actions">
+      <button type="button" class="dsc-primary" id="dsc-upload-yes" disabled>Continue to upload</button>
+      <button type="button" class="dsc-secondary" id="dsc-upload-no">Cancel</button>
+    </div>
+    <p class="dsc-fineprint">
+      Violations may be reported to authorities. See <a href="/terms.html">Terms of Service</a>, sections 5.1–5.3.
+    </p>
+  </div>
+</div>
+
+<script>
+(function () {
+  // ----- Storage keys -----
+  var AGE_KEY    = 'datescan_age_ack_v1';
+  var CAM_KEY    = 'datescan_camera_ack_v1';
+  var UP_KEY     = 'datescan_upload_ack_v1';
+  var UNDER18_REDIRECT = 'https://www.google.com/';
+
+  function uuid() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+  }
+  function alreadyAck(key) {
+    try {
+      var raw = localStorage.getItem(key);
+      if (!raw) return false;
+      var p = JSON.parse(raw);
+      return p && p.confirmed === true;
+    } catch (e) { return false; }
+  }
+  function storeAck(key) {
+    try {
+      localStorage.setItem(key, JSON.stringify({
+        confirmed: true,
+        ts: new Date().toISOString(),
+        declarationId: uuid(),
+        v: 1
+      }));
+    } catch (e) {}
+  }
+  function dscLock()   { document.body.classList.add('dsc-locked'); }
+  function dscUnlock() {
+    var c = document.getElementById('dsc-camera');
+    var u = document.getElementById('dsc-upload');
+    if ((!c || c.hidden) && (!u || u.hidden)) {
+      document.body.classList.remove('dsc-locked');
+    }
+  }
+
+  // ===== AGE GATE (page-load) =====
+  function initAgeGate() {
+    if (alreadyAck(AGE_KEY)) return;
+    var modal = document.getElementById('age-gate');
+    if (!modal) return;
+    modal.hidden = false;
+    document.body.classList.add('ag-locked');
+    var yes = document.getElementById('ag-yes');
+    var no  = document.getElementById('ag-no');
+    function onYes() {
+      storeAck(AGE_KEY);
+      modal.hidden = true;
+      document.body.classList.remove('ag-locked');
+    }
+    function onNo() {
+      try { localStorage.removeItem(AGE_KEY); } catch (e) {}
+      window.location.replace(UNDER18_REDIRECT);
+    }
+    yes && yes.addEventListener('click', onYes);
+    no  && no.addEventListener('click', onNo);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !modal.hidden) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
+  }
+
+  // ===== CAMERA CONSENT (event-triggered, returns Promise) =====
+  function requireCamera() {
+    return new Promise(function (resolve, reject) {
+      if (alreadyAck(CAM_KEY)) { resolve(); return; }
+      var modal = document.getElementById('dsc-camera');
+      var yes   = document.getElementById('dsc-camera-yes');
+      var no    = document.getElementById('dsc-camera-no');
+      if (!modal || !yes || !no) { resolve(); return; }
+      modal.hidden = false;
+      dscLock();
+      function cleanup() {
+        yes.removeEventListener('click', onYes);
+        no.removeEventListener('click', onNo);
+        modal.hidden = true;
+        dscUnlock();
+      }
+      function onYes() { storeAck(CAM_KEY); cleanup(); resolve(); }
+      function onNo()  { cleanup(); reject(new Error('camera_consent_declined')); }
+      yes.addEventListener('click', onYes);
+      no.addEventListener('click', onNo);
+    });
+  }
+
+  // ===== UPLOAD CONSENT (event-triggered, returns Promise) =====
+  function requireUpload() {
+    return new Promise(function (resolve, reject) {
+      if (alreadyAck(UP_KEY)) { resolve(); return; }
+      var modal   = document.getElementById('dsc-upload');
+      var yes     = document.getElementById('dsc-upload-yes');
+      var no      = document.getElementById('dsc-upload-no');
+      var confirm = document.getElementById('dsc-upload-confirm');
+      if (!modal || !yes || !no || !confirm) { resolve(); return; }
+      confirm.checked = false;
+      yes.disabled = true;
+      modal.hidden = false;
+      dscLock();
+      function onChange() { yes.disabled = !confirm.checked; }
+      function cleanup() {
+        yes.removeEventListener('click', onYes);
+        no.removeEventListener('click', onNo);
+        confirm.removeEventListener('change', onChange);
+        modal.hidden = true;
+        dscUnlock();
+      }
+      function onYes() {
+        if (!confirm.checked) return;
+        storeAck(UP_KEY);
+        cleanup();
+        resolve();
+      }
+      function onNo() { cleanup(); reject(new Error('upload_consent_declined')); }
+      confirm.addEventListener('change', onChange);
+      yes.addEventListener('click', onYes);
+      no.addEventListener('click', onNo);
+    });
+  }
+
+  // ----- Public API -----
+  window.DateScanConsent = {
+    requireCamera: requireCamera,
+    requireUpload: requireUpload,
+    reset: function () {
+      try {
+        localStorage.removeItem(AGE_KEY);
+        localStorage.removeItem(CAM_KEY);
+        localStorage.removeItem(UP_KEY);
+      } catch (e) {}
+    },
+    hasAgeAck:    function () { return alreadyAck(AGE_KEY); },
+    hasCameraAck: function () { return alreadyAck(CAM_KEY); },
+    hasUploadAck: function () { return alreadyAck(UP_KEY); }
+  };
+
+  // Boot age gate immediately
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAgeGate);
+  } else {
+    initAgeGate();
+  }
+})();
+</script>
+<!-- ============================================================
+     End compliance modals
+     ============================================================ -->
+
 <div class="ambient-glow"></div>
 
 <!-- Onboarding Modal -->
@@ -2811,6 +3251,15 @@ $('cancelDateTimerBtn').addEventListener('click', () => {
 // ------------------------------
 
 async function startAppFlow() {
+  // Compliance: ensure user has consented to camera processing.
+  // Shown only once per device (stored in localStorage).
+  try {
+    if (window.DateScanConsent) await window.DateScanConsent.requireCamera();
+  } catch (e) {
+    // User declined — abort silently, do not start the camera.
+    return;
+  }
+
   hideError();
   loadingOverlay.classList.remove("hidden");
 
@@ -5560,6 +6009,10 @@ applyOfflineState(!navigator.onLine);
   }
 
   closetBtn?.addEventListener('click', async () => {
+    // Compliance: first-time upload consent (self only, no minors, no third parties)
+    try {
+      if (window.DateScanConsent) await window.DateScanConsent.requireUpload();
+    } catch (e) { return; }
     const ok = await window.dsPrivacy.requestChatImagePermission();
     if (!ok) return;
     openClosetPicker();
@@ -5568,6 +6021,10 @@ applyOfflineState(!navigator.onLine);
   picker?.addEventListener('click', e => { if (e.target === picker) picker.classList.add('hidden'); });
 
   uploadBtn?.addEventListener('click', async () => {
+    // Compliance: first-time upload consent (self only, no minors, no third parties)
+    try {
+      if (window.DateScanConsent) await window.DateScanConsent.requireUpload();
+    } catch (e) { return; }
     const ok = await window.dsPrivacy.requestChatImagePermission();
     if (!ok) return;
     fileInput.click();
@@ -5731,16 +6188,22 @@ applyOfflineState(!navigator.onLine);
     if (!window.isProUser?.()) {
       const used = window.getChatCount?.() || 0;
       if (used >= window.FREE_CHAT_LIMIT) {
-        const lock = document.createElement('div');
-        lock.className = 'mx-auto my-3 max-w-[85%] rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/10 to-purple-500/10 p-4 text-center';
-        lock.innerHTML = `
-          <p class="text-sm text-white/90 leading-relaxed mb-1"><span class="font-semibold">You're asking the right questions.</span></p>
-          <p class="text-sm text-gray-400 leading-relaxed mb-3">Your next answer is where the real improvements happen.</p>
-          <button type="button" class="text-xs font-bold text-white bg-gradient-to-r from-brand-500 to-purple-500 px-5 py-2 rounded-xl shadow-lg shadow-brand-500/30">Unlock AI Coach</button>
-        `;
-        lock.querySelector('button').addEventListener('click', () => window.openPaywall?.());
         const stream = document.getElementById('coachChatStream') || form.parentElement;
-        stream?.appendChild(lock);
+        // Idempotent: if a lock card is already in the DOM, just re-open
+        // the paywall and bail out — never append a second one.
+        let lock = document.getElementById('chatPaywallLock');
+        if (!lock) {
+          lock = document.createElement('div');
+          lock.id = 'chatPaywallLock';
+          lock.className = 'mx-auto my-3 max-w-[85%] rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/10 to-purple-500/10 p-4 text-center';
+          lock.innerHTML = `
+            <p class="text-sm text-white/90 leading-relaxed mb-1"><span class="font-semibold">You're asking the right questions.</span></p>
+            <p class="text-sm text-gray-400 leading-relaxed mb-3">Your next answer is where the real improvements happen.</p>
+            <button type="button" class="text-xs font-bold text-white bg-gradient-to-r from-brand-500 to-purple-500 px-5 py-2 rounded-xl shadow-lg shadow-brand-500/30">Unlock AI Coach</button>
+          `;
+          lock.querySelector('button').addEventListener('click', () => window.openPaywall?.());
+          stream?.appendChild(lock);
+        }
         stream?.scrollTo?.({ top: stream.scrollHeight, behavior: 'smooth' });
         window.openPaywall?.();
         return;

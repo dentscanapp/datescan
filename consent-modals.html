@@ -1,0 +1,440 @@
+<!--
+  ============================================================
+  DateScan — Consent Modals (Camera + Upload)
+  ------------------------------------------------------------
+  Two one-time consent dialogs:
+
+    1. CAMERA CONSENT — shown the very first time the user
+       starts the live camera scanner. Explains what the
+       camera processes and that nothing leaves the device.
+
+    2. UPLOAD CONSENT — shown the very first time the user
+       picks an image from device storage / gallery in the
+       AI Style Coach chat. Reminds the user that uploads
+       must be of themselves only, no third parties, no
+       minors, no explicit content.
+
+  ------------------------------------------------------------
+  HOW TO INSTALL
+  ------------------------------------------------------------
+  1. Paste this entire block (style + two <div>s + script)
+     once, anywhere inside <body>. After the age-gate is the
+     natural place.
+
+  2. In your existing JS, wrap the camera-start handler and
+     the upload handlers like this:
+
+       // Before starting the live camera:
+       startBtn.addEventListener('click', async () => {
+         try {
+           await DateScanConsent.requireCamera();
+         } catch (e) { return; } // user declined
+         // ... your existing camera startup code ...
+       });
+
+       // Before processing an uploaded image (gallery/file):
+       uploadInput.addEventListener('change', async (e) => {
+         try {
+           await DateScanConsent.requireUpload();
+         } catch (err) {
+           e.target.value = '';
+           return;
+         }
+         // ... your existing upload handling code ...
+       });
+
+  3. After first acceptance the promise resolves instantly
+     forever (stored in localStorage). To force re-consent
+     during testing, run in DevTools:
+
+       localStorage.removeItem('datescan_camera_ack_v1');
+       localStorage.removeItem('datescan_upload_ack_v1');
+  ============================================================
+-->
+
+<style>
+  .ds-consent {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483646; /* one below the age gate */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+    background: rgba(9, 9, 11, 0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: #fafafa;
+    animation: dsc-fade 220ms ease-out;
+  }
+  @keyframes dsc-fade { from { opacity: 0; } to { opacity: 1; } }
+
+  .ds-consent .dsc-card {
+    width: 100%;
+    max-width: 460px;
+    max-height: calc(100vh - 2.5rem);
+    overflow-y: auto;
+    background: linear-gradient(180deg, #18181b 0%, #09090b 100%);
+    border: 1px solid rgba(244, 114, 182, 0.18);
+    border-radius: 24px;
+    padding: 1.85rem 1.6rem 1.5rem;
+    box-shadow:
+      0 30px 80px -20px rgba(236, 72, 153, 0.25),
+      0 0 0 1px rgba(255, 255, 255, 0.04);
+    animation: dsc-pop 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes dsc-pop {
+    from { transform: translateY(12px) scale(0.97); opacity: 0; }
+    to   { transform: translateY(0) scale(1); opacity: 1; }
+  }
+
+  .ds-consent .dsc-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.18), rgba(147, 51, 234, 0.12));
+    border: 1px solid rgba(244, 114, 182, 0.28);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: #f472b6;
+  }
+  .ds-consent h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.55rem;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0 0 0.5rem;
+    color: #fff;
+    text-align: center;
+  }
+  .ds-consent .dsc-lede {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #a1a1aa;
+    margin: 0 0 1.2rem;
+    text-align: center;
+  }
+  .ds-consent ul.dsc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+  .ds-consent ul.dsc-list li {
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: #d4d4d8;
+    padding: 0.7rem 0.85rem;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+  }
+  .ds-consent ul.dsc-list li svg {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    margin-top: 1px;
+  }
+  .ds-consent ul.dsc-list li.dsc-good svg { color: #34d399; }
+  .ds-consent ul.dsc-list li.dsc-bad  svg { color: #f87171; }
+  .ds-consent ul.dsc-list li strong { color: #fff; font-weight: 600; }
+
+  .ds-consent .dsc-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    padding: 0.75rem 0.85rem;
+    background: rgba(236, 72, 153, 0.06);
+    border: 1px solid rgba(236, 72, 153, 0.22);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    user-select: none;
+  }
+  .ds-consent .dsc-checkbox input {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    border: 1.5px solid rgba(244, 114, 182, 0.5);
+    background: transparent;
+    flex-shrink: 0;
+    margin-top: 1px;
+    cursor: pointer;
+    position: relative;
+    transition: all 150ms ease;
+  }
+  .ds-consent .dsc-checkbox input:checked {
+    background: #ec4899;
+    border-color: #ec4899;
+  }
+  .ds-consent .dsc-checkbox input:checked::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 1px;
+    width: 5px;
+    height: 10px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  .ds-consent .dsc-checkbox span {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: #e4e4e7;
+  }
+
+  .ds-consent .dsc-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .ds-consent button {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    border-radius: 14px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: transform 120ms ease, box-shadow 200ms ease, background 200ms ease, opacity 200ms ease;
+  }
+  .ds-consent button.dsc-primary {
+    background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+    color: #fff;
+    box-shadow: 0 10px 30px -10px rgba(236, 72, 153, 0.55);
+  }
+  .ds-consent button.dsc-primary:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 36px -10px rgba(236, 72, 153, 0.7);
+  }
+  .ds-consent button.dsc-primary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  .ds-consent button.dsc-secondary {
+    background: transparent;
+    color: #a1a1aa;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  .ds-consent button.dsc-secondary:hover {
+    background: rgba(255, 255, 255, 0.04);
+    color: #fff;
+  }
+  .ds-consent .dsc-fineprint {
+    font-size: 0.7rem;
+    color: #71717a;
+    text-align: center;
+    margin: 0.9rem 0 0;
+    line-height: 1.5;
+  }
+  .ds-consent .dsc-fineprint a {
+    color: #f472b6;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  body.dsc-locked { overflow: hidden !important; }
+</style>
+
+<!-- ============= CAMERA CONSENT MODAL ============= -->
+<div id="dsc-camera" class="ds-consent" role="dialog" aria-modal="true" aria-labelledby="dsc-camera-title" hidden>
+  <div class="dsc-card">
+    <div class="dsc-icon">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+        <circle cx="12" cy="13" r="4"/>
+      </svg>
+    </div>
+    <h2 id="dsc-camera-title">Before we turn on your camera</h2>
+    <p class="dsc-lede">Here's exactly what happens — in plain English.</p>
+    <ul class="dsc-list">
+      <li class="dsc-good">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><strong>On-device only.</strong> Your camera frames are analysed inside your browser. They are <strong>never uploaded</strong> to our servers and we never see them.</span>
+      </li>
+      <li class="dsc-good">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><strong>Nothing is saved.</strong> Frames live in your device's memory for a few seconds while the AI checks outfit, grooming, posture and lighting — then they're discarded.</span>
+      </li>
+      <li class="dsc-good">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><strong>You're in control.</strong> Stop the camera any time by closing the scanner. Your browser also lets you revoke camera permission at any moment.</span>
+      </li>
+      <li class="dsc-bad">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <span><strong>Self-scan only.</strong> Point the camera at <strong>yourself</strong>, not other people. Scanning anyone else without their consent is forbidden by our Terms.</span>
+      </li>
+    </ul>
+    <div class="dsc-actions">
+      <button type="button" class="dsc-primary" id="dsc-camera-yes">Got it — start the camera</button>
+      <button type="button" class="dsc-secondary" id="dsc-camera-no">Not now</button>
+    </div>
+    <p class="dsc-fineprint">
+      See our <a href="/privacy.html">Privacy Policy</a> and
+      <a href="/terms.html">Terms of Service</a> for full details.
+    </p>
+  </div>
+</div>
+
+<!-- ============= UPLOAD CONSENT MODAL ============= -->
+<div id="dsc-upload" class="ds-consent" role="dialog" aria-modal="true" aria-labelledby="dsc-upload-title" hidden>
+  <div class="dsc-card">
+    <div class="dsc-icon">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+    </div>
+    <h2 id="dsc-upload-title">Before you upload an image</h2>
+    <p class="dsc-lede">A quick reality check — these rules are not optional.</p>
+    <ul class="dsc-list">
+      <li class="dsc-good">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><strong>Only upload pictures of yourself.</strong> DateScan is a self-coaching tool, not a way to analyse other people.</span>
+      </li>
+      <li class="dsc-bad">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <span><strong>No other people.</strong> No friends, ex-partners, colleagues, strangers, celebrities or public figures — even if the photo is publicly available online.</span>
+      </li>
+      <li class="dsc-bad">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <span><strong>Absolutely no minors.</strong> Zero tolerance. Any image containing a person under 18 — including yourself as a child — is forbidden and will result in immediate termination.</span>
+      </li>
+      <li class="dsc-bad">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <span><strong>No nudity, sexual or harmful content.</strong> See our Acceptable Use policy for the full list.</span>
+      </li>
+    </ul>
+    <label class="dsc-checkbox">
+      <input type="checkbox" id="dsc-upload-confirm">
+      <span>I confirm the image I'm about to upload is <strong>of myself only</strong>, that I'm 18 or older, and that it doesn't contain any other person or any minor.</span>
+    </label>
+    <div class="dsc-actions">
+      <button type="button" class="dsc-primary" id="dsc-upload-yes" disabled>Continue to upload</button>
+      <button type="button" class="dsc-secondary" id="dsc-upload-no">Cancel</button>
+    </div>
+    <p class="dsc-fineprint">
+      Violations are logged and may be reported to authorities. See
+      <a href="/terms.html">Terms of Service</a>, sections 5.1–5.3.
+    </p>
+  </div>
+</div>
+
+<script>
+(function () {
+  var CAM_KEY = 'datescan_camera_ack_v1';
+  var UP_KEY  = 'datescan_upload_ack_v1';
+
+  function uuid() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+  }
+  function alreadyAck(key) {
+    try {
+      var raw = localStorage.getItem(key);
+      if (!raw) return false;
+      var p = JSON.parse(raw);
+      return p && p.confirmed === true;
+    } catch (e) { return false; }
+  }
+  function storeAck(key) {
+    try {
+      localStorage.setItem(key, JSON.stringify({
+        confirmed: true,
+        ts: new Date().toISOString(),
+        declarationId: uuid(),
+        v: 1
+      }));
+    } catch (e) {}
+  }
+  function lock()   { document.body.classList.add('dsc-locked'); }
+  function unlock() {
+    if (document.getElementById('dsc-camera').hidden &&
+        document.getElementById('dsc-upload').hidden) {
+      document.body.classList.remove('dsc-locked');
+    }
+  }
+
+  // ----- CAMERA -----
+  function requireCamera() {
+    return new Promise(function (resolve, reject) {
+      if (alreadyAck(CAM_KEY)) { resolve(); return; }
+      var modal = document.getElementById('dsc-camera');
+      var yes   = document.getElementById('dsc-camera-yes');
+      var no    = document.getElementById('dsc-camera-no');
+      modal.hidden = false;
+      lock();
+      function cleanup() {
+        yes.removeEventListener('click', onYes);
+        no.removeEventListener('click', onNo);
+        modal.hidden = true;
+        unlock();
+      }
+      function onYes() { storeAck(CAM_KEY); cleanup(); resolve(); }
+      function onNo()  { cleanup(); reject(new Error('camera_consent_declined')); }
+      yes.addEventListener('click', onYes);
+      no.addEventListener('click', onNo);
+    });
+  }
+
+  // ----- UPLOAD -----
+  function requireUpload() {
+    return new Promise(function (resolve, reject) {
+      if (alreadyAck(UP_KEY)) { resolve(); return; }
+      var modal   = document.getElementById('dsc-upload');
+      var yes     = document.getElementById('dsc-upload-yes');
+      var no      = document.getElementById('dsc-upload-no');
+      var confirm = document.getElementById('dsc-upload-confirm');
+      confirm.checked = false;
+      yes.disabled = true;
+      modal.hidden = false;
+      lock();
+      function onChange() { yes.disabled = !confirm.checked; }
+      function cleanup() {
+        yes.removeEventListener('click', onYes);
+        no.removeEventListener('click', onNo);
+        confirm.removeEventListener('change', onChange);
+        modal.hidden = true;
+        unlock();
+      }
+      function onYes() {
+        if (!confirm.checked) return;
+        storeAck(UP_KEY);
+        cleanup();
+        resolve();
+      }
+      function onNo() { cleanup(); reject(new Error('upload_consent_declined')); }
+      confirm.addEventListener('change', onChange);
+      yes.addEventListener('click', onYes);
+      no.addEventListener('click', onNo);
+    });
+  }
+
+  window.DateScanConsent = {
+    requireCamera: requireCamera,
+    requireUpload: requireUpload,
+    // helpers, in case you ever want a "review consents" button
+    reset: function () {
+      try {
+        localStorage.removeItem(CAM_KEY);
+        localStorage.removeItem(UP_KEY);
+      } catch (e) {}
+    },
+    hasCameraAck: function () { return alreadyAck(CAM_KEY); },
+    hasUploadAck: function () { return alreadyAck(UP_KEY); }
+  };
+})();
+</script>
