@@ -1081,8 +1081,9 @@
     <span id="usageBadge" class="inline-block text-[10px] sm:text-xs font-medium px-2.5 sm:px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-300 transition-all whitespace-nowrap">
       Loading...
     </span>
-    <button id="upgradeBtn" class="hidden lg:inline-block text-xs font-bold px-4 py-2 rounded-full bg-white text-black hover:bg-gray-200 transition-colors shadow-lg">
-      Upgrade
+    <button id="upgradeBtn" class="hidden lg:inline-flex text-xs font-bold px-4 py-2 rounded-full bg-gradient-to-r from-brand-500 to-purple-500 text-white hover:brightness-110 transition shadow-lg items-center gap-1.5">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Earn Points
     </button>
   </div>
 </header>
@@ -1465,11 +1466,6 @@
       </p>
       <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 shrink-0">
         <span class="text-[11px] text-gray-600">&copy; 2026 DateScan</span>
-        <span class="hidden sm:inline text-gray-700">·</span>
-        <span class="text-[11px] text-gray-600 inline-flex items-center gap-1.5">
-          Payments by
-          <a href="https://lemonsqueezy.com" target="_blank" rel="noopener" class="text-brand-400 hover:text-brand-500 font-medium transition-colors">Lemon Squeezy</a>
-        </span>
       </div>
     </div>
   </div>
@@ -1495,11 +1491,12 @@
       </svg>
       <span class="text-[10px] font-bold uppercase tracking-widest text-white">Closet</span>
     </button>
-    <button id="mobileNavPro" class="mobile-nav-btn bg-dark-950/80 backdrop-blur-xl rounded-2xl p-3 border border-white/10 flex flex-col items-center gap-1 transition-all active:scale-95">
-      <svg class="w-[22px] h-[22px] text-white" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 2.5l2.9 6 6.6.95-4.78 4.66 1.13 6.58L12 17.6l-5.85 3.07L7.28 14.1 2.5 9.45l6.6-.95z"/>
+    <button id="mobileNavPro" class="mobile-nav-btn bg-dark-950/80 backdrop-blur-xl rounded-2xl p-3 border border-white/10 flex flex-col items-center gap-0.5 transition-all active:scale-95">
+      <svg class="w-[22px] h-[22px] text-brand-400 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
       </svg>
-      <span class="text-[10px] font-bold uppercase tracking-widest text-white">Pro</span>
+      <span class="text-[10px] font-bold uppercase tracking-widest text-white leading-tight">AI</span>
+      <span class="text-[10px] font-bold uppercase tracking-widest text-white leading-tight">Chat</span>
     </button>
   </div>
 </nav>
@@ -1678,9 +1675,21 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     proBtn?.addEventListener('click', () => {
-      if (typeof window.openPaywall === 'function') window.openPaywall();
-      else document.getElementById('upgradeBtn')?.click();
-      setTimeout(syncActive, 50);
+      // The right-most nav button now jumps to the AI Style Coach chat
+      // panel instead of opening a paywall.
+      closePaywallIfOpen();
+      if (typeof window.toggleView === 'function') {
+        window.toggleView('scanner');
+      } else if (closetView && !closetView.classList.contains('hidden')) {
+        document.getElementById('navClosetBtn')?.click();
+      }
+      setTimeout(() => {
+        const chat = document.getElementById('coachChatStream')
+                  || document.getElementById('feedbackPanel')
+                  || document.querySelector('[data-panel="chat"]');
+        chat?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        syncActive();
+      }, 60);
     });
 
     if (paywall) {
@@ -1768,13 +1777,11 @@ document.addEventListener('DOMContentLoaded', function () {
       <div id="privateModeStatus" class="text-[11px] text-gray-500">Status: <span class="text-gray-300">Off</span> — image uploads in chat are allowed after consent.</div>
     </div>
 
-    <!-- Data deletion — required by Google Play's data deletion policy.
-         Wipes IndexedDB (closet, history), localStorage (consent, Pro
-         status, usage counters), and sessionStorage. Server-side Pro
-         entitlements must be revoked separately via /contact. -->
+    <!-- Data deletion — wipes IndexedDB (closet, history), localStorage
+         (consent, point balance, usage counters) and sessionStorage. -->
     <div class="rounded-2xl border border-red-500/20 bg-red-500/5 p-4 mb-4">
       <div class="text-sm font-semibold text-white mb-1">Delete all my data</div>
-      <p class="text-xs text-gray-400 mb-3 leading-relaxed">Wipes your closet, scan history, and local settings from this device. If you have a Pro subscription, this does not cancel it — use the link in your receipt email, or email <a href="/contact.html" class="text-brand-400 hover:text-brand-500 underline">support</a> to request full account and server-side deletion.</p>
+      <p class="text-xs text-gray-400 mb-3 leading-relaxed">Wipes your closet, scan history, local settings and point balance from this device. To request full account deletion, email <a href="/contact.html" class="text-brand-400 hover:text-brand-500 underline">support</a>.</p>
       <button id="deleteAllDataBtn" type="button" class="w-full py-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-sm font-semibold hover:bg-red-500/25 active:scale-[0.98] transition-all">
         Erase everything on this device
       </button>
@@ -1910,61 +1917,63 @@ document.addEventListener('DOMContentLoaded', function () {
   </div>
 </div>
 
-<!-- Paywall Modal -->
+<!-- Earn Points Modal (replaces the old paywall) -->
 <div id="paywallModal" class="hidden fixed inset-0 z-[70] flex items-start justify-center px-4 pb-28 lg:items-center lg:p-4 overflow-y-auto overscroll-contain bg-black/80 backdrop-blur-lg" style="padding-top: max(1.5rem, env(safe-area-inset-top));">
-  <div class="premium-glass border border-brand-500/20 rounded-[32px] p-8 max-w-sm w-full relative overflow-hidden fade-up">
+  <div class="premium-glass border border-brand-500/20 rounded-[32px] p-7 max-w-sm w-full relative overflow-hidden fade-up">
     <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-500 rounded-full mix-blend-screen filter blur-[60px] opacity-30 pointer-events-none"></div>
-    
-    <div class="text-center relative z-10 mb-6">
+
+    <div class="text-center relative z-10 mb-5">
       <div class="w-16 h-16 mx-auto bg-gradient-to-tr from-brand-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg shadow-brand-500/20 mb-4">
-        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
       </div>
-      <h2 class="font-serif text-2xl sm:text-[26px] font-bold mb-2 leading-tight">You’re 1 tweak away from a better first impression.</h2>
-      <p class="text-sm text-gray-400">Most users improve +8–15 points with the full breakdown.</p>
+      <h2 class="font-serif text-2xl font-bold mb-2 leading-tight">Earn more points</h2>
+      <p class="text-sm text-gray-400">You have <span id="pwPointsNow" class="text-brand-400 font-bold">0</span> / <span id="pwPointsMax">5</span> points. Refills in <span id="pwCooldown" class="text-white font-semibold">24h</span> once empty — or earn bonus points now:</p>
     </div>
 
-    <div class="relative z-10 mb-4 rounded-2xl border border-white/10 bg-white/5 p-3.5 space-y-1.5">
-      <div class="flex items-center gap-2 text-[12px] text-white"><span class="text-brand-400">✔</span> Unlimited scans</div>
-      <div class="flex items-center gap-2 text-[12px] text-white"><span class="text-brand-400">✔</span> Unlimited AI coaching</div>
-      <div class="flex items-center gap-2 text-[12px] text-white"><span class="text-brand-400">✔</span> Full improvement breakdown</div>
-      <div class="flex items-center gap-2 text-[12px] text-white"><span class="text-brand-400">✔</span> Track your progress</div>
+    <div class="space-y-3 relative z-10">
+      <!-- Rewarded Ad -->
+      <button id="earnAdBtn" class="w-full text-left bg-gradient-to-r from-brand-500/15 to-purple-500/15 border border-brand-500/40 rounded-2xl p-4 transition-all flex items-center gap-4 hover:border-brand-500/70 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+        <div class="w-11 h-11 rounded-xl bg-brand-500/20 border border-brand-500/40 flex items-center justify-center shrink-0 text-brand-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="font-semibold text-white text-sm">Watch a short video</div>
+          <div id="earnAdSub" class="text-[11px] text-gray-400 mt-0.5 leading-tight">Earn +2 points · max 1 / hour</div>
+        </div>
+        <div class="font-bold text-base text-brand-300 shrink-0">+2</div>
+      </button>
+
+      <!-- Share from closet -->
+      <button id="earnShareBtn" class="w-full text-left bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-2xl p-4 transition-all flex items-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed">
+        <div class="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-gray-200">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="font-semibold text-white text-sm">Share an outfit from your closet</div>
+          <div id="earnShareSub" class="text-[11px] text-gray-400 mt-0.5 leading-tight">Earn +1 point · max 1 / day</div>
+        </div>
+        <div class="font-bold text-base text-white shrink-0">+1</div>
+      </button>
+
+      <!-- Rate a scan -->
+      <button id="earnRateBtn" class="w-full text-left bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-2xl p-4 transition-all flex items-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed">
+        <div class="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-gray-200">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H7V10l4.34-7.4A1.5 1.5 0 0 1 14 3a2 2 0 0 1 1 2.88Z"/></svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="font-semibold text-white text-sm">Rate an AI scan result</div>
+          <div id="earnRateSub" class="text-[11px] text-gray-400 mt-0.5 leading-tight">Earn +1 point · max 1 / day</div>
+        </div>
+        <div class="font-bold text-base text-white shrink-0">+1</div>
+      </button>
     </div>
 
-    <div class="space-y-2.5 relative z-10">
-      <button data-plan="week" class="plan-btn w-full text-left bg-gradient-to-r from-brand-500/10 to-purple-500/10 border border-brand-500/40 rounded-2xl p-3.5 transition-all flex items-center justify-between relative overflow-hidden hover:border-brand-500/70 shadow-lg">
-        <div class="absolute top-0 right-0 bg-brand-500 text-[9px] uppercase font-bold px-2 py-0.5 rounded-bl-lg text-white tracking-wider shadow-sm">Try it out</div>
-        <div class="pr-2">
-          <div class="font-semibold text-white text-sm">Week</div>
-          <div class="text-[11px] text-gray-500 mt-0.5 leading-tight">Quick improvements before your next date</div>
-        </div>
-        <div class="font-bold text-base text-white shrink-0">$4.99</div>
-      </button>
-
-      <button data-plan="month" class="plan-btn w-full text-left bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-2xl p-3.5 transition-all flex items-center justify-between group">
-        <div class="pr-2">
-          <div class="font-semibold text-white text-sm group-hover:text-brand-400 transition-colors">Month — Build confidence fast</div>
-          <div class="text-[11px] text-gray-500 mt-0.5 leading-tight">Unlimited scans + coaching</div>
-        </div>
-        <div class="font-bold text-base text-white shrink-0">$9.99</div>
-      </button>
-
-      <button data-plan="year" class="plan-btn w-full text-left bg-white/5 hover:bg-white/10 border border-yellow-500/30 hover:border-yellow-500/60 rounded-2xl p-3.5 transition-all flex items-center justify-between relative overflow-hidden group">
-        <div class="absolute top-0 right-0 bg-gradient-to-r from-yellow-500 to-amber-600 text-[9px] uppercase font-bold px-2 py-0.5 rounded-bl-lg text-white tracking-wider shadow-sm">Best value — save 58%</div>
-        <div class="pr-2">
-          <div class="font-semibold text-white text-sm">Year — Become consistently attractive</div>
-          <div class="text-[11px] text-gray-500 mt-0.5 leading-tight">Everything, all year</div>
-        </div>
-        <div class="font-bold text-base text-gradient-gold shrink-0">$49.99</div>
-      </button>
-    </div>
-
-    <div class="mt-4 flex items-center justify-center gap-1.5 text-[10px] text-gray-500 relative z-10">
-      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-      Secure checkout by <a href="https://lemonsqueezy.com" target="_blank" rel="noopener" class="text-brand-400 hover:text-brand-500 font-medium">Lemon Squeezy</a>
+    <div class="mt-4 text-[10px] text-gray-500 text-center leading-relaxed relative z-10">
+      1 point = 1 scan or 1 AI chat message. DateScan is 100% free — no subscriptions.
     </div>
 
     <button id="closePaywall" class="w-full mt-4 text-sm font-medium text-gray-500 hover:text-white transition-colors py-2 relative z-10">
-      I’ll stay average
+      Close
     </button>
   </div>
 </div>
@@ -2119,83 +2128,144 @@ const LEVELS = [
   { name: "Level 6: Casanova", xp: 1500 }
 ];
 
-const FREE_SCAN_LIMIT = 3;
-const FREE_CHAT_LIMIT = 2;
+// ============================================================
+// POINT-BASED USAGE SYSTEM
+// ------------------------------------------------------------
+// Each user starts with MAX_POINTS points per day. Every scan
+// and every AI chat message costs 1 point. When points hit 0,
+// a 24h countdown starts; after it elapses, points refill to
+// MAX_POINTS automatically.
+//
+// Bonus points can be earned (capped per day):
+//   • Rating a scan (👍/👎)        → +1 point (max 1/day)
+//   • Sharing an outfit from closet → +1 point (max 1/day)
+//   • Watching a rewarded ad        → +2 points (max 1 ad/hour)
+// ============================================================
+const MAX_POINTS = 5;
 const RESET_MS = 24 * 60 * 60 * 1000;
+const POINTS_KEY = "datescan.points";
+const BONUS_KEY  = "datescan.bonus";
 
-function isProUser() { return localStorage.getItem('datescan.pro') === 'true'; }
-function setProUser() { localStorage.setItem('datescan.pro', 'true'); }
+// Pro system is fully retired — keep the stub returning false
+// so any leftover gating check fails open into the point flow.
+function isProUser() { return false; }
+function setProUser() { /* no-op: pro system retired */ }
 
-// ---- Scan usage (rolling 24h window from first scan; resets 24h after block) ----
-function getUsage() {
-  try {
-    const raw = JSON.parse(localStorage.getItem("datescan.usage") || "{}");
-    if (!raw || typeof raw.count !== 'number') return { count: 0, firstAt: 0, blockedAt: 0 };
-    // If a block was set and 24h has passed → full reset
-    if (raw.blockedAt && Date.now() - raw.blockedAt >= RESET_MS) return { count: 0, firstAt: 0, blockedAt: 0 };
-    // If no block but 24h has passed since first scan → reset
-    if (!raw.blockedAt && raw.firstAt && Date.now() - raw.firstAt >= RESET_MS) return { count: 0, firstAt: 0, blockedAt: 0 };
-    return raw;
-  } catch { return { count: 0, firstAt: 0, blockedAt: 0 }; }
+function _todayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
 }
-function getTodayScans() { return getUsage().count; }
-function incrementUsage() {
-  const u = getUsage();
-  if (!u.firstAt) u.firstAt = Date.now();
-  u.count++;
-  if (u.count >= FREE_SCAN_LIMIT) u.blockedAt = Date.now();
-  localStorage.setItem("datescan.usage", JSON.stringify(u));
+
+function _readPointState() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(POINTS_KEY) || "null");
+    if (!raw || typeof raw.points !== 'number') {
+      return { points: MAX_POINTS, emptyAt: 0 };
+    }
+    // If points are 0 and 24h has passed → refill
+    if (raw.points <= 0 && raw.emptyAt && Date.now() - raw.emptyAt >= RESET_MS) {
+      return { points: MAX_POINTS, emptyAt: 0 };
+    }
+    return raw;
+  } catch {
+    return { points: MAX_POINTS, emptyAt: 0 };
+  }
+}
+function _writePointState(s) {
+  try { localStorage.setItem(POINTS_KEY, JSON.stringify(s)); } catch {}
+}
+function getPoints() { return _readPointState().points; }
+function getPointCooldownMs() {
+  const s = _readPointState();
+  if (s.points > 0 || !s.emptyAt) return 0;
+  return Math.max(0, RESET_MS - (Date.now() - s.emptyAt));
+}
+function spendPoint() {
+  const s = _readPointState();
+  if (s.points <= 0) return false;
+  s.points = Math.max(0, s.points - 1);
+  if (s.points === 0) s.emptyAt = Date.now();
+  _writePointState(s);
+  updateUsageBadge();
+  return true;
+}
+function addPoints(n) {
+  const s = _readPointState();
+  s.points = Math.min(MAX_POINTS + 99, s.points + n); // soft ceiling, can bank via bonuses
+  if (s.points > 0) s.emptyAt = 0;
+  _writePointState(s);
   updateUsageBadge();
 }
-function getScanCooldownMs() {
-  const u = getUsage();
-  if (!u.blockedAt) return 0;
-  return Math.max(0, RESET_MS - (Date.now() - u.blockedAt));
+
+// ---- Daily bonus ledger (which bonuses the user already claimed today) ----
+function _readBonus() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(BONUS_KEY) || "null");
+    if (!raw || raw.date !== _todayKey()) return { date: _todayKey(), rated: false, shared: false, lastAdAt: 0 };
+    return raw;
+  } catch {
+    return { date: _todayKey(), rated: false, shared: false, lastAdAt: 0 };
+  }
+}
+function _writeBonus(b) {
+  try { localStorage.setItem(BONUS_KEY, JSON.stringify(b)); } catch {}
+}
+function canClaimRateBonus()  { return !_readBonus().rated;  }
+function canClaimShareBonus() { return !_readBonus().shared; }
+function canWatchRewardedAd() {
+  const b = _readBonus();
+  return Date.now() - (b.lastAdAt || 0) >= 60 * 60 * 1000; // 1h cap
+}
+function claimRateBonus() {
+  if (!canClaimRateBonus()) return false;
+  const b = _readBonus(); b.rated = true; _writeBonus(b);
+  addPoints(1);
+  window.dsPrivacy?.showToast?.('+1 point — thanks for rating!', 2400);
+  return true;
+}
+function claimShareBonus() {
+  if (!canClaimShareBonus()) return false;
+  const b = _readBonus(); b.shared = true; _writeBonus(b);
+  addPoints(1);
+  window.dsPrivacy?.showToast?.('+1 point — thanks for sharing!', 2400);
+  return true;
+}
+function markAdWatched() {
+  const b = _readBonus(); b.lastAdAt = Date.now(); _writeBonus(b);
+  addPoints(2);
+  window.dsPrivacy?.showToast?.('+2 points — thanks for watching!', 2600);
 }
 
-// ---- Chat usage (same 24h logic) ----
-function getChatUsage() {
-  try {
-    const raw = JSON.parse(localStorage.getItem("datescan.chatUsage") || "{}");
-    if (!raw || typeof raw.count !== 'number') return { count: 0, firstAt: 0, blockedAt: 0 };
-    if (raw.blockedAt && Date.now() - raw.blockedAt >= RESET_MS) return { count: 0, firstAt: 0, blockedAt: 0 };
-    if (!raw.blockedAt && raw.firstAt && Date.now() - raw.firstAt >= RESET_MS) return { count: 0, firstAt: 0, blockedAt: 0 };
-    return raw;
-  } catch { return { count: 0, firstAt: 0, blockedAt: 0 }; }
-}
-function getChatCount() { return getChatUsage().count; }
-function incrementChatUsage() {
-  const u = getChatUsage();
-  if (!u.firstAt) u.firstAt = Date.now();
-  u.count++;
-  if (u.count >= FREE_CHAT_LIMIT) u.blockedAt = Date.now();
-  localStorage.setItem("datescan.chatUsage", JSON.stringify(u));
-}
+// Legacy API shims — older call sites still reference these names.
+function getTodayScans() { return MAX_POINTS - getPoints(); }
+function incrementUsage() { spendPoint(); }
+function getScanCooldownMs() { return getPointCooldownMs(); }
+function getChatCount() { return MAX_POINTS - getPoints(); }
+function incrementChatUsage() { spendPoint(); }
+
+window.getPoints = getPoints;
+window.addPoints = addPoints;
+window.spendPoint = spendPoint;
+window.getPointCooldownMs = getPointCooldownMs;
+window.canClaimRateBonus = canClaimRateBonus;
+window.canClaimShareBonus = canClaimShareBonus;
+window.canWatchRewardedAd = canWatchRewardedAd;
+window.claimRateBonus = claimRateBonus;
+window.claimShareBonus = claimShareBonus;
+window.markAdWatched = markAdWatched;
 window.getChatCount = getChatCount;
 window.incrementChatUsage = incrementChatUsage;
 window.isProUser = isProUser;
-window.FREE_CHAT_LIMIT = FREE_CHAT_LIMIT;
+window.MAX_POINTS = MAX_POINTS;
 
 function updateUsageBadge() {
-  if (isProUser()) {
-    usageBadge.innerHTML = `<span class="text-brand-400 font-bold">PRO Active</span>`;
-    usageBadge.classList.replace('bg-white/5', 'bg-brand-500/10');
-    usageBadge.classList.replace('border-white/10', 'border-brand-500/30');
-    usageBadge.classList.remove('hidden');
-    $("upgradeBtn").classList.add("hidden");
-  } else {
-    const left = Math.max(0, FREE_SCAN_LIMIT - getTodayScans());
-    if (left > 1) {
-      usageBadge.textContent = `${left} Free Scans Left`;
-      usageBadge.classList.remove('text-gray-500');
-    } else if (left === 1) {
-      usageBadge.textContent = `1 Free Scan Left`;
-      usageBadge.classList.remove('text-gray-500');
-    } else {
-      usageBadge.textContent = `0 Free Scans`;
-      usageBadge.classList.add('text-gray-500');
-    }
-  }
+  if (!usageBadge) return;
+  const p = getPoints();
+  usageBadge.innerHTML = `<span class="font-bold text-brand-400">${p}</span><span class="text-gray-400">/${MAX_POINTS}</span> <span class="text-gray-500">pts</span>`;
+  usageBadge.classList.remove('hidden', 'text-gray-500');
+  if (p === 0) usageBadge.classList.add('text-gray-500');
+  const earnBtn = $("earnPointsBtn") || $("upgradeBtn");
+  if (earnBtn) earnBtn.classList.remove("hidden");
 }
 
 // Body scroll lock — `overflow: hidden` alone is unreliable on mobile
@@ -2431,7 +2501,7 @@ window.renderCloset = function(filter = 'all') {
                      <button onclick="window.triggerDeleteOutfit('${outfit.id}')" class="w-12 h-12 rounded-full bg-black/70 hover:bg-red-500/90 active:scale-95 flex items-center justify-center backdrop-blur-md text-white transition-all border border-white/20 shadow-lg" title="Delete">
                          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                      </button>
-                     <button onclick="window.openShareModal(${outfit.score}, '${outfit.image}')" class="w-12 h-12 rounded-full bg-black/70 hover:bg-brand-500/90 active:scale-95 flex items-center justify-center backdrop-blur-md text-white transition-all border border-white/20 shadow-lg" title="Share">
+                     <button onclick="window.openShareModal(${outfit.score}, '${outfit.image}', true)" class="w-12 h-12 rounded-full bg-black/70 hover:bg-brand-500/90 active:scale-95 flex items-center justify-center backdrop-blur-md text-white transition-all border border-white/20 shadow-lg" title="Share">
                          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
                      </button>
                 </div>
@@ -2761,9 +2831,10 @@ async function generateShareCard(overrideScore, overrideImage) {
   }
 }
 
-window.openShareModal = async function(score, image) {
+window.openShareModal = async function(score, image, fromCloset = false) {
   triggerHaptic('tap');
   shareModal.classList.remove('hidden');
+  shareModal.dataset.fromCloset = fromCloset ? '1' : '0';
   document.body.style.overflow = 'hidden';
   await generateShareCard(score, image);
 };
@@ -2816,7 +2887,13 @@ $("shareNativeBtn").addEventListener('click', async () => {
     // Either way, do not award XP for a non-event.
     if (e && e.name !== 'AbortError') console.warn('[share] native share failed:', e);
   }
-  if (didShare) rewardShare();
+  if (didShare) {
+    rewardShare();
+    // Closet-originated share → +1 point (max 1/day).
+    if (shareModal.dataset.fromCloset === '1' && window.canClaimShareBonus?.()) {
+      window.claimShareBonus?.();
+    }
+  }
 });
 
 // Awards +5 XP for sharing the score card — but only ONCE per unique card.
@@ -4341,7 +4418,20 @@ function renderStyleCoach(colorData, occasion, locked = false, items = null) {
       <p class="text-xs text-gray-400 mt-4 font-normal">${historyText}</p>
     </div>
 
-    <div class="mt-6">
+    <div class="mt-6 rounded-2xl border border-white/10 bg-white/[0.025] p-4">
+      <div class="flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-0.5">Was this helpful?</div>
+          <div class="text-[11px] text-gray-500 leading-snug">Rate the AI's analysis · earn +1 point (max once a day)</div>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button data-rate="up" class="rate-btn w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:bg-emerald-500/15 hover:border-emerald-500/40 text-emerald-300 text-lg flex items-center justify-center transition" aria-label="Rate up">👍</button>
+          <button data-rate="down" class="rate-btn w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:bg-red-500/15 hover:border-red-500/40 text-red-300 text-lg flex items-center justify-center transition" aria-label="Rate down">👎</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4">
       <button id="saveOutfitBtn" onclick="window.saveCurrentOutfit()" class="w-full py-3.5 rounded-xl border border-white/20 bg-white/5 text-sm font-bold text-white hover:bg-white/10 transition-colors flex items-center justify-center gap-2 shadow-lg">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
         Save to Digital Closet
@@ -4349,23 +4439,24 @@ function renderStyleCoach(colorData, occasion, locked = false, items = null) {
     </div>
   `;
 
-  if (locked) {
-    panel.innerHTML = `
-      <div class="blur-content">${html}</div>
-      <div class="locked-overlay p-6 text-center">
-         <div class="w-14 h-14 mx-auto bg-brand-500/20 text-brand-400 rounded-full flex items-center justify-center mb-4 backdrop-blur-md border border-brand-500/30">
-           <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
-         </div>
-         <h3 class="font-serif text-2xl font-bold text-white mb-2">Detailed Analysis Locked</h3>
-         <p class="text-sm text-gray-300 mb-6 max-w-[280px] mx-auto">You've used your free scan. Unlock Pro to see your style score, color matches, and save to Digital Closet.</p>
-         <button onclick="window.openPaywall()" class="btn-primary px-8 py-3.5 rounded-xl font-bold shadow-lg shadow-brand-500/30 w-full max-w-[250px]">
-           Unlock Pro
-         </button>
-      </div>
-    `;
-  } else {
-    panel.innerHTML = html;
-  }
+  panel.innerHTML = html;
+
+  // Wire 👍/👎 rating → +1 point bonus (max 1/day).
+  panel.querySelectorAll('.rate-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (window.canClaimRateBonus?.()) {
+        window.claimRateBonus?.();
+      } else {
+        window.dsPrivacy?.showToast?.('Thanks — you already claimed today\'s rating bonus.', 2400);
+      }
+      // Visual ack: disable both buttons once rated.
+      panel.querySelectorAll('.rate-btn').forEach(b => {
+        b.disabled = true;
+        b.classList.add('opacity-50', 'pointer-events-none');
+      });
+      btn.classList.add('ring-2', 'ring-brand-500/60');
+    });
+  });
 }
 
 function clearHUD() { hud.innerHTML = ""; hud.removeAttribute("viewBox"); }
@@ -4743,13 +4834,10 @@ async function runScan() {
 
   triggerHaptic('tap');
 
-  // ---- Free-tier gating: 3 scans / 24h ----
-  if (!isProUser()) {
-    const scans = getTodayScans();
-    if (scans >= FREE_SCAN_LIMIT) {
-      window.openPaywall();
-      return;
-    }
+  // ---- Point-based gating: 1 point per scan ----
+  if (getPoints() <= 0) {
+    window.openPaywall();
+    return;
   }
 
   store.dispatch({ type: 'SCAN_START' });
@@ -4757,8 +4845,8 @@ async function runScan() {
   // stale suggestions while the new analysis is running.
   clearChips();
 
-  // 3rd scan (index 2) → render partial result with blurred action plan, then paywall
-  const isLocked = !isProUser() && getTodayScans() === FREE_SCAN_LIMIT - 1;
+  // Action plan is always fully visible under the point system.
+  const isLocked = false;
 
   videoWrap.classList.add("scanning");
 
@@ -4926,13 +5014,7 @@ async function runScan() {
       window.dsPrivacy?.showToast?.(`+${n} improvement possible`, 2400);
     }, 1000);
 
-    // Animate the blur in for the partial 3rd scan, then open the paywall
-    if (isLocked) {
-      setTimeout(() => {
-        document.querySelector(".blur-content")?.classList.add("blur-active");
-      }, 300);
-      setTimeout(() => { window.openPaywall(); }, 800);
-    }
+    // isLocked is always false now — full results are always shown.
   } catch (err) {
     // Unexpected throw from any analyzer, MediaPipe call, or canvas op.
     // Surface a clean error card instead of leaving the UI mid-scan.
@@ -5186,309 +5268,280 @@ function renderActionPlan(items, locked = false) {
     html += `</div>`;
   }
 
-  if (locked) {
-    feedbackPanel.innerHTML = `
-      <div class="blur-content">${html}</div>
-      <div class="locked-overlay p-6 text-center">
-         <h3 class="font-serif text-xl font-bold text-white mb-2">Premium Feedback</h3>
-         <p class="text-sm text-gray-300 mb-5 max-w-[250px] mx-auto">Get personalized grooming tips and attractiveness boosts to stand out.</p>
-         <button onclick="window.openPaywall()" class="text-sm font-bold text-brand-400 bg-brand-500/10 border border-brand-500/30 px-6 py-2.5 rounded-xl hover:bg-brand-500/20 transition shadow-lg">View Action Plan</button>
-      </div>
-    `;
-  } else {
-    feedbackPanel.innerHTML = html;
-  }
+  feedbackPanel.innerHTML = html;
 }
 
 // ============================================================
-// PAYMENT INTEGRATION — Google Play Billing (TWA) + Lemon Squeezy fallback
+// FREE POINT-BASED ACCESS — replaces previous paid subscription
 // ============================================================
-// Flow:
-//   1. If the app is running inside a Trusted Web Activity on Android and
-//      the Digital Goods API is available, we try Google Play Billing first.
-//   2. On any Google Play error, or in a regular browser (Safari/Chrome/Firefox),
-//      we fall back to Lemon Squeezy hosted checkout.
-//   3. In both cases we verify the Pro status with our Cloudflare Worker at
-//      https://payment.datescan.app/check?user_id=...  which is updated by
-//      Lemon Squeezy webhooks and a Play purchase verification endpoint.
+// DateScan is fully free. The old paywall/payment integration has been
+// removed. Extra points are earned through in-app actions (rating a scan,
+// sharing an outfit, or watching a rewarded Google AdMob video).
 // ============================================================
 
-const WORKER_BASE_URL = "https://payment.datescan.app";
+// ---------- Google Mobile Ads (AdMob) configuration ----------
+const ADMOB_APP_ID          = "ca-app-pub-3142006908570245~9079281842";
+const ADMOB_REWARDED_AD_ID  = "ca-app-pub-3142006908570245/3214366633";
 
-// Google Play product IDs (must match the SKUs you created in Play Console)
-const GOOGLE_SKUS = {
-  week:  "premium_week",
-  month: "premium_month",
-  year:  "premium_year",
-};
+/**
+ * Rewarded ad bridge.
+ *
+ * In a plain browser there is no native AdMob SDK, so this module acts as a
+ * bridge: if the page is running inside a native wrapper (TWA/Capacitor/
+ * Cordova) that exposes `window.AdMob` or `window.admob`, we call into it
+ * with the real App ID / Ad Unit ID. Otherwise we fall back to a short
+ * in-page "simulated" ad so the point flow can be developed and tested in
+ * the browser. Either way, onUserEarnedReward() credits +2 points.
+ */
+const DateScanAds = (function () {
+  let initialized = false;
+  let nativeBridge = null;
 
-// Lemon Squeezy hosted checkout URLs (used as web fallback)
-const LEMON_CHECKOUTS = {
-  week:  "https://datescan.lemonsqueezy.com/checkout/buy/ce5103de-486e-4cef-b48b-87b89330465b",
-  month: "https://datescan.lemonsqueezy.com/checkout/buy/3acc0dcd-b5b6-4642-b553-849db696ee2a",
-  year:  "https://datescan.lemonsqueezy.com/checkout/buy/d9654a21-87cd-4b7f-bdd6-34a1b1f01c3e",
-};
-
-const CHECKOUT_ATTEMPT_KEY = "datescan.lastCheckoutAttempt";
-const CHECKOUT_ATTEMPT_TTL_MS = 30 * 60 * 1000; // 30 min
-
-function getOrCreateUserId() {
-  let id = localStorage.getItem("datescan.userId");
-  if (!id) {
-    id = "u_" + (crypto.randomUUID ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2)));
-    localStorage.setItem("datescan.userId", id);
-  }
-  return id;
-}
-
-function buildCheckoutUrl(plan) {
-  const base = LEMON_CHECKOUTS[plan];
-  if (!base) return null;
-  const userId = getOrCreateUserId();
-  const sep = base.includes("?") ? "&" : "?";
-  return `${base}${sep}checkout[custom][user_id]=${encodeURIComponent(userId)}`;
-}
-
-function markCheckoutAttempt(plan) {
-  localStorage.setItem(CHECKOUT_ATTEMPT_KEY, JSON.stringify({ plan, ts: Date.now() }));
-}
-function getRecentCheckoutAttempt() {
-  try {
-    const raw = JSON.parse(localStorage.getItem(CHECKOUT_ATTEMPT_KEY) || "null");
-    if (!raw) return null;
-    if (Date.now() - raw.ts > CHECKOUT_ATTEMPT_TTL_MS) {
-      localStorage.removeItem(CHECKOUT_ATTEMPT_KEY);
-      return null;
+  function detectBridge() {
+    if (typeof window === 'undefined') return null;
+    if (window.AdMob && typeof window.AdMob.showRewardVideoAd === 'function') {
+      return { kind: 'cordova', obj: window.AdMob };
     }
-    return raw;
-  } catch { return null; }
-}
-function clearCheckoutAttempt() {
-  localStorage.removeItem(CHECKOUT_ATTEMPT_KEY);
-}
-
-// ---- Visible "Verifying payment" overlay ----
-function showVerifyingOverlay() {
-  let el = document.getElementById("verifyOverlay");
-  if (el) return el;
-  el = document.createElement("div");
-  el.id = "verifyOverlay";
-  el.className = "fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-lg p-4";
-  el.innerHTML = `
-    <div class="premium-glass border border-brand-500/30 rounded-[28px] p-8 max-w-sm w-full text-center fade-up">
-      <div class="w-14 h-14 mx-auto mb-4 rounded-full border-4 border-brand-500/30 border-t-brand-500 animate-spin"></div>
-      <h3 class="font-serif text-xl font-bold text-white mb-2">Verifying your payment…</h3>
-      <p id="verifyOverlayMsg" class="text-sm text-gray-400">Hang tight, this only takes a moment.</p>
-      <button id="verifyOverlayClose" class="hidden mt-5 text-xs text-gray-500 hover:text-white underline">Close</button>
-    </div>
-  `;
-  document.body.appendChild(el);
-  return el;
-}
-function hideVerifyingOverlay() {
-  document.getElementById("verifyOverlay")?.remove();
-}
-function setVerifyingMessage(msg, showClose = false) {
-  const m = document.getElementById("verifyOverlayMsg");
-  if (m) m.textContent = msg;
-  if (showClose) {
-    const b = document.getElementById("verifyOverlayClose");
-    if (b) {
-      b.classList.remove("hidden");
-      b.onclick = hideVerifyingOverlay;
+    if (window.admob && typeof window.admob.rewarded === 'object') {
+      return { kind: 'capacitor', obj: window.admob };
     }
+    return null;
   }
-}
 
-async function verifyProStatus({ poll = false, visible = false } = {}) {
-  const userId = getOrCreateUserId();
-  const url = `${WORKER_BASE_URL}/check?user_id=${encodeURIComponent(userId)}`;
-  const tries = poll ? 12 : 1; // up to ~24s
-  console.log("[DateScan] verifyProStatus:", { userId, url, poll, tries });
-
-  if (visible) showVerifyingOverlay();
-
-  for (let i = 0; i < tries; i++) {
+  async function init() {
+    if (initialized) return;
+    nativeBridge = detectBridge();
     try {
-      const r = await fetch(url, { cache: "no-store" });
-      console.log(`[DateScan] /check try #${i + 1} → status ${r.status}`);
-      if (r.ok) {
-        const data = await r.json();
-        console.log("[DateScan] /check response:", data);
-        if (data.pro) {
-          setProUser();
-          if (data.plan) localStorage.setItem("datescan.proPlan", data.plan);
-          clearCheckoutAttempt();
-          try { updateUsageBadge(); } catch {}
-          window.dsPrivacy?.showToast?.("🎉 Welcome to Pro!", 3000);
-          const s = store.get();
-          if (s.lastItems) {
-            renderActionPlan(s.lastItems, false);
-            renderStyleCoach(s.lastColor, s.occasion, false);
-            renderChips(s.occasion);
-          }
-          if (visible) {
-            setVerifyingMessage("✓ Payment confirmed!");
-            setTimeout(hideVerifyingOverlay, 1200);
-          }
-          return true;
-        }
+      if (nativeBridge && nativeBridge.kind === 'capacitor') {
+        await nativeBridge.obj.initialize({ appId: ADMOB_APP_ID });
+      } else if (nativeBridge && nativeBridge.kind === 'cordova') {
+        nativeBridge.obj.setOptions?.({
+          publisherId: ADMOB_APP_ID,
+          rewardedAdId: ADMOB_REWARDED_AD_ID,
+          isTesting: false,
+          autoShow: false,
+        });
       }
+      initialized = true;
+      console.log('[DateScan] AdMob initialized', { appId: ADMOB_APP_ID, bridge: nativeBridge?.kind || 'web-simulated' });
     } catch (e) {
-      console.warn(`[DateScan] /check try #${i + 1} failed:`, e);
+      console.warn('[DateScan] AdMob init failed:', e);
     }
-    if (visible && poll) setVerifyingMessage(`Verifying your payment… (${i + 1}/${tries})`);
-    if (i < tries - 1) await new Promise((r) => setTimeout(r, 2000));
   }
 
-  console.warn("[DateScan] verifyProStatus: gave up");
-  if (visible) {
-    setVerifyingMessage("We couldn't confirm your payment yet. Please refresh in a minute, or contact support if this persists.", true);
-  }
-  return false;
-}
-
-// ---- Lemon Squeezy fallback (opens hosted checkout in the same tab) ----
-function startLemonSqueezyCheckout(plan) {
-  const url = buildCheckoutUrl(plan);
-  if (!url) {
-    console.error("[DateScan] Unknown plan for Lemon Squeezy fallback:", plan);
-    return;
-  }
-  console.log("[DateScan] → Lemon Squeezy checkout:", plan, url);
-  markCheckoutAttempt(plan);
-  window.location.href = url;
-}
-
-// ---- Main entry point: decides Google Play vs Lemon Squeezy ----
-async function handlePayment(plan) {
-  const productId = GOOGLE_SKUS[plan];
-  if (!productId) {
-    console.error("[DateScan] handlePayment: unknown plan:", plan);
-    return;
-  }
-
-  console.log("[DateScan] handlePayment:", { plan, productId });
-
-  // 1. Check if we're running inside a TWA / Android app with Digital Goods API
-  if (window.getDigitalGoodsService && window.PaymentRequest) {
+  async function loadRewarded() {
+    if (!initialized) await init();
+    if (!nativeBridge) return true; // simulated fallback always "loads"
     try {
-      const service = await window.getDigitalGoodsService("https://play.google.com/billing");
+      if (nativeBridge.kind === 'capacitor') {
+        await nativeBridge.obj.rewarded.loadAd({ adId: ADMOB_REWARDED_AD_ID });
+      } else if (nativeBridge.kind === 'cordova') {
+        await new Promise((res, rej) =>
+          nativeBridge.obj.prepareRewardVideoAd(
+            { adId: ADMOB_REWARDED_AD_ID, autoShow: false },
+            res, rej
+          )
+        );
+      }
+      return true;
+    } catch (e) {
+      console.warn('[DateScan] Rewarded ad load failed:', e);
+      return false;
+    }
+  }
 
-      const paymentMethods = [{
-        supportedMethods: "https://play.google.com/billing",
-        data: { sku: productId }
-      }];
+  /**
+   * Shows the rewarded ad and resolves with `true` if the user earned the
+   * reward, `false` otherwise. Crediting the +2 points is done here via
+   * `onUserEarnedReward` so every caller gets the same behaviour.
+   */
+  async function showRewarded() {
+    if (!window.canWatchRewardedAd?.()) {
+      window.dsPrivacy?.showToast?.('You can watch another ad in under an hour.', 2800);
+      return false;
+    }
 
-      const details = {
-        total: {
-          label: "Total",
-          amount: { currency: "USD", value: "0" } // Google Play overrides with the real price
+    if (!initialized) await init();
+
+    // --- Native bridge path (real AdMob SDK inside a TWA / mobile wrapper) ---
+    if (nativeBridge) {
+      try {
+        await loadRewarded();
+        let earned = false;
+        if (nativeBridge.kind === 'capacitor') {
+          const listener = nativeBridge.obj.rewarded.addListener?.(
+            'onRewardedVideoAdReward',
+            () => { earned = true; }
+          );
+          await nativeBridge.obj.rewarded.showAd();
+          try { listener?.remove?.(); } catch {}
+        } else if (nativeBridge.kind === 'cordova') {
+          earned = await new Promise((res) => {
+            const handler = () => { document.removeEventListener('onRewardedVideoAdRewarded', handler); res(true); };
+            document.addEventListener('onRewardedVideoAdRewarded', handler);
+            nativeBridge.obj.showRewardVideoAd(() => {}, () => res(false));
+            setTimeout(() => res(earned), 60000);
+          });
         }
-      };
+        if (earned) onUserEarnedReward();
+        return earned;
+      } catch (e) {
+        console.warn('[DateScan] Rewarded ad show failed, falling back to simulated ad:', e);
+      }
+    }
 
-      const request = new PaymentRequest(paymentMethods, details);
-      const response = await request.show();
-      const { purchaseToken } = response.details;
+    // --- Web fallback: show a short simulated ad inside the page ---
+    const earned = await _showSimulatedRewardedAd();
+    if (earned) onUserEarnedReward();
+    return earned;
+  }
 
-      // 2. Verify the purchase with our Cloudflare Worker
-      showVerifyingOverlay();
-      setVerifyingMessage("Verifying your Google Play purchase…");
+  function onUserEarnedReward() {
+    // Credit the user with +2 points and remember when the ad was watched.
+    if (typeof window.markAdWatched === 'function') {
+      window.markAdWatched();
+    }
+  }
 
-      const userId = getOrCreateUserId();
-      const verifyRes = await fetch(`${WORKER_BASE_URL}/verify`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          purchaseToken: purchaseToken,
-          sku: productId,
-          plan: plan,
-          userId: userId
-        })
+  function _showSimulatedRewardedAd() {
+    return new Promise((resolve) => {
+      let host = document.getElementById('simulatedAdOverlay');
+      if (host) host.remove();
+      host = document.createElement('div');
+      host.id = 'simulatedAdOverlay';
+      host.className = 'fixed inset-0 z-[120] bg-black/95 flex items-center justify-center p-4';
+      host.innerHTML = `
+        <div class="max-w-sm w-full bg-gradient-to-br from-brand-500/10 to-purple-500/10 border border-white/10 rounded-3xl p-6 text-center">
+          <div class="text-[10px] uppercase tracking-widest text-gray-500 mb-2">Sponsored · Rewarded Ad</div>
+          <h3 class="font-serif text-2xl font-bold text-white mb-2">Thanks for supporting DateScan</h3>
+          <p class="text-sm text-gray-400 mb-5">Your ad is playing. You'll earn <span class="text-brand-400 font-bold">+2 points</span> when it finishes.</p>
+          <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden mb-5">
+            <div id="simAdBar" class="h-full bg-gradient-to-r from-brand-500 to-purple-500" style="width:0%;transition:width .2s linear"></div>
+          </div>
+          <button id="simAdSkip" class="text-xs text-gray-500 hover:text-white underline">Skip (forfeits reward)</button>
+        </div>
+      `;
+      document.body.appendChild(host);
+
+      let pct = 0;
+      const tick = setInterval(() => {
+        pct += 5;
+        const bar = document.getElementById('simAdBar');
+        if (bar) bar.style.width = pct + '%';
+        if (pct >= 100) {
+          clearInterval(tick);
+          host.remove();
+          resolve(true);
+        }
+      }, 250); // ~5s total
+
+      document.getElementById('simAdSkip')?.addEventListener('click', () => {
+        clearInterval(tick);
+        host.remove();
+        resolve(false);
       });
-
-      const result = await verifyRes.json();
-      console.log("[DateScan] /verify response:", result);
-
-      if (result && result.success) {
-        await response.complete("success");
-        setProUser();
-        localStorage.setItem("datescan.proPlan", plan);
-        try { updateUsageBadge(); } catch {}
-        setVerifyingMessage("✓ Payment confirmed! Welcome to Pro.");
-        window.dsPrivacy?.showToast?.("🎉 Welcome to Pro!", 3000);
-        setTimeout(() => {
-          hideVerifyingOverlay();
-          location.reload();
-        }, 1500);
-      } else {
-        await response.complete("fail");
-        setVerifyingMessage("We couldn't verify your purchase. Please contact support at info@datescan.app.", true);
-      }
-      return;
-
-    } catch (e) {
-      console.error("[DateScan] Google Play billing error — falling back to Lemon Squeezy:", e);
-      // Any error (user cancelled, SKU not found, API unavailable) → fallback to web checkout
-      hideVerifyingOverlay();
-      startLemonSqueezyCheckout(plan);
-      return;
-    }
+    });
   }
 
-  // 3. Regular browser (Safari / Chrome / Firefox / desktop) → Lemon Squeezy
-  startLemonSqueezyCheckout(plan);
-}
+  return { init, loadRewarded, showRewarded, onUserEarnedReward };
+})();
 
-window.addEventListener("load", () => {
-  const params = new URLSearchParams(window.location.search);
-  const premium = params.get("premium");
-  const cameFromLemon = document.referrer && document.referrer.includes("lemonsqueezy.com");
-  const recentAttempt = getRecentCheckoutAttempt();
-
-  console.log("[DateScan] page load checkout flow:", {
-    premium,
-    cameFromLemon,
-    referrer: document.referrer,
-    recentAttempt,
-    isProUser: isProUser(),
-  });
-
-  // CASE A: just returned from a Lemon Squeezy checkout → ALWAYS verify, never re-redirect
-  if (recentAttempt || cameFromLemon) {
-    console.log("[DateScan] → returning from checkout, verifying with backend");
-    if (params.toString()) {
-      const cleanUrl = window.location.pathname + window.location.hash;
-      window.history.replaceState({}, "", cleanUrl);
-    }
-    verifyProStatus({ poll: true, visible: true });
-    return;
-  }
-
-  // CASE B: fresh entry via /?premium=plan link → route through handlePayment
-  if (premium && GOOGLE_SKUS[premium] && !isProUser()) {
-    console.log("[DateScan] → starting checkout for plan:", premium);
-    handlePayment(premium);
-    return;
-  }
-
-  // CASE C: normal page load → silent background check (in case Pro from another session)
-  if (!isProUser()) {
-    console.log("[DateScan] → silent pro status check");
-    verifyProStatus({ poll: false, visible: false });
-  }
+// Initialise the SDK as soon as the page is ready.
+window.addEventListener('load', () => {
+  DateScanAds.init().then(() => DateScanAds.loadRewarded()).catch(() => {});
 });
 
+// ---------- Earn Points modal wiring ----------
 $("closePaywall").addEventListener("click", closePaywall);
-$("upgradeBtn").addEventListener("click", window.openPaywall);
-document.querySelectorAll(".plan-btn").forEach(b => b.addEventListener("click", () => {
-  triggerHaptic('success');
-  const plan = b.dataset.plan || 'week';
-  console.log("[DateScan] plan-btn click → handlePayment:", plan);
-  handlePayment(plan);
-}));
+$("upgradeBtn").addEventListener("click", () => window.openPaywall());
 
-document.querySelectorAll(".plan-btn").forEach(b => b.dataset.originalHTML = b.innerHTML);
+function _refreshEarnModal() {
+  const p = getPoints();
+  const pn = document.getElementById('pwPointsNow');
+  const pm = document.getElementById('pwPointsMax');
+  if (pn) pn.textContent = String(p);
+  if (pm) pm.textContent = String(MAX_POINTS);
+
+  const cd = document.getElementById('pwCooldown');
+  if (cd) {
+    const ms = getPointCooldownMs();
+    if (ms > 0) {
+      const h = Math.floor(ms / 3600000);
+      const m = Math.floor((ms % 3600000) / 60000);
+      cd.textContent = `${h}h ${m}m`;
+    } else {
+      cd.textContent = '24h';
+    }
+  }
+
+  const adBtn = document.getElementById('earnAdBtn');
+  const adSub = document.getElementById('earnAdSub');
+  if (adBtn) {
+    const can = canWatchRewardedAd();
+    adBtn.disabled = !can;
+    if (!can) {
+      const b = JSON.parse(localStorage.getItem(BONUS_KEY) || '{}');
+      const left = Math.max(0, 60 * 60 * 1000 - (Date.now() - (b.lastAdAt || 0)));
+      const m = Math.ceil(left / 60000);
+      if (adSub) adSub.textContent = `Next ad available in ~${m} min`;
+    } else if (adSub) {
+      adSub.textContent = 'Earn +2 points · max 1 / hour';
+    }
+  }
+
+  const shareBtn = document.getElementById('earnShareBtn');
+  const shareSub = document.getElementById('earnShareSub');
+  if (shareBtn) {
+    const can = canClaimShareBonus();
+    shareBtn.disabled = !can;
+    if (shareSub) shareSub.textContent = can
+      ? 'Earn +1 point · max 1 / day'
+      : 'Claimed today — come back tomorrow';
+  }
+
+  const rateBtn = document.getElementById('earnRateBtn');
+  const rateSub = document.getElementById('earnRateSub');
+  if (rateBtn) {
+    const can = canClaimRateBonus();
+    rateBtn.disabled = !can;
+    if (rateSub) rateSub.textContent = can
+      ? 'Earn +1 point · max 1 / day'
+      : 'Claimed today — come back tomorrow';
+  }
+}
+
+// Wire Earn Points modal buttons
+document.getElementById('earnAdBtn')?.addEventListener('click', async () => {
+  triggerHaptic('tap');
+  const earned = await DateScanAds.showRewarded();
+  _refreshEarnModal();
+  if (earned) setTimeout(closePaywall, 900);
+});
+
+document.getElementById('earnShareBtn')?.addEventListener('click', () => {
+  closePaywall();
+  // Jump the user to the closet so they can share an outfit. The actual
+  // +1 point is credited inside the closet share flow via claimShareBonus().
+  if (typeof window.toggleView === 'function') window.toggleView('closet');
+  else document.getElementById('navClosetBtn')?.click();
+  window.dsPrivacy?.showToast?.('Tap a saved outfit and share it to earn +1 point.', 3600);
+});
+
+document.getElementById('earnRateBtn')?.addEventListener('click', () => {
+  closePaywall();
+  window.dsPrivacy?.showToast?.('Run a scan, then rate the result with 👍 or 👎 to earn +1 point.', 3600);
+  document.getElementById('scanBtn')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
+
+// Keep the modal up to date every time it opens.
+(function patchOpenPaywall() {
+  const orig = window.openPaywall;
+  window.openPaywall = function () {
+    try { _refreshEarnModal(); } catch {}
+    return orig?.();
+  };
+})();
+
 
 const CHECKLIST_ITEMS = [{ id:"perfume", label:"Perfume", icon:"🌸" }, { id:"mints", label:"Mints / Gum", icon:"🍃" }, { id:"wallet", label:"Wallet / ID", icon:"💳" }, { id:"charge", label:"Phone charged", icon:"🔋" }];
 function renderChecklist() {
@@ -6222,54 +6275,31 @@ applyOfflineState(!navigator.onLine);
       return;
     }
 
-    // Trend paywall gate. The "Is this trendy? 🔥" chip (and any free-form
-    // message containing the word "trendy") is positioned as a Pro-only
-    // feature. We surface a short coach reply explaining why and open
-    // the paywall — without burning the user's free message counter,
-    // since we return BEFORE the free-tier check below.
-    if (/\btrendy\b/i.test(text) && !window.isProUser?.()) {
-      // Render the user message naturally so the conversation flow
-      // reads correctly even though we're short-circuiting sendMessage.
-      addMessage('user', text, pendingAttachments.map(a => a.url));
-      pendingAttachments = [];
-      renderAttachments();
-      input.value = '';
-      const teaser = addMessage(
-        'assistant',
-        '🔥 Trend insights are part of Pro analysis. Unlock to see what\'s actually trending right now and how your look stacks up.'
-      );
-      teaser.classList.add('border-brand-500/30');
-      messagesEl.scrollTo?.({ top: messagesEl.scrollHeight, behavior: 'smooth' });
-      // Open the paywall after a short beat so the user reads the
-      // teaser line first instead of being slammed with the modal.
-      setTimeout(() => { window.openPaywall?.(); }, 600);
-      return;
-    }
+    // Note: the old "Pro-only trendy" gate has been removed. Trend
+    // insights are available to everyone, subject only to the shared
+    // point budget below.
 
-    // Free tier: 2 chat messages / 24h
-    if (!window.isProUser?.()) {
-      const used = window.getChatCount?.() || 0;
-      if (used >= window.FREE_CHAT_LIMIT) {
-        const stream = document.getElementById('coachChatStream') || form.parentElement;
-        // Idempotent: if a lock card is already in the DOM, just re-open
-        // the paywall and bail out — never append a second one.
-        let lock = document.getElementById('chatPaywallLock');
-        if (!lock) {
-          lock = document.createElement('div');
-          lock.id = 'chatPaywallLock';
-          lock.className = 'mx-auto my-3 max-w-[85%] rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/10 to-purple-500/10 p-4 text-center';
-          lock.innerHTML = `
-            <p class="text-sm text-white/90 leading-relaxed mb-1"><span class="font-semibold">You're asking the right questions.</span></p>
-            <p class="text-sm text-gray-400 leading-relaxed mb-3">Your next answer is where the real improvements happen.</p>
-            <button type="button" class="text-xs font-bold text-white bg-gradient-to-r from-brand-500 to-purple-500 px-5 py-2 rounded-xl shadow-lg shadow-brand-500/30">Unlock AI Coach</button>
-          `;
-          lock.querySelector('button').addEventListener('click', () => window.openPaywall?.());
-          stream?.appendChild(lock);
-        }
-        stream?.scrollTo?.({ top: stream.scrollHeight, behavior: 'smooth' });
-        window.openPaywall?.();
-        return;
+    // Point-based chat gate: 1 point per message, shared with scans.
+    if ((window.getPoints?.() ?? 0) <= 0) {
+      const stream = document.getElementById('coachChatStream') || form.parentElement;
+      // Idempotent: if a lock card is already in the DOM, just re-open
+      // the modal and bail out — never append a second one.
+      let lock = document.getElementById('chatPaywallLock');
+      if (!lock) {
+        lock = document.createElement('div');
+        lock.id = 'chatPaywallLock';
+        lock.className = 'mx-auto my-3 max-w-[85%] rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/10 to-purple-500/10 p-4 text-center';
+        lock.innerHTML = `
+          <p class="text-sm text-white/90 leading-relaxed mb-1"><span class="font-semibold">You're out of points.</span></p>
+          <p class="text-sm text-gray-400 leading-relaxed mb-3">Points refill every 24 hours — or earn bonus points now.</p>
+          <button type="button" class="text-xs font-bold text-white bg-gradient-to-r from-brand-500 to-purple-500 px-5 py-2 rounded-xl shadow-lg shadow-brand-500/30">Earn Points</button>
+        `;
+        lock.querySelector('button').addEventListener('click', () => window.openPaywall?.());
+        stream?.appendChild(lock);
       }
+      stream?.scrollTo?.({ top: stream.scrollHeight, behavior: 'smooth' });
+      window.openPaywall?.();
+      return;
     }
 
     const attachments = pendingAttachments.slice();
@@ -6277,21 +6307,13 @@ applyOfflineState(!navigator.onLine);
     renderAttachments();
     input.value = '';
     sendBtn.disabled = true;
+    // Spend the point up front — a sent message always consumes 1 point.
+    window.spendPoint?.();
     sendMessage(text, attachments).finally(() => {
-      // Only re-enable if we're not offline; otherwise applyOfflineState
-      // owns the disabled state and we'd just be overriding it.
       if (!(window.dsIsOffline && window.dsIsOffline())) {
         sendBtn.disabled = false;
       }
       input.focus();
-      if (!window.isProUser?.()) {
-        window.incrementChatUsage?.();
-        // Note: the post-2nd-message soft teaser used to live here but
-        // it duplicated the paywall lock that the submit handler
-        // already shows on the next send attempt. Removed to avoid
-        // two near-identical "You're asking the right questions"
-        // cards stacking on top of each other.
-      }
     });
   });
 })();
@@ -6481,7 +6503,7 @@ applyOfflineState(!navigator.onLine);
         <div class="flex-1 min-w-0">
           <p class="text-sm text-white font-medium mb-1">We respect your privacy.</p>
           <p class="text-xs text-gray-400 leading-relaxed">
-            Camera scans run on your device. 🔒 Messages and photos you send to the AI Style Coach are processed on our server for that request only. We only use essential cookies to secure your Pro experience and payments. By continuing, you accept our
+            Camera scans run on your device. 🔒 Messages and photos you send to the AI Style Coach are processed on our server for that request only. We only use essential cookies and local storage to remember your point balance and settings. By continuing, you accept our
             <a href="/privacy.html" class="text-brand-400 hover:text-brand-500 underline underline-offset-2">Privacy Policy</a>.
           </p>
         </div>
