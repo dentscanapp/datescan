@@ -469,13 +469,6 @@
     background: rgba(236, 72, 153, 0.16);
     border-color: rgba(236, 72, 153, 0.6);
   }
-
-  /* Ha az app standalone módban fut, ne mutassa a cookie sávot */
-@media (display-mode: standalone) {
-  #cookie-notice, .cookie-bar-class {
-    display: none !important;
-  }
-}
 </style>
 </head>
 <body class="relative antialiased text-gray-100">
@@ -4903,16 +4896,16 @@ async function handlePayment(plan) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           purchaseToken: purchaseToken,
-          productId: productId,
+          sku: productId,
           plan: plan,
-          user_id: userId
+          userId: userId
         })
       });
 
       const result = await verifyRes.json();
       console.log("[DateScan] /verify response:", result);
 
-      if (result && result.status === "success") {
+      if (result && result.success) {
         await response.complete("success");
         setProUser();
         localStorage.setItem("datescan.proPlan", plan);
