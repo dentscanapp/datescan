@@ -113,7 +113,8 @@
       <li>Onboarding completion state</li>
       <li>Your XP, level, streak, and mission history</li>
       <li>Your digital closet (photos you save yourself)</li>
-      <li>Your point balance (5 points per day, refills every 24 hours) and daily bonus ledger</li>
+      <li>Your daily free-tier counter (3 scans + 2 AI Coach messages, resets every 24 hours)</li>
+      <li>Whether you have an active Pro subscription</li>
       <li>Your cookie-banner and privacy-panel choices</li>
     </ul>
     <p>You can erase all of this at any time by opening the <strong>Privacy</strong> panel in the app and tapping <strong>"Erase everything on this device"</strong>, or by clearing site data for datescan.app in your browser.</p>
@@ -123,10 +124,15 @@
       <li><strong>AI Style Coach chat logs</strong> — retained up to 30 days (see §4).</li>
       <li><strong>Content moderation reports</strong> — when you tap "Report" on an AI response, we store the reported text, your chosen category, and any optional note, retained for up to 12 months for safety auditing.</li>
       <li><strong>Server access logs</strong> — IP address, user agent, request path, timestamp, retained for up to 14 days for security, retained longer in aggregated/anonymized form for analytics.</li>
+      <li><strong>Subscription/entitlement records</strong> — we store a minimal record linking your anonymized device/account ID to your Pro status, plan type, and renewal date for the purpose of gating premium features.</li>
     </ul>
 
-    <h3>Advertising data</h3>
-    <p>DateScan shows optional <strong>rewarded video ads</strong> via Google Mobile Ads (AdMob). You can earn +2 points by voluntarily watching one. AdMob may collect an advertising identifier and standard device/network data to serve and measure those ads. We never initiate an ad on your behalf — it only runs when you tap "Watch a short video" in the Earn Points panel. See <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener">Google Ads privacy</a>.</p>
+    <h3>Payment data</h3>
+    <p>We do not store full payment card details on our servers under any circumstance. Depending on how you subscribe, payment processing happens in one of two places:</p>
+    <ul>
+      <li><strong>Google Play Store (Android app users):</strong> subscriptions are processed by <strong>Google Play Billing</strong>. Google collects the billing data and shares only minimal entitlement information with us (plan, renewal date, anonymized purchase token). See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</li>
+      <li><strong>Web subscriptions:</strong> processed by our Merchant of Record <strong>Lemon Squeezy</strong>, which collects name, email, billing address, and payment method. See <a href="https://www.lemonsqueezy.com/privacy" target="_blank" rel="noopener">Lemon Squeezy's Privacy Policy</a>.</li>
+    </ul>
 
     <h3>Infrastructure &amp; server logs</h3>
     <p>Our static files are served via <strong>Cloudflare</strong>, which handles TLS termination, DDoS protection, caching, and abuse prevention. Cloudflare automatically records standard request metadata (IP address, user agent, timestamps) in its own server logs for security purposes.</p>
@@ -144,7 +150,8 @@
     <h2>7. Third-Party Services</h2>
     <p>The following third-party providers are involved in running DateScan:</p>
     <ul>
-      <li><strong>Google Mobile Ads (AdMob)</strong> — serves the optional rewarded videos users can watch to earn bonus points. <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener">Privacy policy</a></li>
+      <li><strong>Google Play Billing</strong> — subscription processing for the Android app. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Privacy policy</a></li>
+      <li><strong>Lemon Squeezy</strong> — Merchant of Record for web subscriptions. <a href="https://www.lemonsqueezy.com/privacy" target="_blank" rel="noopener">Privacy policy</a></li>
       <li><strong>OpenAI</strong> and/or <strong>Anthropic</strong> — vision-language model providers for the AI Style Coach chat. Chat messages and attached images are forwarded to them to generate replies. We use API terms that prohibit training on user data where available. <a href="https://openai.com/policies/privacy-policy" target="_blank" rel="noopener">OpenAI privacy</a> · <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener">Anthropic privacy</a></li>
       <li><strong>Cloudflare</strong> — CDN, TLS, DDoS protection, and security layer. <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Privacy policy</a></li>
       <li><strong>Google Fonts</strong> — Inter and Playfair Display typefaces. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Privacy policy</a></li>
@@ -152,13 +159,13 @@
     </ul>
 
     <h2>8. Cookies &amp; Local Storage</h2>
-    <p>DateScan itself does not set any advertising or tracking cookies of its own. We use:</p>
+    <p>DateScan itself does not set any advertising or tracking cookies. We use:</p>
     <ul>
-      <li><strong>LocalStorage &amp; IndexedDB</strong> — to remember your progress, point balance, preferences, closet, and cookie-consent choice on your device.</li>
+      <li><strong>LocalStorage &amp; IndexedDB</strong> — to remember your progress, preferences, closet, and cookie-consent choice on your device.</li>
       <li><strong>Strictly necessary cookies</strong> — set by Cloudflare for security, bot detection, and load balancing.</li>
-      <li><strong>Ad-network cookies / identifiers</strong> — set by Google Mobile Ads only when you voluntarily watch a rewarded video to earn bonus points.</li>
+      <li><strong>Payment cookies</strong> — set by Lemon Squeezy only when you proceed to web checkout, for fraud prevention. The Google Play Store (Android app) handles payments without setting cookies on our domain.</li>
     </ul>
-    <p>On your first visit you will see a cookie banner with both <strong>Accept</strong> and <strong>Reject</strong> options. Rejecting only disables non-essential storage; strictly necessary cookies (security) remain active because the service cannot function without them.</p>
+    <p>On your first visit you will see a cookie banner with both <strong>Accept</strong> and <strong>Reject</strong> options. Rejecting only disables non-essential storage; strictly necessary cookies (security, payments) remain active because the service cannot function without them.</p>
 
     <h2>9. Your Rights (GDPR, UK GDPR &amp; CCPA)</h2>
     <p>If you are located in the European Economic Area, the United Kingdom, or California, you have the following rights regarding any personal data we hold:</p>
@@ -177,9 +184,9 @@
     <ul>
       <li><strong>In-app wipe (local data only):</strong> Open the Privacy panel inside DateScan and tap <strong>"Erase everything on this device"</strong>. This wipes your closet, scan history, local settings, and cached service worker data from the current device.</li>
       <li><strong>Web-based account deletion (local + server data):</strong> Visit <a href="/delete-account.html"><strong>https://datescan.app/delete-account.html</strong></a> and submit the form. No login is required. We will permanently delete your chat logs, moderation reports, and entitlement records associated with your email/device identifier within 30 days. This URL is also the account deletion link we submit to the Google Play Store, in compliance with Google Play's account deletion policy.</li>
-      <li><strong>Email request:</strong> Write to <a href="/cdn-cgi/l/email-protection#b8d1d6ded7f8dcd9ccddcbdbd9d696d9c8c8"><span class="__cf_email__" data-cfemail="c5acaba3aa85a1a4b1a0b6a6a4abeba4b5b5">[email&#160;protected]</span></a> with the subject "Data Deletion Request".</li>
+      <li><strong>Email request:</strong> Write to <a href="/cdn-cgi/l/email-protection#b8d1d6ded7f8dcd9ccddcbdbd9d696d9c8c8"><span class="__cf_email__" data-cfemail="c5acaba3aa85a1a4b1a0b6a6a4abeba4b5b5">[email&#160;protected]</span></a> with the subject "Data Deletion Request". Include your purchase email address if you have ever subscribed to Pro.</li>
     </ul>
-    <p>DateScan is free and no subscriptions exist, so there is nothing to cancel — deleting your data simply wipes it from your device and our servers.</p>
+    <p>Deleting your data does <strong>not</strong> cancel an active subscription. If you have Pro via Google Play, cancel it in the <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">Play Store subscriptions page</a>. If you have Pro via the web, use the cancellation link in your Lemon Squeezy receipt or see our <a href="/refund.html">Refund Policy</a>.</p>
 
     <h2>11. Data Retention</h2>
     <p>We retain different categories of data for different periods:</p>
@@ -188,6 +195,8 @@
       <li><strong>AI Style Coach chat logs</strong> — up to 30 days for abuse prevention and debugging, then automatically deleted.</li>
       <li><strong>Content moderation reports</strong> — up to 12 months for safety auditing.</li>
       <li><strong>Server access logs</strong> — up to 14 days in raw form.</li>
+      <li><strong>Subscription records</strong> — for the duration of the subscription plus the period required by applicable tax and accounting law (typically 7 years in the EU).</li>
+      <li><strong>Billing records held by Google Play and Lemon Squeezy</strong> — as long as required by their own policies and applicable tax law.</li>
     </ul>
 
     <h2>12. International Data Transfers</h2>
@@ -235,6 +244,7 @@
         <ul class="space-y-2.5 text-sm">
           <li><a href="/privacy.html" class="text-gray-400 hover:text-brand-400 transition-colors">Privacy Policy</a></li>
           <li><a href="/terms.html" class="text-gray-400 hover:text-brand-400 transition-colors">Terms of Service</a></li>
+          <li><a href="/refund.html" class="text-gray-400 hover:text-brand-400 transition-colors">Refund Policy</a></li>
           <li><a href="/delete-account.html" class="text-gray-400 hover:text-brand-400 transition-colors">Delete Account</a></li>
         </ul>
       </div>
@@ -253,6 +263,11 @@
       </p>
       <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 shrink-0">
         <span class="text-[11px] text-gray-600">&copy; 2026 DateScan</span>
+        <span class="hidden sm:inline text-gray-700">·</span>
+        <span class="text-[11px] text-gray-600 inline-flex items-center gap-1.5">
+          Payments by
+          <a href="https://lemonsqueezy.com" target="_blank" rel="noopener" class="text-brand-400 hover:text-brand-500 font-medium transition-colors">Lemon Squeezy</a>
+        </span>
       </div>
     </div>
   </div>
