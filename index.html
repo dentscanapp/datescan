@@ -6069,8 +6069,11 @@ applyOfflineState(!navigator.onLine);
     try {
       if (window.DateScanConsent) await window.DateScanConsent.requireUpload();
     } catch (e) { return; }
-    const ok = await window.dsPrivacy.requestChatImagePermission();
-    if (!ok) return;
+    // Private Mode still blocks uploads (feature, not consent)
+    if (window.dsPrivacy?.isPrivateMode?.()) {
+      window.dsPrivacy.showToast('Private Mode is on — image uploads in chat are disabled.');
+      return;
+    }
     openClosetPicker();
   });
   pickerClose?.addEventListener('click', () => picker.classList.add('hidden'));
@@ -6081,8 +6084,11 @@ applyOfflineState(!navigator.onLine);
     try {
       if (window.DateScanConsent) await window.DateScanConsent.requireUpload();
     } catch (e) { return; }
-    const ok = await window.dsPrivacy.requestChatImagePermission();
-    if (!ok) return;
+    // Private Mode still blocks uploads (feature, not consent)
+    if (window.dsPrivacy?.isPrivateMode?.()) {
+      window.dsPrivacy.showToast('Private Mode is on — image uploads in chat are disabled.');
+      return;
+    }
     fileInput.click();
   });
   fileInput?.addEventListener('change', async e => {
