@@ -36,6 +36,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='40' y2='40' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%23ec4899'/%3E%3Cstop offset='1' stop-color='%239333ea'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M10 5 H5 V10' stroke='url(%23bg)' stroke-width='2'/%3E%3Cpath d='M30 5 H35 V10' stroke='url(%23bg)' stroke-width='2'/%3E%3Cpath d='M10 35 H5 V30' stroke='url(%23bg)' stroke-width='2'/%3E%3Cpath d='M30 35 H35 V30' stroke='url(%23bg)' stroke-width='2'/%3E%3Cpath d='M20 13.5C20 13.5 16 9 11.5 9C7.5 9 5 12.5 5 16.5C5 22 13 28 20 32C27 28 35 22 35 16.5C35 12.5 32.5 9 28.5 9C24 9 20 13.5 20 13.5Z' fill='url(%23bg)' fill-opacity='0.2' stroke='url(%23bg)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='4' y1='20' x2='36' y2='20' stroke='%23f472b6' stroke-width='1.5' stroke-dasharray='2 2' opacity='0.8'/%3E%3C/svg%3E">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/idb@8.0.0/build/umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
 <script>
   tailwind.config = {
@@ -1113,9 +1114,8 @@
     <span id="usageBadge" class="inline-block text-[10px] sm:text-xs font-medium px-2.5 sm:px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-300 transition-all whitespace-nowrap">
       Loading...
     </span>
-    <button id="upgradeBtn" class="hidden lg:inline-flex text-xs font-bold px-4 py-2 rounded-full bg-gradient-to-r from-brand-500 to-purple-500 text-white hover:brightness-110 transition shadow-lg items-center justify-center gap-1.5 leading-none">
-      <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.4 6.8L21 10l-5.4 4.2L17.4 21 12 17.3 6.6 21l1.8-6.8L3 10l6.6-1.2z"/></svg>
-      <span>Earn Points</span>
+    <button id="upgradeBtn" class="hidden lg:inline-flex text-xs font-bold px-4 py-2 rounded-full bg-gradient-to-r from-brand-500 to-purple-500 text-white hover:brightness-110 transition shadow-lg items-center justify-center leading-none">
+      Earn Points
     </button>
   </div>
 </header>
@@ -1363,23 +1363,19 @@
             <!-- Submenu bar (only visible when body has .coach-view, i.e. on
                  mobile after tapping the AI CHAT tab). Gives the feature a
                  dedicated nav feel with a back button and section label. -->
-            <div id="coachSubmenu" class="relative z-10 mb-5 -mx-2 px-2 pb-4 border-b border-white/10 items-center justify-between gap-3">
-              <button id="coachBackBtn" type="button" class="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 px-3 py-2 rounded-full transition">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+            <div id="coachSubmenu" class="relative z-10 mb-6 -mx-2 sm:mx-0 px-3 sm:px-4 py-4 rounded-2xl border border-white/10 bg-gradient-to-br from-brand-500/10 to-purple-500/10 items-center justify-between gap-3">
+              <button id="coachBackBtn" type="button" class="inline-flex items-center gap-2 text-sm font-semibold text-white bg-white/10 hover:bg-white/15 border border-white/15 px-4 py-2.5 rounded-full transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
                 Back
               </button>
-              <div class="flex flex-col items-center leading-tight">
-                <span class="text-[9px] uppercase tracking-[0.18em] text-brand-400 font-bold">AI Chat</span>
-                <span class="font-serif text-base text-white font-semibold">Style Coach</span>
+              <div class="flex flex-col items-center leading-tight text-center">
+                <span class="text-[10px] uppercase tracking-[0.22em] text-brand-400 font-bold mb-1">AI Chat</span>
+                <span class="font-serif text-xl sm:text-2xl text-white font-semibold">Style Coach</span>
               </div>
-              <div class="w-[58px]"></div>
+              <div class="w-[72px]"></div>
             </div>
 
-            <div class="flex items-center justify-between mb-1 relative z-10">
-              <h2 class="font-serif text-2xl font-semibold flex items-center gap-2">
-                <svg class="w-6 h-6 text-purple-300" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg>
-                AI Style Coach Chat
-              </h2>
+            <div class="flex items-center justify-end mb-1 relative z-10">
               <span class="shrink-0 text-[10px] font-sans font-bold uppercase tracking-widest text-purple-300 border border-purple-500/30 bg-purple-500/10 px-2.5 py-0.5 rounded-full whitespace-nowrap text-center">Vision AI</span>
             </div>
             <p class="text-xs text-gray-400 mb-5 relative z-10">Upload an outfit photo, pick from your closet, or just ask — I'll see it and help.</p>
@@ -1522,7 +1518,7 @@
 <!-- Mobile / Tablet Bottom Nav -->
 <nav id="mobileBottomNav" class="lg:hidden fixed bottom-0 left-0 right-0 z-[80] px-3 pt-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] bg-gradient-to-t from-[#09090b] via-[#09090b]/95 to-transparent pointer-events-none">
   <div class="max-w-md mx-auto grid grid-cols-3 gap-2 pointer-events-auto">
-    <button id="mobileNavScan" class="mobile-nav-btn bg-dark-950/80 backdrop-blur-xl rounded-2xl p-3 border border-white/10 flex flex-col items-center gap-1 transition-all active:scale-95">
+    <button id="mobileNavScan" class="mobile-nav-btn bg-dark-950/80 backdrop-blur-xl rounded-2xl p-3 border border-white/10 flex flex-col items-center justify-center gap-1 transition-all active:scale-95 min-h-[64px]">
       <svg class="w-[22px] h-[22px] text-brand-400" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M4 8V6a2 2 0 0 1 2-2h2"/>
         <path d="M16 4h2a2 2 0 0 1 2 2v2"/>
@@ -1531,17 +1527,17 @@
         <circle cx="12" cy="11" r="2.4"/>
         <path d="M8 17c1-1.5 2.4-2.3 4-2.3s3 .8 4 2.3"/>
       </svg>
-      <span class="text-[10px] font-bold uppercase tracking-widest text-white">Scan</span>
+      <span class="text-[11px] font-bold uppercase tracking-widest text-white leading-tight">Scan</span>
     </button>
-    <button id="mobileNavCloset" class="mobile-nav-btn bg-dark-950/80 backdrop-blur-xl rounded-2xl p-3 border border-white/10 flex flex-col items-center gap-1 transition-all active:scale-95">
+    <button id="mobileNavCloset" class="mobile-nav-btn bg-dark-950/80 backdrop-blur-xl rounded-2xl p-3 border border-white/10 flex flex-col items-center justify-center gap-1 transition-all active:scale-95 min-h-[64px]">
       <svg class="w-[22px] h-[22px] text-white" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/>
       </svg>
-      <span class="text-[10px] font-bold uppercase tracking-widest text-white">Closet</span>
+      <span class="text-[11px] font-bold uppercase tracking-widest text-white leading-tight">Closet</span>
     </button>
-    <button id="mobileNavPro" class="mobile-nav-btn bg-dark-950/80 backdrop-blur-xl rounded-2xl p-3 border border-white/10 flex flex-col items-center justify-center gap-0 transition-all active:scale-95 min-h-[58px]">
-      <span class="text-[11px] font-bold uppercase tracking-widest text-white leading-tight">AI</span>
-      <span class="text-[11px] font-bold uppercase tracking-widest text-white leading-tight mt-0.5">Chat</span>
+    <button id="mobileNavPro" class="mobile-nav-btn bg-dark-950/80 backdrop-blur-xl rounded-2xl p-3 border border-white/10 flex flex-col items-center justify-center gap-0.5 transition-all active:scale-95 min-h-[64px]">
+      <span class="text-xl font-extrabold tracking-wide text-white leading-none font-serif italic">AI</span>
+      <span class="text-[11px] font-bold uppercase tracking-widest text-white leading-none">Chat</span>
     </button>
   </div>
 </nav>
@@ -1863,6 +1859,20 @@ document.addEventListener('DOMContentLoaded', function () {
     btn.disabled = true;
     btn.textContent = 'Erasing…';
     try {
+      // 0) Wipe the fingerprint-keyed point backup (see the POINT SYSTEM
+      // comment) BEFORE we clear localStorage — because we need the
+      // fingerprint value from LS to locate the IDB key. Then force a
+      // reset to MAX_POINTS in the backup so the next page load doesn't
+      // reconcile the user back down to a stale low balance.
+      try {
+        if (typeof _syncVisitorId === 'function') {
+          var id = _syncVisitorId();
+          if (id && typeof _fpIdbDel === 'function') {
+            await _fpIdbDel('points:' + id);
+          }
+        }
+      } catch (_) {}
+
       // 1) IndexedDB: drop every database we can enumerate. Falls back
       // to deleting the known app DBs by name on browsers that don't
       // support indexedDB.databases() (Firefox).
@@ -1877,7 +1887,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
           }));
         } else {
-          ['datescan', 'datescan-closet', 'datescan-history', 'keyval-store'].forEach(function (n) {
+          ['datescan', 'datescan-closet', 'datescan-history', 'datescan-fp', 'keyval-store'].forEach(function (n) {
             try { indexedDB.deleteDatabase(n); } catch (_) {}
           });
         }
@@ -1904,7 +1914,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       } catch (_) {}
 
-      alert("All local data has been erased. The app will now reload.");
+      // 5) Seed a fresh MAX_POINTS balance back into localStorage so the
+      // user lands on the default 5-point starter state after reload.
+      try {
+        localStorage.setItem('datescan.points', JSON.stringify({ points: 5, emptyAt: 0 }));
+      } catch (_) {}
+
+      alert("All local data has been erased. Your points have been reset to 5. The app will now reload.");
       location.reload();
     } catch (e) {
       console.error('[DateScan] data wipe failed:', e);
@@ -1936,7 +1952,7 @@ document.addEventListener('DOMContentLoaded', function () {
 </div>
 
 <!-- Toast container -->
-<div id="dsToast" class="hidden fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] px-4 py-2.5 rounded-full bg-black/85 border border-white/15 backdrop-blur-md text-xs text-white shadow-xl pointer-events-none"></div>
+<div id="dsToast" class="hidden fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] px-5 py-3 rounded-full bg-black/85 border border-white/15 backdrop-blur-md text-sm text-white shadow-xl pointer-events-none whitespace-nowrap max-w-[calc(100vw-2rem)] overflow-hidden text-ellipsis"></div>
 
 <!-- Share Modal -->
 <div id="shareModal" class="hidden fixed inset-0 z-[90] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl">
@@ -1988,7 +2004,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
       </div>
       <h2 class="font-serif text-2xl font-bold mb-2 leading-tight">Earn more points</h2>
-      <p class="text-sm text-gray-400">You have <span id="pwPointsNow" class="text-brand-400 font-bold">0</span> / <span id="pwPointsMax">5</span> points. Refills in <span id="pwCooldown" class="text-white font-semibold">24h</span> once empty — or earn bonus points now:</p>
+      <p class="text-sm text-gray-400">You have <span id="pwPointsNow" class="text-brand-400 font-bold">0</span> points. Refills in <span id="pwCooldown" class="text-white font-semibold">24h</span> once empty — or earn bonus points now:</p>
     </div>
 
     <div class="space-y-3 relative z-10">
@@ -2212,18 +2228,166 @@ const BONUS_KEY  = "datescan.bonus";
 function isProUser() { return false; }
 function setProUser() { /* no-op: pro system retired */ }
 
+// ============================================================
+// FingerprintJS + IndexedDB backup
+// ------------------------------------------------------------
+// localStorage alone is trivially cleared by "Clear site data" or the
+// in-app Erase button, which means a user could refresh their point
+// balance indefinitely by wiping storage. To make refills sticky across
+// storage wipes we:
+//   1. Generate a stable device fingerprint via FingerprintJS (hashed
+//      from screen size, fonts, canvas/webgl signature, timezone, etc.)
+//   2. Store a copy of the point state in a SEPARATE IndexedDB database
+//      (`datescan-fp`) keyed by that fingerprint. IndexedDB is wiped by
+//      full site-data clears but NOT by in-app wipes or localStorage
+//      clears, so the fingerprint-keyed copy survives most resets.
+//   3. On read, we take the MINIMUM points of the two stores — so a
+//      local wipe can never raise the balance back to 5 if the IDB
+//      copy still shows 0.
+//   4. On every write, we mirror to both stores.
+//
+// A full solution against determined cheaters needs a server endpoint
+// keyed by the same fingerprint; see the comment block in DateScanAds.
+// ============================================================
+let _fpVisitorId = null;
+let _fpReadyPromise = null;
+const FP_DB_NAME  = 'datescan-fp';
+const FP_STORE    = 'state';
+const FP_LS_CACHE = 'datescan.fp';
+
+function _openFpDb() {
+  return new Promise((resolve, reject) => {
+    try {
+      const req = indexedDB.open(FP_DB_NAME, 1);
+      req.onupgradeneeded = () => {
+        const db = req.result;
+        if (!db.objectStoreNames.contains(FP_STORE)) {
+          db.createObjectStore(FP_STORE);
+        }
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    } catch (e) { reject(e); }
+  });
+}
+async function _fpIdbGet(key) {
+  try {
+    const db = await _openFpDb();
+    return await new Promise((res) => {
+      const tx = db.transaction(FP_STORE, 'readonly');
+      const req = tx.objectStore(FP_STORE).get(key);
+      req.onsuccess = () => res(req.result || null);
+      req.onerror   = () => res(null);
+    });
+  } catch { return null; }
+}
+async function _fpIdbPut(key, val) {
+  try {
+    const db = await _openFpDb();
+    return await new Promise((res) => {
+      const tx = db.transaction(FP_STORE, 'readwrite');
+      tx.objectStore(FP_STORE).put(val, key);
+      tx.oncomplete = () => res(true);
+      tx.onerror    = () => res(false);
+    });
+  } catch { return false; }
+}
+async function _fpIdbDel(key) {
+  try {
+    const db = await _openFpDb();
+    return await new Promise((res) => {
+      const tx = db.transaction(FP_STORE, 'readwrite');
+      tx.objectStore(FP_STORE).delete(key);
+      tx.oncomplete = () => res(true);
+      tx.onerror    = () => res(false);
+    });
+  } catch { return false; }
+}
+
+async function _initFingerprint() {
+  if (_fpReadyPromise) return _fpReadyPromise;
+  _fpReadyPromise = (async () => {
+    try {
+      // FingerprintJS was loaded from CDN in <head>. If it failed to
+      // load, fall back to a random-but-persistent id cached in LS so
+      // the rest of the code doesn't explode.
+      if (typeof window.FingerprintJS === 'undefined') {
+        console.warn('[DateScan] FingerprintJS not loaded, using LS fallback id');
+        let id = localStorage.getItem(FP_LS_CACHE);
+        if (!id) {
+          id = 'fpfallback_' + (crypto.randomUUID?.() || Date.now().toString(36));
+          try { localStorage.setItem(FP_LS_CACHE, id); } catch {}
+        }
+        _fpVisitorId = id;
+        return id;
+      }
+      const fp = await window.FingerprintJS.load();
+      const result = await fp.get();
+      _fpVisitorId = result.visitorId;
+      // Cache a copy in LS for synchronous reads later in the session.
+      try { localStorage.setItem(FP_LS_CACHE, _fpVisitorId); } catch {}
+      console.log('[DateScan] fingerprint:', _fpVisitorId);
+
+      // Once we know the fingerprint, immediately pull any point state
+      // previously persisted under this id from IndexedDB and reconcile
+      // with what localStorage currently holds. Whichever balance is
+      // LOWER wins — a user who wiped LS gets pulled back down to the
+      // sticky IDB copy.
+      await _reconcilePointsFromBackup();
+      return _fpVisitorId;
+    } catch (e) {
+      console.warn('[DateScan] fingerprint init failed:', e);
+      _fpVisitorId = localStorage.getItem(FP_LS_CACHE) || 'anon';
+      return _fpVisitorId;
+    }
+  })();
+  return _fpReadyPromise;
+}
+
+function _syncVisitorId() {
+  // For sync callers that run before FP is ready — read the cached id
+  // from LS. Returns null if nothing's cached yet.
+  return _fpVisitorId || localStorage.getItem(FP_LS_CACHE) || null;
+}
+
+async function _reconcilePointsFromBackup() {
+  const id = _syncVisitorId();
+  if (!id) return;
+  const lsState = _readLocalPointState();
+  const backup = await _fpIdbGet('points:' + id);
+  if (!backup) {
+    // First time — seed IDB with whatever LS has.
+    await _fpIdbPut('points:' + id, lsState);
+    return;
+  }
+  // Prefer the lower balance. If backup says 2 and LS somehow says 5,
+  // we force LS back down to 2. This is the anti-cheat piece.
+  const reconciled = {
+    points:  Math.min(lsState.points,  backup.points),
+    emptyAt: Math.max(lsState.emptyAt, backup.emptyAt || 0),
+  };
+  // …but still honour the 24h refill rule on the reconciled state.
+  if (reconciled.points <= 0 && reconciled.emptyAt && Date.now() - reconciled.emptyAt >= RESET_MS) {
+    reconciled.points = MAX_POINTS;
+    reconciled.emptyAt = 0;
+  }
+  _writeLocalPointState(reconciled);
+  await _fpIdbPut('points:' + id, reconciled);
+  try { updateUsageBadge(); } catch {}
+}
+
 function _todayKey() {
   const d = new Date();
   return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
 }
 
-function _readPointState() {
+// ---- LOW-LEVEL localStorage reader (unchanged shape, renamed for clarity) ----
+function _readLocalPointState() {
   try {
     const raw = JSON.parse(localStorage.getItem(POINTS_KEY) || "null");
     if (!raw || typeof raw.points !== 'number') {
       return { points: MAX_POINTS, emptyAt: 0 };
     }
-    // If points are 0 and 24h has passed → refill
     if (raw.points <= 0 && raw.emptyAt && Date.now() - raw.emptyAt >= RESET_MS) {
       return { points: MAX_POINTS, emptyAt: 0 };
     }
@@ -2232,9 +2396,20 @@ function _readPointState() {
     return { points: MAX_POINTS, emptyAt: 0 };
   }
 }
-function _writePointState(s) {
+function _writeLocalPointState(s) {
   try { localStorage.setItem(POINTS_KEY, JSON.stringify(s)); } catch {}
 }
+
+// _readPointState / _writePointState are the PUBLIC API used by the
+// rest of the app. They go through local storage for speed, and mirror
+// writes to IndexedDB under the fingerprint key in the background.
+function _readPointState() { return _readLocalPointState(); }
+function _writePointState(s) {
+  _writeLocalPointState(s);
+  const id = _syncVisitorId();
+  if (id) _fpIdbPut('points:' + id, s).catch(() => {});
+}
+
 function getPoints() { return _readPointState().points; }
 function getPointCooldownMs() {
   const s = _readPointState();
@@ -2257,6 +2432,22 @@ function addPoints(n) {
   _writePointState(s);
   updateUsageBadge();
 }
+
+// Called by the Erase Everything flow. Resets the balance to exactly
+// MAX_POINTS and mirrors that to both LS and the IDB backup — because
+// the user explicitly asked for a clean slate, we honour it even in
+// the backup. If cheating becomes a problem, remove this function and
+// let users keep whatever balance they had.
+async function resetPoints() {
+  const fresh = { points: MAX_POINTS, emptyAt: 0 };
+  _writeLocalPointState(fresh);
+  const id = _syncVisitorId();
+  if (id) {
+    try { await _fpIdbPut('points:' + id, fresh); } catch {}
+  }
+  try { updateUsageBadge(); } catch {}
+}
+window.resetPoints = resetPoints;
 
 // ---- Daily bonus ledger (which bonuses the user already claimed today) ----
 function _readBonus() {
@@ -2322,16 +2513,11 @@ window.MAX_POINTS = MAX_POINTS;
 function updateUsageBadge() {
   if (!usageBadge) return;
   const p = getPoints();
-  // Below the daily max → show "N / 5" with a star.
-  // At or above the max (user banked bonus points) → show just "N" so
-  // "7 / 5" never appears, which looked broken.
-  const starSvg = '<svg class="w-3 h-3 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.4 6.8L21 10l-5.4 4.2L17.4 21 12 17.3 6.6 21l1.8-6.8L3 10l6.6-1.2z"/></svg>';
-  const valueHtml = p >= MAX_POINTS
-    ? `<span class="font-bold text-brand-400">${p}</span>`
-    : `<span class="font-bold text-brand-400">${p}</span><span class="text-gray-500">/${MAX_POINTS}</span>`;
-  usageBadge.innerHTML = `<span class="inline-flex items-center gap-1 text-brand-400">${starSvg}</span>${valueHtml}<span class="text-gray-500 text-[10px] uppercase tracking-wider ml-0.5">pts</span>`;
+  // Always show just the current point count — never the "/ 5" denominator,
+  // which was confusing above 5 (7/5 looked broken) and redundant below.
+  usageBadge.innerHTML = `<span class="font-bold text-brand-400">${p}</span><span class="text-gray-500 text-[10px] uppercase tracking-wider ml-1">pts</span>`;
   usageBadge.classList.remove('hidden', 'text-gray-500');
-  usageBadge.classList.add('inline-flex', 'items-center', 'gap-1');
+  usageBadge.classList.add('inline-flex', 'items-center');
   if (p === 0) usageBadge.classList.add('text-gray-500');
   const earnBtn = $("earnPointsBtn") || $("upgradeBtn");
   if (earnBtn) earnBtn.classList.remove("hidden");
@@ -5573,8 +5759,9 @@ const DateScanAds = (function () {
   return { init, loadRewarded, showRewarded, onUserEarnedReward };
 })();
 
-// Initialise the SDK as soon as the page is ready.
+// Initialise the SDK and fingerprint as soon as the page is ready.
 window.addEventListener('load', () => {
+  _initFingerprint().catch(() => {});
   DateScanAds.init().then(() => DateScanAds.loadRewarded()).catch(() => {});
 });
 
@@ -5638,66 +5825,67 @@ function _refreshEarnModal() {
 }
 
 // Wire Earn Points modal buttons.
-// These handlers are attached at script-load time, but we guard on the
-// point/bonus state ourselves rather than trusting the `disabled` attribute
-// — because disabled buttons swallow clicks, and if _refreshEarnModal hasn't
-// run yet (first open) the disabled state might be stale.
-(function wireEarnButtons() {
-  const adBtn = document.getElementById('earnAdBtn');
-  if (adBtn) {
-    adBtn.addEventListener('click', async (e) => {
-      e.preventDefault();
-      console.log('[DateScan] earnAdBtn clicked');
-      try { triggerHaptic('tap'); } catch {}
-      if (!window.canWatchRewardedAd?.()) {
-        window.dsPrivacy?.showToast?.('You can watch another ad in under an hour.', 2800);
-        _refreshEarnModal();
-        return;
-      }
-      let earned = false;
-      try {
-        earned = await DateScanAds.showRewarded();
-      } catch (err) {
-        console.error('[DateScan] showRewarded threw:', err);
-      }
+//
+// We use event delegation on document.body so the listener survives any
+// DOM replacement of the modal and fires even if the element wasn't in
+// the tree at script-load time. This also makes the ad button completely
+// immune to the old `disabled`-attribute-swallows-clicks problem.
+document.body.addEventListener('click', async (e) => {
+  const target = e.target.closest?.('#earnAdBtn, #earnShareBtn, #earnRateBtn');
+  if (!target) return;
+  e.preventDefault();
+  e.stopPropagation();
+
+  if (target.id === 'earnAdBtn') {
+    console.log('[DateScan] earnAdBtn clicked (delegated)');
+    try { triggerHaptic('tap'); } catch {}
+    if (!window.canWatchRewardedAd?.()) {
+      window.dsPrivacy?.showToast?.('You can watch another ad in under an hour.', 2800);
       _refreshEarnModal();
-      if (earned) setTimeout(closePaywall, 900);
-    });
+      return;
+    }
+    let earned = false;
+    try {
+      earned = await DateScanAds.showRewarded();
+    } catch (err) {
+      console.error('[DateScan] showRewarded threw:', err);
+      // Last-ditch fallback: credit the reward directly so a broken
+      // bridge doesn't silently swallow the user's tap forever.
+      window.dsPrivacy?.showToast?.('Ad could not play — retrying later.', 3000);
+    }
+    _refreshEarnModal();
+    if (earned) setTimeout(closePaywall, 900);
+    return;
   }
 
-  const shareBtn = document.getElementById('earnShareBtn');
-  if (shareBtn) {
-    shareBtn.addEventListener('click', () => {
-      closePaywall();
-      if (typeof window.toggleView === 'function') window.toggleView('closet');
-      else document.getElementById('navClosetBtn')?.click();
-      window.dsPrivacy?.showToast?.('Tap a saved outfit and share it to earn +1 point.', 3600);
-    });
+  if (target.id === 'earnShareBtn') {
+    // "Share an outfit from your closet" → navigate to the Closet page.
+    closePaywall();
+    document.body.classList.remove('coach-view');
+    if (typeof window.toggleView === 'function') {
+      window.toggleView('closet');
+    } else {
+      document.getElementById('navClosetBtn')?.click();
+    }
+    window.dsPrivacy?.showToast?.('Tap a saved outfit and share it to earn +1 point.', 3600);
+    return;
   }
 
-  const rateBtn = document.getElementById('earnRateBtn');
-  if (rateBtn) {
-    rateBtn.addEventListener('click', () => {
-      closePaywall();
-      // The AI CHAT panel is where the user reviews the AI's work, so
-      // jump them there directly — on desktop that's the sticky side
-      // column; on mobile/tablet we switch to coach view so only the
-      // chat is visible.
-      if (typeof window.openCoachView === 'function') {
-        window.openCoachView();
-      } else if (typeof window.toggleView === 'function') {
-        window.toggleView('scanner');
-      }
-      setTimeout(() => {
-        const target = document.getElementById('coachChatMessages')
-                    || document.getElementById('coachChatForm')
-                    || document.getElementById('feedbackPanel');
-        target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 200);
-      window.dsPrivacy?.showToast?.('Rate the AI with 👍 / 👎 below your last scan to earn +1 point.', 3600);
-    });
+  if (target.id === 'earnRateBtn') {
+    // "Rate an AI scan result" → navigate to the Scan page.
+    closePaywall();
+    document.body.classList.remove('coach-view');
+    if (typeof window.toggleView === 'function') {
+      window.toggleView('scanner');
+    }
+    setTimeout(() => {
+      document.getElementById('scanBtn')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 120);
+    window.dsPrivacy?.showToast?.('Run a scan, then rate the result with 👍 / 👎 to earn +1 point.', 3600);
+    return;
   }
-})();
+}, true);
 
 // Keep the modal up to date every time it opens.
 (function patchOpenPaywall() {
