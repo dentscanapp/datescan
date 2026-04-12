@@ -75,6 +75,12 @@
 </head>
 <body class="antialiased">
 <div class="ambient-glow"></div>
+<a href="/index.html" aria-label="Back to app" class="lg:hidden fixed top-4 left-4 z-30 w-11 h-11 flex items-center justify-center rounded-full border border-white/10 bg-[#0f0f14]/80 backdrop-blur-md text-gray-300 hover:text-white hover:border-brand-500/50 hover:bg-brand-500/10 hover:shadow-[0_0_16px_rgba(236,72,153,0.25)] active:scale-95 transition-all" style="top: calc(env(safe-area-inset-top, 0px) + 1rem);">
+  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M15 18l-6-6 6-6"/>
+  </svg>
+</a>
+
 
 <header class="relative z-10 max-w-3xl mx-auto px-6 pt-10 pb-8">
   <a href="/" class="inline-flex items-center gap-3 group">
@@ -293,7 +299,7 @@
       console.error('[DateScan] delete request failed:', err);
       submitBtn.disabled = false;
       submitBtn.textContent = 'Request permanent deletion';
-      showError("We couldn't submit your request automatically. Please email us directly at info@datescan.app with the subject \"Data Deletion Request\" and include your email address.");
+      showError("We couldn't submit your request automatically. Please try again in a few minutes, or DM us on social media (links in the footer) with the subject \"Data Deletion Request\" and include your email address.");
     }
   });
 

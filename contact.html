@@ -35,6 +35,12 @@
 </head>
 <body class="antialiased">
 <div class="ambient-glow"></div>
+<a href="/index.html" aria-label="Back to app" class="lg:hidden fixed top-4 left-4 z-30 w-11 h-11 flex items-center justify-center rounded-full border border-white/10 bg-[#0f0f14]/80 backdrop-blur-md text-gray-300 hover:text-white hover:border-brand-500/50 hover:bg-brand-500/10 hover:shadow-[0_0_16px_rgba(236,72,153,0.25)] active:scale-95 transition-all" style="top: calc(env(safe-area-inset-top, 0px) + 1rem);">
+  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M15 18l-6-6 6-6"/>
+  </svg>
+</a>
+
 
 <header class="relative z-10 max-w-3xl mx-auto px-6 pt-10 pb-8">
   <a href="/" class="inline-flex items-center gap-3 group">
@@ -65,16 +71,22 @@
   <div class="mb-10 pb-8 border-b border-white/10">
     <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-3">Support</div>
     <h1 class="font-serif text-4xl sm:text-5xl font-medium text-white mb-3">Contact Support</h1>
-    <p class="text-sm text-gray-500">We read every email. Really.</p>
+    <p class="text-sm text-gray-500">We read every message. Really.</p>
   </div>
 
   <article class="prose-custom">
-    <p>Need help? Found a bug? Want to tell us the score we gave you was harsh? Email us. We're a small team and we actually respond.</p>
+    <p>Need help? Found a bug? Want to tell us the score we gave you was harsh? Use one of the channels below — we're a small team and we actually respond.</p>
 
     <div class="my-8 p-6 rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/10 to-purple-500/5">
-      <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-2">Direct line</div>
-      <a href="/cdn-cgi/l/email-protection#c5acaba3aa85a1a4b1a0b6a6a4abeba4b5b5" class="font-serif text-2xl sm:text-3xl text-white hover:text-brand-400 transition"><span class="__cf_email__" data-cfemail="c7aea9a1a887a3a6b3a2b4a4a6a9e9a6b7b7">[email&#160;protected]</span></a>
-      <p class="text-xs text-gray-500 mt-3 mb-0">Typical response time: <strong class="text-gray-300">1–3 business days</strong></p>
+      <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-2">Fastest route</div>
+      <p class="text-sm text-gray-300 mt-0 mb-3">Most issues are faster to resolve through one of these dedicated channels than a generic message:</p>
+      <ul class="text-sm text-gray-300 space-y-2 mb-0 pl-0 list-none">
+        <li>🗑️ <strong class="text-white">Delete your data</strong> — <a href="/delete-account.html">datescan.app/delete-account.html</a></li>
+        <li>🚨 <strong class="text-white">Report harmful AI content</strong> — tap the <strong>"Report"</strong> button under any message in the chat</li>
+        <li>💳 <strong class="text-white">Refund</strong> — handled by Google Play, see <a href="/refund.html">Refund Policy</a></li>
+        <li>💬 <strong class="text-white">Everything else</strong> — DM us on social (links in the footer)</li>
+      </ul>
+      <p class="text-xs text-gray-500 mt-4 mb-0">Typical response time: <strong class="text-gray-300">1–3 business days</strong></p>
     </div>
 
     <h2>What to Include</h2>
@@ -96,34 +108,28 @@
     <p>Lighting matters a lot. Face a window or a bright lamp — avoid backlighting yourself with a window behind you. Keep your face centered and about arm's length from the camera. If you're wearing a dark outfit against a dark background, the outfit color detection may struggle.</p>
 
     <h3>"I lost my Pro access after clearing cookies"</h3>
-    <p>Pro access on DateScan is tied to your browser's local storage. If you cleared site data, you'll need to restore it — email us with your purchase details and we'll re-enable Pro on your device.</p>
+    <p>Pro access on DateScan is tied to your browser's local storage. If you cleared site data, restore your purchase from the in-app Settings → "Restore purchases" button, or reach out via social media DM with your Google Play order ID.</p>
 
     <h3>"I want a refund"</h3>
-    <p>See our <a href="/refund.html">Refund Policy</a> for details. The short version: email us with "Refund Request" in the subject, and we'll sort it out.</p>
+    <p>See our <a href="/refund.html">Refund Policy</a> for details. Refunds on Google Play subscriptions are handled directly through your Play Store account within 48 hours of purchase.</p>
 
     <h3>"I have feedback or a feature idea"</h3>
-    <p>We love feedback. Seriously. Send it to <a href="/cdn-cgi/l/email-protection#056c6b636a45616471607666646b2b647575"><span class="__cf_email__" data-cfemail="86efe8e0e9c6e2e7f2e3f5e5e7e8a8e7f6f6">[email&#160;protected]</span></a> with "Feedback" in the subject. If your idea makes it into the product, we'll let you know.</p>
+    <p>We love feedback. Seriously. DM us on any of our social channels (links in the footer). If your idea makes it into the product, we'll let you know.</p>
 
     <h3>"I'm a journalist / creator / partner"</h3>
-    <p>Email us with "Press" or "Partnership" in the subject and we'll route it to the right person.</p>
+    <p>DM us on X or LinkedIn with "Press" or "Partnership" in your message and we'll route it to the right person.</p>
 
     <h2>Privacy Requests &amp; Data Deletion</h2>
-    <p>To delete your data, you have three options:</p>
+    <p>To delete your data, you have two options:</p>
     <ul>
       <li><strong>Fastest — web form (no login required):</strong> visit <a href="/delete-account.html"><strong>datescan.app/delete-account.html</strong></a> and submit the form. We'll permanently delete your chat logs, moderation reports, and subscription records within 30 days.</li>
       <li><strong>In-app wipe (local data only):</strong> Open the Privacy panel inside the app and tap "Erase everything on this device".</li>
-      <li><strong>Email:</strong> Write to <a href="/cdn-cgi/l/email-protection#137a7d757c53777267766070727d3d726363"><span class="__cf_email__" data-cfemail="6b02050d042b0f0a1f0e18080a05450a1b1b">[email&#160;protected]</span></a> with the subject "Data Deletion Request".</li>
     </ul>
-    <p>For other GDPR/UK GDPR/CCPA requests (access, rectification, portability, objection), email us with the subject "Privacy Request". See our <a href="/privacy.html">Privacy Policy</a> for the full list of rights and how we handle them.</p>
+    <p>For other GDPR/UK GDPR/CCPA requests (access, rectification, portability, objection), use the same deletion form and specify your request in the "Reason" field. See our <a href="/privacy.html">Privacy Policy</a> for the full list of rights and how we handle them.</p>
 
     <h2>Reporting Harmful AI Content</h2>
-    <p>If the AI Style Coach gave you a response that is offensive, dangerous, sexual, or otherwise inappropriate, the fastest way to report it is the <strong>"Report"</strong> button directly under the message in the chat. You can also email <a href="/cdn-cgi/l/email-protection#93fafdf5fcd3f7f2e7f6e0f0f2fdbdf2e3e3"><span class="__cf_email__" data-cfemail="b6dfd8d0d9f6d2d7c2d3c5d5d7d898d7c6c6">[email&#160;protected]</span></a> with the subject "AI Content Report" and include:</p>
-    <ul>
-      <li>The exact response text, or a screenshot</li>
-      <li>What you had typed just before the response</li>
-      <li>Why you are reporting it (offensive, harmful, misinformation, sexual, etc.)</li>
-    </ul>
-    <p>If you believe any content on DateScan may involve a minor or constitute illegal activity, please email us immediately with the subject "<strong>URGENT — Safety</strong>" so we can escalate it to the top of the queue.</p>
+    <p>If the AI Style Coach gave you a response that is offensive, dangerous, sexual, or otherwise inappropriate, the fastest way to report it is the <strong>"Report"</strong> button directly under the message in the chat. This sends us the exact response, context, and metadata automatically.</p>
+    <p>If you believe any content on DateScan may involve a minor or constitute illegal activity, please use the Report button with the category marked "URGENT — Safety" so we can escalate it to the top of the queue.</p>
 
     <h2>Response Times</h2>
     <ul>
@@ -133,7 +139,7 @@
       <li><strong>Press inquiries</strong> — within 1 business day</li>
     </ul>
 
-    <p class="mt-8 text-sm text-gray-500 italic">We don't have a phone number or a live chat — yet. Email is the fastest way to reach us, and the quality of support is better when we can look at your screenshots and logs before responding.</p>
+    <p class="mt-8 text-sm text-gray-500 italic">We don't have a phone number or a live chat — yet. The channels above are the fastest way to reach us, and the quality of support is better when we can look at your screenshots and logs through the in-app Report button before responding.</p>
   </article>
 </main>
 

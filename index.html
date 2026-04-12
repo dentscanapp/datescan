@@ -5866,7 +5866,7 @@ async function handlePayment(plan) {
         }, 1500);
       } else {
         await response.complete("fail");
-        setVerifyingMessage("We couldn't verify your purchase. Please contact support at info@datescan.app.", true);
+        setVerifyingMessage("We couldn't verify your purchase. Please try again, or visit datescan.app/contact.html for help.", true);
       }
       return;
 
