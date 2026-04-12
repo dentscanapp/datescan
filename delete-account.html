@@ -277,51 +277,25 @@
     submitBtn.disabled = true;
     submitBtn.textContent = 'Submitting…';
 
-    // ===== ÚJ MAILTO LOGIKA =====
-// A Google Play elfogadja az emailes törlési kérelmet.
-// A Cloudflare Worker helyett ezt használjuk a megbízhatóság érdekében.
-
-try {
-  // Felépítjük az email tárgyát és szövegét
-  var subject = encodeURIComponent("Data Deletion Request - DateScan");
-  var body = encodeURIComponent(
-    "Kérem a DateScan fiókom és minden kapcsolódó adatom végleges törlését.\n\n" +
-    "═══════════════════════════════════════\n" +
-    "FELHASZNÁLÓI ADATOK\n" +
-    "═══════════════════════════════════════\n" +
-    "Email cím: " + (payload.email || "Nincs megadva") + "\n" +
-    "Eszköz azonosító: " + (payload.deviceId || "Nincs megadva") + "\n" +
-    "Vásárlás forrása: " + (payload.purchase || "Nincs megadva") + "\n" +
-    "Rendelés azonosító: " + (payload.orderId || "Nincs megadva") + "\n" +
-    "Indoklás: " + (payload.reason || "Nincs megadva") + "\n\n" +
-    "═══════════════════════════════════════\n" +
-    "RENDSZER INFORMÁCIÓK\n" +
-    "═══════════════════════════════════════\n" +
-    "Időbélyeg: " + new Date().toISOString() + "\n" +
-    "Böngésző: " + navigator.userAgent + "\n"
-  );
-
-  // Megnyitjuk az email klienst
-  window.location.href = "mailto:info@datescan.app?subject=" + subject + "&body=" + body;
-
-  // Siker visszajelzése a felhasználónak
-  form.classList.add('hidden');
-  successEmail.textContent = payload.email || 'a megadott címre';
-  successState.classList.remove('hidden');
-  successState.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-  // A felhasználónak még el kell küldenie az emailt, erről tájékoztatjuk
-  var infoMsg = document.createElement('p');
-  infoMsg.className = 'text-xs text-gray-400 mt-2';
-  infoMsg.textContent = 'Kérjük, küldje el a megnyílt emailt. A törlési kérelmet csak az email beérkezése után tudjuk feldolgozni.';
-  successState.appendChild(infoMsg);
-
-} catch (err) {
-  console.error('Email generálási hiba:', err);
-  submitBtn.disabled = false;
-  submitBtn.textContent = 'Request permanent deletion';
-  showError("Hiba történt az email előkészítése során. Kérjük, írjon közvetlenül az info@datescan.app címre.");
-}
+    try {
+      var res = await fetch('/api/delete-account', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      form.classList.add('hidden');
+      successEmail.textContent = email;
+      successState.classList.remove('hidden');
+      // Scroll success into view on mobile
+      successState.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } catch (err) {
+      console.error('[DateScan] delete request failed:', err);
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Request permanent deletion';
+      showError("We couldn't submit your request automatically. Please email us directly at support@datescan.app with the subject \"Data Deletion Request\" and include your email address.");
+    }
+  });
 
   function showError(msg) {
     errorMessage.textContent = msg;
