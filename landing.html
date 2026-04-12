@@ -41,11 +41,6 @@
     "@type": "Offer",
     "price": "0",
     "priceCurrency": "USD"
-  },
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.8",
-    "ratingCount": "327"
   }
 }
 </script>
@@ -332,8 +327,8 @@
         <div class="text-[10px] uppercase tracking-widest text-gray-500 mt-1">scan processing</div>
       </div>
       <div>
-        <div class="font-serif text-2xl text-white">4.8★</div>
-        <div class="text-[10px] uppercase tracking-widest text-gray-500 mt-1">user rating</div>
+        <div class="font-serif text-2xl text-white">No login</div>
+        <div class="text-[10px] uppercase tracking-widest text-gray-500 mt-1">required</div>
       </div>
     </div>
   </div>
@@ -351,9 +346,9 @@
     <div class="grid md:grid-cols-3 gap-6">
 
       <!-- First date -->
-      <article class="premium-glass rounded-3xl p-7 relative overflow-hidden group">
+      <article class="premium-glass rounded-3xl p-7 relative overflow-hidden group flex flex-col">
         <div class="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-brand-500/20 blur-3xl pointer-events-none"></div>
-        <div class="relative z-10">
+        <div class="relative z-10 flex-1 flex flex-col">
           <div class="w-12 h-12 rounded-2xl bg-brand-500/10 border border-brand-500/30 flex items-center justify-center text-brand-300 mb-5">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </div>
@@ -364,17 +359,19 @@
             <li class="flex gap-2.5"><span class="text-brand-400">→</span> Grooming check: shine, redness, mirror-symmetry</li>
             <li class="flex gap-2.5"><span class="text-brand-400">→</span> Posture &amp; smile cues so the first impression lands</li>
           </ul>
-          <a href="/index.html?action=scan&amp;occasion=first_date" class="btn-primary inline-flex items-center gap-2 text-sm font-bold px-5 py-3 rounded-xl">
-            Prep for a date
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-          </a>
+          <div class="mt-auto">
+            <a href="/index.html?action=scan&amp;occasion=first_date" class="btn-primary inline-flex items-center gap-2 text-sm font-bold px-5 py-3 rounded-xl">
+              Prep for a date
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+          </div>
         </div>
       </article>
 
       <!-- Job interview -->
-      <article class="premium-glass rounded-3xl p-7 relative overflow-hidden group">
+      <article class="premium-glass rounded-3xl p-7 relative overflow-hidden group flex flex-col">
         <div class="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-purple-500/20 blur-3xl pointer-events-none"></div>
-        <div class="relative z-10">
+        <div class="relative z-10 flex-1 flex flex-col">
           <div class="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-300 mb-5">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg>
           </div>
@@ -385,17 +382,19 @@
             <li class="flex gap-2.5"><span class="text-purple-300">→</span> Lint, stray hair, tired-eye and shine detection</li>
             <li class="flex gap-2.5"><span class="text-purple-300">→</span> Camera framing and background tidiness for video calls</li>
           </ul>
-          <a href="/index.html?action=scan&amp;occasion=fancy" class="btn-primary inline-flex items-center gap-2 text-sm font-bold px-5 py-3 rounded-xl">
-            Prep for an interview
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-          </a>
+          <div class="mt-auto">
+            <a href="/index.html?action=scan&amp;occasion=fancy" class="btn-primary inline-flex items-center gap-2 text-sm font-bold px-5 py-3 rounded-xl">
+              Prep for an interview
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+          </div>
         </div>
       </article>
 
       <!-- Night out -->
-      <article class="premium-glass rounded-3xl p-7 relative overflow-hidden group">
+      <article class="premium-glass rounded-3xl p-7 relative overflow-hidden group flex flex-col">
         <div class="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-amber-500/20 blur-3xl pointer-events-none"></div>
-        <div class="relative z-10">
+        <div class="relative z-10 flex-1 flex flex-col">
           <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-300 mb-5">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
           </div>
@@ -406,10 +405,12 @@
             <li class="flex gap-2.5"><span class="text-amber-300">→</span> Live weather pairing — do you actually need that jacket?</li>
             <li class="flex gap-2.5"><span class="text-amber-300">→</span> Date-prep countdown from "almost ready" to "walk in"</li>
           </ul>
-          <a href="/index.html?action=scan&amp;occasion=night_out" class="btn-primary inline-flex items-center gap-2 text-sm font-bold px-5 py-3 rounded-xl">
-            Prep for a night out
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-          </a>
+          <div class="mt-auto">
+            <a href="/index.html?action=scan&amp;occasion=night_out" class="btn-primary inline-flex items-center gap-2 text-sm font-bold px-5 py-3 rounded-xl">
+              Prep for a night out
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+          </div>
         </div>
       </article>
 
@@ -701,7 +702,12 @@
     if (!localStorage.getItem('cookieConsent')) {
       setTimeout(function () {
         banner.classList.remove('hidden');
-        banner.style.animation = 'ds-cookie-slide-up .4s ease-out';
+        banner.style.opacity = '1';
+        banner.style.transform = 'translateY(0)';
+        banner.style.animation = 'ds-cookie-slide-up .4s ease-out forwards';
+        // Clear the animation style after it completes so nothing can revert
+        // the banner to its starting (opacity:0) state on later repaints.
+        setTimeout(function () { banner.style.animation = ''; }, 500);
       }, 600);
     }
 
