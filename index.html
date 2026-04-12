@@ -244,6 +244,14 @@
     }
   }
 
+  /* Closet category picker — selected state (sticky) */
+  .closet-cat-opt.is-selected {
+    background-color: rgba(236, 72, 153, 0.28) !important;
+    border-color: rgba(236, 72, 153, 0.7) !important;
+    color: #fff !important;
+    box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.45), 0 8px 24px -8px rgba(236, 72, 153, 0.35);
+  }
+
   /* Gradient Text */
   .text-gradient {
     background: linear-gradient(135deg, #f472b6 0%, #db2777 100%);
@@ -1477,9 +1485,14 @@
             <h2 class="font-serif text-3xl md:text-4xl font-medium mb-2 leading-tight">Digital Closet</h2>
             <p class="text-gray-400 text-sm font-medium">Your saved outfits and personal style archive.</p>
          </div>
-         <button id="aiMixBtn" class="btn-primary px-5 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center w-full md:w-auto justify-center">
-            <span class="text-lg leading-none">✨</span> AI Suggestion
-         </button>
+         <div class="flex gap-2 w-full md:w-auto">
+            <button id="closetUploadBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-[0.98] transition">
+               <span class="text-lg leading-none">📸</span> Add Item
+            </button>
+            <button id="aiMixBtn" class="btn-primary px-5 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center flex-1 md:flex-none justify-center">
+               <span class="text-lg leading-none">✨</span> AI Suggestion
+            </button>
+         </div>
       </div>
        
       <div class="mb-6 flex gap-2 overflow-x-auto pb-2" id="closetFilters" role="group" aria-label="Closet category filter">
@@ -1492,6 +1505,107 @@
 
       <div id="closetGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
           <!-- Populated by JS -->
+      </div>
+
+      <!-- Uploaded Items section -->
+      <div class="mt-14 mb-6 flex items-end justify-between gap-4">
+         <div>
+            <h3 class="font-serif text-2xl md:text-3xl font-medium mb-1 leading-tight">My Items</h3>
+            <p class="text-gray-400 text-sm font-medium">Individual clothing pieces you uploaded.</p>
+         </div>
+      </div>
+
+      <div class="mb-6 flex gap-2 overflow-x-auto pb-2" id="closetTypeFilters" role="group" aria-label="Closet item type filter">
+          <button type="button" data-type-filter="all"       aria-pressed="true"  class="closet-type-btn border border-brand-500/50 bg-brand-500/20 text-white rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">All</button>
+          <button type="button" data-type-filter="shirt"     aria-pressed="false" class="closet-type-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">👕 Shirt / Top</button>
+          <button type="button" data-type-filter="pants"     aria-pressed="false" class="closet-type-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">👖 Pants</button>
+          <button type="button" data-type-filter="jacket"    aria-pressed="false" class="closet-type-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">🧥 Jacket</button>
+          <button type="button" data-type-filter="dress"     aria-pressed="false" class="closet-type-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">👗 Dress</button>
+          <button type="button" data-type-filter="shoes"     aria-pressed="false" class="closet-type-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">👟 Shoes</button>
+          <button type="button" data-type-filter="accessory" aria-pressed="false" class="closet-type-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">👜 Accessory</button>
+      </div>
+
+      <div id="closetItemsGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+          <!-- Populated by JS -->
+      </div>
+
+      <!-- Hidden file input for manual closet uploads -->
+      <input type="file" id="closetUploadInput" accept="image/*" class="hidden" />
+
+      <!-- Consent modal: shown on the FIRST ever upload attempt. Mandatory. -->
+      <div id="closetUploadConsent" class="hidden fixed inset-0 z-[110] bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="premium-glass rounded-3xl border border-brand-500/30 max-w-md w-full p-6 sm:p-7 relative">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-500/20 to-purple-500/20 border border-brand-500/30 flex items-center justify-center mb-4 mx-auto">
+            <svg class="w-7 h-7 text-brand-400" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
+          <h3 class="font-serif text-2xl font-semibold text-white text-center mb-2">Before you upload</h3>
+          <p class="text-sm text-gray-400 text-center mb-5 leading-relaxed">Quick rules for closet uploads. Required before your first upload.</p>
+
+          <ul class="space-y-3 mb-5 text-sm text-gray-300">
+            <li class="flex gap-3">
+              <span class="shrink-0 w-5 h-5 rounded-full bg-brand-500/20 border border-brand-500/40 text-brand-300 text-[11px] font-bold flex items-center justify-center mt-0.5">1</span>
+              <span>Upload photos of <strong class="text-white">your own clothes only</strong>. No celebrity, stock, or copyrighted images.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="shrink-0 w-5 h-5 rounded-full bg-brand-500/20 border border-brand-500/40 text-brand-300 text-[11px] font-bold flex items-center justify-center mt-0.5">2</span>
+              <span><strong class="text-white">No people, no faces, no minors.</strong> Only the clothing item itself. Photos of people will be rejected.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="shrink-0 w-5 h-5 rounded-full bg-brand-500/20 border border-brand-500/40 text-brand-300 text-[11px] font-bold flex items-center justify-center mt-0.5">3</span>
+              <span>Nothing <strong class="text-white">sexual, violent, or illegal.</strong> Your uploads are stored locally on your device.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="shrink-0 w-5 h-5 rounded-full bg-brand-500/20 border border-brand-500/40 text-brand-300 text-[11px] font-bold flex items-center justify-center mt-0.5">4</span>
+              <span>I am <strong class="text-white">18+</strong> and I own or have the right to use the image.</span>
+            </li>
+          </ul>
+
+          <label class="flex gap-3 items-start p-3 rounded-xl bg-white/[0.03] border border-white/10 cursor-pointer mb-5">
+            <input type="checkbox" id="closetUploadConsentCheck" class="mt-0.5 w-4 h-4 shrink-0 accent-pink-500" />
+            <span class="text-xs text-gray-300 leading-relaxed">I accept these rules and the <a href="/terms.html" target="_blank" class="text-brand-400 underline">Terms of Service</a> and <a href="/privacy.html" target="_blank" class="text-brand-400 underline">Privacy Policy</a>.</span>
+          </label>
+
+          <div class="flex gap-2">
+            <button id="closetUploadConsentCancel" type="button" class="flex-1 py-3 rounded-xl bg-white/5 border border-white/10 text-gray-300 text-sm font-bold hover:bg-white/10 transition">Cancel</button>
+            <button id="closetUploadConsentOk" type="button" disabled class="flex-1 py-3 rounded-xl btn-primary text-sm font-bold disabled:opacity-40 disabled:cursor-not-allowed">Continue</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category picker modal: shown after an image is selected. -->
+      <div id="closetCategoryModal" class="hidden fixed inset-0 z-[110] bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="premium-glass rounded-3xl border border-white/10 max-w-md w-full p-6 sm:p-7 relative max-h-[90vh] overflow-y-auto">
+          <h3 class="font-serif text-2xl font-semibold text-white text-center mb-1">What is this?</h3>
+          <p class="text-sm text-gray-400 text-center mb-5">Pick a category so your closet stays organized.</p>
+
+          <div class="aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-black mb-5 relative">
+            <img id="closetCategoryPreview" src="" alt="Upload preview" class="w-full h-full object-contain" />
+          </div>
+
+          <div id="closetCategoryOptions" class="grid grid-cols-3 gap-2 mb-5">
+            <button type="button" data-type="shirt"     class="closet-cat-opt py-3 rounded-xl border border-white/10 bg-white/5 text-gray-300 text-xs font-bold transition flex flex-col items-center gap-1"><span class="text-xl">👕</span>Shirt / Top</button>
+            <button type="button" data-type="pants"     class="closet-cat-opt py-3 rounded-xl border border-white/10 bg-white/5 text-gray-300 text-xs font-bold transition flex flex-col items-center gap-1"><span class="text-xl">👖</span>Pants</button>
+            <button type="button" data-type="jacket"    class="closet-cat-opt py-3 rounded-xl border border-white/10 bg-white/5 text-gray-300 text-xs font-bold transition flex flex-col items-center gap-1"><span class="text-xl">🧥</span>Jacket</button>
+            <button type="button" data-type="dress"     class="closet-cat-opt py-3 rounded-xl border border-white/10 bg-white/5 text-gray-300 text-xs font-bold transition flex flex-col items-center gap-1"><span class="text-xl">👗</span>Dress</button>
+            <button type="button" data-type="shoes"     class="closet-cat-opt py-3 rounded-xl border border-white/10 bg-white/5 text-gray-300 text-xs font-bold transition flex flex-col items-center gap-1"><span class="text-xl">👟</span>Shoes</button>
+            <button type="button" data-type="accessory" class="closet-cat-opt py-3 rounded-xl border border-white/10 bg-white/5 text-gray-300 text-xs font-bold transition flex flex-col items-center gap-1"><span class="text-xl">👜</span>Accessory</button>
+          </div>
+
+          <div class="mb-5">
+            <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-2">Occasion</label>
+            <select id="closetCategoryOccasion" class="w-full py-3 px-4 rounded-xl bg-white/5 border border-white/10 text-sm text-white">
+              <option value="casual">Casual</option>
+              <option value="first_date">First Date</option>
+              <option value="fancy">Fancy Dinner</option>
+              <option value="night_out">Night Out</option>
+            </select>
+          </div>
+
+          <div class="flex gap-2">
+            <button id="closetCategoryCancel" type="button" class="flex-1 py-3 rounded-xl bg-white/5 border border-white/10 text-gray-300 text-sm font-bold hover:bg-white/10 transition">Cancel</button>
+            <button id="closetCategorySave" type="button" disabled class="flex-1 py-3 rounded-xl btn-primary text-sm font-bold disabled:opacity-40 disabled:cursor-not-allowed">Save to Closet</button>
+          </div>
+        </div>
       </div>
   </div>
 
@@ -2132,11 +2246,11 @@ document.addEventListener('DOMContentLoaded', function () {
     </button>
 
     <div class="text-center relative z-10 mb-4 mt-1">
-      <div class="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-widest font-bold text-brand-400 mb-2">
+      <div id="shareModalKicker" class="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-widest font-bold text-brand-400 mb-2">
         <span>🔥</span> TikTok Ready
       </div>
-      <h2 class="font-serif text-2xl font-bold text-white">Share your score</h2>
-      <p class="text-xs text-gray-400 mt-1">Your friends need to see this.</p>
+      <h2 id="shareModalTitle" class="font-serif text-2xl font-bold text-white">Share your score</h2>
+      <p id="shareModalSubtitle" class="text-xs text-gray-400 mt-1">Your friends need to see this.</p>
     </div>
 
     <!-- Generated card preview -->
@@ -2781,9 +2895,11 @@ async function closetInit() {
     }
 
     userCloset.outfits = await closetDB.getAll();
-    if (typeof window.renderCloset === 'function' &&
-        store.get().activeView === 'closet') {
+    if (typeof window.renderCloset === 'function') {
       window.renderCloset();
+    }
+    if (typeof window.renderClosetItems === 'function') {
+      window.renderClosetItems();
     }
     if (typeof updateUsageBadge === 'function') updateUsageBadge();
   } catch (e) {
@@ -2813,37 +2929,48 @@ function generateThumbnail(dataUrl, callback) {
 
 window.renderCloset = function(filter = 'all') {
     const grid = $("closetGrid");
-    if (!userCloset.outfits || userCloset.outfits.length === 0) {
+    // Only scanned outfits belong here — uploaded items render in closetItemsGrid
+    const outfitsOnly = (userCloset.outfits || []).filter(o => o.source !== 'upload');
+
+    if (!outfitsOnly.length) {
         grid.innerHTML = `<div class="col-span-full py-16 text-center text-gray-500"><div class="text-5xl mb-4 opacity-50">👻</div><h3 class="font-serif text-xl text-gray-300 mb-2">Your closet is empty.</h3><p class="text-sm">Scan and save your first outfit to start building your style archive.</p></div>`;
         return;
     }
 
-    const filtered = filter === 'all' ? userCloset.outfits : userCloset.outfits.filter(o => o.occasion === filter);
+    const filtered = filter === 'all' ? outfitsOnly : outfitsOnly.filter(o => o.occasion === filter);
 
     if (filtered.length === 0) {
         grid.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500"><p>No saved outfits found for this category.</p></div>`;
         return;
     }
 
-    grid.innerHTML = filtered.map(outfit => `
+    grid.innerHTML = filtered.map(outfit => {
+        const TYPE_LABELS = { shirt:'👕 Shirt', pants:'👖 Pants', jacket:'🧥 Jacket', dress:'👗 Dress', shoes:'👟 Shoes', accessory:'👜 Accessory' };
+        const typeBadge = outfit.type && TYPE_LABELS[outfit.type]
+          ? `<div class="absolute top-2 left-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-white border border-white/10 z-10">${TYPE_LABELS[outfit.type]}</div>`
+          : '';
+        const scoreBadge = outfit.score != null
+          ? `<div class="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-xs font-bold ${outfit.score >= 80 ? 'text-emerald-400' : 'text-brand-400'} border border-white/10 z-10">${outfit.score}/100</div>`
+          : '';
+        const occasion = (outfit.occasion || 'casual').replace('_', ' ');
+        return `
         <div class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-default relative">
             <div class="aspect-[3/4] bg-black relative">
-                <img src="${outfit.image}" class="w-full h-full object-cover opacity-90 transition-opacity" alt="Saved Outfit" />
-                <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-xs font-bold ${outfit.score >= 80 ? 'text-emerald-400' : 'text-brand-400'} border border-white/10 z-10">
-                    ${outfit.score}/100
-                </div>
+                <img src="${outfit.image}" class="w-full h-full object-cover opacity-90 transition-opacity" alt="Saved Item" />
+                ${typeBadge}
+                ${scoreBadge}
                 <div class="absolute bottom-3 right-3 flex gap-2.5 z-20">
                      <button onclick="window.triggerDeleteOutfit('${outfit.id}')" class="w-12 h-12 rounded-full bg-black/70 hover:bg-red-500/90 active:scale-95 flex items-center justify-center backdrop-blur-md text-white transition-all border border-white/20 shadow-lg" title="Delete">
                          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                      </button>
-                     <button onclick="window.openShareModal(${outfit.score}, '${outfit.image}')" class="w-12 h-12 rounded-full bg-black/70 hover:bg-brand-500/90 active:scale-95 flex items-center justify-center backdrop-blur-md text-white transition-all border border-white/20 shadow-lg" title="Share">
+                     <button onclick="window.openShareModal(${outfit.score || 0}, '${outfit.image}')" class="w-12 h-12 rounded-full bg-black/70 hover:bg-brand-500/90 active:scale-95 flex items-center justify-center backdrop-blur-md text-white transition-all border border-white/20 shadow-lg" title="Share">
                          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
                      </button>
                 </div>
             </div>
             <div class="p-3.5 bg-gradient-to-t from-dark-900 to-transparent">
                 <div class="flex items-center justify-between mb-1">
-                  <div class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">${outfit.occasion.replace('_', ' ')}</div>
+                  <div class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">${occasion}</div>
                   <div class="text-[9px] text-gray-500">${new Date(outfit.date).toLocaleDateString()}</div>
                 </div>
                 <div class="text-sm text-white font-medium truncate flex items-center gap-1.5">
@@ -2851,9 +2978,76 @@ window.renderCloset = function(filter = 'all') {
                    ${outfit.color || 'Mixed'} Palette
                 </div>
             </div>
-        </div>
-    `).join('');
+        </div>`;
+    }).join('');
 };
+
+// Renders the uploaded Items grid (separate from scanned outfits).
+window.renderClosetItems = function(typeFilter = 'all') {
+    const grid = document.getElementById('closetItemsGrid');
+    if (!grid) return;
+    const items = (userCloset.outfits || []).filter(o => o.source === 'upload');
+
+    if (!items.length) {
+        grid.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500"><div class="text-4xl mb-3 opacity-50">📸</div><p class="text-sm">No items uploaded yet. Tap <strong class="text-gray-300">📸 Add Item</strong> above to start.</p></div>`;
+        return;
+    }
+
+    const filtered = typeFilter === 'all' ? items : items.filter(i => i.type === typeFilter);
+
+    if (!filtered.length) {
+        grid.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500"><p class="text-sm">No items in this category yet.</p></div>`;
+        return;
+    }
+
+    const TYPE_LABELS = { shirt:'👕 Shirt', pants:'👖 Pants', jacket:'🧥 Jacket', dress:'👗 Dress', shoes:'👟 Shoes', accessory:'👜 Accessory' };
+
+    grid.innerHTML = filtered.map(item => `
+        <div class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-default relative">
+            <div class="aspect-[3/4] bg-black relative">
+                <img src="${item.image}" class="w-full h-full object-cover opacity-90 transition-opacity" alt="Saved Item" />
+                <div class="absolute top-2 left-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-white border border-white/10 z-10">${TYPE_LABELS[item.type] || 'Item'}</div>
+                <div class="absolute bottom-3 right-3 flex gap-2.5 z-20">
+                     <button onclick="window.triggerDeleteOutfit('${item.id}')" class="w-12 h-12 rounded-full bg-black/70 hover:bg-red-500/90 active:scale-95 flex items-center justify-center backdrop-blur-md text-white transition-all border border-white/20 shadow-lg" title="Delete">
+                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                     </button>
+                     <button onclick="window.openShareModal(null, '${item.image}')" class="w-12 h-12 rounded-full bg-black/70 hover:bg-brand-500/90 active:scale-95 flex items-center justify-center backdrop-blur-md text-white transition-all border border-white/20 shadow-lg" title="Share">
+                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                     </button>
+                </div>
+            </div>
+            <div class="p-3.5 bg-gradient-to-t from-dark-900 to-transparent">
+                <div class="flex items-center justify-between mb-1">
+                  <div class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">${(item.occasion || 'casual').replace('_', ' ')}</div>
+                  <div class="text-[9px] text-gray-500">${new Date(item.date).toLocaleDateString()}</div>
+                </div>
+                <div class="text-sm text-white font-medium truncate">${TYPE_LABELS[item.type] || 'Item'}</div>
+            </div>
+        </div>`).join('');
+};
+
+// Type filter buttons for the Items section
+window.setClosetTypeFilter = function(typeFilter) {
+    if (!typeFilter) typeFilter = 'all';
+    document.querySelectorAll('.closet-type-btn').forEach(b => {
+        const active = b.dataset.typeFilter === typeFilter;
+        b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        b.classList.toggle('border-brand-500/50', active);
+        b.classList.toggle('bg-brand-500/20', active);
+        b.classList.toggle('text-white', active);
+        b.classList.toggle('border-white/10', !active);
+        b.classList.toggle('bg-white/5', !active);
+        b.classList.toggle('text-gray-400', !active);
+    });
+    window.renderClosetItems(typeFilter);
+};
+
+document.querySelectorAll('.closet-type-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+        window.setClosetTypeFilter(e.currentTarget.dataset.typeFilter);
+    });
+});
 
 // Apply a closet filter by name: updates the active button styles, re-renders
 // the grid, and reflects the choice in the URL hash so links can be shared.
@@ -2952,6 +3146,11 @@ $("confirmDeleteBtn").addEventListener("click", async () => {
         const activeFilterBtn = document.querySelector(".closet-filter-btn.border-brand-500\\/50");
         const filter = activeFilterBtn ? activeFilterBtn.dataset.filter : 'all';
         renderCloset(filter);
+        if (typeof window.renderClosetItems === 'function') {
+            const activeTypeBtn = document.querySelector(".closet-type-btn[aria-pressed='true']");
+            const typeFilter = activeTypeBtn ? activeTypeBtn.dataset.typeFilter : 'all';
+            window.renderClosetItems(typeFilter);
+        }
         updateUsageBadge();
     }
     outfitToDelete = null;
@@ -3005,6 +3204,159 @@ window.saveCurrentOutfit = function() {
     });
 };
 
+// ============================================================
+// Closet — manual upload flow (Add Item button)
+// ============================================================
+(function () {
+  const CONSENT_KEY = 'datescan_upload_consent_v1';
+  const btn         = document.getElementById('closetUploadBtn');
+  const fileInput   = document.getElementById('closetUploadInput');
+  const consentEl   = document.getElementById('closetUploadConsent');
+  const consentChk  = document.getElementById('closetUploadConsentCheck');
+  const consentOk   = document.getElementById('closetUploadConsentOk');
+  const consentNo   = document.getElementById('closetUploadConsentCancel');
+  const catEl       = document.getElementById('closetCategoryModal');
+  const catPreview  = document.getElementById('closetCategoryPreview');
+  const catOpts     = document.querySelectorAll('.closet-cat-opt');
+  const catOccasion = document.getElementById('closetCategoryOccasion');
+  const catSave     = document.getElementById('closetCategorySave');
+  const catCancel   = document.getElementById('closetCategoryCancel');
+
+  if (!btn || !fileInput || !consentEl || !catEl) return;
+
+  let pendingImage = null;   // data URL of the selected image
+  let pendingType  = null;   // 'shirt' | 'pants' | ...
+
+  function openConsent() {
+    consentChk.checked = false;
+    consentOk.disabled = true;
+    consentEl.classList.remove('hidden');
+  }
+  function closeConsent() { consentEl.classList.add('hidden'); }
+  function openCategory(imgData) {
+    pendingImage = imgData;
+    pendingType  = null;
+    catPreview.src = imgData;
+    catOpts.forEach(o => o.classList.remove('is-selected'));
+    catSave.disabled = true;
+    catEl.classList.remove('hidden');
+  }
+  function closeCategory() {
+    catEl.classList.add('hidden');
+    pendingImage = null;
+    pendingType  = null;
+    fileInput.value = '';
+  }
+
+  // Pro gate + consent gate + file picker
+  btn.addEventListener('click', () => {
+    if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+    if (typeof isProUser === 'function' && !isProUser() &&
+        window.userCloset && window.userCloset.outfits && window.userCloset.outfits.length >= 3) {
+      if (typeof window.openPaywall === 'function') window.openPaywall();
+      return;
+    }
+    const consented = localStorage.getItem(CONSENT_KEY) === 'true';
+    if (!consented) {
+      openConsent();
+    } else {
+      fileInput.click();
+    }
+  });
+
+  // Consent checkbox toggles Continue button
+  consentChk.addEventListener('change', () => {
+    consentOk.disabled = !consentChk.checked;
+  });
+
+  consentNo.addEventListener('click', closeConsent);
+
+  consentOk.addEventListener('click', () => {
+    if (!consentChk.checked) return;
+    try { localStorage.setItem(CONSENT_KEY, 'true'); } catch (e) {}
+    closeConsent();
+    fileInput.click();
+  });
+
+  // File selected → read as data URL, downscale, show category picker
+  fileInput.addEventListener('change', (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file.');
+      fileInput.value = '';
+      return;
+    }
+    if (file.size > 15 * 1024 * 1024) {
+      alert('Image is too large (max 15 MB).');
+      fileInput.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      // Downscale using the existing generateThumbnail helper (expects data URL)
+      if (typeof generateThumbnail === 'function') {
+        generateThumbnail(ev.target.result, (thumbBase64) => openCategory(thumbBase64));
+      } else {
+        openCategory(ev.target.result);
+      }
+    };
+    reader.onerror = () => {
+      alert("Couldn't read the image. Please try another one.");
+      fileInput.value = '';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Category selection
+  catOpts.forEach(opt => {
+    opt.addEventListener('click', () => {
+      pendingType = opt.dataset.type;
+      catOpts.forEach(o => o.classList.remove('is-selected'));
+      opt.classList.add('is-selected');
+      catSave.disabled = false;
+    });
+  });
+
+  catCancel.addEventListener('click', closeCategory);
+
+  catSave.addEventListener('click', async () => {
+    if (!pendingImage || !pendingType) return;
+    catSave.disabled = true;
+    catSave.textContent = 'Saving…';
+
+    const newItem = {
+      id: 'item_' + Date.now(),
+      image: pendingImage,
+      type: pendingType,
+      occasion: catOccasion.value || 'casual',
+      date: Date.now(),
+      color: 'Mixed',
+      colorHex: '#888',
+      score: null,
+      source: 'upload'
+    };
+
+    try {
+      await closetDB.put(newItem);
+      if (window.userCloset && Array.isArray(window.userCloset.outfits)) {
+        window.userCloset.outfits.unshift(newItem);
+      }
+      if (typeof window.renderClosetItems === 'function') window.renderClosetItems();
+      closeCategory();
+      catSave.textContent = 'Save to Closet';
+    } catch (err) {
+      console.error('[Closet upload] save failed:', err);
+      const msg = (err && err.name === 'QuotaExceededError')
+        ? 'Storage full! Please free up space or delete old items.'
+        : "Couldn't save the item. Please try again.";
+      alert(msg);
+      catSave.disabled = false;
+      catSave.textContent = 'Save to Closet';
+    }
+  });
+})();
+
 $("aiMixBtn").addEventListener("click", () => {
     triggerHaptic('success');
     const modal = $("aiMixModal");
@@ -3041,9 +3393,10 @@ function getScoreEmoji(s) {
 
 async function generateShareCard(overrideScore, overrideImage) {
   const s = store.get();
-  const score = overrideScore !== undefined ? overrideScore : (s.lastScore || 75);
+  const isItemMode = overrideScore === null;
+  const score = isItemMode ? null : (overrideScore !== undefined ? overrideScore : (s.lastScore || 75));
   const photoURL = overrideImage !== undefined ? overrideImage : s.lastCap;
-  
+
   currentShareScore = score;
 
   const W = 1080, H = 1920;
@@ -3103,56 +3456,71 @@ async function generateShareCard(overrideScore, overrideImage) {
     g.closePath();
     g.stroke();
 
-    g.fillStyle = 'rgba(0,0,0,0.7)';
-    const tagX = photoX + 30, tagY = photoY + 30, tagW = 340, tagH = 60;
-    g.beginPath();
-    g.roundRect(tagX, tagY, tagW, tagH, 30);
-    g.fill();
-    g.strokeStyle = 'rgba(236,72,153,0.5)';
-    g.lineWidth = 2; g.stroke();
-    g.fillStyle = '#fff';
-    g.font = 'bold 22px Inter, sans-serif';
-    g.textAlign = 'left';
-    g.fillText('🤖  AI RATED MY OUTFIT', tagX + 24, tagY + 38);
+    if (!isItemMode) {
+      g.fillStyle = 'rgba(0,0,0,0.7)';
+      const tagX = photoX + 30, tagY = photoY + 30, tagW = 340, tagH = 60;
+      g.beginPath();
+      g.roundRect(tagX, tagY, tagW, tagH, 30);
+      g.fill();
+      g.strokeStyle = 'rgba(236,72,153,0.5)';
+      g.lineWidth = 2; g.stroke();
+      g.fillStyle = '#fff';
+      g.font = 'bold 22px Inter, sans-serif';
+      g.textAlign = 'left';
+      g.fillText('🤖  AI RATED MY OUTFIT', tagX + 24, tagY + 38);
 
-    const cx = photoX + photoW - 140, cy = photoY + photoH - 140, rad = 110;
-    g.fillStyle = 'rgba(0,0,0,0.85)';
-    g.beginPath(); g.arc(cx, cy, rad, 0, Math.PI*2); g.fill();
-    g.strokeStyle = 'rgba(255,255,255,0.1)';
-    g.lineWidth = 12;
-    g.beginPath(); g.arc(cx, cy, rad-14, 0, Math.PI*2); g.stroke();
-    const grad = g.createLinearGradient(cx-rad, cy-rad, cx+rad, cy+rad);
-    grad.addColorStop(0, '#f472b6'); grad.addColorStop(1, '#9333ea');
-    g.strokeStyle = grad;
-    g.lineWidth = 12;
-    g.lineCap = 'round';
-    g.beginPath();
-    g.arc(cx, cy, rad-14, -Math.PI/2, -Math.PI/2 + (Math.PI*2 * score/100));
-    g.stroke();
-    g.fillStyle = '#fff';
-    g.font = 'bold 88px Playfair Display, Georgia, serif';
-    g.textAlign = 'center';
-    g.fillText(score, cx, cy + 20);
-    g.font = '500 18px Inter, sans-serif';
-    g.fillStyle = 'rgba(255,255,255,0.6)';
-    g.fillText('/ 100', cx, cy + 48);
+      const cx = photoX + photoW - 140, cy = photoY + photoH - 140, rad = 110;
+      g.fillStyle = 'rgba(0,0,0,0.85)';
+      g.beginPath(); g.arc(cx, cy, rad, 0, Math.PI*2); g.fill();
+      g.strokeStyle = 'rgba(255,255,255,0.1)';
+      g.lineWidth = 12;
+      g.beginPath(); g.arc(cx, cy, rad-14, 0, Math.PI*2); g.stroke();
+      const grad = g.createLinearGradient(cx-rad, cy-rad, cx+rad, cy+rad);
+      grad.addColorStop(0, '#f472b6'); grad.addColorStop(1, '#9333ea');
+      g.strokeStyle = grad;
+      g.lineWidth = 12;
+      g.lineCap = 'round';
+      g.beginPath();
+      g.arc(cx, cy, rad-14, -Math.PI/2, -Math.PI/2 + (Math.PI*2 * score/100));
+      g.stroke();
+      g.fillStyle = '#fff';
+      g.font = 'bold 88px Playfair Display, Georgia, serif';
+      g.textAlign = 'center';
+      g.fillText(score, cx, cy + 20);
+      g.font = '500 18px Inter, sans-serif';
+      g.fillStyle = 'rgba(255,255,255,0.6)';
+      g.fillText('/ 100', cx, cy + 48);
 
-    g.textAlign = 'center';
-    g.font = '600 38px Inter, sans-serif';
-    g.fillStyle = 'rgba(255,255,255,0.6)';
-    g.fillText('MY SCORE', W/2, photoY + photoH + 90);
-    g.font = 'bold 120px Playfair Display, Georgia, serif';
-    const lg = g.createLinearGradient(W/2-200, 0, W/2+200, 0);
-    lg.addColorStop(0, '#f472b6'); lg.addColorStop(1, '#c084fc');
-    g.fillStyle = lg;
-    g.fillText(`${score}/100 ${getScoreEmoji(score)}`, W/2, photoY + photoH + 220);
+      g.textAlign = 'center';
+      g.font = '600 38px Inter, sans-serif';
+      g.fillStyle = 'rgba(255,255,255,0.6)';
+      g.fillText('MY SCORE', W/2, photoY + photoH + 90);
+      g.font = 'bold 120px Playfair Display, Georgia, serif';
+      const lg = g.createLinearGradient(W/2-200, 0, W/2+200, 0);
+      lg.addColorStop(0, '#f472b6'); lg.addColorStop(1, '#c084fc');
+      g.fillStyle = lg;
+      g.fillText(`${score}/100 ${getScoreEmoji(score)}`, W/2, photoY + photoH + 220);
 
-    g.font = 'bold 36px Inter, sans-serif';
-    g.fillStyle = '#f472b6';
-    g.fillText(getScoreLabel(score), W/2, photoY + photoH + 275);
+      g.font = 'bold 36px Inter, sans-serif';
+      g.fillStyle = '#f472b6';
+      g.fillText(getScoreLabel(score), W/2, photoY + photoH + 275);
+    } else {
+      // Item mode — minimalist tagline under the photo, no score widgets
+      g.textAlign = 'center';
+      g.font = 'bold 64px Playfair Display, Georgia, serif';
+      const lg = g.createLinearGradient(W/2-300, 0, W/2+300, 0);
+      lg.addColorStop(0, '#f472b6'); lg.addColorStop(1, '#c084fc');
+      g.fillStyle = lg;
+      g.fillText('From My Closet', W/2, photoY + photoH + 150);
+
+      g.font = '500 32px Inter, sans-serif';
+      g.fillStyle = 'rgba(255,255,255,0.55)';
+      g.fillText('Built with DateScan', W/2, photoY + photoH + 210);
+    }
 
     g.fillStyle = 'rgba(255,255,255,0.75)';
     g.font = 'bold 38px Inter, sans-serif';
+    g.textAlign = 'center';
     g.fillText('Get your score → datescan.app', W/2, H - 80);
   };
 
@@ -3183,6 +3551,18 @@ async function generateShareCard(overrideScore, overrideImage) {
 
 window.openShareModal = async function(score, image) {
   triggerHaptic('tap');
+  const isItemMode = score === null;
+  const titleEl = document.getElementById('shareModalTitle');
+  const subEl   = document.getElementById('shareModalSubtitle');
+  if (titleEl && subEl) {
+    if (isItemMode) {
+      titleEl.textContent = 'Share this item';
+      subEl.textContent   = 'Show off what\u2019s in your closet.';
+    } else {
+      titleEl.textContent = 'Share your score';
+      subEl.textContent   = 'Your friends need to see this.';
+    }
+  }
   shareModal.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
   await generateShareCard(score, image);
@@ -6088,6 +6468,7 @@ window.addEventListener('pagehide', stopCameraTracks);
 renderChecklist();
 updateUsageBadge();
 renderCloset();
+if (typeof window.renderClosetItems === 'function') window.renderClosetItems();
 boot();
 // Apply initial offline state once the DOM is ready. The 'online'/'offline'
 // listeners attached above will keep it in sync from here on.
