@@ -430,6 +430,71 @@
     border-radius: inherit;
   }
 
+  /* Phase 3 selective blur — "lock-pane" pattern used by renderStyleCoach
+     and renderActionPlan to blur individual sub-sections (Suggested
+     Upgrades rest, Glow-Up History, Grooming rest) while leaving the
+     score circle, category scores and first-tip visible as free teasers.
+     Unlike .blur-content above (which animates from unblurred → blurred
+     via an add-class trigger), .lock-pane-blur is blurred immediately on
+     render — no animation step. */
+  .lock-pane {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.75rem;
+  }
+  .lock-pane-blur {
+    filter: blur(7px) grayscale(25%);
+    opacity: 0.45;
+    pointer-events: none;
+    user-select: none;
+    transform: scale(0.99);
+  }
+  .lock-pane-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: linear-gradient(180deg, rgba(9,9,11,0.25) 0%, rgba(9,9,11,0.92) 65%);
+    border-radius: inherit;
+    text-align: center;
+  }
+  .lock-pane-overlay .lock-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #f472b6;
+    background: rgba(236, 72, 153, 0.12);
+    border: 1px solid rgba(236, 72, 153, 0.35);
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+  }
+  .lock-pane-overlay .lock-cta {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: #fff;
+    background: linear-gradient(135deg, #ec4899 0%, #9333ea 100%);
+    padding: 0.55rem 1.1rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 6px 18px rgba(236, 72, 153, 0.4);
+    cursor: pointer;
+    border: none;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+  }
+  .lock-pane-overlay .lock-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(236, 72, 153, 0.55);
+  }
+
   /* Animations */
   .fade-up { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
   @keyframes fadeUp {
@@ -1109,12 +1174,24 @@
       <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
       <span class="hidden sm:inline">Closet</span>
     </button>
-    <span id="usageBadge" class="inline-block text-[10px] sm:text-xs font-medium px-2.5 sm:px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-300 transition-all whitespace-nowrap">
-      Loading...
+    <!-- Points pill (replaces the old "Free Scans Left" badge).
+         Populated by updatePointsBadge(). Always visible — shows the
+         current point balance for free users, "PRO" for upgraded
+         users. The Earn Points button next to it drives the conversion
+         funnel and is hidden entirely for Pro users. -->
+    <span id="pointsBadge" class="inline-flex items-center text-[11px] sm:text-xs font-medium px-3 sm:px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-white transition-all whitespace-nowrap" title="Loading…">
+      <span class="font-bold text-white tabular-nums">–</span><span class="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-1">PTS</span>
     </span>
-    <button id="upgradeBtn" class="hidden lg:inline-block text-xs font-bold px-4 py-2 rounded-full bg-white text-black hover:bg-gray-200 transition-colors shadow-lg">
-      Upgrade
+    <button id="earnPointsBtn" class="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-bold px-3 sm:px-4 py-1.5 rounded-full text-white bg-gradient-to-r from-brand-500 to-purple-500 hover:from-brand-400 hover:to-purple-400 transition-all shadow-[0_4px_14px_rgba(236,72,153,0.35)] whitespace-nowrap">
+      <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+      Earn Points
     </button>
+    <!-- Legacy upgradeBtn id retained (hidden) because several older
+         call sites still do $("upgradeBtn").addEventListener(...) for
+         desktop-only affordances. Rewiring those is Phase 2 work; for
+         now earnPointsBtn is the primary CTA and upgradeBtn stays in
+         the DOM as a silent alias target. -->
+    <button id="upgradeBtn" class="hidden" aria-hidden="true" tabindex="-1"></button>
   </div>
 </header>
 
@@ -1354,64 +1431,14 @@
             </div>
           </div>
 
-          <!-- AI Style Coach Chat Module -->
-          <div class="premium-glass rounded-[32px] p-6 sm:p-8 relative overflow-hidden">
-            <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-purple-500/20 mix-blend-screen filter blur-[40px] pointer-events-none"></div>
-            <div class="flex items-center justify-between mb-1 relative z-10">
-              <h2 class="font-serif text-2xl font-semibold flex items-center gap-2">
-                <svg class="w-6 h-6 text-purple-300" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg>
-                AI Style Coach Chat
-              </h2>
-              <span class="shrink-0 text-[10px] font-sans font-bold uppercase tracking-widest text-purple-300 border border-purple-500/30 bg-purple-500/10 px-2.5 py-0.5 rounded-full whitespace-nowrap text-center">Vision AI</span>
-            </div>
-            <p class="text-xs text-gray-400 mb-5 relative z-10">Upload an outfit photo, pick from your closet, or just ask — I'll see it and help.</p>
+            <!-- AI Style Coach Chat Module — moved to #viewChat below.
+                 The chat card and its closet-picker modal used to live here
+                 as sibling cards in the scanner column. Phase 2 extracted
+                 them into a dedicated top-level view so the bottom nav's
+                 AI CHAT tab can route to them directly, and so the scanner
+                 view is no longer responsible for the chat DOM. -->
 
-            <div id="coachChatMessages" class="relative z-10 space-y-3 max-h-[420px] overflow-y-auto pr-1 mb-4">
-              <div class="flex gap-2.5">
-                <div class="shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-purple-500 flex items-center justify-center text-white">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.6 4.6L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.4z"/><path d="M19 14l.7 1.9 1.8.6-1.8.6L19 19l-.7-1.9-1.8-.6 1.8-.6z"/></svg>
-                </div>
-                <div class="bg-white/5 border border-white/10 rounded-2xl rounded-tl-sm px-4 py-2.5 text-sm text-gray-200 max-w-[85%]">
-                  Hey! I'm your AI Style Coach with vision. Upload a photo or tap 👕 to pick from your closet, and I'll give you feedback on colors, fit, and how it works for your date tonight.
-                </div>
-              </div>
-            </div>
-
-            <!-- Attachment preview -->
-            <div id="coachChatAttachments" class="relative z-10 flex gap-2 flex-wrap mb-3 hidden"></div>
-
-            <form id="coachChatForm" class="relative z-10 flex gap-2 items-center">
-              <input id="coachChatFile" type="file" accept="image/*" class="hidden" />
-              <button id="coachChatUploadBtn" type="button" title="Upload photo" aria-label="Upload photo" class="shrink-0 w-11 h-11 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 flex items-center justify-center transition">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="m21 16-4-4-8 8"/></svg>
-              </button>
-              <button id="coachChatClosetBtn" type="button" title="Pick from closet" aria-label="Pick from closet" class="shrink-0 w-11 h-11 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 flex items-center justify-center transition">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
-              </button>
-              <input id="coachChatInput" type="text" autocomplete="off" placeholder="Ask me anything…" class="flex-1 min-w-0 bg-white/5 border border-white/10 focus:border-brand-500/60 focus:bg-white/10 outline-none rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-500 transition" />
-              <button id="coachChatSend" type="submit" aria-label="Send message" class="shrink-0 btn-primary w-11 h-11 rounded-xl flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>
-              </button>
-            </form>
-
-            <!-- Suggestion chips (populated dynamically after each scan) -->
-            <div id="chatChips" class="relative z-10 flex flex-wrap gap-2 mt-3 hidden"></div>
           </div>
-
-          <!-- Closet Picker Modal for Chat -->
-          <div id="coachClosetPicker" class="hidden fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <div class="premium-glass rounded-3xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col">
-              <div class="flex items-center justify-between p-5 border-b border-white/10">
-                <h3 class="font-serif text-xl font-semibold">Pick from your closet</h3>
-                <button id="coachClosetPickerClose" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center transition">✕</button>
-              </div>
-              <div id="coachClosetPickerGrid" class="p-5 grid grid-cols-2 sm:grid-cols-3 gap-3 overflow-y-auto">
-                <!-- Populated by JS -->
-              </div>
-            </div>
-          </div>
-
-        </div>
 
       </div>
   </div>
@@ -1439,6 +1466,88 @@
       <div id="closetGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
           <!-- Populated by JS -->
       </div>
+  </div>
+
+  <!-- AI CHAT VIEW — Phase 2 extraction.
+       This used to be a card at the bottom of #viewScanner's camera column.
+       It now lives as a top-level sibling view so the bottom nav's AI CHAT
+       tab can route to it directly. All IDs inside (coachChatForm,
+       coachChatInput, coachChatMessages, coachChatUploadBtn, coachChatFile,
+       coachChatClosetBtn, coachChatAttachments, coachChatSend, chatChips)
+       are unchanged — every handler in the chat IIFE still binds to them
+       by ID, so no JS rewiring is needed for the move. -->
+  <div id="viewChat" class="hidden opacity-0 translate-y-8 transition-all duration-500 pb-12 pt-4">
+    <div class="max-w-2xl mx-auto w-full">
+      <div class="mb-8">
+        <h2 class="font-serif text-3xl md:text-4xl font-medium mb-2 leading-tight">AI Style Coach</h2>
+        <p class="text-gray-400 text-sm font-medium">Upload a photo, pick from your closet, or just ask — I'll see it and help.</p>
+      </div>
+
+      <div class="premium-glass rounded-[32px] p-6 sm:p-8 relative overflow-hidden">
+        <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-purple-500/20 mix-blend-screen filter blur-[40px] pointer-events-none"></div>
+        <div class="flex items-center justify-between mb-1 relative z-10">
+          <h2 class="font-serif text-2xl font-semibold flex items-center gap-2">
+            <svg class="w-6 h-6 text-purple-300" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg>
+            Chat with Coach
+          </h2>
+          <span class="shrink-0 text-[10px] font-sans font-bold uppercase tracking-widest text-purple-300 border border-purple-500/30 bg-purple-500/10 px-2.5 py-0.5 rounded-full whitespace-nowrap text-center">Vision AI</span>
+        </div>
+        <p class="text-xs text-gray-400 mb-5 relative z-10">
+          <span class="inline-flex items-center gap-1">
+            <svg class="w-3 h-3 text-brand-400" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <span><strong class="text-brand-400">1 point</strong> per message</span>
+          </span>
+        </p>
+
+        <div id="coachChatMessages" class="relative z-10 space-y-3 max-h-[420px] overflow-y-auto pr-1 mb-4">
+          <div class="flex gap-2.5">
+            <div class="shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-purple-500 flex items-center justify-center text-white">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.6 4.6L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.4z"/><path d="M19 14l.7 1.9 1.8.6-1.8.6L19 19l-.7-1.9-1.8-.6 1.8-.6z"/></svg>
+            </div>
+            <div class="bg-white/5 border border-white/10 rounded-2xl rounded-tl-sm px-4 py-2.5 text-sm text-gray-200 max-w-[85%]">
+              Hey! I'm your AI Style Coach with vision. Upload a photo or tap 👕 to pick from your closet, and I'll give you feedback on colors, fit, and how it works for your date tonight.
+            </div>
+          </div>
+        </div>
+
+        <!-- Attachment preview -->
+        <div id="coachChatAttachments" class="relative z-10 flex gap-2 flex-wrap mb-3 hidden"></div>
+
+        <form id="coachChatForm" class="relative z-10 flex gap-2 items-center">
+          <input id="coachChatFile" type="file" accept="image/*" class="hidden" />
+          <button id="coachChatUploadBtn" type="button" title="Upload photo" aria-label="Upload photo" class="shrink-0 w-11 h-11 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 flex items-center justify-center transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="m21 16-4-4-8 8"/></svg>
+          </button>
+          <button id="coachChatClosetBtn" type="button" title="Pick from closet" aria-label="Pick from closet" class="shrink-0 w-11 h-11 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 flex items-center justify-center transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
+          </button>
+          <input id="coachChatInput" type="text" autocomplete="off" placeholder="Ask me anything…" class="flex-1 min-w-0 bg-white/5 border border-white/10 focus:border-brand-500/60 focus:bg-white/10 outline-none rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-500 transition" />
+          <button id="coachChatSend" type="submit" aria-label="Send message" class="shrink-0 btn-primary w-11 h-11 rounded-xl flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>
+          </button>
+        </form>
+
+        <!-- Suggestion chips (populated dynamically after each scan) -->
+        <div id="chatChips" class="relative z-10 flex flex-wrap gap-2 mt-3 hidden"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Closet Picker Modal for Chat.
+       Moved OUT of viewScanner in Phase 2. It used to be a child of the
+       scanner column, which meant `display:none` on viewScanner would
+       also hide this modal even though it is fixed-position. Now it
+       lives at the top level of <main> and can be opened from any view. -->
+  <div id="coachClosetPicker" class="hidden fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="premium-glass rounded-3xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col">
+      <div class="flex items-center justify-between p-5 border-b border-white/10">
+        <h3 class="font-serif text-xl font-semibold">Pick from your closet</h3>
+        <button id="coachClosetPickerClose" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center transition">✕</button>
+      </div>
+      <div id="coachClosetPickerGrid" class="p-5 grid grid-cols-2 sm:grid-cols-3 gap-3 overflow-y-auto">
+        <!-- Populated by JS -->
+      </div>
+    </div>
   </div>
 
 </main>
@@ -1526,11 +1635,11 @@
       </svg>
       <span class="text-[10px] font-bold uppercase tracking-widest text-white">Closet</span>
     </button>
-    <button id="mobileNavPro" class="mobile-nav-btn bg-dark-950/80 backdrop-blur-xl rounded-2xl p-3 border border-white/10 flex flex-col items-center gap-1 transition-all active:scale-95">
+    <button id="mobileNavChat" class="mobile-nav-btn bg-dark-950/80 backdrop-blur-xl rounded-2xl p-3 border border-white/10 flex flex-col items-center gap-1 transition-all active:scale-95">
       <svg class="w-[22px] h-[22px] text-white" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 2.5l2.9 6 6.6.95-4.78 4.66 1.13 6.58L12 17.6l-5.85 3.07L7.28 14.1 2.5 9.45l6.6-.95z"/>
+        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/>
       </svg>
-      <span class="text-[10px] font-bold uppercase tracking-widest text-white">Pro</span>
+      <span class="text-[10px] font-bold uppercase tracking-widest text-white">AI Chat</span>
     </button>
   </div>
 </nav>
@@ -1648,19 +1757,24 @@ document.addEventListener('DOMContentLoaded', function () {
   document.addEventListener('DOMContentLoaded', function() {
     const scanBtn = document.getElementById('mobileNavScan');
     const closetBtn = document.getElementById('mobileNavCloset');
-    const proBtn = document.getElementById('mobileNavPro');
+    const chatBtn = document.getElementById('mobileNavChat');
     const paywall = document.getElementById('paywallModal');
     const closetView = document.getElementById('viewCloset');
+    const chatView = document.getElementById('viewChat');
 
     function setActive(which) {
-      [scanBtn, closetBtn, proBtn].forEach(b => b?.classList.remove('is-active'));
-      const map = { scan: scanBtn, closet: closetBtn, pro: proBtn };
+      [scanBtn, closetBtn, chatBtn].forEach(b => b?.classList.remove('is-active'));
+      const map = { scan: scanBtn, closet: closetBtn, chat: chatBtn };
       map[which]?.classList.add('is-active');
     }
 
     function syncActive() {
-      if (paywall && !paywall.classList.contains('hidden')) {
-        setActive('pro');
+      // The paywall is a modal overlay, not a view — when it's open we
+      // leave the underlying view's tab highlighted instead of fighting
+      // for activeness. Previously this treated the paywall as the Pro
+      // tab's active state, but there is no Pro tab anymore.
+      if (chatView && !chatView.classList.contains('hidden')) {
+        setActive('chat');
       } else if (closetView && !closetView.classList.contains('hidden')) {
         setActive('closet');
       } else {
@@ -1695,11 +1809,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     closetBtn?.addEventListener('click', () => {
       closePaywallIfOpen();
-      // Same fix: force the closet view, don't toggle. The previous
-      // implementation called navClosetBtn.click() which is a toggle —
-      // if the user opened the paywall while already on the closet,
-      // tapping Closet from the bottom nav would flip them to the
-      // scanner instead of just closing the paywall.
       if (typeof window.toggleView === 'function') {
         window.toggleView('closet');
       } else {
@@ -1708,10 +1817,18 @@ document.addEventListener('DOMContentLoaded', function () {
       setTimeout(syncActive, 50);
     });
 
-    proBtn?.addEventListener('click', () => {
-      if (typeof window.openPaywall === 'function') window.openPaywall();
-      else document.getElementById('upgradeBtn')?.click();
+    chatBtn?.addEventListener('click', () => {
+      closePaywallIfOpen();
+      if (typeof window.toggleView === 'function') {
+        window.toggleView('chat');
+      }
       setTimeout(syncActive, 50);
+      // Drop focus into the chat input so the user can start typing
+      // immediately, the same way tapping Scan focuses the scan button.
+      // Delayed past the view transition so we don't focus a hidden input.
+      setTimeout(() => {
+        document.getElementById('coachChatInput')?.focus({ preventScroll: true });
+      }, 400);
     });
 
     if (paywall) {
@@ -1719,6 +1836,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     if (closetView) {
       new MutationObserver(syncActive).observe(closetView, { attributes: true, attributeFilter: ['class'] });
+    }
+    if (chatView) {
+      new MutationObserver(syncActive).observe(chatView, { attributes: true, attributeFilter: ['class'] });
     }
 
     syncActive();
@@ -2094,7 +2214,12 @@ const feedbackPanel = $("feedbackPanel");
 const videoWrap = $("videoWrap");
 const analysisCanvas = $("analysisCanvas");
 const ctx = analysisCanvas.getContext("2d", { willReadFrequently: true });
-const usageBadge = $("usageBadge");
+// NOTE: The top-right badge is now looked up dynamically inside
+// updatePointsBadge() because its DOM id changed from `usageBadge`
+// (legacy "Free Scans Left" pill) to `pointsBadge` (the new "5 PTS"
+// pill). We intentionally do not cache it as a module-level const
+// anymore — the lookup is cheap and it avoids a stale reference if
+// the header is ever re-rendered.
 const paywall = $("paywallModal");
 const onboardingModal = $("onboardingModal");
 
@@ -2175,84 +2300,160 @@ const LEVELS = [
   { name: "Level 6: Casanova", xp: 1500 }
 ];
 
-const FREE_SCAN_LIMIT = 3;
-const FREE_CHAT_LIMIT = 2;
-const RESET_MS = 24 * 60 * 60 * 1000;
+// ============================================================
+// UNIFIED POINTS SYSTEM
+// ============================================================
+// Replaces the legacy two-counter model (3 scans + 2 chats / 24h)
+// with a single shared pool: DAILY_POINTS points per 24h, where
+//   - 1 scan  = 1 point
+//   - 1 chat  = 1 point
+// The 24h window starts ticking at the first consumption after a
+// refill. When `remaining` hits 0, the chat is fully blocked
+// (paywall) and the scan is still allowed but renders a locked/
+// blurred result as a conversion teaser.
+//
+// Storage shape in localStorage["datescan.points"]:
+//   { remaining: number, firstAt: number }
+// `firstAt` is the timestamp of the FIRST consumption in the
+// current window — once `now - firstAt >= 24h`, the pool refills
+// to DAILY_POINTS and firstAt resets to 0 until the next spend.
+// ============================================================
+
+const DAILY_POINTS = 5;
+const POINTS_KEY = "datescan.points";
+const POINTS_RESET_MS = 24 * 60 * 60 * 1000;
+
+// Legacy constants kept for any external code that still references
+// them via window.*, but they are no longer authoritative. The real
+// gate is getPoints().
+const FREE_SCAN_LIMIT = DAILY_POINTS;
+const FREE_CHAT_LIMIT = DAILY_POINTS;
+const RESET_MS = POINTS_RESET_MS;
 
 function isProUser() { return localStorage.getItem('datescan.pro') === 'true'; }
 function setProUser() { localStorage.setItem('datescan.pro', 'true'); }
 
-// ---- Scan usage (rolling 24h window from first scan; resets 24h after block) ----
-function getUsage() {
+// Read + auto-refill. This is the ONLY function that knows about the
+// storage shape — everything else goes through getPoints / consumePoint.
+function _readPointsState() {
   try {
-    const raw = JSON.parse(localStorage.getItem("datescan.usage") || "{}");
-    if (!raw || typeof raw.count !== 'number') return { count: 0, firstAt: 0, blockedAt: 0 };
-    // If a block was set and 24h has passed → full reset
-    if (raw.blockedAt && Date.now() - raw.blockedAt >= RESET_MS) return { count: 0, firstAt: 0, blockedAt: 0 };
-    // If no block but 24h has passed since first scan → reset
-    if (!raw.blockedAt && raw.firstAt && Date.now() - raw.firstAt >= RESET_MS) return { count: 0, firstAt: 0, blockedAt: 0 };
-    return raw;
-  } catch { return { count: 0, firstAt: 0, blockedAt: 0 }; }
-}
-function getTodayScans() { return getUsage().count; }
-function incrementUsage() {
-  const u = getUsage();
-  if (!u.firstAt) u.firstAt = Date.now();
-  u.count++;
-  if (u.count >= FREE_SCAN_LIMIT) u.blockedAt = Date.now();
-  localStorage.setItem("datescan.usage", JSON.stringify(u));
-  updateUsageBadge();
-}
-function getScanCooldownMs() {
-  const u = getUsage();
-  if (!u.blockedAt) return 0;
-  return Math.max(0, RESET_MS - (Date.now() - u.blockedAt));
+    const raw = JSON.parse(localStorage.getItem(POINTS_KEY) || "{}");
+    const now = Date.now();
+    // Fresh install, or window has rolled over → full refill.
+    if (typeof raw.remaining !== 'number' || !raw.firstAt ||
+        (now - raw.firstAt) >= POINTS_RESET_MS) {
+      return { remaining: DAILY_POINTS, firstAt: 0 };
+    }
+    return {
+      remaining: Math.max(0, Math.min(DAILY_POINTS, raw.remaining)),
+      firstAt: raw.firstAt,
+    };
+  } catch {
+    return { remaining: DAILY_POINTS, firstAt: 0 };
+  }
 }
 
-// ---- Chat usage (same 24h logic) ----
-function getChatUsage() {
+function getPoints() {
+  if (isProUser()) return Infinity;
+  return _readPointsState().remaining;
+}
+
+// Milliseconds until the current 24h window resets. Returns 0 if the
+// pool is already full (no window is active). Used by the UI to show
+// "Resets in 4h 12m" under the badge when the user is at zero.
+function getPointsResetMs() {
+  if (isProUser()) return 0;
+  const s = _readPointsState();
+  if (!s.firstAt) return 0;
+  return Math.max(0, POINTS_RESET_MS - (Date.now() - s.firstAt));
+}
+
+// Spend one point. Pro users are a no-op. Returns the new remaining.
+function consumePoint() {
+  if (isProUser()) return Infinity;
+  const s = _readPointsState();
+  const remaining = Math.max(0, s.remaining - 1);
+  // Start the 24h clock on the FIRST spend of a fresh pool.
+  const firstAt = s.firstAt || Date.now();
   try {
-    const raw = JSON.parse(localStorage.getItem("datescan.chatUsage") || "{}");
-    if (!raw || typeof raw.count !== 'number') return { count: 0, firstAt: 0, blockedAt: 0 };
-    if (raw.blockedAt && Date.now() - raw.blockedAt >= RESET_MS) return { count: 0, firstAt: 0, blockedAt: 0 };
-    if (!raw.blockedAt && raw.firstAt && Date.now() - raw.firstAt >= RESET_MS) return { count: 0, firstAt: 0, blockedAt: 0 };
-    return raw;
-  } catch { return { count: 0, firstAt: 0, blockedAt: 0 }; }
+    localStorage.setItem(POINTS_KEY, JSON.stringify({ remaining, firstAt }));
+  } catch {}
+  updatePointsBadge();
+  return remaining;
 }
-function getChatCount() { return getChatUsage().count; }
-function incrementChatUsage() {
-  const u = getChatUsage();
-  if (!u.firstAt) u.firstAt = Date.now();
-  u.count++;
-  if (u.count >= FREE_CHAT_LIMIT) u.blockedAt = Date.now();
-  localStorage.setItem("datescan.chatUsage", JSON.stringify(u));
+
+// ---- Back-compat shims ----
+// Several callers in the chat submit handler and older code paths
+// still reference these names. They now all route through the points
+// pool so there's one source of truth.
+function getTodayScans() {
+  return DAILY_POINTS - getPoints();
 }
+function incrementUsage() { consumePoint(); }
+function getChatCount() {
+  return DAILY_POINTS - getPoints();
+}
+function incrementChatUsage() { consumePoint(); }
+function getScanCooldownMs() { return getPointsResetMs(); }
+
 window.getChatCount = getChatCount;
 window.incrementChatUsage = incrementChatUsage;
 window.isProUser = isProUser;
 window.FREE_CHAT_LIMIT = FREE_CHAT_LIMIT;
+window.getPoints = getPoints;
+window.consumePoint = consumePoint;
+window.getPointsResetMs = getPointsResetMs;
+window.DAILY_POINTS = DAILY_POINTS;
 
-function updateUsageBadge() {
-  if (isProUser()) {
-    usageBadge.innerHTML = `<span class="text-brand-400 font-bold">PRO Active</span>`;
-    usageBadge.classList.replace('bg-white/5', 'bg-brand-500/10');
-    usageBadge.classList.replace('border-white/10', 'border-brand-500/30');
-    usageBadge.classList.remove('hidden');
-    $("upgradeBtn").classList.add("hidden");
-  } else {
-    const left = Math.max(0, FREE_SCAN_LIMIT - getTodayScans());
-    if (left > 1) {
-      usageBadge.textContent = `${left} Free Scans Left`;
-      usageBadge.classList.remove('text-gray-500');
-    } else if (left === 1) {
-      usageBadge.textContent = `1 Free Scan Left`;
-      usageBadge.classList.remove('text-gray-500');
-    } else {
-      usageBadge.textContent = `0 Free Scans`;
-      usageBadge.classList.add('text-gray-500');
-    }
-  }
+// Human-readable "Resets in Xh Ym" string for the tooltip / secondary
+// label under the points pill. Empty string if no window is active.
+function formatPointsResetShort() {
+  const ms = getPointsResetMs();
+  if (ms <= 0) return '';
+  const hours = Math.floor(ms / (60 * 60 * 1000));
+  const mins = Math.floor((ms % (60 * 60 * 1000)) / (60 * 1000));
+  if (hours > 0) return `${hours}h ${mins}m`;
+  return `${mins}m`;
 }
+
+function updatePointsBadge() {
+  const badge = document.getElementById('pointsBadge');
+  const earnBtn = document.getElementById('earnPointsBtn');
+  if (!badge) return;
+
+  if (isProUser()) {
+    badge.innerHTML = `<span class="text-brand-400 font-bold">PRO</span>`;
+    badge.classList.remove('text-gray-500');
+    badge.classList.remove('bg-white/5');
+    badge.classList.remove('border-white/10');
+    badge.classList.add('bg-brand-500/10', 'border-brand-500/30');
+    badge.title = 'Pro active — unlimited scans and chat';
+    if (earnBtn) earnBtn.classList.add('hidden');
+    return;
+  }
+
+  const pts = getPoints();
+  // Show e.g. "5 PTS" with optional reset hint in the title attribute.
+  badge.innerHTML = `<span class="font-bold text-white tabular-nums">${pts}</span><span class="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-1">PTS</span>`;
+  badge.classList.remove('bg-brand-500/10', 'border-brand-500/30');
+  badge.classList.add('bg-white/5', 'border-white/10');
+  if (pts === 0) {
+    badge.classList.add('text-gray-400');
+  } else {
+    badge.classList.remove('text-gray-400');
+  }
+  const resetHint = formatPointsResetShort();
+  badge.title = resetHint
+    ? `${pts} of ${DAILY_POINTS} points left · resets in ${resetHint}`
+    : `${pts} of ${DAILY_POINTS} points left`;
+
+  if (earnBtn) earnBtn.classList.remove('hidden');
+}
+
+// Legacy alias — some older call sites still reference updateUsageBadge.
+// Route them through the new badge updater so we don't have to touch
+// every caller in this phase.
+function updateUsageBadge() { updatePointsBadge(); }
 
 // Body scroll lock — `overflow: hidden` alone is unreliable on mobile
 // Chrome / iOS Safari, especially when the keyboard is open. We also
@@ -2292,56 +2493,102 @@ function closePaywall() {
   triggerHaptic('tap');
 }
 
+// toggleView — tri-state view switcher for scanner / closet / chat.
+// Original implementation was a simple scanner↔closet toggle with the
+// else-branch handling "any non-closet target" as scanner. Phase 2
+// added #viewChat as a third top-level view (extracted from the
+// scanner's bottom card), so this now dispatches on targetView
+// explicitly instead of falling through.
 function toggleView(targetView) {
     const viewScanner = $("viewScanner");
     const viewCloset = $("viewCloset");
+    const viewChat = $("viewChat");
     const navBtn = $("navClosetBtn");
 
-    if (targetView === 'closet') {
-        viewScanner.classList.replace("block", "hidden");
-        viewScanner.classList.remove("opacity-100");
-        
-        viewCloset.classList.replace("hidden", "block");
-        setTimeout(() => {
-            viewCloset.classList.replace("opacity-0", "opacity-100");
-            viewCloset.classList.replace("translate-y-8", "translate-y-0");
-        }, 50);
+    // --- Helpers -----------------------------------------------------
+    // Hide one of the non-scanner overlay views with the fade-down
+    // transition. The scanner view is the resting state and uses a
+    // different show/hide pattern (just block/hidden, no translate),
+    // so it's handled inline by showScanner() below.
+    function hideOverlay(el) {
+      if (!el || el.classList.contains('hidden')) return;
+      el.classList.replace('opacity-100', 'opacity-0');
+      el.classList.replace('translate-y-0', 'translate-y-8');
+      setTimeout(() => el.classList.replace('block', 'hidden'), 300);
+    }
+    function showOverlay(el) {
+      if (!el) return;
+      el.classList.replace('hidden', 'block');
+      // Next tick so the browser commits the display change before we
+      // start the opacity/translate transition, otherwise it snaps in.
+      setTimeout(() => {
+        el.classList.replace('opacity-0', 'opacity-100');
+        el.classList.replace('translate-y-8', 'translate-y-0');
+      }, 50);
+    }
+    function showScanner() {
+      viewScanner.classList.replace('hidden', 'block');
+      setTimeout(() => viewScanner.classList.add('opacity-100'), 50);
+    }
+    function hideScanner() {
+      viewScanner.classList.replace('block', 'hidden');
+      viewScanner.classList.remove('opacity-100');
+    }
+    // Restore the top-bar closet button to its default "Closet" state.
+    // The button text/color swaps when the closet view is open; other
+    // views (scanner, chat) share the same "Closet" idle appearance.
+    function resetClosetNavBtn() {
+      if (!navBtn) return;
+      navBtn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg><span class="hidden sm:inline">Closet</span>`;
+      navBtn.classList.remove('bg-brand-500/20', 'text-brand-300', 'border-brand-500/40');
+      navBtn.classList.add('bg-white/5', 'text-white', 'border-white/10');
+    }
 
-        navBtn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V6a2 2 0 0 1 2-2h2"/><path d="M16 4h2a2 2 0 0 1 2 2v2"/><path d="M20 16v2a2 2 0 0 1-2 2h-2"/><path d="M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="11" r="2.4"/><path d="M8 17c1-1.5 2.4-2.3 4-2.3s3 .8 4 2.3"/></svg><span class="hidden sm:inline">Scanner</span>`;
-        navBtn.classList.replace("bg-white/5", "bg-brand-500/20");
-        navBtn.classList.replace("text-white", "text-brand-300");
-        navBtn.classList.replace("border-white/10", "border-brand-500/40");
-        
-        // Always reset to the "All Outfits" tab when entering the closet view,
-        // so navigating away (to Scan / Pro) and back never leaves the user
-        // stuck on a previously-selected category filter.
+    // --- Dispatch ----------------------------------------------------
+    if (targetView === 'closet') {
+        hideScanner();
+        hideOverlay(viewChat);
+        showOverlay(viewCloset);
+
+        if (navBtn) {
+          navBtn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V6a2 2 0 0 1 2-2h2"/><path d="M16 4h2a2 2 0 0 1 2 2v2"/><path d="M20 16v2a2 2 0 0 1-2 2h-2"/><path d="M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="11" r="2.4"/><path d="M8 17c1-1.5 2.4-2.3 4-2.3s3 .8 4 2.3"/></svg><span class="hidden sm:inline">Scanner</span>`;
+          navBtn.classList.remove('bg-white/5', 'text-white', 'border-white/10');
+          navBtn.classList.add('bg-brand-500/20', 'text-brand-300', 'border-brand-500/40');
+        }
+
+        // Always reset to the "All Outfits" tab when entering the closet
+        // view, so navigating away and back never leaves the user stuck
+        // on a previously-selected category filter.
         if (typeof window.setClosetFilter === 'function') {
             window.setClosetFilter('all', { updateHash: false });
         } else {
             renderCloset();
         }
         store.set({ activeView: 'closet' });
-        // Force the hash to plain #closet (strip any /filter suffix) so the
-        // hashchange handler won't re-apply an old filter on back/forward.
         if (location.hash !== '#closet') {
             history.replaceState(null, '', '#closet');
         }
-    } else {
-        viewCloset.classList.replace("opacity-100", "opacity-0");
-        viewCloset.classList.replace("translate-y-0", "translate-y-8");
-        setTimeout(() => {
-            viewCloset.classList.replace("block", "hidden");
-            viewScanner.classList.replace("hidden", "block");
-            setTimeout(() => viewScanner.classList.add("opacity-100"), 50);
-        }, 300);
+    } else if (targetView === 'chat') {
+        hideScanner();
+        hideOverlay(viewCloset);
+        showOverlay(viewChat);
+        resetClosetNavBtn();
 
-        navBtn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg><span class="hidden sm:inline">Closet</span>`;
-        navBtn.classList.replace("bg-brand-500/20", "bg-white/5");
-        navBtn.classList.replace("text-brand-300", "text-white");
-        navBtn.classList.replace("border-brand-500/40", "border-white/10");
-        
+        store.set({ activeView: 'chat' });
+        if (location.hash !== '#chat') {
+            history.replaceState(null, '', '#chat');
+        }
+    } else {
+        // targetView === 'scanner' (or any unrecognized value — default).
+        hideOverlay(viewCloset);
+        hideOverlay(viewChat);
+        // Scanner comes back in after the overlay fade-down completes
+        // so the two transitions don't visually fight.
+        setTimeout(showScanner, 300);
+        resetClosetNavBtn();
+
         store.set({ activeView: 'scanner' });
-        if (/^#closet(\/|$)/.test(location.hash)) {
+        if (/^#(closet|chat)(\/|$)/.test(location.hash)) {
             history.replaceState(null, '', location.pathname + location.search);
         }
     }
@@ -2350,7 +2597,7 @@ function toggleView(targetView) {
 $("navClosetBtn").addEventListener("click", () => {
     triggerHaptic('tap');
     const s = store.get();
-    toggleView(s.activeView === 'scanner' ? 'closet' : 'scanner');
+    toggleView(s.activeView === 'closet' ? 'scanner' : 'closet');
 });
 
 // Expose for use by the inline mobile-nav script and other modules.
@@ -2358,7 +2605,9 @@ window.toggleView = toggleView;
 window.unlockBodyScroll = unlockBodyScroll;
 
 $("logoBtn").addEventListener("click", () => {
-    if (store.get().activeView === 'closet') {
+    // Logo taps always bring you home to the scanner view, regardless
+    // of whether you're in closet or chat.
+    if (store.get().activeView !== 'scanner') {
         triggerHaptic('tap');
         toggleView('scanner');
     }
@@ -2555,10 +2804,25 @@ function applyClosetFilterFromHash() {
     setTimeout(() => window.setClosetFilter(filter, { updateHash: false }), 0);
     return true;
 }
-window.addEventListener('hashchange', applyClosetFilterFromHash);
+// Parallel handler for #chat — deep-links to the AI Chat view.
+// No sub-filters (unlike #closet/<category>) so the match is simpler.
+function applyChatFromHash() {
+    if (!/^#chat(\/|$)/.test(location.hash || '')) return false;
+    if (store.get().activeView !== 'chat') {
+        toggleView('chat');
+    }
+    return true;
+}
+window.addEventListener('hashchange', () => {
+    applyClosetFilterFromHash();
+    applyChatFromHash();
+});
 // Run once on initial load (after DOM + closet are wired up)
 document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(applyClosetFilterFromHash, 100);
+    setTimeout(() => {
+      applyClosetFilterFromHash();
+      applyChatFromHash();
+    }, 100);
 });
 
 let outfitToDelete = null;
@@ -4327,6 +4591,100 @@ function renderStyleCoach(colorData, occasion, locked = false, items = null) {
 
   const scoreLabel = baseScore >= 85 ? 'EXCELLENT' : baseScore >= 70 ? 'GREAT' : baseScore >= 55 ? 'GOOD' : baseScore >= 40 ? 'DECENT' : 'NEEDS WORK';
 
+  // --- Phase 3 selective blur helpers --------------------------------
+  // Render a single fix as a row. Used both for the visible first fix
+  // and the blurred rest-of-fixes block.
+  const renderFixRow = (f) => `
+    <div class="flex items-center justify-between bg-gradient-to-r from-white/5 to-transparent border border-white/10 rounded-xl p-3 hover:border-brand-500/30 transition-colors">
+      <div class="flex items-center gap-2">
+        <span class="text-brand-500">→</span>
+        <span class="text-sm font-medium text-gray-200">${f.text}</span>
+      </div>
+      <div class="shrink-0 bg-brand-500/20 text-brand-300 text-xs font-bold px-2 py-1 rounded-md shadow-[0_0_10px_rgba(236,72,153,0.1)]">
+        +${f.points}
+      </div>
+    </div>
+  `;
+
+  // Suggested Upgrades — when locked, show only the first fix fully
+  // visible and blur the rest behind a lock overlay with an inline CTA.
+  // Free user conversion hook: "here's one tip, 3 more behind upgrade".
+  let fixesHtml;
+  if (!locked || analysis.fixes.length <= 1) {
+    fixesHtml = analysis.fixes.map(renderFixRow).join('');
+  } else {
+    const [firstFix, ...restFixes] = analysis.fixes;
+    fixesHtml = `
+      ${renderFixRow(firstFix)}
+      <div class="lock-pane mt-2.5">
+        <div class="space-y-2.5 lock-pane-blur">
+          ${restFixes.map(renderFixRow).join('')}
+        </div>
+        <div class="lock-pane-overlay">
+          <div class="lock-pill">
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
+            +${restFixes.length} more ${restFixes.length === 1 ? 'tip' : 'tips'}
+          </div>
+          <button type="button" class="lock-cta" onclick="window.openPaywall()">See personalized improvements</button>
+        </div>
+      </div>
+    `;
+  }
+
+  // Glow-Up History — entirely wrapped in a lock pane when locked,
+  // with a "Full History" pill and Unlock CTA. Pro users see the real
+  // sparkline + text unblurred.
+  const historyInnerHtml = `
+    <div class="flex items-end justify-between mb-4">
+      <div>
+        <h3 class="text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-500 mb-1">Glow-Up History</h3>
+        <div class="flex items-baseline gap-2">
+          <span class="font-serif text-4xl font-semibold text-white tabular-nums leading-none">${sparkData.currentScore || '—'}</span>
+          <span class="text-xs text-gray-500 font-medium">current</span>
+        </div>
+      </div>
+      <div class="text-right">
+        <div class="text-[10px] text-gray-500 tracking-wider">LAST ${hist.length} ${hist.length === 1 ? 'SCAN' : 'SCANS'}</div>
+        ${hist.length >= 2 ? `<div class="text-[11px] text-gray-400 mt-1 tabular-nums">${sparkData.minScore} – ${sparkData.maxScore}</div>` : ''}
+      </div>
+    </div>
+    <div class="relative w-full aspect-[5/1]">
+      ${sparkData.svg}
+      <div class="absolute w-2.5 h-2.5 rounded-full bg-pink-500 ring-2 ring-white/90 shadow-[0_0_0_4px_rgba(236,72,153,0.18)]" style="left: ${sparkData.endX}%; top: ${sparkData.endY}%; transform: translate(-50%, -50%);"></div>
+    </div>
+    <p class="text-xs text-gray-400 mt-4 font-normal">${historyText}</p>
+  `;
+  const historyHtml = locked
+    ? `
+      <div class="lock-pane" style="min-height: 180px;">
+        <div class="lock-pane-blur">${historyInnerHtml}</div>
+        <div class="lock-pane-overlay">
+          <div class="lock-pill">
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
+            Full History
+          </div>
+          <button type="button" class="lock-cta" onclick="window.openPaywall()">Unlock Full Analysis</button>
+        </div>
+      </div>
+    `
+    : historyInnerHtml;
+
+  // Save button — replaced with a clear conversion CTA when locked,
+  // since saving requires a Pro-level closet slot anyway past the 3rd.
+  const saveBtnHtml = locked
+    ? `
+      <button type="button" onclick="window.openPaywall()" class="w-full py-3.5 rounded-xl btn-primary text-sm font-bold text-white flex items-center justify-center gap-2 shadow-lg shadow-brand-500/30">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
+        Upgrade to Pro
+      </button>
+    `
+    : `
+      <button id="saveOutfitBtn" onclick="window.saveCurrentOutfit()" class="w-full py-3.5 rounded-xl border border-white/20 bg-white/5 text-sm font-bold text-white hover:bg-white/10 transition-colors flex items-center justify-center gap-2 shadow-lg">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
+        Save to Digital Closet
+      </button>
+    `;
+
   let html = `
     <div class="flex flex-col items-center mb-6">
       <div class="relative w-44 h-44 drop-shadow-[0_0_24px_rgba(236,72,153,0.35)]">
@@ -4383,66 +4741,25 @@ function renderStyleCoach(colorData, occasion, locked = false, items = null) {
         <span class="text-gray-500 bg-white/5 px-2 py-0.5 rounded">Target: ${targetScore}</span>
       </div>
       <div class="space-y-2.5">
-        ${analysis.fixes.map(f => `
-          <div class="flex items-center justify-between bg-gradient-to-r from-white/5 to-transparent border border-white/10 rounded-xl p-3 hover:border-brand-500/30 transition-colors">
-            <div class="flex items-center gap-2">
-              <span class="text-brand-500">→</span>
-              <span class="text-sm font-medium text-gray-200">${f.text}</span>
-            </div>
-            <div class="shrink-0 bg-brand-500/20 text-brand-300 text-xs font-bold px-2 py-1 rounded-md shadow-[0_0_10px_rgba(236,72,153,0.1)]">
-              +${f.points}
-            </div>
-          </div>
-        `).join('')}
+        ${fixesHtml}
       </div>
     </div>
-    
+
     <div class="mt-8 pt-6 border-t border-white/5">
-      <div class="flex items-end justify-between mb-4">
-        <div>
-          <h3 class="text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-500 mb-1">Glow-Up History</h3>
-          <div class="flex items-baseline gap-2">
-            <span class="font-serif text-4xl font-semibold text-white tabular-nums leading-none">${sparkData.currentScore || '—'}</span>
-            <span class="text-xs text-gray-500 font-medium">current</span>
-          </div>
-        </div>
-        <div class="text-right">
-          <div class="text-[10px] text-gray-500 tracking-wider">LAST ${hist.length} ${hist.length === 1 ? 'SCAN' : 'SCANS'}</div>
-          ${hist.length >= 2 ? `<div class="text-[11px] text-gray-400 mt-1 tabular-nums">${sparkData.minScore} – ${sparkData.maxScore}</div>` : ''}
-        </div>
-      </div>
-      <div class="relative w-full aspect-[5/1]">
-        ${sparkData.svg}
-        <div class="absolute w-2.5 h-2.5 rounded-full bg-pink-500 ring-2 ring-white/90 shadow-[0_0_0_4px_rgba(236,72,153,0.18)]" style="left: ${sparkData.endX}%; top: ${sparkData.endY}%; transform: translate(-50%, -50%);"></div>
-      </div>
-      <p class="text-xs text-gray-400 mt-4 font-normal">${historyText}</p>
+      ${historyHtml}
     </div>
 
     <div class="mt-6">
-      <button id="saveOutfitBtn" onclick="window.saveCurrentOutfit()" class="w-full py-3.5 rounded-xl border border-white/20 bg-white/5 text-sm font-bold text-white hover:bg-white/10 transition-colors flex items-center justify-center gap-2 shadow-lg">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
-        Save to Digital Closet
-      </button>
+      ${saveBtnHtml}
     </div>
   `;
 
-  if (locked) {
-    panel.innerHTML = `
-      <div class="blur-content">${html}</div>
-      <div class="locked-overlay p-6 text-center">
-         <div class="w-14 h-14 mx-auto bg-brand-500/20 text-brand-400 rounded-full flex items-center justify-center mb-4 backdrop-blur-md border border-brand-500/30">
-           <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
-         </div>
-         <h3 class="font-serif text-2xl font-bold text-white mb-2">Detailed Analysis Locked</h3>
-         <p class="text-sm text-gray-300 mb-6 max-w-[280px] mx-auto">You've used your free scan. Unlock Pro to see your style score, color matches, and save to Digital Closet.</p>
-         <button onclick="window.openPaywall()" class="btn-primary px-8 py-3.5 rounded-xl font-bold shadow-lg shadow-brand-500/30 w-full max-w-[250px]">
-           Unlock Pro
-         </button>
-      </div>
-    `;
-  } else {
-    panel.innerHTML = html;
-  }
+  // Phase 3: always write the full selective-blur HTML. The old
+  // "wrap everything in .blur-content + .locked-overlay" branch is
+  // gone because the lock is now applied per-section inline, not
+  // as a full-panel overlay. Pro users see the unblurred version
+  // since renderStyleCoach is called with locked=false for them.
+  panel.innerHTML = html;
 }
 
 function clearHUD() { hud.innerHTML = ""; hud.removeAttribute("viewBox"); }
@@ -4820,14 +5137,22 @@ async function runScan() {
 
   triggerHaptic('tap');
 
-  // ---- Free-tier gating: 3 scans / 24h ----
-  if (!isProUser()) {
-    const scans = getTodayScans();
-    if (scans >= FREE_SCAN_LIMIT) {
-      window.openPaywall();
-      return;
-    }
-  }
+  // ---- Unified points gating + selective blur ----
+  // Phase 3 refinement: the blur strategy is no longer tied to "out of
+  // points" — it's tied to "not Pro". Every free user sees the same
+  // selective-blur view on every scan (score + category scores + first
+  // tip visible; Suggested Upgrades rest, Deep Analysis, and Glow-Up
+  // History locked with inline CTAs). The points pool is orthogonal:
+  // it rate-limits how many times per day the scan can actually run
+  // and how many chat messages can be sent, but does not gate the
+  // depth of the result shown.
+  //
+  // At zero points the scan still runs (same locked view) and we also
+  // auto-open the paywall after the result reveals, to reinforce the
+  // conversion prompt. Chat at zero points is a hard block (handled
+  // separately in the chat submit handler).
+  const isLocked = !isProUser();
+  const outOfPointsOnEntry = !isProUser() && getPoints() === 0;
 
   store.dispatch({ type: 'SCAN_START' });
   // Clear any chips from the previous scan so the user doesn't see
@@ -4839,9 +5164,6 @@ async function runScan() {
   // trigger), the new drawHUD would append on top of leftover reticles.
   // One idempotent call here costs nothing and closes the window.
   clearHUD();
-
-  // 3rd scan (index 2) → render partial result with blurred action plan, then paywall
-  const isLocked = !isProUser() && getTodayScans() === FREE_SCAN_LIMIT - 1;
 
   videoWrap.classList.add("scanning");
 
@@ -5001,7 +5323,14 @@ async function runScan() {
     // the user can tap a question instead of typing.
     renderChips(store.get().occasion);
 
-    incrementUsage();
+    // Free users consume 1 point per scan when they have any left.
+    // Because the blur strategy is now tied to Pro-status rather than
+    // point balance, a scan at zero points still produces the same
+    // locked view — we just can't decrement the pool below zero.
+    // consumePoint() is clamped at 0 internally and is a no-op for Pro.
+    if (!isProUser() && getPoints() > 0) {
+      consumePoint();
+    }
 
     // Peak-moment trigger: tease an improvement number 1s after the reveal
     setTimeout(() => {
@@ -5009,11 +5338,13 @@ async function runScan() {
       window.dsPrivacy?.showToast?.(`+${n} improvement possible`, 2400);
     }, 1000);
 
-    // Animate the blur in for the partial 3rd scan, then open the paywall
-    if (isLocked) {
-      setTimeout(() => {
-        document.querySelector(".blur-content")?.classList.add("blur-active");
-      }, 300);
+    // When a free user scans at zero points, open the paywall shortly
+    // after the reveal. They still see the full locked result first
+    // (~800ms) so the missing depth registers before the upsell lands.
+    // The old ".blur-content → .blur-active" animation trigger is gone:
+    // the new selective-blur (.lock-pane-blur) is blurred on render,
+    // no animation step required.
+    if (outOfPointsOnEntry) {
       setTimeout(() => { window.openPaywall(); }, 800);
     }
   } catch (err) {
@@ -5202,6 +5533,8 @@ function renderActionPlan(items, locked = false) {
   const booster = randomBooster();
 
   // Coach's Pep Talk — kept as the introductory card for brand flavor.
+  // Always visible, even for locked/free users, because it's flavor
+  // copy with no depth that would be worth paywalling.
   html += `
     <div class="relative overflow-hidden rounded-2xl p-5 mb-5 border border-brand-500/20 bg-gradient-to-br from-brand-500/10 via-purple-500/5 to-transparent">
       <div class="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-brand-500/20 blur-2xl pointer-events-none"></div>
@@ -5224,63 +5557,72 @@ function renderActionPlan(items, locked = false) {
     items.forEach(it => { if (it.category === cat) ordered.push(it); });
   });
 
-  if (ordered.length === 0) {
-    html += `<div class="p-4 text-center text-sm text-emerald-400 bg-emerald-500/10 rounded-xl border border-emerald-500/20">All grooming & presence checks passed!</div>`;
-  } else {
-    html += `<div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-5">`;
-
-    ordered.forEach(it => {
-      const isGood = it.tone === 'good';
-
-      // Action pill colors — muted but clearly tone-coded.
-      const pillCls =
-        isGood                ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300' :
-        it.tone === 'warn'    ? 'border-amber-500/40 bg-amber-500/10 text-amber-300'       :
-        it.tone === 'info'    ? 'border-blue-500/40 bg-blue-500/10 text-blue-300'          :
-                                'border-red-500/40 bg-red-500/10 text-red-300';
-
-      // Tiny leading glyph inside the pill: check for a resolved/good item,
-      // arrow for an actionable one.
-      const pillGlyph = isGood
-        ? '<svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>'
-        : '<svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>';
-
-      const actionText = it.action || '';
-
-      html += `
-        <div class="flex items-start gap-3">
-          <div class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-gray-300">
-            ${renderIconSvg(it.icon)}
-          </div>
-          <div class="flex-1 min-w-0">
-            <h4 class="font-semibold text-white text-sm leading-tight">${it.title}</h4>
-            ${it.text ? `<p class="text-[11px] text-gray-500 mt-0.5 leading-snug mb-2">${it.text}</p>` : '<div class="mb-2"></div>'}
-            ${actionText ? `
-              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border ${pillCls} text-[10.5px] font-semibold max-w-full">
-                ${pillGlyph}
-                <span class="truncate">${actionText}</span>
-              </div>
-            ` : ''}
-          </div>
+  // Helper: render one item's card HTML. Extracted so the visible-first
+  // and blurred-rest paths share one definition.
+  const renderItemCard = (it) => {
+    const isGood = it.tone === 'good';
+    const pillCls =
+      isGood                ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300' :
+      it.tone === 'warn'    ? 'border-amber-500/40 bg-amber-500/10 text-amber-300'       :
+      it.tone === 'info'    ? 'border-blue-500/40 bg-blue-500/10 text-blue-300'          :
+                              'border-red-500/40 bg-red-500/10 text-red-300';
+    const pillGlyph = isGood
+      ? '<svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>'
+      : '<svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>';
+    const actionText = it.action || '';
+    return `
+      <div class="flex items-start gap-3">
+        <div class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-gray-300">
+          ${renderIconSvg(it.icon)}
         </div>
-      `;
-    });
-
-    html += `</div>`;
-  }
-
-  if (locked) {
-    feedbackPanel.innerHTML = `
-      <div class="blur-content">${html}</div>
-      <div class="locked-overlay p-6 text-center">
-         <h3 class="font-serif text-xl font-bold text-white mb-2">Premium Feedback</h3>
-         <p class="text-sm text-gray-300 mb-5 max-w-[250px] mx-auto">Get personalized grooming tips and attractiveness boosts to stand out.</p>
-         <button onclick="window.openPaywall()" class="text-sm font-bold text-brand-400 bg-brand-500/10 border border-brand-500/30 px-6 py-2.5 rounded-xl hover:bg-brand-500/20 transition shadow-lg">View Action Plan</button>
+        <div class="flex-1 min-w-0">
+          <h4 class="font-semibold text-white text-sm leading-tight">${it.title}</h4>
+          ${it.text ? `<p class="text-[11px] text-gray-500 mt-0.5 leading-snug mb-2">${it.text}</p>` : '<div class="mb-2"></div>'}
+          ${actionText ? `
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border ${pillCls} text-[10.5px] font-semibold max-w-full">
+              ${pillGlyph}
+              <span class="truncate">${actionText}</span>
+            </div>
+          ` : ''}
+        </div>
       </div>
     `;
+  };
+
+  if (ordered.length === 0) {
+    html += `<div class="p-4 text-center text-sm text-emerald-400 bg-emerald-500/10 rounded-xl border border-emerald-500/20">All grooming &amp; presence checks passed!</div>`;
+  } else if (!locked || ordered.length <= 1) {
+    // Pro user, or only a single item (nothing to lock behind).
+    html += `<div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-5">`;
+    ordered.forEach(it => { html += renderItemCard(it); });
+    html += `</div>`;
   } else {
-    feedbackPanel.innerHTML = html;
+    // Free/locked user: first item visible as a teaser, rest in a
+    // lock-pane with an inline "+N more insights" CTA.
+    const [firstItem, ...restItems] = ordered;
+    html += `
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-5 mb-5">
+        ${renderItemCard(firstItem)}
+      </div>
+      <div class="lock-pane">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-5 lock-pane-blur p-4">
+          ${restItems.map(renderItemCard).join('')}
+        </div>
+        <div class="lock-pane-overlay">
+          <div class="lock-pill">
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
+            +${restItems.length} more ${restItems.length === 1 ? 'insight' : 'insights'}
+          </div>
+          <button type="button" class="lock-cta" onclick="window.openPaywall()">Upgrade to Pro</button>
+        </div>
+      </div>
+    `;
   }
+
+  // Phase 3: always write the full selective-blur HTML. The old
+  // all-or-nothing ".blur-content + .locked-overlay" branch is gone
+  // because the lock is now applied per-section inline.
+  feedbackPanel.innerHTML = html;
 }
 
 // ============================================================
@@ -5563,7 +5905,15 @@ window.addEventListener("load", () => {
 });
 
 $("closePaywall").addEventListener("click", closePaywall);
+// Legacy #upgradeBtn is now a hidden alias target (kept in the DOM so
+// older code that .click()s it keeps working). The primary visible CTA
+// is #earnPointsBtn — wire both to the paywall so either entry point
+// opens it.
 $("upgradeBtn").addEventListener("click", window.openPaywall);
+$("earnPointsBtn").addEventListener("click", () => {
+  triggerHaptic('tap');
+  window.openPaywall();
+});
 document.querySelectorAll(".plan-btn").forEach(b => b.addEventListener("click", () => {
   triggerHaptic('success');
   const plan = b.dataset.plan || 'week';
@@ -6336,10 +6686,13 @@ applyOfflineState(!navigator.onLine);
       return;
     }
 
-    // Free tier: 2 chat messages / 24h
+    // Unified points gating: every chat message costs 1 point from the
+    // shared daily pool. If the pool is empty, block and open the
+    // paywall — unlike the scan path, chat is a hard stop because a
+    // reply consumes a real API call to the vision model.
     if (!window.isProUser?.()) {
-      const used = window.getChatCount?.() || 0;
-      if (used >= window.FREE_CHAT_LIMIT) {
+      const remaining = window.getPoints?.() ?? 0;
+      if (remaining <= 0) {
         const stream = document.getElementById('coachChatStream') || form.parentElement;
         // Idempotent: if a lock card is already in the DOM, just re-open
         // the paywall and bail out — never append a second one.
@@ -6349,8 +6702,8 @@ applyOfflineState(!navigator.onLine);
           lock.id = 'chatPaywallLock';
           lock.className = 'mx-auto my-3 max-w-[85%] rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/10 to-purple-500/10 p-4 text-center';
           lock.innerHTML = `
-            <p class="text-sm text-white/90 leading-relaxed mb-1"><span class="font-semibold">You're asking the right questions.</span></p>
-            <p class="text-sm text-gray-400 leading-relaxed mb-3">Your next answer is where the real improvements happen.</p>
+            <p class="text-sm text-white/90 leading-relaxed mb-1"><span class="font-semibold">You're out of points for today.</span></p>
+            <p class="text-sm text-gray-400 leading-relaxed mb-3">Upgrade to Pro for unlimited scans and chat — or wait for your daily refill.</p>
             <button type="button" class="text-xs font-bold text-white bg-gradient-to-r from-brand-500 to-purple-500 px-5 py-2 rounded-xl shadow-lg shadow-brand-500/30">Unlock AI Coach</button>
           `;
           lock.querySelector('button').addEventListener('click', () => window.openPaywall?.());
@@ -6374,13 +6727,11 @@ applyOfflineState(!navigator.onLine);
         sendBtn.disabled = false;
       }
       input.focus();
+      // Consume 1 point per successful send. The points pool is shared
+      // with scans — see the UNIFIED POINTS SYSTEM block near the top
+      // of this file. Pro users are a no-op inside consumePoint().
       if (!window.isProUser?.()) {
-        window.incrementChatUsage?.();
-        // Note: the post-2nd-message soft teaser used to live here but
-        // it duplicated the paywall lock that the submit handler
-        // already shows on the next send attempt. Removed to avoid
-        // two near-identical "You're asking the right questions"
-        // cards stacking on top of each other.
+        window.consumePoint?.();
       }
     });
   });
