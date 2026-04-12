@@ -138,13 +138,13 @@
   <!-- Deletion Request Form -->
   <section class="mt-10 p-6 sm:p-7 rounded-2xl border border-red-500/20 bg-red-500/5">
     <h2 class="font-serif text-2xl font-semibold text-white mb-2">Deletion request form</h2>
-    <p class="text-sm text-gray-400 mb-6">We'll send a confirmation email to the address you provide. You must click the link in that email within 48 hours to confirm the request. This prevents other people from deleting your account.</p>
+    <p class="text-sm text-gray-400 mb-6">Fill in your details below and submit the form. We'll process your request within 30 days and notify you by email once the deletion is complete.</p>
 
     <form id="deleteForm" class="space-y-5" novalidate>
       <div>
         <label class="form-label" for="email">Email address <span class="text-red-400">*</span></label>
         <input type="email" id="email" name="email" required class="form-input" placeholder="you@example.com" autocomplete="email" />
-        <p class="text-[11px] text-gray-500 mt-1.5">Use the email you subscribed with, or — if you never subscribed — the address where we should send the confirmation link.</p>
+        <p class="text-[11px] text-gray-500 mt-1.5">Use the email you subscribed with, or — if you never subscribed — the address where we should send the deletion confirmation.</p>
       </div>
 
       <div>
@@ -208,7 +208,7 @@
         <svg class="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         <div>
           <h3 class="text-white font-semibold mb-1">Request received</h3>
-          <p class="text-sm text-gray-300 leading-relaxed">We've sent a confirmation link to <strong id="successEmail" class="text-white"></strong>. Click the link within 48 hours to finalize deletion. If you don't see the email, check your spam folder or email us at <a href="/contact.html" class="text-brand-400 underline">support</a>.</p>
+          <p class="text-sm text-gray-300 leading-relaxed">We've received your deletion request for <strong id="successEmail" class="text-white"></strong>. We'll process it within 30 days and notify you by email once the deletion is complete. If you change your mind in the meantime, contact <a href="/contact.html" class="text-brand-400 underline">support</a>.</p>
         </div>
       </div>
     </div>
@@ -270,6 +270,7 @@
       purchase: document.getElementById('purchase').value || null,
       orderId: document.getElementById('orderId').value.trim() || null,
       reason: document.getElementById('reason').value.trim() || null,
+      website: document.getElementById('website').value,
       ts: Date.now(),
       ua: navigator.userAgent.slice(0, 200)
     };
