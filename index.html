@@ -4673,7 +4673,6 @@ function renderStyleCoach(colorData, occasion, locked = false, items = null) {
             <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
             +${restFixes.length} more ${restFixes.length === 1 ? 'tip' : 'tips'}
           </div>
-          <button type="button" class="lock-cta" onclick="window.openPaywall()">See personalized improvements</button>
         </div>
       </div>
     `;
@@ -4711,22 +4710,14 @@ function renderStyleCoach(colorData, occasion, locked = false, items = null) {
             <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
             Full History
           </div>
-          <button type="button" class="lock-cta" onclick="window.openPaywall()">Unlock Full Analysis</button>
         </div>
       </div>
     `
     : historyInnerHtml;
 
-  // Save button — replaced with a clear conversion CTA when locked,
-  // since saving requires a Pro-level closet slot anyway past the 3rd.
-  const saveBtnHtml = locked
-    ? `
-      <button type="button" onclick="window.openPaywall()" class="w-full py-3.5 rounded-xl btn-primary text-sm font-bold text-white flex items-center justify-center gap-2 shadow-lg shadow-brand-500/30">
-        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
-        Upgrade to Pro
-      </button>
-    `
-    : `
+  // Save button — always the normal Save button. Locked users get the
+  // blur on the analysis panels; saving itself has its own quota check.
+  const saveBtnHtml = `
       <button id="saveOutfitBtn" onclick="window.saveCurrentOutfit()" class="w-full py-3.5 rounded-xl border border-white/20 bg-white/5 text-sm font-bold text-white hover:bg-white/10 transition-colors flex items-center justify-center gap-2 shadow-lg">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
         Save to Digital Closet
@@ -5386,14 +5377,9 @@ async function runScan() {
       }, 1000);
     }
 
-    // When the scan was locked (free user at 0 points), open the paywall
-    // shortly after the reveal. They see the full selective-blur result
-    // first (~800ms) so the missing depth registers before the upsell
-    // lands. The new selective-blur (.lock-pane-blur) is blurred on
-    // render — no animation step required.
-    if (isLocked) {
-      setTimeout(() => { window.openPaywall(); }, 800);
-    }
+    // Locked scan (free user at 0 points) — keep the selective blur
+    // on the result and let the user tap the CTA buttons inside the
+    // blurred panels themselves. No auto-popup.
   } catch (err) {
     // Unexpected throw from any analyzer, MediaPipe call, or canvas op.
     // Surface a clean error card instead of leaving the UI mid-scan.
@@ -5660,7 +5646,6 @@ function renderActionPlan(items, locked = false) {
             <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
             +${restItems.length} more ${restItems.length === 1 ? 'insight' : 'insights'}
           </div>
-          <button type="button" class="lock-cta" onclick="window.openPaywall()">Upgrade to Pro</button>
         </div>
       </div>
     `;
@@ -6718,9 +6703,8 @@ applyOfflineState(!navigator.onLine);
       );
       teaser.classList.add('border-brand-500/30');
       messagesEl.scrollTo?.({ top: messagesEl.scrollHeight, behavior: 'smooth' });
-      // Open the paywall after a short beat so the user reads the
-      // teaser line first instead of being slammed with the modal.
-      setTimeout(() => { window.openPaywall?.(); }, 600);
+      // No auto-popup: the teaser message itself is the CTA. User taps
+      // Upgrade in the header / lock cards when they want to upgrade.
       return;
     }
 
@@ -6748,7 +6732,9 @@ applyOfflineState(!navigator.onLine);
           stream?.appendChild(lock);
         }
         stream?.scrollTo?.({ top: stream.scrollHeight, behavior: 'smooth' });
-        window.openPaywall?.();
+        // No auto-popup: the inline lock card above has its own Upgrade
+        // button. Let the user tap it when they're ready instead of
+        // slamming the modal over the chat.
         return;
       }
     }
