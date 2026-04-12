@@ -215,9 +215,26 @@
 
   <div class="relative max-w-7xl mx-auto px-6 sm:px-8">
     <div class="grid grid-cols-2 lg:grid-cols-12 gap-x-8 gap-y-12 mb-12">
+
+      <!-- Brand column -->
       <div class="col-span-2 lg:col-span-5">
         <a href="/" class="inline-flex items-center gap-3 group mb-4">
-          <img src="/apple-touch-icon.png" alt="DateScan logo" width="44" height="44" class="w-11 h-11 rounded-2xl shadow-lg shadow-brand-500/20 group-hover:shadow-brand-500/40 transition-shadow" />
+          <div class="w-11 h-11 flex items-center justify-center shrink-0">
+            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-[0_0_8px_rgba(236,72,153,0.4)]">
+              <defs>
+                <linearGradient id="footer-logo-grad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#ec4899"/>
+                  <stop offset="1" stop-color="#9333ea"/>
+                </linearGradient>
+              </defs>
+              <path d="M10 5 H5 V10" stroke="url(#footer-logo-grad)" stroke-width="2"/>
+              <path d="M30 5 H35 V10" stroke="url(#footer-logo-grad)" stroke-width="2"/>
+              <path d="M10 35 H5 V30" stroke="url(#footer-logo-grad)" stroke-width="2"/>
+              <path d="M30 35 H35 V30" stroke="url(#footer-logo-grad)" stroke-width="2"/>
+              <path d="M20 13.5C20 13.5 16 9 11.5 9C7.5 9 5 12.5 5 16.5C5 22 13 28 20 32C27 28 35 22 35 16.5C35 12.5 32.5 9 28.5 9C24 9 20 13.5 20 13.5Z" fill="url(#footer-logo-grad)" fill-opacity="0.15" stroke="url(#footer-logo-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="4" y1="20" x2="36" y2="20" stroke="#f472b6" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.8"/>
+            </svg>
+          </div>
           <div class="flex flex-col">
             <span class="font-bold text-xl tracking-tight leading-none text-white group-hover:text-brand-400 transition-colors">DateScan<span class="text-brand-500">.</span></span>
             <span class="text-[10px] text-gray-500 font-medium uppercase tracking-widest mt-1.5">Personal Style Coach</span>
@@ -232,7 +249,8 @@
         </div>
       </div>
 
-      <div class="lg:col-span-3 lg:col-start-7">
+      <!-- Legal -->
+      <div class="lg:col-span-2 lg:col-start-7">
         <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4">Legal</h3>
         <ul class="space-y-2.5 text-sm">
           <li><a href="/privacy.html" class="text-gray-400 hover:text-brand-400 transition-colors">Privacy Policy</a></li>
@@ -242,14 +260,45 @@
         </ul>
       </div>
 
-      <div class="lg:col-span-3">
+      <!-- Support -->
+      <div class="lg:col-span-2">
         <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4">Support</h3>
         <ul class="space-y-2.5 text-sm">
           <li><a href="/contact.html" class="text-gray-400 hover:text-brand-400 transition-colors">Contact Support</a></li>
         </ul>
       </div>
+
+      <!-- Social -->
+      <div class="lg:col-span-3">
+        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4">Follow</h3>
+        <div class="flex items-center gap-2.5">
+          <a href="https://www.tiktok.com/@datescan" target="_blank" rel="noopener noreferrer" aria-label="DateScan on TikTok" class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/10 bg-white/5 text-gray-400 hover:text-white hover:border-brand-500/50 hover:bg-brand-500/10 hover:shadow-[0_0_16px_rgba(236,72,153,0.25)] transition-all">
+            <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.321 5.562a5.124 5.124 0 0 1-.443-.258 6.228 6.228 0 0 1-1.137-.966c-.849-.971-1.166-1.956-1.282-2.645h.004C16.369 1.104 16.41.5 16.41.5h-3.31v12.789c0 .171 0 .341-.007.508l-.001.064-.003.085v.007a3.535 3.535 0 0 1-1.78 2.801 3.474 3.474 0 0 1-1.724.454c-1.933 0-3.502-1.579-3.502-3.524s1.569-3.524 3.502-3.524c.366 0 .718.057 1.049.162l.004-3.37a6.844 6.844 0 0 0-5.283 1.524A6.842 6.842 0 0 0 3 13.304c0 1.599.503 3.123 1.456 4.4a6.838 6.838 0 0 0 5.475 2.78c3.78 0 6.844-3.064 6.844-6.844V8.168a9.533 9.533 0 0 0 5.565 1.781V6.642c-1.175 0-2.218-.391-3.019-1.08Z"/></svg>
+          </a>
+          <a href="https://www.youtube.com/@DateScan" target="_blank" rel="noopener noreferrer" aria-label="DateScan on YouTube" class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/10 bg-white/5 text-gray-400 hover:text-white hover:border-brand-500/50 hover:bg-brand-500/10 hover:shadow-[0_0_16px_rgba(236,72,153,0.25)] transition-all">
+            <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
+          <a href="https://www.facebook.com/profile.php?id=615732231666977" target="_blank" rel="noopener noreferrer" aria-label="DateScan on Facebook" class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/10 bg-white/5 text-gray-400 hover:text-white hover:border-brand-500/50 hover:bg-brand-500/10 hover:shadow-[0_0_16px_rgba(236,72,153,0.25)] transition-all">
+            <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+          <a href="https://x.com/DateS33180" target="_blank" rel="noopener noreferrer" aria-label="DateScan on X" class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/10 bg-white/5 text-gray-400 hover:text-white hover:border-brand-500/50 hover:bg-brand-500/10 hover:shadow-[0_0_16px_rgba(236,72,153,0.25)] transition-all">
+            <svg class="w-[16px] h-[16px]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117Z"/></svg>
+          </a>
+        </div>
+      </div>
     </div>
 
+    <!-- Bottom strip -->
     <div class="border-t border-white/5 pt-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
       <p class="text-[11px] text-gray-600 italic leading-relaxed max-w-2xl">
-        Disclaimer: DateScan is an AI-powered tool designed for entertainment and confidence-boosting purposes only. We do not guarantee dating success
+        Disclaimer: DateScan is an AI-powered tool designed for entertainment and confidence-boosting purposes only. We do not guarantee dating success or specific social outcomes.
+      </p>
+      <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 shrink-0">
+        <span class="text-[11px] text-gray-600">&copy; 2026 DateScan</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
