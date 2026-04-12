@@ -1495,60 +1495,28 @@
       </div>
   </div>
 
-  <!-- DIGITAL CLOSET VIEW — Phase 1a rebuild.
-       The old closet stored complete outfits as single photos. The new
-       model stores individual wardrobe items (top / bottom / shoes /
-       accessory) that the Build Outfit generator can combine on the
-       fly. The old #closetGrid, #closetFilters, and #aiMixBtn are
-       intentionally gone — renderCloset() is now a safe no-op (see the
-       null guard in its first line), and the chat closet picker still
-       reads from userCloset.outfits independently, so chat attachments
-       from saved outfits keep working for backwards compat. -->
+  <!-- DIGITAL CLOSET VIEW -->
   <div id="viewCloset" class="hidden opacity-0 translate-y-8 transition-all duration-500 pb-12 pt-4">
       <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
          <div>
-            <h2 class="font-serif text-3xl md:text-4xl font-medium mb-2 leading-tight">My Closet</h2>
-            <p class="text-gray-400 text-sm font-medium">Your wardrobe — add items, then build outfits for any occasion.</p>
+            <h2 class="font-serif text-3xl md:text-4xl font-medium mb-2 leading-tight">Digital Closet</h2>
+            <p class="text-gray-400 text-sm font-medium">Your saved outfits and personal style archive.</p>
          </div>
-         <div class="flex gap-2 w-full md:w-auto shrink-0">
-            <button id="addItemBtn" class="flex-1 md:flex-none px-4 py-2.5 rounded-xl text-sm font-bold flex gap-1.5 items-center justify-center bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-[0.98] transition-all whitespace-nowrap">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-              Add Item
-            </button>
-            <button id="buildOutfitBtn" class="flex-1 md:flex-none btn-primary px-4 py-2.5 rounded-xl text-sm font-bold flex gap-1.5 items-center justify-center whitespace-nowrap shadow-[0_4px_14px_rgba(236,72,153,0.35)]">
-              <svg class="w-4 h-4 drop-shadow-[0_0_4px_rgba(250,204,21,0.5)]" viewBox="0 0 24 24" fill="#facc15" aria-hidden="true">
-                <path fill-rule="evenodd" d="M9 4.5a.75.75 0 0 1 .721.544l.813 2.846a3.75 3.75 0 0 0 2.576 2.576l2.846.813a.75.75 0 0 1 0 1.442l-2.846.813a3.75 3.75 0 0 0-2.576 2.576l-.813 2.846a.75.75 0 0 1-1.442 0l-.813-2.846a3.75 3.75 0 0 0-2.576-2.576l-2.846-.813a.75.75 0 0 1 0-1.442l2.846-.813A3.75 3.75 0 0 0 7.466 7.89l.813-2.846A.75.75 0 0 1 9 4.5ZM18 1.5a.75.75 0 0 1 .728.568l.258 1.036c.236.94.97 1.674 1.91 1.91l1.036.258a.75.75 0 0 1 0 1.456l-1.036.258c-.94.236-1.674.97-1.91 1.91l-.258 1.036a.75.75 0 0 1-1.456 0l-.258-1.036a2.625 2.625 0 0 0-1.91-1.91l-1.036-.258a.75.75 0 0 1 0-1.456l1.036-.258a2.625 2.625 0 0 0 1.91-1.91l.258-1.036A.75.75 0 0 1 18 1.5ZM16.5 15a.75.75 0 0 1 .712.513l.394 1.183c.15.447.5.799.948.948l1.183.395a.75.75 0 0 1 0 1.422l-1.183.395c-.447.15-.799.5-.948.948l-.395 1.183a.75.75 0 0 1-1.422 0l-.395-1.183a1.5 1.5 0 0 0-.948-.948l-1.183-.395a.75.75 0 0 1 0-1.422l1.183-.395c.447-.15.799-.5.948-.948l.395-1.183A.75.75 0 0 1 16.5 15Z" clip-rule="evenodd"/>
-              </svg>
-              Build Outfit
-            </button>
-         </div>
+         <button id="aiMixBtn" class="btn-primary px-5 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center w-full md:w-auto justify-center">
+            <span class="text-lg leading-none">✨</span> AI Suggestion
+         </button>
+      </div>
+       
+      <div class="mb-6 flex gap-2 overflow-x-auto pb-2" id="closetFilters" role="group" aria-label="Closet category filter">
+          <button type="button" data-filter="all" aria-pressed="true" class="closet-filter-btn border border-brand-500/50 bg-brand-500/20 text-white rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">All Outfits</button>
+          <button type="button" data-filter="casual" aria-pressed="false" class="closet-filter-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">Casual</button>
+          <button type="button" data-filter="first_date" aria-pressed="false" class="closet-filter-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">First Date</button>
+          <button type="button" data-filter="fancy" aria-pressed="false" class="closet-filter-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">Fancy Dinner</button>
+          <button type="button" data-filter="night_out" aria-pressed="false" class="closet-filter-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">Night Out</button>
       </div>
 
-      <!-- Items counter + free limit indicator -->
-      <div id="itemsCounter" class="mb-4 text-xs text-gray-400 flex items-center gap-2">
-        <span id="itemsCountText">0 items</span>
-      </div>
-
-      <!-- Hidden file input shared between Add Item and camera capture.
-           IMPORTANT: uses off-screen absolute positioning instead of
-           Tailwind's `hidden` (display:none). Some Android WebView
-           builds silently refuse a programmatic `.click()` on a
-           display:none input — the file picker never opens and the
-           button looks dead. Absolute-positioned 1×1 opacity-0 keeps
-           the input in the render tree so .click() fires the picker. -->
-      <input id="addItemFileInput" type="file" accept="image/*" style="position:absolute;left:-9999px;top:0;width:1px;height:1px;opacity:0;pointer-events:none;" />
-
-      <!-- Category filter -->
-      <div class="mb-6 flex gap-2 overflow-x-auto pb-2" id="itemsFilters" role="group" aria-label="Items category filter">
-          <button type="button" data-filter="all" aria-pressed="true" class="items-filter-btn border border-brand-500/50 bg-brand-500/20 text-white rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">All</button>
-          <button type="button" data-filter="top" aria-pressed="false" class="items-filter-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">Tops</button>
-          <button type="button" data-filter="bottom" aria-pressed="false" class="items-filter-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">Bottoms</button>
-          <button type="button" data-filter="shoes" aria-pressed="false" class="items-filter-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">Shoes</button>
-          <button type="button" data-filter="accessory" aria-pressed="false" class="items-filter-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">Accessories</button>
-      </div>
-
-      <div id="itemsGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-          <!-- Populated by renderItems() -->
+      <div id="closetGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+          <!-- Populated by JS -->
       </div>
   </div>
 
@@ -1630,66 +1598,6 @@
       </div>
       <div id="coachClosetPickerGrid" class="p-5 grid grid-cols-2 sm:grid-cols-3 gap-3 overflow-y-auto">
         <!-- Populated by JS -->
-      </div>
-    </div>
-  <!-- Add Item Modal — Phase 1a closet.
-       Opened after the user picks a photo via #addItemFileInput. Shows
-       a live preview of the selected image and asks the user to pick a
-       category manually. AI auto-tagging (Level 1 in the spec) is a
-       later phase — for now the category is a plain dropdown. -->
-  <div id="addItemModal" class="hidden fixed inset-0 z-[100] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="premium-glass rounded-3xl max-w-md w-full max-h-[90vh] overflow-hidden flex flex-col">
-      <div class="flex items-center justify-between p-5 border-b border-white/10 shrink-0">
-        <h3 class="font-serif text-xl font-semibold text-white">Add a new item</h3>
-        <button id="addItemCloseBtn" type="button" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center transition">✕</button>
-      </div>
-      <div class="p-5 flex flex-col gap-4 overflow-y-auto">
-        <div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-black/40 border border-white/10">
-          <img id="addItemPreview" alt="Item preview" class="w-full h-full object-cover" />
-        </div>
-        <div>
-          <label for="addItemCategory" class="block text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-2">Category</label>
-          <select id="addItemCategory" class="w-full bg-white/5 border border-white/10 focus:border-brand-500/60 focus:bg-white/10 outline-none rounded-xl px-4 py-3 text-sm text-white transition appearance-none cursor-pointer">
-            <option value="top">Top (shirt, t-shirt, jacket, hoodie)</option>
-            <option value="bottom">Bottom (pants, jeans, shorts)</option>
-            <option value="shoes">Shoes</option>
-            <option value="accessory">Accessory (watch, hat, belt)</option>
-          </select>
-        </div>
-      </div>
-      <div class="p-5 border-t border-white/10 flex gap-3 shrink-0">
-        <button id="addItemCancelBtn" type="button" class="flex-1 py-3 rounded-xl text-sm font-semibold text-gray-300 hover:text-white border border-white/10 hover:bg-white/5 transition">Cancel</button>
-        <button id="addItemSaveBtn" type="button" class="flex-1 btn-primary py-3 rounded-xl text-sm font-bold">Save to closet</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Outfit Preview Modal — Phase 1a closet generator.
-       Opened when the user taps Build Outfit. Shows 3–4 item tiles
-       (top, bottom, shoes, optional accessory) picked randomly by the
-       buildOutfit() function, plus two CTAs: Scan this outfit (routes
-       to the scanner view so the user can physically put the outfit
-       on and scan themselves in it), and Generate another (rerolls). -->
-  <div id="outfitPreviewModal" class="hidden fixed inset-0 z-[100] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="premium-glass rounded-3xl max-w-sm w-full max-h-[90vh] overflow-hidden flex flex-col">
-      <div class="flex items-center justify-between p-5 border-b border-white/10 shrink-0">
-        <h3 class="font-serif text-xl font-semibold text-white">Your Outfit</h3>
-        <button id="outfitPreviewCloseBtn" type="button" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center transition">✕</button>
-      </div>
-      <div class="p-5 overflow-y-auto">
-        <div id="outfitPreviewGrid" class="grid grid-cols-1 gap-3">
-          <!-- Populated by buildOutfit() -->
-        </div>
-        <p id="outfitPreviewEmpty" class="hidden text-center text-sm text-gray-400 py-8">Add at least one top, one bottom, and one pair of shoes to your closet to generate an outfit.</p>
-      </div>
-      <div class="p-5 border-t border-white/10 flex flex-col gap-3 shrink-0">
-        <button id="outfitScanBtn" type="button" class="w-full btn-primary py-3.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center shadow-[0_4px_14px_rgba(236,72,153,0.35)]">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V6a2 2 0 0 1 2-2h2"/><path d="M16 4h2a2 2 0 0 1 2 2v2"/><path d="M20 16v2a2 2 0 0 1-2 2h-2"/><path d="M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/></svg>
-          Scan this outfit
-        </button>
-        <button id="outfitRegenerateBtn" type="button" class="w-full py-2.5 rounded-xl text-sm font-semibold text-gray-300 hover:text-white border border-white/10 hover:bg-white/5 transition">
-          Generate another
-        </button>
       </div>
     </div>
   </div>
@@ -2703,14 +2611,6 @@ function toggleView(targetView) {
         } else {
             renderCloset();
         }
-        // Phase 1a: also render the new items-based closet grid. Both
-        // calls are safe — renderCloset() is a no-op when #closetGrid
-        // is absent (current state), and renderItems() is a no-op when
-        // #itemsGrid is absent. This lets the closet view refresh
-        // whichever grid is in the DOM.
-        if (typeof window.renderItems === 'function') {
-            window.renderItems();
-        }
         store.set({ activeView: 'closet' });
         if (location.hash !== '#closet') {
             history.replaceState(null, '', '#closet');
@@ -2777,20 +2677,11 @@ const closetDB = (function () {
       if (!window.idb || !window.idb.openDB) {
         return Promise.reject(new Error('idb library not loaded'));
       }
-      dbPromise = window.idb.openDB('datescan-db', 2, {
-        upgrade(db, oldVersion) {
-          // v1 → v2: add the new 'items' store used by the Phase 1a
-          // items-based closet. The legacy 'outfits' store is kept
-          // unchanged so the chat picker and saveCurrentOutfit handler
-          // keep working during the migration window.
+      dbPromise = window.idb.openDB('datescan-db', 1, {
+        upgrade(db) {
           if (!db.objectStoreNames.contains('outfits')) {
             const store = db.createObjectStore('outfits', { keyPath: 'id' });
             store.createIndex('date', 'date');
-          }
-          if (!db.objectStoreNames.contains('items')) {
-            const itemsStore = db.createObjectStore('items', { keyPath: 'id' });
-            itemsStore.createIndex('category', 'category');
-            itemsStore.createIndex('createdAt', 'createdAt');
           }
         }
       });
@@ -2849,458 +2740,6 @@ async function closetInit() {
 // Kick off the load (non-blocking)
 closetInit();
 
-// ============================================================
-// PHASE 1a — ITEMS-BASED CLOSET
-// ============================================================
-// Concept: "Mit vegyek fel ma?" — the user saves individual
-// wardrobe items (top, bottom, shoes, accessory), then taps
-// Build Outfit to get a random combination they can physically
-// put on and scan themselves wearing. The items system runs
-// alongside the legacy outfits system (userCloset.outfits) so
-// the chat closet picker and saveCurrentOutfit button keep
-// working without changes.
-//
-// Data model (per item):
-//   { id, image: dataUrl, category, color, createdAt }
-//
-// Phase 1a ships: upload + grid + random outfit generator +
-// scan handoff + free limit gating.
-// Phase 2+ will add: AI auto-tagging on upload, Smart Generator
-// (Pro, color theory), outfit rating, gamification, history.
-// ============================================================
-
-const FREE_ITEM_LIMIT = 5;
-
-// In-memory mirror, exposed on window so classic script blocks
-// (and any future chat-picker migration) can read items without
-// punching through the module boundary.
-let userItems = { items: [] };
-window.userItems = userItems;
-
-const itemsDB = (function () {
-  let dbPromise = null;
-  function getDB() {
-    if (!dbPromise) {
-      if (!window.idb || !window.idb.openDB) {
-        return Promise.reject(new Error('idb library not loaded'));
-      }
-      // Same name + version as closetDB. The idb library caches
-      // connections per (name, version), so the second openDB call
-      // resolves to the same underlying IDBDatabase. Upgrade logic
-      // is duplicated to be safe when items load first.
-      dbPromise = window.idb.openDB('datescan-db', 2, {
-        upgrade(db) {
-          if (!db.objectStoreNames.contains('outfits')) {
-            const s = db.createObjectStore('outfits', { keyPath: 'id' });
-            s.createIndex('date', 'date');
-          }
-          if (!db.objectStoreNames.contains('items')) {
-            const s = db.createObjectStore('items', { keyPath: 'id' });
-            s.createIndex('category', 'category');
-            s.createIndex('createdAt', 'createdAt');
-          }
-        }
-      });
-    }
-    return dbPromise;
-  }
-  return {
-    async getAll() {
-      const db = await getDB();
-      const all = await db.getAll('items');
-      all.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-      return all;
-    },
-    async put(item) {
-      const db = await getDB();
-      await db.put('items', item);
-    },
-    async delete(id) {
-      const db = await getDB();
-      await db.delete('items', id);
-    },
-  };
-})();
-
-async function itemsInit() {
-  try {
-    userItems.items = await itemsDB.getAll();
-    if (store.get().activeView === 'closet') renderItems();
-    updateItemsCounter();
-  } catch (e) {
-    console.error('Items init failed:', e);
-  }
-}
-itemsInit();
-
-const CATEGORY_LABELS = {
-  top: 'Top',
-  bottom: 'Bottom',
-  shoes: 'Shoes',
-  accessory: 'Accessory',
-};
-
-function makeItemId() {
-  return 'itm_' + (crypto.randomUUID
-    ? crypto.randomUUID().slice(0, 12)
-    : Math.random().toString(36).slice(2, 14));
-}
-
-function getActiveItemsFilter() {
-  const active = document.querySelector('.items-filter-btn[aria-pressed="true"]');
-  return active ? active.dataset.filter : 'all';
-}
-
-function updateItemsCounter() {
-  const el = document.getElementById('itemsCountText');
-  if (!el) return;
-  const n = userItems.items.length;
-  if (isProUser()) {
-    el.textContent = `${n} ${n === 1 ? 'item' : 'items'} · Pro (unlimited)`;
-  } else {
-    el.textContent = `${n} / ${FREE_ITEM_LIMIT} items used`;
-  }
-}
-
-async function addItem({ image, category }) {
-  // Free limit is enforced in two places: here (the actual save)
-  // and in openAddItemFlow (the entry point) so the user never even
-  // sees the upload modal when they're over cap. This second check
-  // is defensive — if the entry-point gate is ever bypassed, the
-  // paywall still fires.
-  if (!isProUser() && userItems.items.length >= FREE_ITEM_LIMIT) {
-    window.dsPrivacy?.showToast?.(`Free closet holds ${FREE_ITEM_LIMIT} items. Upgrade for unlimited.`, 2800);
-    if (typeof window.openPaywall === 'function') window.openPaywall();
-    return null;
-  }
-  const item = {
-    id: makeItemId(),
-    image,
-    category: category || 'top',
-    color: null,
-    createdAt: Date.now(),
-  };
-  try {
-    await itemsDB.put(item);
-    userItems.items.unshift(item);
-    renderItems(getActiveItemsFilter());
-    updateItemsCounter();
-    return item;
-  } catch (e) {
-    console.error('addItem failed:', e);
-    window.dsPrivacy?.showToast?.("Couldn't save item. Please try again.", 2400);
-    return null;
-  }
-}
-
-async function removeItem(id) {
-  try {
-    await itemsDB.delete(id);
-    userItems.items = userItems.items.filter(i => i.id !== id);
-    renderItems(getActiveItemsFilter());
-    updateItemsCounter();
-  } catch (e) {
-    console.error('removeItem failed:', e);
-  }
-}
-
-function renderItems(filter) {
-  const grid = document.getElementById('itemsGrid');
-  if (!grid) return;
-  const activeFilter = filter || getActiveItemsFilter();
-
-  if (!userItems.items || userItems.items.length === 0) {
-    grid.innerHTML = `
-      <div class="col-span-full py-16 text-center text-gray-500">
-        <div class="text-5xl mb-4 opacity-50">👕</div>
-        <h3 class="font-serif text-xl text-gray-300 mb-2">Your closet is empty</h3>
-        <p class="text-sm mb-6 max-w-xs mx-auto">Add your first top, bottom, and pair of shoes to start building outfits.</p>
-        <button type="button" id="itemsEmptyAddBtn" class="btn-primary px-5 py-2.5 rounded-xl text-sm font-bold">
-          + Add your first item
-        </button>
-      </div>`;
-    // Wire the inline empty-state CTA to the same entry point as the
-    // header button. Done here (not via onclick) so the handler has
-    // proper closure access and haptics stay consistent.
-    const emptyBtn = document.getElementById('itemsEmptyAddBtn');
-    if (emptyBtn) emptyBtn.addEventListener('click', () => {
-      triggerHaptic('tap');
-      openAddItemFlow();
-    });
-    return;
-  }
-
-  const filtered = activeFilter === 'all'
-    ? userItems.items
-    : userItems.items.filter(i => i.category === activeFilter);
-
-  if (filtered.length === 0) {
-    const label = CATEGORY_LABELS[activeFilter]?.toLowerCase() || '';
-    grid.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500 text-sm">No ${label} items yet. Tap <strong>Add Item</strong> to save one.</div>`;
-    return;
-  }
-
-  grid.innerHTML = filtered.map(item => `
-    <div class="group relative aspect-square rounded-2xl overflow-hidden bg-white/5 border border-white/10 transition-all hover:border-brand-500/40">
-      <img src="${item.image}" alt="${CATEGORY_LABELS[item.category] || 'Item'}" class="w-full h-full object-cover" loading="lazy" />
-      <div class="absolute top-2 left-2 text-[9px] uppercase tracking-widest font-bold text-white bg-black/60 backdrop-blur-md px-2 py-1 rounded border border-white/10 pointer-events-none">
-        ${CATEGORY_LABELS[item.category] || 'Item'}
-      </div>
-      <button type="button" data-item-id="${item.id}" class="item-delete-btn absolute top-2 right-2 w-8 h-8 rounded-full bg-black/70 hover:bg-red-500/90 flex items-center justify-center text-white transition-all border border-white/20 opacity-0 group-hover:opacity-100 focus:opacity-100" title="Delete item" aria-label="Delete item">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
-      </button>
-    </div>
-  `).join('');
-
-  grid.querySelectorAll('.item-delete-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const id = btn.dataset.itemId;
-      if (confirm('Delete this item from your closet?')) {
-        triggerHaptic('warning');
-        removeItem(id);
-      }
-    });
-  });
-}
-// Expose so toggleView() and any external caller can refresh the grid.
-window.renderItems = renderItems;
-
-// ---- Upload entry point with free-limit gate ----
-
-let pendingItemDataUrl = null;
-
-function openAddItemFlow() {
-  if (!isProUser() && userItems.items.length >= FREE_ITEM_LIMIT) {
-    window.dsPrivacy?.showToast?.(`Free closet holds ${FREE_ITEM_LIMIT} items. Upgrade for unlimited.`, 2800);
-    if (typeof window.openPaywall === 'function') window.openPaywall();
-    return;
-  }
-  document.getElementById('addItemFileInput')?.click();
-}
-
-// ---- Outfit generator (Phase 1a: random) ----
-// Smart generator with color theory is a Pro feature in a later phase.
-let currentGeneratedOutfit = null;
-
-function pickRandom(arr) {
-  if (!arr || arr.length === 0) return null;
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
-function generateAndShowOutfit() {
-  const modal = document.getElementById('outfitPreviewModal');
-  const grid = document.getElementById('outfitPreviewGrid');
-  const emptyMsg = document.getElementById('outfitPreviewEmpty');
-  const scanBtn = document.getElementById('outfitScanBtn');
-  const regenBtn = document.getElementById('outfitRegenerateBtn');
-  if (!modal || !grid || !emptyMsg || !scanBtn || !regenBtn) return;
-
-  const tops = userItems.items.filter(i => i.category === 'top');
-  const bottoms = userItems.items.filter(i => i.category === 'bottom');
-  const shoes = userItems.items.filter(i => i.category === 'shoes');
-  const accessories = userItems.items.filter(i => i.category === 'accessory');
-
-  // Need at least one top, one bottom, and one pair of shoes to
-  // generate a meaningful outfit. Accessories are optional and
-  // included with 50% probability when present.
-  if (tops.length === 0 || bottoms.length === 0 || shoes.length === 0) {
-    grid.innerHTML = '';
-    emptyMsg.classList.remove('hidden');
-    scanBtn.disabled = true;
-    scanBtn.classList.add('opacity-40', 'cursor-not-allowed');
-    regenBtn.disabled = true;
-    regenBtn.classList.add('opacity-40', 'cursor-not-allowed');
-    modal.classList.remove('hidden');
-    currentGeneratedOutfit = null;
-    return;
-  }
-
-  emptyMsg.classList.add('hidden');
-  scanBtn.disabled = false;
-  scanBtn.classList.remove('opacity-40', 'cursor-not-allowed');
-  regenBtn.disabled = false;
-  regenBtn.classList.remove('opacity-40', 'cursor-not-allowed');
-
-  const outfit = {
-    top: pickRandom(tops),
-    bottom: pickRandom(bottoms),
-    shoes: pickRandom(shoes),
-    accessory: accessories.length > 0 && Math.random() > 0.5 ? pickRandom(accessories) : null,
-  };
-  currentGeneratedOutfit = outfit;
-
-  const slots = [
-    { label: 'Top', item: outfit.top },
-    { label: 'Bottom', item: outfit.bottom },
-    { label: 'Shoes', item: outfit.shoes },
-  ];
-  if (outfit.accessory) slots.push({ label: 'Accessory', item: outfit.accessory });
-
-  grid.innerHTML = slots.map(slot => `
-    <div class="flex items-center gap-3 p-3 rounded-2xl bg-white/5 border border-white/10">
-      <div class="shrink-0 w-16 h-16 rounded-xl overflow-hidden bg-black/40">
-        <img src="${slot.item.image}" alt="${slot.label}" class="w-full h-full object-cover" />
-      </div>
-      <div class="flex-1 min-w-0">
-        <div class="text-[10px] uppercase tracking-widest font-bold text-gray-400">${slot.label}</div>
-        <div class="text-sm text-white font-medium">${CATEGORY_LABELS[slot.item.category] || 'Item'}</div>
-      </div>
-    </div>
-  `).join('');
-
-  modal.classList.remove('hidden');
-}
-
-// ---- Event wiring ----
-// Called once at module-script execution time. All elements live in
-// the statically parsed HTML above, so they exist by the time this
-// runs. Each listener is safe-guarded so a missing element from a
-// partial template doesn't abort the whole setup.
-
-function setupClosetEventWiring() {
-  // DEBUG — Phase 1a diagnostic. Tells us whether the setup function
-  // actually runs and whether each required element is findable at
-  // DOM query time. Remove once click-routing is confirmed working
-  // on the target devices.
-  const addItemBtn = document.getElementById('addItemBtn');
-  const fileInput = document.getElementById('addItemFileInput');
-  const addItemModal = document.getElementById('addItemModal');
-  const addItemPreview = document.getElementById('addItemPreview');
-  const addItemCategory = document.getElementById('addItemCategory');
-  const addItemSaveBtn = document.getElementById('addItemSaveBtn');
-  const addItemCancelBtn = document.getElementById('addItemCancelBtn');
-  const addItemCloseBtn = document.getElementById('addItemCloseBtn');
-  const buildOutfitBtn = document.getElementById('buildOutfitBtn');
-  const outfitPreviewModal = document.getElementById('outfitPreviewModal');
-  const outfitScanBtn = document.getElementById('outfitScanBtn');
-  const outfitRegenerateBtn = document.getElementById('outfitRegenerateBtn');
-  const outfitPreviewCloseBtn = document.getElementById('outfitPreviewCloseBtn');
-
-  const missing = [];
-  if (!addItemBtn) missing.push('addItemBtn');
-  if (!fileInput) missing.push('addItemFileInput');
-  if (!buildOutfitBtn) missing.push('buildOutfitBtn');
-  if (!addItemModal) missing.push('addItemModal');
-  if (!outfitPreviewModal) missing.push('outfitPreviewModal');
-  console.log('[DateScan closet] setupClosetEventWiring running. Missing elements:', missing.length ? missing : 'none');
-  if (missing.length) {
-    // Visible warning so mobile testers can see the setup failed
-    // without needing to open a remote debugger.
-    setTimeout(() => {
-      window.dsPrivacy?.showToast?.('⚠ Closet setup failed: ' + missing.join(', '), 5000);
-    }, 1500);
-  }
-
-  if (addItemBtn) {
-    addItemBtn.addEventListener('click', () => {
-      console.log('[DateScan closet] Add Item clicked');
-      window.dsPrivacy?.showToast?.('Add Item tap ✓', 1200);
-      triggerHaptic('tap');
-      openAddItemFlow();
-    });
-  }
-
-  if (fileInput && addItemModal && addItemPreview && addItemCategory) {
-    fileInput.addEventListener('change', (e) => {
-      const file = e.target.files && e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const rawDataUrl = ev.target.result;
-        // Compress (max 800px, webp @0.85) via the existing
-        // closet-thumbnailer to keep IDB entries small.
-        generateThumbnail(rawDataUrl, (compressed) => {
-          pendingItemDataUrl = compressed;
-          addItemPreview.src = compressed;
-          addItemCategory.value = 'top';
-          addItemModal.classList.remove('hidden');
-        });
-      };
-      reader.readAsDataURL(file);
-      // Reset value so the same file can be re-picked after cancel.
-      fileInput.value = '';
-    });
-  }
-
-  function closeAddItemModal() {
-    if (addItemModal) addItemModal.classList.add('hidden');
-    pendingItemDataUrl = null;
-    if (addItemPreview) addItemPreview.src = '';
-  }
-  if (addItemCloseBtn) addItemCloseBtn.addEventListener('click', closeAddItemModal);
-  if (addItemCancelBtn) addItemCancelBtn.addEventListener('click', closeAddItemModal);
-
-  if (addItemSaveBtn) {
-    addItemSaveBtn.addEventListener('click', async () => {
-      if (!pendingItemDataUrl) return;
-      const category = (addItemCategory && addItemCategory.value) || 'top';
-      triggerHaptic('success');
-      const saved = await addItem({ image: pendingItemDataUrl, category });
-      if (saved) {
-        window.dsPrivacy?.showToast?.('Added to closet ✓', 1800);
-        closeAddItemModal();
-      }
-    });
-  }
-
-  // Filter buttons — toggle aria-pressed + swap classes + re-render
-  document.querySelectorAll('.items-filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      triggerHaptic('tap');
-      document.querySelectorAll('.items-filter-btn').forEach(b => {
-        b.setAttribute('aria-pressed', 'false');
-        b.classList.remove('border-brand-500/50', 'bg-brand-500/20', 'text-white');
-        b.classList.add('border-white/10', 'bg-white/5', 'text-gray-400', 'hover:bg-white/10');
-      });
-      btn.setAttribute('aria-pressed', 'true');
-      btn.classList.remove('border-white/10', 'bg-white/5', 'text-gray-400', 'hover:bg-white/10');
-      btn.classList.add('border-brand-500/50', 'bg-brand-500/20', 'text-white');
-      renderItems(btn.dataset.filter);
-    });
-  });
-
-  if (buildOutfitBtn) {
-    buildOutfitBtn.addEventListener('click', () => {
-      console.log('[DateScan closet] Build Outfit clicked');
-      window.dsPrivacy?.showToast?.('Build Outfit tap ✓', 1200);
-      triggerHaptic('tap');
-      generateAndShowOutfit();
-    });
-  }
-
-  function closeOutfitPreviewModal() {
-    if (outfitPreviewModal) outfitPreviewModal.classList.add('hidden');
-  }
-  if (outfitPreviewCloseBtn) outfitPreviewCloseBtn.addEventListener('click', closeOutfitPreviewModal);
-  if (outfitRegenerateBtn) {
-    outfitRegenerateBtn.addEventListener('click', () => {
-      triggerHaptic('tap');
-      generateAndShowOutfit();
-    });
-  }
-  if (outfitScanBtn) {
-    outfitScanBtn.addEventListener('click', () => {
-      triggerHaptic('success');
-      closeOutfitPreviewModal();
-      window.dsPrivacy?.showToast?.('Wear the outfit and scan yourself when ready 📸', 2800);
-      // Route to scanner view. toggleView() handles the view swap,
-      // the bottom-nav active state, and the hash update atomically.
-      if (typeof window.toggleView === 'function') {
-        window.toggleView('scanner');
-      } else {
-        // Fallback if toggleView isn't exposed for some reason
-        window.location.hash = '';
-      }
-    });
-  }
-}
-
-setupClosetEventWiring();
-// ============================================================
-// END PHASE 1a ITEMS CLOSET
-// ============================================================
-
 function generateThumbnail(dataUrl, callback) {
     const img = new Image();
     img.onload = () => {
@@ -3321,12 +2760,6 @@ function generateThumbnail(dataUrl, callback) {
 
 window.renderCloset = function(filter = 'all') {
     const grid = $("closetGrid");
-    // Phase 1a: the new items-based #viewCloset no longer contains a
-    // #closetGrid element. The old outfit list is still in IndexedDB
-    // and still feeds the chat closet picker, but has no visible UI
-    // of its own. Short-circuit here so every legacy caller (delete,
-    // save, filter click) remains a safe no-op.
-    if (!grid) return;
     if (!userCloset.outfits || userCloset.outfits.length === 0) {
         grid.innerHTML = `<div class="col-span-full py-16 text-center text-gray-500"><div class="text-5xl mb-4 opacity-50">👻</div><h3 class="font-serif text-xl text-gray-300 mb-2">Your closet is empty.</h3><p class="text-sm">Scan and save your first outfit to start building your style archive.</p></div>`;
         return;
@@ -3519,13 +2952,7 @@ window.saveCurrentOutfit = function() {
     });
 };
 
-// The old #aiMixBtn is part of the legacy outfit-based closet UI.
-// Phase 1a replaced #viewCloset with the new items-based closet, so
-// the button no longer exists. Wrap the handler in a null guard so
-// the surrounding module script keeps loading cleanly; the handler
-// itself still works if the element is ever restored.
-const _aiMixBtnEl = $("aiMixBtn");
-if (_aiMixBtnEl) _aiMixBtnEl.addEventListener("click", () => {
+$("aiMixBtn").addEventListener("click", () => {
     triggerHaptic('success');
     const modal = $("aiMixModal");
     const textEl = $("aiMixText");
@@ -4432,15 +3859,6 @@ window.clearChips = clearChips;
 window.handleChipClick = handleChipClick;
 
 function boot() {
-  // DEBUG Phase 1a — remove once stable. A visible toast at boot()
-  // entry tells mobile testers whether module execution reached this
-  // point (which means nothing earlier threw). If the user sees
-  // "BOOT 1" but not "CLICK" when they tap the onboarding button,
-  // the click handler is not attached. If they see neither, module
-  // execution was halted before this line (or the page is stuck on
-  // a stale service-worker cache).
-  try { window.dsPrivacy?.showToast?.('BOOT 1', 1500); } catch (_) {}
-
   const hasOnboarded = localStorage.getItem("datescan.onboarded");
 
   if (!hasOnboarded) {
@@ -4449,7 +3867,6 @@ function boot() {
     onboardingModal.classList.remove("hidden");
     setupPwaInstall();
     $("startOnboardingBtn").addEventListener("click", () => {
-      try { window.dsPrivacy?.showToast?.('CLICK — starting splash', 1500); } catch (_) {}
       triggerHaptic('tap');
       localStorage.setItem("datescan.onboarded", "true");
       // Show the Tinder-style splash IMMEDIATELY, before fading the
@@ -4461,7 +3878,6 @@ function boot() {
       loadingOverlay.classList.remove("hidden");
       onboardingModal.style.opacity = "0";
       setTimeout(() => {
-        try { window.dsPrivacy?.showToast?.('STARTAPP — camera init', 1500); } catch (_) {}
         onboardingModal.classList.add("hidden");
         document.documentElement.classList.remove('has-onboarding');
         document.body.classList.remove('has-onboarding');
