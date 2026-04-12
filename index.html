@@ -2,63 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<script>
-  // ============================================================
-  // DESKTOP REDIRECT
-  // ============================================================
-  // The DateScan app is built for mobile (Google Play distribution).
-  // Desktop visitors should land on /landing.html, which markets the
-  // Play Store download instead of trying to run the camera-based
-  // PWA on a device that won't have a good experience.
-  //
-  // Detection uses pointer + hover media queries (the most reliable
-  // signal for "this is a real desktop with a mouse"), combined with
-  // a viewport-width fallback. Mobile devices report `pointer: coarse`
-  // and `hover: none`; desktops report `pointer: fine` and `hover: hover`.
-  //
-  // Escape hatches:
-  //   • ?desktop=1 in the URL → bypass the redirect (for QA / debugging)
-  //   • localStorage.datescan.allowDesktop = '1' → permanent bypass
-  //   • Already on /landing or /landing.html → never redirect (would loop)
-  //
-  // This block runs synchronously BEFORE any other script, so it's a
-  // hard cutoff: no app code loads on desktop visits to the root URL.
-  (function () {
-    try {
-      var path = location.pathname;
-      // Skip on the landing page itself, and on any other top-level
-      // page that isn't the app entry point (privacy, terms, etc.).
-      if (/^\/(landing|privacy|terms|refund|contact|delete-account|subscription)(\.html)?\/?$/i.test(path)) return;
-      if (path !== '/' && path !== '/index.html' && path !== '/index') return;
-
-      // Manual escape hatches.
-      var qs = location.search || '';
-      if (/[?&]desktop=1\b/.test(qs)) return;
-      try {
-        if (localStorage.getItem('datescan.allowDesktop') === '1') return;
-      } catch (e) {}
-
-      // The actual desktop check. We require BOTH a fine pointer AND
-      // hover capability — any mobile or touchscreen tablet will fail
-      // at least one. Width is a tiebreaker for unusual environments.
-      var isDesktop =
-        window.matchMedia &&
-        window.matchMedia('(pointer: fine)').matches &&
-        window.matchMedia('(hover: hover)').matches &&
-        window.innerWidth >= 1024;
-
-      if (isDesktop) {
-        // replace() so back-button doesn't bring them back to a
-        // half-loaded app they can't use.
-        location.replace('/landing.html');
-      }
-    } catch (e) {
-      // If anything in the detection throws, fall through and load
-      // the app normally — better to serve a degraded experience than
-      // to crash on the entry redirect.
-    }
-  })();
-</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 <meta name="theme-color" content="#09090b" />
 
@@ -448,10 +391,14 @@
   }
 
   /* Loader & Bars */
-  /* The legacy .pulse-ring spinner was removed when the inline
-     loadingOverlay was redesigned into the Tinder-style full-bleed
-     splash. Kept the @keyframes spin definition because other elements
-     (verifying overlay, etc.) still reference it via inline classes. */
+  .pulse-ring {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid rgba(236, 72, 153, 0.2);
+    border-top-color: #ec4899;
+    animation: spin 1s linear infinite;
+  }
   @keyframes spin { 100% { transform: rotate(360deg); } }
 
   .xp-bar-fill {
@@ -805,13 +752,38 @@
   /* ===== Pre-boot flicker guard =====
      Until the age gate has been acknowledged, hide every other piece
      of UI that would otherwise flash behind it (onboarding modal,
-     bottom nav, loading overlay). The class is added synchronously
-     by the compliance script below, before the browser has a chance
-     to paint the competing elements. */
+     cookie banner, bottom nav, loading overlay). The class is added
+     synchronously by the compliance script below, before the browser
+     has a chance to paint the competing elements. */
   html.datescan-age-pending #onboardingModal,
+  html.datescan-age-pending #cookieBanner,
   html.datescan-age-pending #mobileBottomNav,
   html.datescan-age-pending #loadingOverlay { display: none !important; }
   html.datescan-age-pending body { overflow: hidden !important; }
+
+  /* ===== Cookie banner: mobile hide + desktop stability =====
+     The app already has #mobileBottomNav at the bottom on phones; a
+     second fixed bar there obscures it and is redundant. Hide the
+     cookie banner below the lg breakpoint (matches Tailwind lg:hidden
+     used elsewhere in the file). */
+  @media (max-width: 1023px) {
+    #cookieBanner { display: none !important; }
+  }
+  /* Desktop: some ancestor stacking contexts in this file were causing
+     the banner to disappear once the footer scrolled into view. Force
+     it to stay pinned to the viewport with a very high z-index and
+     explicit fixed positioning that no cascading rule can override. */
+  @media (min-width: 1024px) {
+    #cookieBanner:not(.hidden) {
+      position: fixed !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      z-index: 2147483640 !important;
+      transform: none !important;
+      will-change: auto !important;
+    }
+  }
 </style>
 
 <!-- ===== AGE GATE (18+) ===== -->
@@ -1146,6 +1118,23 @@
       </div>
     </div>
 
+    <!-- Install as App card (Hidden on lg monitors via Tailwind lg:hidden) -->
+    <div id="pwaInstallCard" class="hidden relative z-10 mb-5 rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/15 to-purple-500/10 p-4">
+      <div class="flex items-start gap-3">
+        <div class="shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-brand-500/30">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M12 18h.01"/><path d="M9 6h6"/></svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-0.5">Recommended</div>
+          <h4 class="font-medium text-white text-sm mb-1">Install DateScan as an app</h4>
+          <p id="pwaInstallDesc" class="text-xs text-gray-400 leading-relaxed">Faster load, offline access, and full-screen camera — just like a native app.</p>
+        </div>
+      </div>
+      <button id="pwaInstallBtn" class="mt-3 w-full text-sm font-bold py-2.5 px-3 rounded-xl bg-brand-500/20 border border-brand-500/50 text-brand-300 hover:bg-brand-500/30 transition flex items-center justify-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v12m0 0l-4-4m4 4l4-4M5 20h14"></path></svg> <span id="pwaInstallBtnLabel">Install App</span>
+      </button>
+    </div>
+
     <button id="startOnboardingBtn" class="btn-primary w-full py-4 rounded-2xl text-base font-bold shadow-xl shadow-brand-500/20 flex justify-center items-center gap-2">
       Enable Camera & Start
     </button>
@@ -1188,24 +1177,14 @@
     <!-- Points pill (replaces the old "Free Scans Left" badge).
          Populated by updatePointsBadge(). Always visible — shows the
          current point balance for free users, "PRO" for upgraded
-         users. The Go PRO button next to it (id earnPointsBtn — kept
-         for backwards compat with the existing click handler binding)
-         drives the conversion funnel and is hidden entirely for Pro
-         users. -->
+         users. The Earn Points button next to it drives the conversion
+         funnel and is hidden entirely for Pro users. -->
     <span id="pointsBadge" class="inline-flex items-center text-[11px] sm:text-xs font-medium px-3 sm:px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-white transition-all whitespace-nowrap" title="Loading…">
       <span class="font-bold text-white tabular-nums">–</span><span class="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-1">PTS</span>
     </span>
     <button id="earnPointsBtn" class="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-bold px-3 sm:px-4 py-1.5 rounded-full text-white bg-gradient-to-r from-brand-500 to-purple-500 hover:from-brand-400 hover:to-purple-400 transition-all shadow-[0_4px_14px_rgba(236,72,153,0.35)] whitespace-nowrap">
-      <!-- Yellow sparkles icon, kept yellow on the pink gradient
-           background per spec ("a csillagnak hagyd meg a sárga színt").
-           Heroicons-style filled sparkles: one large 4-point twinkle
-           plus two smaller ones, all rendered in yellow-400 (#facc15)
-           with a soft drop-shadow halo so the yellow doesn't get lost
-           against the brand gradient. -->
-      <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 drop-shadow-[0_0_4px_rgba(250,204,21,0.5)]" viewBox="0 0 24 24" fill="#facc15" aria-hidden="true">
-        <path fill-rule="evenodd" d="M9 4.5a.75.75 0 0 1 .721.544l.813 2.846a3.75 3.75 0 0 0 2.576 2.576l2.846.813a.75.75 0 0 1 0 1.442l-2.846.813a3.75 3.75 0 0 0-2.576 2.576l-.813 2.846a.75.75 0 0 1-1.442 0l-.813-2.846a3.75 3.75 0 0 0-2.576-2.576l-2.846-.813a.75.75 0 0 1 0-1.442l2.846-.813A3.75 3.75 0 0 0 7.466 7.89l.813-2.846A.75.75 0 0 1 9 4.5ZM18 1.5a.75.75 0 0 1 .728.568l.258 1.036c.236.94.97 1.674 1.91 1.91l1.036.258a.75.75 0 0 1 0 1.456l-1.036.258c-.94.236-1.674.97-1.91 1.91l-.258 1.036a.75.75 0 0 1-1.456 0l-.258-1.036a2.625 2.625 0 0 0-1.91-1.91l-1.036-.258a.75.75 0 0 1 0-1.456l1.036-.258a2.625 2.625 0 0 0 1.91-1.91l.258-1.036A.75.75 0 0 1 18 1.5ZM16.5 15a.75.75 0 0 1 .712.513l.394 1.183c.15.447.5.799.948.948l1.183.395a.75.75 0 0 1 0 1.422l-1.183.395c-.447.15-.799.5-.948.948l-.395 1.183a.75.75 0 0 1-1.422 0l-.395-1.183a1.5 1.5 0 0 0-.948-.948l-1.183-.395a.75.75 0 0 1 0-1.422l1.183-.395c.447-.15.799-.5.948-.948l.395-1.183A.75.75 0 0 1 16.5 15Z" clip-rule="evenodd"/>
-      </svg>
-      Go PRO
+      <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+      Earn Points
     </button>
     <!-- Legacy upgradeBtn id retained (hidden) because several older
          call sites still do $("upgradeBtn").addEventListener(...) for
@@ -1263,40 +1242,9 @@
 
               <div id="flashOverlay" class="flash-overlay"></div>
 
-              <!-- Tinder-style full-bleed splash / loading screen.
-                   Despite living inside the camera card, `fixed inset-0`
-                   escapes the parent stacking context and covers the
-                   entire viewport during initial app boot (camera +
-                   MediaPipe model load). The brand gradient + centered
-                   white logo matches the visual language we want for
-                   the very first frame the user sees. -->
-              <div id="loadingOverlay" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-center bg-gradient-to-br from-[#ec4899] via-[#db2777] to-[#9333ea]">
-                <!-- Subtle radial highlight in the center, like Tinder's background sheen -->
-                <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(circle at 50% 45%, rgba(255,255,255,0.18) 0%, transparent 55%);"></div>
-
-                <!-- Centered white logo. Reuses the same DateScan glyph
-                     as the header but recolored to solid white and sized
-                     larger for the splash. -->
-                <div class="relative w-28 h-28 sm:w-32 sm:h-32 drop-shadow-[0_8px_24px_rgba(0,0,0,0.35)]">
-                  <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
-                    <path d="M10 5 H5 V10" stroke="#ffffff" stroke-width="2"/>
-                    <path d="M30 5 H35 V10" stroke="#ffffff" stroke-width="2"/>
-                    <path d="M10 35 H5 V30" stroke="#ffffff" stroke-width="2"/>
-                    <path d="M30 35 H35 V30" stroke="#ffffff" stroke-width="2"/>
-                    <path d="M20 13.5C20 13.5 16 9 11.5 9C7.5 9 5 12.5 5 16.5C5 22 13 28 20 32C27 28 35 22 35 16.5C35 12.5 32.5 9 28.5 9C24 9 20 13.5 20 13.5Z" fill="#ffffff" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <line x1="4" y1="20" x2="36" y2="20" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.55"/>
-                  </svg>
-                </div>
-
-                <!-- Loading status text. Kept on the same DOM id so the
-                     existing setters (loadingText.textContent = "...")
-                     keep working without any JS changes. -->
-                <p class="relative mt-8 text-[11px] font-bold uppercase tracking-[0.25em] text-white/85" id="loadingText">Loading…</p>
-
-                <!-- Bottom wordmark, like Tinder's "from MatchGroup" line -->
-                <div class="absolute bottom-10 left-0 right-0 flex justify-center pointer-events-none">
-                  <span class="font-bold text-sm tracking-tight text-white/85">DateScan<span class="text-white">.</span></span>
-                </div>
+              <div id="loadingOverlay" class="hidden absolute inset-0 z-40 flex flex-col items-center justify-center bg-dark-950/80 backdrop-blur-sm">
+                <div class="pulse-ring mb-4"></div>
+                <p class="text-sm font-medium text-gray-300 tracking-wide" id="loadingText">Connecting...</p>
               </div>
 
               <div id="errorOverlay" class="hidden absolute inset-0 z-50 flex flex-col items-center justify-center bg-dark-950/95 p-6 text-center">
@@ -1657,6 +1605,11 @@
       </p>
       <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 shrink-0">
         <span class="text-[11px] text-gray-600">&copy; 2026 DateScan</span>
+        <span class="hidden sm:inline text-gray-700">·</span>
+        <span class="text-[11px] text-gray-600 inline-flex items-center gap-1.5">
+          Payments by
+          <a href="https://lemonsqueezy.com" target="_blank" rel="noopener" class="text-brand-400 hover:text-brand-500 font-medium transition-colors">Lemon Squeezy</a>
+        </span>
       </div>
     </div>
   </div>
@@ -2158,7 +2111,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     <div class="mt-4 flex items-center justify-center gap-1.5 text-[10px] text-gray-500 relative z-10">
       <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-      Secure billing via Google Play
+      Secure checkout by <a href="https://lemonsqueezy.com" target="_blank" rel="noopener" class="text-brand-400 hover:text-brand-500 font-medium">Lemon Squeezy</a>
     </div>
 
     <button id="closePaywall" class="w-full mt-4 text-sm font-medium text-gray-500 hover:text-white transition-colors py-2 relative z-10">
@@ -3705,12 +3658,73 @@ async function startAppFlow() {
 }
 
 function setupPwaInstall() {
-  // Stub — the in-app install card and prompt have been removed.
-  // The app is now distributed via Google Play (TWA), so the
-  // browser-level "Add to Home Screen" / beforeinstallprompt UI
-  // is no longer surfaced. The service worker and manifest are
-  // still registered (the TWA wrapper depends on them), but the
-  // user-facing install affordance is gone.
+  const card = document.getElementById('pwaInstallCard');
+  const btn = document.getElementById('pwaInstallBtn');
+  const label = document.getElementById('pwaInstallBtnLabel');
+  const desc = document.getElementById('pwaInstallDesc');
+  if (!card || !btn) return;
+
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                    || window.navigator.standalone === true;
+                    
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+  if (isStandalone || !isMobile || window.innerWidth >= 1024) {
+      card.classList.add('hidden');
+      return;
+  }
+
+  // Force show the card for visibility on the loading screen
+  card.classList.remove('hidden');
+
+  const ua = navigator.userAgent || '';
+  const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+  const isSafari = /^((?!chrome|android|crios|fxios).)*safari/i.test(ua);
+  const isAndroid = /Android/.test(ua);
+
+  let deferredPrompt = window._deferredInstallPrompt || null;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    window._deferredInstallPrompt = e;
+  });
+  window.addEventListener('pwa-installable', () => {
+    deferredPrompt = window._deferredInstallPrompt;
+  });
+
+  if (isIOS && isSafari) {
+    label.textContent = 'How to install';
+    desc.textContent = 'Tap the Share button in Safari, then "Add to Home Screen" to install.';
+    btn.addEventListener('click', () => {
+      triggerHaptic('tap');
+      alert('To install DateScan:\n\n1. Tap the Share button (⬆️) at the bottom of Safari\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" in the top-right corner');
+    });
+    return;
+  }
+
+  btn.addEventListener('click', async () => {
+    triggerHaptic('tap');
+    if (!deferredPrompt) {
+      if (isAndroid) {
+        alert('To install: tap the ⋮ menu in Chrome, then "Install app" or "Add to Home screen".');
+      } else {
+        alert('Your browser doesn\'t support direct install. Try the browser menu → "Install" or "Add to Home screen".');
+      }
+      return;
+    }
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      card.classList.add('hidden');
+    }
+    deferredPrompt = null;
+  });
+
+  window.addEventListener('appinstalled', () => {
+    card.classList.add('hidden');
+    deferredPrompt = null;
+  });
 }
 
 // --- OFFLINE / ONLINE STATE ---
@@ -3869,13 +3883,6 @@ function boot() {
     $("startOnboardingBtn").addEventListener("click", () => {
       triggerHaptic('tap');
       localStorage.setItem("datescan.onboarded", "true");
-      // Show the Tinder-style splash IMMEDIATELY, before fading the
-      // onboarding modal. Without this, there is a 500ms gap between
-      // the modal fading out and startAppFlow() showing the splash —
-      // during which the user briefly sees the underlying camera card
-      // ("Loading..." pill, viewfinder corners). The splash is z-[100]
-      // so it covers both the fading modal and the camera card behind.
-      loadingOverlay.classList.remove("hidden");
       onboardingModal.style.opacity = "0";
       setTimeout(() => {
         onboardingModal.classList.add("hidden");
@@ -5130,18 +5137,22 @@ async function runScan() {
 
   triggerHaptic('tap');
 
-  // ---- Unified points gating ----
-  // The blur strategy is tied to the point balance: a free user with
-  // points remaining gets the FULL unblurred result (this is the
-  // "experience the value" phase), and only when they hit 0 does the
-  // selective-blur view appear with the conversion CTAs. The chat path
-  // is stricter (hard block at 0), since chat consumes a real API call
-  // while a scan is on-device compute.
+  // ---- Unified points gating + selective blur ----
+  // Phase 3 refinement: the blur strategy is no longer tied to "out of
+  // points" — it's tied to "not Pro". Every free user sees the same
+  // selective-blur view on every scan (score + category scores + first
+  // tip visible; Suggested Upgrades rest, Deep Analysis, and Glow-Up
+  // History locked with inline CTAs). The points pool is orthogonal:
+  // it rate-limits how many times per day the scan can actually run
+  // and how many chat messages can be sent, but does not gate the
+  // depth of the result shown.
   //
-  // `isLocked` is decided BEFORE any point is spent so the scan
-  // attempted at 0pts shows the locked view, not the one taking
-  // the balance from 1 → 0.
-  const isLocked = !isProUser() && getPoints() === 0;
+  // At zero points the scan still runs (same locked view) and we also
+  // auto-open the paywall after the result reveals, to reinforce the
+  // conversion prompt. Chat at zero points is a hard block (handled
+  // separately in the chat submit handler).
+  const isLocked = !isProUser();
+  const outOfPointsOnEntry = !isProUser() && getPoints() === 0;
 
   store.dispatch({ type: 'SCAN_START' });
   // Clear any chips from the previous scan so the user doesn't see
@@ -5312,9 +5323,12 @@ async function runScan() {
     // the user can tap a question instead of typing.
     renderChips(store.get().occasion);
 
-    // Free users consume 1 point per scan when they're not already
-    // locked. consumePoint() is a no-op for Pro users (returns Infinity).
-    if (!isLocked) {
+    // Free users consume 1 point per scan when they have any left.
+    // Because the blur strategy is now tied to Pro-status rather than
+    // point balance, a scan at zero points still produces the same
+    // locked view — we just can't decrement the pool below zero.
+    // consumePoint() is clamped at 0 internally and is a no-op for Pro.
+    if (!isProUser() && getPoints() > 0) {
       consumePoint();
     }
 
@@ -5324,12 +5338,13 @@ async function runScan() {
       window.dsPrivacy?.showToast?.(`+${n} improvement possible`, 2400);
     }, 1000);
 
-    // When the scan was locked (free user at 0 points), open the paywall
-    // shortly after the reveal. They see the full selective-blur result
-    // first (~800ms) so the missing depth registers before the upsell
-    // lands. The new selective-blur (.lock-pane-blur) is blurred on
-    // render — no animation step required.
-    if (isLocked) {
+    // When a free user scans at zero points, open the paywall shortly
+    // after the reveal. They still see the full locked result first
+    // (~800ms) so the missing depth registers before the upsell lands.
+    // The old ".blur-content → .blur-active" animation trigger is gone:
+    // the new selective-blur (.lock-pane-blur) is blurred on render,
+    // no animation step required.
+    if (outOfPointsOnEntry) {
       setTimeout(() => { window.openPaywall(); }, 800);
     }
   } catch (err) {
@@ -5611,28 +5626,32 @@ function renderActionPlan(items, locked = false) {
 }
 
 // ============================================================
-// PAYMENT INTEGRATION — Google Play Billing only
+// PAYMENT INTEGRATION — Google Play Billing (TWA) + Lemon Squeezy fallback
 // ============================================================
-// DateScan is now distributed exclusively through the Google Play
-// Store as a TWA. Web users on desktop are redirected to the
-// landing page (see the inline script at the top of <head>); web
-// users on mobile who somehow land on this entry point and try to
-// upgrade get a "Get the app on Google Play" message instead of a
-// purchase flow, since there's no working web checkout anymore.
-//
-// Pro status is still verified server-side via the Cloudflare Worker
-// at https://payment.datescan.app/ — that endpoint is updated by a
-// Play purchase verification webhook.
+// Flow:
+//   1. If the app is running inside a Trusted Web Activity on Android and
+//      the Digital Goods API is available, we try Google Play Billing first.
+//   2. On any Google Play error, or in a regular browser (Safari/Chrome/Firefox),
+//      we fall back to Lemon Squeezy hosted checkout.
+//   3. In both cases we verify the Pro status with our Cloudflare Worker at
+//      https://payment.datescan.app/check?user_id=...  which is updated by
+//      Lemon Squeezy webhooks and a Play purchase verification endpoint.
 // ============================================================
 
 const WORKER_BASE_URL = "https://payment.datescan.app";
-const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=app.datescan";
 
 // Google Play product IDs (must match the SKUs you created in Play Console)
 const GOOGLE_SKUS = {
   week:  "premium_week",
   month: "premium_month",
   year:  "premium_year",
+};
+
+// Lemon Squeezy hosted checkout URLs (used as web fallback)
+const LEMON_CHECKOUTS = {
+  week:  "https://datescan.lemonsqueezy.com/checkout/buy/ce5103de-486e-4cef-b48b-87b89330465b",
+  month: "https://datescan.lemonsqueezy.com/checkout/buy/3acc0dcd-b5b6-4642-b553-849db696ee2a",
+  year:  "https://datescan.lemonsqueezy.com/checkout/buy/d9654a21-87cd-4b7f-bdd6-34a1b1f01c3e",
 };
 
 const CHECKOUT_ATTEMPT_KEY = "datescan.lastCheckoutAttempt";
@@ -5645,6 +5664,14 @@ function getOrCreateUserId() {
     localStorage.setItem("datescan.userId", id);
   }
   return id;
+}
+
+function buildCheckoutUrl(plan) {
+  const base = LEMON_CHECKOUTS[plan];
+  if (!base) return null;
+  const userId = getOrCreateUserId();
+  const sep = base.includes("?") ? "&" : "?";
+  return `${base}${sep}checkout[custom][user_id]=${encodeURIComponent(userId)}`;
 }
 
 function markCheckoutAttempt(plan) {
@@ -5746,19 +5773,19 @@ async function verifyProStatus({ poll = false, visible = false } = {}) {
   return false;
 }
 
-// ---- Web fallback: redirect to Play Store ----
-// When the user isn't in a TWA (i.e. they're on a regular mobile
-// browser), there's no way for them to complete a purchase here. We
-// surface the Play Store link instead so they can install the app
-// and pay through Google Play. Desktop users never reach this code
-// because they're redirected to /landing.html on first paint.
-function redirectToPlayStore(plan) {
-  console.log("[DateScan] → redirecting to Play Store, intended plan:", plan);
+// ---- Lemon Squeezy fallback (opens hosted checkout in the same tab) ----
+function startLemonSqueezyCheckout(plan) {
+  const url = buildCheckoutUrl(plan);
+  if (!url) {
+    console.error("[DateScan] Unknown plan for Lemon Squeezy fallback:", plan);
+    return;
+  }
+  console.log("[DateScan] → Lemon Squeezy checkout:", plan, url);
   markCheckoutAttempt(plan);
-  window.location.href = PLAY_STORE_URL;
+  window.location.href = url;
 }
 
-// ---- Main entry point: Google Play in TWA, Play Store link otherwise ----
+// ---- Main entry point: decides Google Play vs Lemon Squeezy ----
 async function handlePayment(plan) {
   const productId = GOOGLE_SKUS[plan];
   if (!productId) {
@@ -5826,37 +5853,34 @@ async function handlePayment(plan) {
       return;
 
     } catch (e) {
-      console.error("[DateScan] Google Play billing error:", e);
+      console.error("[DateScan] Google Play billing error — falling back to Lemon Squeezy:", e);
+      // Any error (user cancelled, SKU not found, API unavailable) → fallback to web checkout
       hideVerifyingOverlay();
-      // No web checkout available — send them to the Play Store so
-      // they can install the app and try the purchase from inside the
-      // TWA. This branch is hit on cancelled prompts too, which is
-      // mildly suboptimal, but redirecting after a cancel is better
-      // than silently swallowing the error.
-      redirectToPlayStore(plan);
+      startLemonSqueezyCheckout(plan);
       return;
     }
   }
 
-  // 2. Regular browser (no Digital Goods API) → send them to the
-  // Play Store so they can install the app. There is no longer a
-  // web-side checkout to fall back to.
-  redirectToPlayStore(plan);
+  // 3. Regular browser (Safari / Chrome / Firefox / desktop) → Lemon Squeezy
+  startLemonSqueezyCheckout(plan);
 }
 
 window.addEventListener("load", () => {
   const params = new URLSearchParams(window.location.search);
   const premium = params.get("premium");
+  const cameFromLemon = document.referrer && document.referrer.includes("lemonsqueezy.com");
   const recentAttempt = getRecentCheckoutAttempt();
 
   console.log("[DateScan] page load checkout flow:", {
     premium,
+    cameFromLemon,
+    referrer: document.referrer,
     recentAttempt,
     isProUser: isProUser(),
   });
 
-  // CASE A: just returned from a checkout attempt → verify status
-  if (recentAttempt) {
+  // CASE A: just returned from a Lemon Squeezy checkout → ALWAYS verify, never re-redirect
+  if (recentAttempt || cameFromLemon) {
     console.log("[DateScan] → returning from checkout, verifying with backend");
     if (params.toString()) {
       const cleanUrl = window.location.pathname + window.location.hash;
@@ -6885,6 +6909,96 @@ applyOfflineState(!navigator.onLine);
      Cookie Consent Banner — shows on first visit only
      Persists choice in localStorage('cookieConsent')
      ========================================================= -->
+<div id="cookieBanner" class="hidden fixed inset-x-0 bottom-0 z-[100] px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pointer-events-none">
+  <div class="max-w-3xl mx-auto pointer-events-auto">
+    <div class="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0f0f14]/95 backdrop-blur-xl shadow-2xl shadow-black/50">
+      <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-500/50 to-transparent pointer-events-none"></div>
+      <div class="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+        <div class="shrink-0 w-11 h-11 rounded-xl bg-gradient-to-tr from-brand-500/20 to-purple-500/20 border border-brand-500/30 flex items-center justify-center">
+          <svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm text-white font-medium mb-1">We respect your privacy.</p>
+          <p class="text-xs text-gray-400 leading-relaxed">
+            Camera scans run on your device. 🔒 Messages and photos you send to the AI Style Coach are processed on our server for that request only. We only use essential cookies to secure your Pro experience and payments. By continuing, you accept our
+            <a href="/privacy.html" class="text-brand-400 hover:text-brand-500 underline underline-offset-2">Privacy Policy</a>.
+          </p>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <a href="/privacy.html" class="hidden sm:inline-block text-xs text-gray-400 hover:text-white px-3 py-2 transition-colors">Learn more</a>
+          <button id="cookieRejectBtn" type="button"
+            class="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-300 text-sm font-semibold hover:bg-white/10 active:scale-[0.98] transition-all">
+            Reject
+          </button>
+          <button id="cookieAcceptBtn" type="button"
+            class="px-5 py-2.5 rounded-xl bg-gradient-to-tr from-brand-500 to-purple-500 text-white text-sm font-semibold shadow-lg shadow-brand-500/30 hover:shadow-brand-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all">
+            Accept
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes ds-cookie-slide-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes ds-cookie-slide-down {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(20px); }
+  }
+</style>
+
+<script>
+(function () {
+  try {
+    var banner = document.getElementById('cookieBanner');
+    var acceptBtn = document.getElementById('cookieAcceptBtn');
+    var rejectBtn = document.getElementById('cookieRejectBtn');
+    if (!banner || !acceptBtn) return;
+
+    if (!localStorage.getItem('cookieConsent')) {
+      setTimeout(function () {
+        banner.classList.remove('hidden');
+        banner.style.animation = 'ds-cookie-slide-up .4s ease-out';
+      }, 600);
+    }
+
+    function hideBanner() {
+      banner.style.animation = 'ds-cookie-slide-down .3s ease-in forwards';
+      setTimeout(function () { banner.classList.add('hidden'); }, 300);
+    }
+
+    acceptBtn.addEventListener('click', function () {
+      try {
+        localStorage.setItem('cookieConsent', 'accepted');
+        localStorage.setItem('cookieConsentTs', String(Date.now()));
+      } catch (e) { /* localStorage blocked — fail silently */ }
+      hideBanner();
+    });
+
+    if (rejectBtn) {
+      rejectBtn.addEventListener('click', function () {
+        try {
+          localStorage.setItem('cookieConsent', 'rejected');
+          localStorage.setItem('cookieConsentTs', String(Date.now()));
+        } catch (e) { /* localStorage blocked — fail silently */ }
+        // Signal the rest of the app that non-essential storage/tracking
+        // must stay off. Only strictly necessary cookies (auth, payment
+        // session) are allowed from this point on.
+        window.dsConsent = { analytics: false, marketing: false };
+        hideBanner();
+      });
+    }
+  } catch (e) {
+    console.warn('[DateScan] cookie banner init failed:', e);
+  }
+})();
+</script>
 
 </body>
 </html>
