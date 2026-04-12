@@ -5,6 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 <meta name="theme-color" content="#09090b" />
 
+<!-- SEO -->
+<meta name="description" content="DateScan is your personal AI style coach. Scan your outfit, get real-time feedback on fit, color, and grooming, and show up to your date at your best." />
+<link rel="canonical" href="https://datescan.app/" />
+
+<!-- Open Graph / Facebook / Messenger -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="DateScan" />
+<meta property="og:url" content="https://datescan.app/" />
+<meta property="og:title" content="DateScan — Your Personal Style Coach" />
+<meta property="og:description" content="Scan your outfit, get real-time AI feedback on fit, color, and grooming, and show up to your date at your best." />
+<!-- NOTE: For best social previews, host a dedicated 1200x630 JPG/PNG at
+     /og-image.png. Until then we fall back to the PWA icon, which social
+     crawlers will letterbox but still render. -->
+<meta property="og:image" content="https://datescan.app/icon-512.png" />
+<meta property="og:image:width" content="512" />
+<meta property="og:image:height" content="512" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="DateScan — Your Personal Style Coach" />
+<meta name="twitter:description" content="Scan your outfit, get real-time AI feedback on fit, color, and grooming, and show up to your date at your best." />
+<meta name="twitter:image" content="https://datescan.app/icon-512.png" />
+
 <!-- PWA -->
 <link rel="manifest" href="/manifest.webmanifest" />
 <script>
@@ -36,6 +59,14 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='40' y2='40' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%23ec4899'/%3E%3Cstop offset='1' stop-color='%239333ea'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M10 5 H5 V10' stroke='url(%23bg)' stroke-width='2'/%3E%3Cpath d='M30 5 H35 V10' stroke='url(%23bg)' stroke-width='2'/%3E%3Cpath d='M10 35 H5 V30' stroke='url(%23bg)' stroke-width='2'/%3E%3Cpath d='M30 35 H35 V30' stroke='url(%23bg)' stroke-width='2'/%3E%3Cpath d='M20 13.5C20 13.5 16 9 11.5 9C7.5 9 5 12.5 5 16.5C5 22 13 28 20 32C27 28 35 22 35 16.5C35 12.5 32.5 9 28.5 9C24 9 20 13.5 20 13.5Z' fill='url(%23bg)' fill-opacity='0.2' stroke='url(%23bg)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='4' y1='20' x2='36' y2='20' stroke='%23f472b6' stroke-width='1.5' stroke-dasharray='2 2' opacity='0.8'/%3E%3C/svg%3E">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/idb@8.0.0/build/umd.js"></script>
+<!-- Preconnect to Google Fonts before the stylesheet request is even made.
+     This saves ~100-300ms on first paint by letting the browser open the
+     TLS connection to fonts.gstatic.com (where the woff2 files live) in
+     parallel with the CSS parse, instead of serially after the stylesheet
+     downloads and references them. The crossorigin attribute is required
+     on fonts.gstatic.com because font files are fetched with CORS. -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
 <script>
   tailwind.config = {
@@ -1263,7 +1294,7 @@
                 <div class="flex items-center justify-between mb-3">
                   <div>
                     <div class="text-[10px] uppercase tracking-widest font-bold text-brand-400 mb-1" id="levelName">Level 1: Rookie</div>
-                    <div class="flex items-baseline gap-1.5">
+                    <div class="flex items-baseline gap-1.5" role="status" aria-live="polite" aria-atomic="true" aria-label="Experience points">
                       <span id="missionCount" class="font-serif font-bold text-3xl text-white">0</span>
                       <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">XP</span>
                     </div>
@@ -1272,7 +1303,7 @@
                     <div id="streakFlame" class="flex justify-end text-orange-400">
                       <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
                     </div>
-                    <div id="missionStreak" class="text-[11px] font-bold text-orange-400 mt-1">0 Day Streak</div>
+                    <div id="missionStreak" class="text-[11px] font-bold text-orange-400 mt-1" aria-live="polite" aria-atomic="true">0 Day Streak</div>
                   </div>
                 </div>
 
@@ -2106,6 +2137,31 @@ store.subscribe((s) => {
   } else {
     statusText.textContent = "Ready";
     statusDot.className = "w-2 h-2 rounded-full bg-brand-500";
+  }
+});
+
+// Re-render the style coach + chat chips when the user switches occasion
+// AFTER a scan has already produced results. Without this, the coach card
+// would stay pinned to the occasion that was active when the scan ran,
+// which is misleading — the score and fixes are occasion-sensitive
+// (see computeScore, generateImprovements, generateStyleAnalysis).
+//
+// Gated on lastColor so it no-ops before the first scan. Gated on
+// !isScanning so it doesn't fight runScan, which sets lastColor + occasion
+// together at the end of the pipeline. We track the previous occasion in
+// a closure so we only re-render on actual occasion changes, not on every
+// unrelated state change (scan start/end, camera ready, etc.).
+let _prevOccasion = store.get().occasion;
+store.subscribe((s) => {
+  if (s.occasion === _prevOccasion) return;
+  _prevOccasion = s.occasion;
+  if (s.isScanning) return;
+  if (!s.lastColor) return;
+  try {
+    renderStyleCoach(s.lastColor, s.occasion, false, s.lastItems);
+    renderChips(s.occasion);
+  } catch (e) {
+    console.warn('[occasion-change] re-render failed:', e);
   }
 });
 
@@ -3902,6 +3958,23 @@ const OUTFIT_COLORS = [
   { id: "gray",  name: "Neutral Gray", hex: "#64748b", rgb: [100, 116, 139] }
 ];
 
+// SoA (struct-of-arrays) view of OUTFIT_COLORS for the hot inner loop of
+// analyzeOutfitColor. Building this once at module load lets the per-pixel
+// nearest-color search run as a tight numeric for-loop over typed arrays,
+// with no callback overhead and no polymorphic property access (c.rgb[0]).
+// Keep in sync with OUTFIT_COLORS above.
+const OC_LEN = OUTFIT_COLORS.length;
+const OC_R = new Int32Array(OC_LEN);
+const OC_G = new Int32Array(OC_LEN);
+const OC_B = new Int32Array(OC_LEN);
+for (let i = 0; i < OC_LEN; i++) {
+  OC_R[i] = OUTFIT_COLORS[i].rgb[0];
+  OC_G[i] = OUTFIT_COLORS[i].rgb[1];
+  OC_B[i] = OUTFIT_COLORS[i].rgb[2];
+}
+// Reusable vote buffer — reset with .fill(0) per call instead of reallocating.
+const OC_VOTES = new Int32Array(OC_LEN);
+
 function analyzeOutfitColor(landmarks, W, H) {
   const chin = landmarks[152];
   if (!chin) return null;
@@ -3910,24 +3983,28 @@ function analyzeOutfitColor(landmarks, W, H) {
 
   if (actualW < 10 || actualH < 10) return null;
   const data = ctx.getImageData(xStart, yStart, actualW, actualH).data;
-  const votes = {}; OUTFIT_COLORS.forEach(c => votes[c.id] = 0);
 
-  for (let i = 0; i < data.length; i += 40) {
+  OC_VOTES.fill(0);
+  const len = data.length;
+  for (let i = 0; i < len; i += 40) {
     const r = data[i], g = data[i+1], b = data[i+2];
     if (r < 15 && g < 15 && b < 15) continue;
-    let minDist = Infinity, bestId = null;
-    OUTFIT_COLORS.forEach(c => {
-      const dist = (r-c.rgb[0])**2 + (g-c.rgb[1])**2 + (b-c.rgb[2])**2;
-      if (dist < minDist) { minDist = dist; bestId = c.id; }
-    });
-    if (bestId) votes[bestId]++;
+    let minDist = Infinity, bestJ = -1;
+    for (let j = 0; j < OC_LEN; j++) {
+      const dr = r - OC_R[j], dg = g - OC_G[j], db = b - OC_B[j];
+      const dist = dr*dr + dg*dg + db*db;
+      if (dist < minDist) { minDist = dist; bestJ = j; }
+    }
+    if (bestJ >= 0) OC_VOTES[bestJ]++;
   }
 
-  let maxVotes = -1, winningId = null;
-  Object.entries(votes).forEach(([id, count]) => { if (count > maxVotes) { maxVotes = count; winningId = id; } });
-  if (!winningId || maxVotes === 0) return null;
+  let maxVotes = -1, winningJ = -1;
+  for (let j = 0; j < OC_LEN; j++) {
+    if (OC_VOTES[j] > maxVotes) { maxVotes = OC_VOTES[j]; winningJ = j; }
+  }
+  if (winningJ < 0 || maxVotes === 0) return null;
 
-  return OUTFIT_COLORS.find(c => c.id === winningId);
+  return OUTFIT_COLORS[winningJ];
 }
 
 function addXP(amount) {
@@ -4756,6 +4833,12 @@ async function runScan() {
   // Clear any chips from the previous scan so the user doesn't see
   // stale suggestions while the new analysis is running.
   clearChips();
+  // Defensive: endScan() already schedules clearHUD via setTimeout(…, 500),
+  // so in normal flow the HUD is empty by now. But if a user manages to
+  // re-trigger a scan inside that 500ms window (fast re-tap, programmatic
+  // trigger), the new drawHUD would append on top of leftover reticles.
+  // One idempotent call here costs nothing and closes the window.
+  clearHUD();
 
   // 3rd scan (index 2) → render partial result with blurred action plan, then paywall
   const isLocked = !isProUser() && getTodayScans() === FREE_SCAN_LIMIT - 1;
@@ -5977,7 +6060,14 @@ applyOfflineState(!navigator.onLine);
       if (wContent) {
         const enableBtn = document.getElementById('weatherEnableBtn');
         if (!enableBtn || enableBtn.offsetParent === null) {
-          const wText = (wContent.innerText || '').replace(/\s+/g, ' ').trim();
+          // Strip button text (Refresh, Try again, etc.) before extracting
+          // the textual content. innerText would otherwise leak UI affordance
+          // labels into the chat context — harmless but noisy, and it can
+          // confuse the model into thinking "Refresh" is weather data.
+          // We clone the node so we don't mutate the live DOM.
+          const clone = wContent.cloneNode(true);
+          clone.querySelectorAll('button').forEach(b => b.remove());
+          const wText = (clone.innerText || clone.textContent || '').replace(/\s+/g, ' ').trim();
           if (wText) {
             lines.push('Weather' + (wLoc ? ' in ' + wLoc : '') + ': ' + wText);
           }
