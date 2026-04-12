@@ -278,7 +278,7 @@
     submitBtn.textContent = 'Submitting…';
 
     try {
-      var res = await fetch('/api/delete-account', {
+      var res = await fetch('https://www.datescan.app/api/delete-account', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
