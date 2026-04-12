@@ -5338,11 +5338,18 @@ async function runScan() {
       consumePoint();
     }
 
-    // Peak-moment trigger: tease an improvement number 1s after the reveal
-    setTimeout(() => {
-      const n = 6 + Math.floor(Math.random() * 8); // 6–13
-      window.dsPrivacy?.showToast?.(`+${n} improvement possible`, 2400);
-    }, 1000);
+    // Peak-moment trigger: tease an improvement number 1s after the reveal.
+    // Only fire when the outfit was actually detected — if detectedOutfitColor
+    // is null, renderStyleCoach already surfaces "Could not detect outfit
+    // clearly", and showing a "+7 improvement possible" toast underneath that
+    // would be nonsensical (improvement from what? the scan failed). Skip
+    // silently in that case.
+    if (detectedOutfitColor) {
+      setTimeout(() => {
+        const n = 6 + Math.floor(Math.random() * 8); // 6–13
+        window.dsPrivacy?.showToast?.(`+${n} improvement possible`, 2400);
+      }, 1000);
+    }
 
     // When the scan was locked (free user at 0 points), open the paywall
     // shortly after the reveal. They see the full selective-blur result
