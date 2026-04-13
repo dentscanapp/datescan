@@ -642,7 +642,6 @@
   </div>
 </footer>
 
-
 <!-- =========================================================
      Cookie Consent Banner — shows on first visit only
      Persists choice in localStorage('cookieConsent')
@@ -702,12 +701,7 @@
     if (!localStorage.getItem('cookieConsent')) {
       setTimeout(function () {
         banner.classList.remove('hidden');
-        banner.style.opacity = '1';
-        banner.style.transform = 'translateY(0)';
         banner.style.animation = 'ds-cookie-slide-up .4s ease-out forwards';
-        // Clear the animation style after it completes so nothing can revert
-        // the banner to its starting (opacity:0) state on later repaints.
-        setTimeout(function () { banner.style.animation = ''; }, 500);
       }, 600);
     }
 
