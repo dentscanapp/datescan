@@ -1582,7 +1582,7 @@
                   <img id="vai-snapshot-result" alt="Analyzed frame" class="w-full h-full object-cover" />
                 </div>
                 <div class="flex-1 text-center sm:text-left">
-                  <div class="flex items-center gap-2 justify-center sm:justify-start mb-1">
+                  <div class="flex items-center gap-2 justify-center sm:justify-start mb-1 flex-wrap">
                     <div class="text-[10px] uppercase tracking-[0.15em] text-brand-400 font-bold">First impression analysis</div>
                     <span id="vai-origin-badge" class="hidden text-[9px] uppercase tracking-[0.1em] font-bold px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-500/20 to-brand-500/20 border border-amber-400/40 text-amber-300">✦ Origin</span>
                     <span id="vai-delta-badge" class="hidden text-[9px] uppercase tracking-[0.1em] font-bold px-2 py-0.5 rounded-full border"></span>
@@ -1590,9 +1590,9 @@
                   <div class="font-serif text-6xl sm:text-7xl font-light leading-none my-2">
                     <span id="vai-score" class="bg-gradient-to-br from-white via-brand-300 to-purple-400 bg-clip-text text-transparent">0</span>
                   </div>
-                  <div class="text-[10px] font-mono uppercase tracking-[0.15em] text-gray-500 mb-3">/ 100 vibe score</div>
-                  <div class="font-serif text-xl italic text-white" id="vai-vibe-type">Confident Minimal</div>
-                  <div class="inline-block mt-2 px-3 py-1 border border-brand-500/30 rounded-full text-[10px] uppercase tracking-[0.1em] text-brand-400 font-bold" id="vai-vibe-sub">monochrome architect</div>
+                  <div class="text-[10px] font-mono uppercase tracking-[0.15em] text-gray-500 mb-4">/ 100 vibe score</div>
+                  <div class="font-serif text-2xl italic text-white leading-tight" id="vai-vibe-type">Confident Minimal</div>
+                  <div class="text-[10px] uppercase tracking-[0.22em] text-gray-500 mt-1.5 font-medium" id="vai-vibe-sub">monochrome architect</div>
                 </div>
               </div>
 
@@ -1602,9 +1602,20 @@
                 <div class="vai-insight pt-3 border-t border-white/5 text-[12px] text-gray-300 leading-relaxed"></div>
               </div>
 
-              <div class="mt-4 p-3 rounded-2xl bg-brand-500/5 border border-brand-500/20 text-left">
-                <div class="text-[10px] uppercase tracking-[0.12em] text-brand-400 font-bold mb-1">Tip</div>
-                <div class="text-[12px] text-gray-300 leading-relaxed" id="vai-tip">A single warm accent — cognac or rust — would deepen impact on your next look.</div>
+              <div class="mt-5 p-4 rounded-2xl bg-gradient-to-br from-brand-500/12 via-purple-500/5 to-transparent border border-brand-500/25 text-left relative overflow-hidden">
+                <div class="absolute -top-12 -right-12 w-32 h-32 bg-brand-500 rounded-full mix-blend-screen filter blur-[40px] opacity-15 pointer-events-none"></div>
+                <div class="flex items-center justify-between mb-2 relative z-10">
+                  <div class="text-[10px] uppercase tracking-[0.14em] text-brand-400 font-bold flex items-center gap-1.5">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                    The Missing Piece
+                  </div>
+                  <div class="text-[10px] font-mono flex items-center gap-1.5">
+                    <span id="vai-score-current" class="text-gray-400">87</span>
+                    <span class="text-gray-600">→</span>
+                    <span id="vai-score-potential" class="text-white font-bold">93</span>
+                  </div>
+                </div>
+                <div class="text-[12px] text-gray-200 leading-relaxed relative z-10" id="vai-tip">A single warm accent — cognac or rust — would deepen impact on your next look.</div>
               </div>
 
               <div class="text-center flex gap-2 justify-center flex-wrap mt-5">
@@ -7718,16 +7729,56 @@ applyOfflineState(!navigator.onLine);
     ];
   }
 
-  function generateTip(c) {
+  function generateMissingPiece(c) {
     const f = c.features;
-    if (f.avgSat < 0.18 && f.warmth < 0)  return 'A single warm accent — cognac, rust, or terracotta — would deepen the cool restraint.';
-    if (f.avgSat < 0.18 && f.warmth >= 0) return 'A cool steel or navy layer would balance these warm neutrals beautifully.';
-    if (f.avgSat > 0.5 && f.hueDiversity >= 5) return 'Your palette is doing a lot — try anchoring with one neutral piece next time.';
-    if (f.contrast < 25) return 'Add a structured layer or darker piece for visual definition.';
-    if (f.contrast > 70) return 'Your contrast is the statement — keep accessories quiet and let it lead.';
-    if (f.warmth > 25)   return 'A cool accent — slate, navy, or charcoal — would sharpen the warmth.';
-    if (f.warmth < -25)  return 'A warm metal accent (gold, bronze) would soften the cool palette.';
-    return 'You\'re in a balanced zone — try one unexpected texture next time to elevate it.';
+    const cur = c.score;
+
+    // Find the dominant weakness and craft a specific actionable fix
+    let advice, gain;
+
+    if (f.contrast < 22) {
+      advice = 'Your composition is too flat. Add <strong style="color:#fff">one structured darker piece</strong> — a navy blazer, charcoal layer, or black overshirt — and the contrast jump alone unlocks new range.';
+      gain = 7;
+    }
+    else if (f.avgSat < 0.16 && f.warmth < -8) {
+      advice = 'Your palette is cool and restrained. <strong style="color:#fff">One cognac or rust accessory</strong> — belt, watch strap, leather strap — would warm and deepen the whole look.';
+      gain = 6;
+    }
+    else if (f.avgSat < 0.16 && f.warmth >= -8) {
+      advice = 'Pure restraint, no anchor. <strong style="color:#fff">One silver or steel accent</strong> — chain, ring, frame, buckle — would sharpen the entire composition.';
+      gain = 5;
+    }
+    else if (f.hueDiversity >= 6 && f.avgSat > 0.42) {
+      advice = 'Your palette is doing too much at once. <strong style="color:#fff">Anchor with one neutral piece</strong> — cream, taupe, off-black — and watch cohesion lift.';
+      gain = 8;
+    }
+    else if (f.contrast > 75) {
+      advice = 'Your contrast is the statement. Add <strong style="color:#fff">one tactile texture</strong> — knit, suede, brushed linen — so the eye has a place to rest.';
+      gain = 4;
+    }
+    else if (f.avgLuma < 90) {
+      advice = 'Low-key palette is missing one breath of light. <strong style="color:#fff">A white or cream layer</strong> — tee, scarf, collar — would lift it without breaking the mood.';
+      gain = 5;
+    }
+    else if (f.avgLuma > 185) {
+      advice = 'High-key palette is missing weight. <strong style="color:#fff">A darker grounding piece</strong> — denim, charcoal, espresso — would anchor the brightness.';
+      gain = 5;
+    }
+    else if (f.warmth > 28) {
+      advice = 'Warmth is dominant. <strong style="color:#fff">A cool accent</strong> — slate, navy, or charcoal — would sharpen the palette without fighting it.';
+      gain = 4;
+    }
+    else if (f.warmth < -28) {
+      advice = 'Cool palette needs a spark. <strong style="color:#fff">A gold or bronze metal accent</strong> would soften the chill instantly.';
+      gain = 5;
+    }
+    else {
+      advice = 'You\'re close. <strong style="color:#fff">One unexpected texture</strong> — silk, leather, velvet, or knit — is the missing piece.';
+      gain = 3;
+    }
+
+    const potential = Math.min(96, cur + gain);
+    return { advice, current: cur, potential, gain };
   }
 
   // ============================================================
@@ -7913,11 +7964,17 @@ applyOfflineState(!navigator.onLine);
       }
     });
 
-    // ---------- TIP — origin-aware ----------
+    // ---------- MISSING PIECE — actionable concrete tip with target ----------
+    const missing = generateMissingPiece(c);
+    const scoreCurEl = $vai('vai-score-current');
+    const scorePotEl = $vai('vai-score-potential');
+    if (scoreCurEl) scoreCurEl.textContent = missing.current;
+    if (scorePotEl) scorePotEl.textContent = missing.potential;
+
     if (isFirstScan) {
-      tipEl.innerHTML = `This is your <strong style="color:#fb7185">Origin Vibe</strong> — the baseline the AI will measure every future scan against. ${generateTip(c)}`;
+      tipEl.innerHTML = `<strong style="color:#fb7185">This is your Origin Vibe</strong> — the baseline for every future scan. ${missing.advice}`;
     } else {
-      tipEl.textContent = generateTip(c);
+      tipEl.innerHTML = missing.advice;
     }
 
     // ---------- ANIMATE SCORE ----------
