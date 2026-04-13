@@ -1478,8 +1478,13 @@
             <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-purple-500 rounded-full mix-blend-screen filter blur-[60px] opacity-15 pointer-events-none"></div>
 
             <!-- Returning-user greeting (hidden by default, shown via JS) -->
-            <div id="vai-greeting" class="hidden relative z-10 mb-4 px-3 py-2 rounded-full bg-brand-500/10 border border-brand-500/30 text-center">
-              <span class="text-[11px] font-bold text-brand-300">Welcome back. </span><span id="vai-greeting-text" class="text-[11px] text-brand-100"></span>
+            <div id="vai-greeting" class="hidden relative z-10 mb-5 text-center">
+              <div class="inline-flex items-center gap-2 text-[11px] pb-2 border-b border-white/10">
+                <span class="w-1 h-1 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.8)]"></span>
+                <span class="text-gray-500 uppercase tracking-[0.15em] text-[9px] font-bold">Origin Vibe</span>
+                <span class="text-gray-700">—</span>
+                <span class="font-serif italic text-white text-[13px]" id="vai-greeting-text"></span>
+              </div>
             </div>
 
             <!-- Header -->
@@ -1545,9 +1550,10 @@
                 </button>
               </div>
 
-              <!-- Camera error fallback -->
-              <div id="vai-cam-error" class="hidden mt-4 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-center">
-                <div class="text-[11px] text-red-300 font-semibold" id="vai-cam-error-text">Camera blocked. Check your browser permissions.</div>
+              <!-- Camera / analysis error fallback -->
+              <div id="vai-cam-error" class="hidden mt-4 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-center">
+                <div class="font-serif italic text-base text-red-200 mb-1">Too much noise.</div>
+                <div class="text-[11px] text-red-300/80">I can't see your vibe yet — <span id="vai-cam-error-text">try again</span>.</div>
               </div>
             </div>
 
@@ -1618,6 +1624,43 @@
                 <div class="text-[12px] text-gray-200 leading-relaxed relative z-10" id="vai-tip">A single warm accent — cognac or rust — would deepen impact on your next look.</div>
               </div>
 
+              <!-- ============ TRANSPARENCY: extracted signals ============ -->
+              <div class="mt-4 pt-4 border-t border-white/5">
+                <div class="text-[9px] uppercase tracking-[0.18em] text-gray-600 font-bold mb-3 flex items-center gap-1.5">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" d="M12 7v5l3 2"/></svg>
+                  What the AI saw
+                </div>
+                <div class="flex items-center gap-4 flex-wrap">
+                  <!-- Color swatches -->
+                  <div class="flex flex-col gap-1.5">
+                    <div class="text-[8px] uppercase tracking-[0.12em] text-gray-600 font-semibold">Palette</div>
+                    <div class="flex gap-1.5" id="vai-palette-strip">
+                      <div class="vai-swatch w-7 h-7 rounded-full border border-white/15 shadow-inner" style="background:#222"></div>
+                      <div class="vai-swatch w-7 h-7 rounded-full border border-white/15 shadow-inner" style="background:#333"></div>
+                      <div class="vai-swatch w-7 h-7 rounded-full border border-white/15 shadow-inner" style="background:#444"></div>
+                    </div>
+                  </div>
+                  <!-- Metrics -->
+                  <div class="flex flex-col gap-1.5 flex-1 min-w-[140px]">
+                    <div class="text-[8px] uppercase tracking-[0.12em] text-gray-600 font-semibold">Signals</div>
+                    <div class="grid grid-cols-3 gap-2 text-center">
+                      <div class="bg-white/[0.03] rounded-lg py-1.5 px-1 border border-white/5">
+                        <div class="text-[9px] text-gray-500 uppercase tracking-wider">Contrast</div>
+                        <div class="text-[11px] font-mono font-bold text-white" id="vai-metric-contrast">—</div>
+                      </div>
+                      <div class="bg-white/[0.03] rounded-lg py-1.5 px-1 border border-white/5">
+                        <div class="text-[9px] text-gray-500 uppercase tracking-wider">Saturation</div>
+                        <div class="text-[11px] font-mono font-bold text-white" id="vai-metric-sat">—</div>
+                      </div>
+                      <div class="bg-white/[0.03] rounded-lg py-1.5 px-1 border border-white/5">
+                        <div class="text-[9px] text-gray-500 uppercase tracking-wider">Warmth</div>
+                        <div class="text-[11px] font-mono font-bold text-white" id="vai-metric-warmth">—</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div class="text-center flex gap-2 justify-center flex-wrap mt-5">
                 <button id="vai-share-btn" type="button" class="px-5 py-2.5 rounded-2xl text-xs font-bold inline-flex items-center gap-2 bg-gradient-to-r from-brand-500 to-purple-500 text-white shadow-[0_0_20px_rgba(236,72,153,0.4)] hover:scale-[1.03] active:scale-[0.98] transition-transform">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path stroke-linecap="round" stroke-linejoin="round" d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
@@ -1630,9 +1673,10 @@
               </div>
             </div>
 
-            <p class="relative z-10 text-center text-[9px] font-mono text-gray-600 mt-5 tracking-wide">
-              AI-GENERATED PERCEPTION · VISUAL ANALYSIS · NOT A JUDGMENT
-            </p>
+            <div class="relative z-10 text-center text-[9px] font-mono text-gray-600 mt-5 tracking-wide leading-relaxed">
+              <div>AI-GENERATED PERCEPTION · VISUAL ANALYSIS</div>
+              <div class="mt-0.5">NOT A JUDGMENT</div>
+            </div>
           </div>
 
           <style>
@@ -7580,6 +7624,8 @@ applyOfflineState(!navigator.onLine);
           let lumaSum=0, lumaSqSum=0;
           let satSum=0;
           const hueBins = new Array(12).fill(0);
+          // Color quantization buckets: 4 levels per channel → 64 buckets
+          const rgbBuckets = {};
           const n = W * H;
 
           for (let i = 0; i < data.length; i += 4) {
@@ -7604,6 +7650,17 @@ applyOfflineState(!navigator.onLine);
               h *= 60;
               hueBins[Math.floor(h / 30) % 12]++;
             }
+
+            // RGB quantization for dominant color extraction (64 buckets)
+            const qr = r >> 6; // 0..3
+            const qg = g >> 6;
+            const qb = b >> 6;
+            const key = (qr << 4) | (qg << 2) | qb;
+            if (!rgbBuckets[key]) rgbBuckets[key] = { r: 0, g: 0, b: 0, count: 0 };
+            rgbBuckets[key].r += r;
+            rgbBuckets[key].g += g;
+            rgbBuckets[key].b += b;
+            rgbBuckets[key].count += 1;
           }
 
           const avgR = rSum / n, avgG = gSum / n, avgB = bSum / n;
@@ -7618,9 +7675,19 @@ applyOfflineState(!navigator.onLine);
           const dominantHue = maxIdx * 30 + 15;
           const hueDiversity = hueBins.filter(v => v > n * 0.025).length;
 
+          // Top 3 dominant colors (by bucket population)
+          const sortedBuckets = Object.values(rgbBuckets).sort((a, b) => b.count - a.count);
+          const topColors = sortedBuckets.slice(0, 3).map(bk => ({
+            r: Math.round(bk.r / bk.count),
+            g: Math.round(bk.g / bk.count),
+            b: Math.round(bk.b / bk.count),
+            pct: bk.count / n
+          }));
+
           resolve({
             avgR, avgG, avgB, avgLuma, contrast, avgSat,
-            warmth, dominantHue, hueDiversity, pixelCount: n
+            warmth, dominantHue, hueDiversity, pixelCount: n,
+            topColors
           });
         } catch (e) { reject(e); }
       };
@@ -7633,10 +7700,11 @@ applyOfflineState(!navigator.onLine);
   // CLASSIFIER — features → archetype + score
   // ============================================================
   function classify(f) {
-    // Validity gates — refuse useless inputs
-    if (f.avgLuma < 18) return { valid: false, reason: 'too dark — try better lighting' };
-    if (f.avgLuma > 245) return { valid: false, reason: 'overexposed — too bright' };
-    if (f.contrast < 7) return { valid: false, reason: 'too uniform — point the camera at yourself' };
+    // Validity gates — refuse useless inputs outright
+    if (f.avgLuma < 22)    return { valid: false, reason: 'too dark, try better lighting' };
+    if (f.avgLuma > 242)   return { valid: false, reason: 'overexposed, lower the brightness' };
+    if (f.contrast < 12)   return { valid: false, reason: 'too uniform, point at yourself' };
+    if (f.avgSat < 0.02 && f.contrast < 20) return { valid: false, reason: 'nothing to read here' };
 
     // Score components (real, derived)
     const compositionScore = Math.min(28, f.contrast * 0.55);
@@ -7788,14 +7856,14 @@ applyOfflineState(!navigator.onLine);
     if (originVibe) {
       const days = Math.floor((Date.now() - originVibe.timestamp) / 86400000);
       const when = days === 0 ? 'today' : days === 1 ? '1 day ago' : `${days} days ago`;
-      greetingTxt.textContent = `Your Origin Vibe: ${originVibe.archetype} · set ${when}.`;
+      greetingTxt.textContent = `${originVibe.archetype}, set ${when}`;
       greeting.classList.remove('hidden');
     } else {
       const saved = JSON.parse(localStorage.getItem('vai_last_result') || 'null');
       if (saved && saved.vibeType && saved.timestamp) {
         const days = Math.floor((Date.now() - saved.timestamp) / 86400000);
-        const when = days === 0 ? "today's" : days === 1 ? "yesterday's" : `your ${days}-day-old`;
-        greetingTxt.textContent = `After ${when} ${saved.vibeType} vibe — let's see today's.`;
+        const when = days === 0 ? 'today' : days === 1 ? '1 day ago' : `${days} days ago`;
+        greetingTxt.textContent = `${saved.vibeType}, ${when}`;
         greeting.classList.remove('hidden');
       }
     }
@@ -7827,10 +7895,10 @@ applyOfflineState(!navigator.onLine);
       });
       video.srcObject = stream;
     } catch (err) {
-      let msg = 'Camera unavailable.';
-      if (err && err.name === 'NotAllowedError') msg = 'Camera blocked. Enable it in browser settings.';
-      else if (err && err.name === 'NotFoundError') msg = 'No camera found on this device.';
-      else if (err && err.name === 'NotReadableError') msg = 'Camera in use by another app.';
+      let msg = 'camera unavailable';
+      if (err && err.name === 'NotAllowedError') msg = 'camera blocked, enable it in browser settings';
+      else if (err && err.name === 'NotFoundError') msg = 'no camera found on this device';
+      else if (err && err.name === 'NotReadableError') msg = 'camera in use by another app';
       camErrorTxt.textContent = msg;
       camError.classList.remove('hidden');
     }
@@ -7859,7 +7927,7 @@ applyOfflineState(!navigator.onLine);
   async function runScan() {
     const snapshot = captureSnapshot();
     if (!snapshot) {
-      camErrorTxt.textContent = 'Could not read camera frame. Try again.';
+      camErrorTxt.textContent = 'could not read camera frame';
       camError.classList.remove('hidden');
       return;
     }
@@ -7870,14 +7938,14 @@ applyOfflineState(!navigator.onLine);
       const features = await analyzeImage(snapshot);
       classification = classify(features);
     } catch (e) {
-      camErrorTxt.textContent = 'Analysis failed. Try again.';
+      camErrorTxt.textContent = 'analysis failed, try again';
       camError.classList.remove('hidden');
       return;
     }
 
     // Reject invalid images BEFORE entering the loader
     if (!classification.valid) {
-      camErrorTxt.textContent = "Let's get a clearer look — " + classification.reason + '.';
+      camErrorTxt.textContent = classification.reason;
       camError.classList.remove('hidden');
       return;
     }
@@ -7976,6 +8044,26 @@ applyOfflineState(!navigator.onLine);
     } else {
       tipEl.innerHTML = missing.advice;
     }
+
+    // ---------- TRANSPARENCY: show what the AI actually saw ----------
+    const paletteStrip = $vai('vai-palette-strip');
+    if (paletteStrip && c.features.topColors) {
+      paletteStrip.innerHTML = '';
+      c.features.topColors.forEach(col => {
+        const hex = '#' + [col.r, col.g, col.b].map(v => v.toString(16).padStart(2, '0')).join('');
+        const el = document.createElement('div');
+        el.className = 'vai-swatch w-7 h-7 rounded-full border border-white/15 shadow-inner transition-transform hover:scale-110';
+        el.style.background = hex;
+        el.title = hex.toUpperCase() + ' · ' + Math.round(col.pct * 100) + '%';
+        paletteStrip.appendChild(el);
+      });
+    }
+    const mContrast = $vai('vai-metric-contrast');
+    const mSat      = $vai('vai-metric-sat');
+    const mWarmth   = $vai('vai-metric-warmth');
+    if (mContrast) mContrast.textContent = Math.round(c.features.contrast);
+    if (mSat)      mSat.textContent = Math.round(c.features.avgSat * 100) + '%';
+    if (mWarmth)   mWarmth.textContent = (c.features.warmth >= 0 ? '+' : '') + Math.round(c.features.warmth);
 
     // ---------- ANIMATE SCORE ----------
     const target = c.score;
