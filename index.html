@@ -1466,6 +1466,175 @@
             </div>
           </div>
 
+          <!-- ============================================================
+               VIBEAI — FIRST VIBE INFERENCE ENGINE · MAGIC MIRROR
+               Live camera mirror → snapshot → 4-stage analysis → result
+               Camera only starts on user click (privacy compliant).
+               ============================================================ -->
+          <div id="vibeai-module" class="premium-glass border border-brand-500/20 rounded-[32px] p-6 sm:p-8 relative overflow-hidden">
+
+            <!-- Decorative blurs -->
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-500 rounded-full mix-blend-screen filter blur-[60px] opacity-25 pointer-events-none"></div>
+            <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-purple-500 rounded-full mix-blend-screen filter blur-[60px] opacity-15 pointer-events-none"></div>
+
+            <!-- Returning-user greeting (hidden by default, shown via JS) -->
+            <div id="vai-greeting" class="hidden relative z-10 mb-4 px-3 py-2 rounded-full bg-brand-500/10 border border-brand-500/30 text-center">
+              <span class="text-[11px] font-bold text-brand-300">Welcome back. </span><span id="vai-greeting-text" class="text-[11px] text-brand-100"></span>
+            </div>
+
+            <!-- Header -->
+            <div class="relative z-10 text-center mb-6">
+              <div class="flex items-center justify-center gap-3 mb-3">
+                <span class="h-px w-6 bg-brand-500/60"></span>
+                <span class="text-[10px] uppercase tracking-[0.18em] text-brand-400 font-bold">First Vibe Inference Engine</span>
+                <span class="h-px w-6 bg-brand-500/60"></span>
+              </div>
+              <h2 class="font-serif text-2xl sm:text-3xl font-medium text-white leading-tight tracking-tight mb-2">
+                Zero data. <span class="italic bg-gradient-to-r from-brand-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">Instant perception.</span>
+              </h2>
+              <p class="text-xs sm:text-sm text-gray-400 leading-relaxed max-w-md mx-auto">
+                One image. Four stages. Under two seconds. The AI reads your style — no history needed.
+              </p>
+            </div>
+
+            <!-- ============ STATE: IDLE (no camera yet) ============ -->
+            <div id="vai-state-idle" class="relative z-10 text-center pt-2">
+              <div class="w-14 h-14 mx-auto bg-gradient-to-tr from-brand-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg shadow-brand-500/30 mb-4">
+                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.823-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.823 1.316z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/>
+                </svg>
+              </div>
+              <h3 class="font-serif text-xl font-semibold text-white mb-1">Open the Magic Mirror</h3>
+              <p class="text-xs text-gray-400 mb-5 max-w-xs mx-auto leading-relaxed">Your camera stays on your device. Nothing uploads, nothing leaves.</p>
+              <button id="vai-open-mirror-btn" type="button" class="btn-primary px-7 py-3 rounded-2xl text-sm font-bold shadow-xl shadow-brand-500/20 inline-flex items-center gap-2">
+                Open Mirror
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5-5 5M6 12h12"/></svg>
+              </button>
+            </div>
+
+            <!-- ============ STATE: MIRROR (live camera) ============ -->
+            <div id="vai-state-mirror" class="relative z-10 hidden">
+              <div class="relative rounded-2xl overflow-hidden bg-black border border-white/10 shadow-2xl shadow-black/50">
+                <video id="vai-webcam" autoplay playsinline muted class="w-full block" style="aspect-ratio: 4/5; object-fit: cover; transform: scaleX(-1);"></video>
+
+                <!-- Frame guides (decorative corners) -->
+                <div class="absolute inset-3 pointer-events-none">
+                  <div class="absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-brand-400/80 rounded-tl-lg"></div>
+                  <div class="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-brand-400/80 rounded-tr-lg"></div>
+                  <div class="absolute bottom-0 left-0 w-6 h-6 border-b-2 border-l-2 border-brand-400/80 rounded-bl-lg"></div>
+                  <div class="absolute bottom-0 right-0 w-6 h-6 border-b-2 border-r-2 border-brand-400/80 rounded-br-lg"></div>
+                </div>
+
+                <!-- Status pill (top-left) -->
+                <div class="absolute top-3 left-3 flex items-center gap-2 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-brand-500/30">
+                  <div class="w-2 h-2 rounded-full bg-brand-400 animate-pulse"></div>
+                  <span class="text-[10px] uppercase tracking-wider font-bold text-white/90">AI Vision Active</span>
+                </div>
+              </div>
+
+              <p class="text-center text-[12px] text-gray-300 mt-3 mb-4 font-medium">Center yourself in the frame.</p>
+
+              <div class="flex gap-2 justify-center">
+                <button id="vai-cancel-mirror-btn" type="button" class="px-4 py-3 rounded-2xl text-xs font-bold border border-white/10 text-gray-300 hover:bg-white/5 transition">
+                  Cancel
+                </button>
+                <button id="vai-capture-btn" type="button" class="btn-primary px-7 py-3 rounded-2xl text-sm font-bold shadow-xl shadow-brand-500/20 inline-flex items-center gap-2">
+                  Begin scan
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
+                </button>
+              </div>
+
+              <!-- Camera error fallback -->
+              <div id="vai-cam-error" class="hidden mt-4 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-center">
+                <div class="text-[11px] text-red-300 font-semibold" id="vai-cam-error-text">Camera blocked. Check your browser permissions.</div>
+              </div>
+            </div>
+
+            <!-- ============ STATE: LOADING (snapshot + scan line) ============ -->
+            <div id="vai-state-loading" class="relative z-10 hidden text-center">
+              <!-- Snapshot with scanning line overlay -->
+              <div class="relative w-40 mx-auto rounded-2xl overflow-hidden border border-brand-500/30 shadow-xl shadow-brand-500/20 mb-5" style="aspect-ratio: 4/5;">
+                <img id="vai-snapshot-loading" alt="Captured frame" class="w-full h-full object-cover" />
+                <!-- Scanning line -->
+                <div class="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-brand-400 to-transparent shadow-[0_0_12px_rgba(236,72,153,0.8)]" id="vai-scan-line" style="top: 0; animation: vaiScanLine 1.6s ease-in-out infinite;"></div>
+                <!-- Tint overlay -->
+                <div class="absolute inset-0 bg-brand-500/5 mix-blend-overlay pointer-events-none"></div>
+              </div>
+
+              <div id="vai-loader-text" class="text-[12px] font-mono text-brand-400 mb-3 min-h-[18px] tracking-wide">Reading your palette...</div>
+              <div class="h-[3px] w-full max-w-xs mx-auto bg-white/5 rounded-full overflow-hidden">
+                <div id="vai-loader-fill" class="h-full bg-gradient-to-r from-brand-500 to-purple-500 rounded-full" style="width: 0%"></div>
+              </div>
+              <div class="grid grid-cols-4 gap-2 mt-5 max-w-xs mx-auto">
+                <div data-vai-stage="0" class="vai-stage-dot h-1 rounded-full bg-white/10 transition-colors"></div>
+                <div data-vai-stage="1" class="vai-stage-dot h-1 rounded-full bg-white/10 transition-colors"></div>
+                <div data-vai-stage="2" class="vai-stage-dot h-1 rounded-full bg-white/10 transition-colors"></div>
+                <div data-vai-stage="3" class="vai-stage-dot h-1 rounded-full bg-white/10 transition-colors"></div>
+              </div>
+            </div>
+
+            <!-- ============ STATE: RESULT ============ -->
+            <div id="vai-state-result" class="relative z-10 hidden">
+              <!-- Snapshot + score side by side on desktop, stacked on mobile -->
+              <div class="flex flex-col sm:flex-row sm:items-center gap-5 mb-5">
+                <div class="w-32 sm:w-36 mx-auto sm:mx-0 shrink-0 rounded-2xl overflow-hidden border border-brand-500/30 shadow-xl shadow-brand-500/20" style="aspect-ratio: 4/5;">
+                  <img id="vai-snapshot-result" alt="Analyzed frame" class="w-full h-full object-cover" />
+                </div>
+                <div class="flex-1 text-center sm:text-left">
+                  <div class="flex items-center gap-2 justify-center sm:justify-start mb-1">
+                    <div class="text-[10px] uppercase tracking-[0.15em] text-brand-400 font-bold">First impression analysis</div>
+                    <span id="vai-origin-badge" class="hidden text-[9px] uppercase tracking-[0.1em] font-bold px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-500/20 to-brand-500/20 border border-amber-400/40 text-amber-300">✦ Origin</span>
+                    <span id="vai-delta-badge" class="hidden text-[9px] uppercase tracking-[0.1em] font-bold px-2 py-0.5 rounded-full border"></span>
+                  </div>
+                  <div class="font-serif text-6xl sm:text-7xl font-light leading-none my-2">
+                    <span id="vai-score" class="bg-gradient-to-br from-white via-brand-300 to-purple-400 bg-clip-text text-transparent">0</span>
+                  </div>
+                  <div class="text-[10px] font-mono uppercase tracking-[0.15em] text-gray-500 mb-3">/ 100 vibe score</div>
+                  <div class="font-serif text-xl italic text-white" id="vai-vibe-type">Confident Minimal</div>
+                  <div class="inline-block mt-2 px-3 py-1 border border-brand-500/30 rounded-full text-[10px] uppercase tracking-[0.1em] text-brand-400 font-bold" id="vai-vibe-sub">monochrome architect</div>
+                </div>
+              </div>
+
+              <div class="space-y-2 text-left mt-2" id="vai-insights">
+                <div class="vai-insight pt-3 border-t border-white/5 text-[12px] text-gray-300 leading-relaxed"></div>
+                <div class="vai-insight pt-3 border-t border-white/5 text-[12px] text-gray-300 leading-relaxed"></div>
+                <div class="vai-insight pt-3 border-t border-white/5 text-[12px] text-gray-300 leading-relaxed"></div>
+              </div>
+
+              <div class="mt-4 p-3 rounded-2xl bg-brand-500/5 border border-brand-500/20 text-left">
+                <div class="text-[10px] uppercase tracking-[0.12em] text-brand-400 font-bold mb-1">Tip</div>
+                <div class="text-[12px] text-gray-300 leading-relaxed" id="vai-tip">A single warm accent — cognac or rust — would deepen impact on your next look.</div>
+              </div>
+
+              <div class="text-center flex gap-2 justify-center flex-wrap mt-5">
+                <button id="vai-share-btn" type="button" class="px-5 py-2.5 rounded-2xl text-xs font-bold inline-flex items-center gap-2 bg-gradient-to-r from-brand-500 to-purple-500 text-white shadow-[0_0_20px_rgba(236,72,153,0.4)] hover:scale-[1.03] active:scale-[0.98] transition-transform">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path stroke-linecap="round" stroke-linejoin="round" d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
+                  Share Score
+                </button>
+                <button id="vai-reset-btn" type="button" class="px-5 py-2.5 rounded-2xl text-xs font-bold border border-white/10 text-gray-300 hover:bg-white/5 transition inline-flex items-center gap-2">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                  Run again
+                </button>
+              </div>
+            </div>
+
+            <p class="relative z-10 text-center text-[9px] font-mono text-gray-600 mt-5 tracking-wide">
+              AI-GENERATED PERCEPTION · VISUAL ANALYSIS · NOT A JUDGMENT
+            </p>
+          </div>
+
+          <style>
+            @keyframes vaiScanLine {
+              0%   { top: 0%;   opacity: 0; }
+              10%  { opacity: 1; }
+              90%  { opacity: 1; }
+              50%  { top: 100%; }
+              100% { top: 0%;   opacity: 0; }
+            }
+          </style>
+          <!-- ============ END VIBEAI MODULE ============ -->
+
             <!-- AI Style Coach Chat Module — moved to #viewChat below.
                  The chat card and its closet-picker modal used to live here
                  as sibling cards in the scanner column. Phase 2 extracted
@@ -1476,6 +1645,7 @@
           </div>
 
       </div>
+
   </div>
 
   <!-- DIGITAL CLOSET VIEW -->
@@ -7307,6 +7477,501 @@ applyOfflineState(!navigator.onLine);
     }
     return { allowed: true };
   };
+})();
+</script>
+
+<!-- ============ VIBEAI MODULE SCRIPT (Magic Mirror + Real Vision) ============ -->
+<script>
+(function() {
+  const stages = [
+    { text: 'Reading your palette...',        duration: 900 },
+    { text: 'Mapping silhouette...',          duration: 800 },
+    { text: 'Synthesizing your vibe...',      duration: 900 },
+    { text: 'Finalizing first impression...', duration: 900 }
+  ];
+
+  const $vai = (id) => document.getElementById(id);
+  const idle    = $vai('vai-state-idle');
+  const mirror  = $vai('vai-state-mirror');
+  const loading = $vai('vai-state-loading');
+  const result  = $vai('vai-state-result');
+  if (!idle || !mirror || !loading || !result) return;
+
+  const video       = $vai('vai-webcam');
+  const fill        = $vai('vai-loader-fill');
+  const txt         = $vai('vai-loader-text');
+  const scoreEl     = $vai('vai-score');
+  const dots        = document.querySelectorAll('.vai-stage-dot');
+  const snapLoad    = $vai('vai-snapshot-loading');
+  const snapResult  = $vai('vai-snapshot-result');
+  const camError    = $vai('vai-cam-error');
+  const camErrorTxt = $vai('vai-cam-error-text');
+  const greeting    = $vai('vai-greeting');
+  const greetingTxt = $vai('vai-greeting-text');
+  const vibeTypeEl  = $vai('vai-vibe-type');
+  const vibeSubEl   = $vai('vai-vibe-sub');
+  const insightEls  = document.querySelectorAll('#vai-insights .vai-insight');
+  const tipEl       = $vai('vai-tip');
+  const originBadge = $vai('vai-origin-badge');
+  const deltaBadge  = $vai('vai-delta-badge');
+
+  let stream = null;
+  let lastSnapshot = null;
+  let lastResult = null;
+  let originVibe = null;
+
+  // ============================================================
+  // ORIGIN VIBE — load on init
+  // ============================================================
+  try {
+    const raw = localStorage.getItem('vai_origin_vibe');
+    if (raw) originVibe = JSON.parse(raw);
+  } catch (e) {}
+
+  function saveOrigin(c) {
+    const payload = {
+      archetype: c.archetype,
+      subtype:   c.subtype,
+      score:     c.score,
+      // Baseline color signature
+      avgR: Math.round(c.features.avgR),
+      avgG: Math.round(c.features.avgG),
+      avgB: Math.round(c.features.avgB),
+      avgLuma:    Math.round(c.features.avgLuma),
+      contrast:   Math.round(c.features.contrast),
+      avgSat:     +c.features.avgSat.toFixed(3),
+      warmth:     Math.round(c.features.warmth),
+      dominantHue: Math.round(c.features.dominantHue),
+      hueDiversity: c.features.hueDiversity,
+      timestamp: Date.now()
+    };
+    try { localStorage.setItem('vai_origin_vibe', JSON.stringify(payload)); } catch (e) {}
+    originVibe = payload;
+  }
+
+  // ============================================================
+  // REAL IMAGE ANALYSIS — runs on captured snapshot, no backend
+  // ============================================================
+  function analyzeImage(dataURL) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const c = document.createElement('canvas');
+          const W = 96;
+          const H = Math.max(1, Math.round(W * img.height / img.width));
+          c.width = W; c.height = H;
+          const ctx = c.getContext('2d');
+          ctx.drawImage(img, 0, 0, W, H);
+          const data = ctx.getImageData(0, 0, W, H).data;
+
+          let rSum=0, gSum=0, bSum=0;
+          let lumaSum=0, lumaSqSum=0;
+          let satSum=0;
+          const hueBins = new Array(12).fill(0);
+          const n = W * H;
+
+          for (let i = 0; i < data.length; i += 4) {
+            const r = data[i], g = data[i+1], b = data[i+2];
+            rSum += r; gSum += g; bSum += b;
+            const luma = 0.299*r + 0.587*g + 0.114*b;
+            lumaSum += luma; lumaSqSum += luma*luma;
+
+            const max = Math.max(r, g, b);
+            const min = Math.min(r, g, b);
+            const v = max / 255;
+            const s = max === 0 ? 0 : (max - min) / max;
+            satSum += s;
+
+            // Bin colorful pixels into hue buckets
+            if (s > 0.18 && v > 0.15 && v < 0.95) {
+              let h;
+              if (max === min) h = 0;
+              else if (max === r) h = ((g - b) / (max - min) + 6) % 6;
+              else if (max === g) h = (b - r) / (max - min) + 2;
+              else h = (r - g) / (max - min) + 4;
+              h *= 60;
+              hueBins[Math.floor(h / 30) % 12]++;
+            }
+          }
+
+          const avgR = rSum / n, avgG = gSum / n, avgB = bSum / n;
+          const avgLuma = lumaSum / n;
+          const variance = (lumaSqSum / n) - (avgLuma * avgLuma);
+          const contrast = Math.sqrt(Math.max(0, variance));
+          const avgSat = satSum / n;
+          const warmth = avgR - avgB;
+
+          let maxBin = 0, maxIdx = 0;
+          hueBins.forEach((v, i) => { if (v > maxBin) { maxBin = v; maxIdx = i; } });
+          const dominantHue = maxIdx * 30 + 15;
+          const hueDiversity = hueBins.filter(v => v > n * 0.025).length;
+
+          resolve({
+            avgR, avgG, avgB, avgLuma, contrast, avgSat,
+            warmth, dominantHue, hueDiversity, pixelCount: n
+          });
+        } catch (e) { reject(e); }
+      };
+      img.onerror = reject;
+      img.src = dataURL;
+    });
+  }
+
+  // ============================================================
+  // CLASSIFIER — features → archetype + score
+  // ============================================================
+  function classify(f) {
+    // Validity gates — refuse useless inputs
+    if (f.avgLuma < 18) return { valid: false, reason: 'too dark — try better lighting' };
+    if (f.avgLuma > 245) return { valid: false, reason: 'overexposed — too bright' };
+    if (f.contrast < 7) return { valid: false, reason: 'too uniform — point the camera at yourself' };
+
+    // Score components (real, derived)
+    const compositionScore = Math.min(28, f.contrast * 0.55);
+    const contrastScore    = Math.min(22, f.contrast * 0.42);
+
+    let cohesionScore;
+    if (f.avgSat < 0.18) cohesionScore = 18;
+    else if (f.avgSat > 0.45 && f.hueDiversity <= 3) cohesionScore = 17;
+    else if (f.avgSat > 0.45 && f.hueDiversity >= 6) cohesionScore = 11;
+    else cohesionScore = 14;
+
+    const idealLuma = 130;
+    const exposureScore = Math.max(0, 14 - Math.abs(f.avgLuma - idealLuma) * 0.11);
+    const clarity = Math.max(2, 10 - f.hueDiversity * 1.1);
+
+    let raw = compositionScore + contrastScore + cohesionScore + exposureScore + clarity;
+    let score = Math.max(62, Math.min(94, Math.round(raw + 6)));
+
+    // Archetype mapping from features
+    const dark         = f.avgLuma < 95;
+    const bright       = f.avgLuma > 165;
+    const warm         = f.warmth > 14;
+    const cool         = f.warmth < -14;
+    const muted        = f.avgSat < 0.22;
+    const vivid        = f.avgSat > 0.42;
+    const highContrast = f.contrast > 50;
+
+    let archetype, subtype;
+    if (muted && dark && highContrast)      { archetype = 'Confident Minimal'; subtype = 'monochrome architect'; }
+    else if (muted && dark)                 { archetype = 'Urban Edge';        subtype = 'shadow walker'; }
+    else if (muted && bright && warm)       { archetype = 'Soft Romantic';     subtype = 'golden hour'; }
+    else if (muted && bright)               { archetype = 'Effortless Cool';   subtype = 'sun-bleached wanderer'; }
+    else if (muted)                         { archetype = 'Quiet Luxury';      subtype = 'understated refined'; }
+    else if (vivid && f.hueDiversity >= 5)  { archetype = 'Creative Bold';     subtype = 'chromatic rebel'; }
+    else if (vivid && warm)                 { archetype = 'Playful Eclectic';  subtype = 'sunlit maximalist'; }
+    else if (vivid && cool)                 { archetype = 'Artistic Avant';    subtype = 'cool provocateur'; }
+    else if (warm && dark)                  { archetype = 'Modern Heritage';   subtype = 'earth tones'; }
+    else if (cool && dark)                  { archetype = 'After-hours Sleek'; subtype = 'midnight palette'; }
+    else if (warm)                          { archetype = 'Refined Classic';   subtype = 'warm composition'; }
+    else                                    { archetype = 'Refined Classic';   subtype = 'balanced composition'; }
+
+    return { valid: true, score, archetype, subtype, features: f };
+  }
+
+  // ============================================================
+  // INSIGHT + TIP GENERATION — uses real measurements
+  // ============================================================
+  function hueName(h, s, v) {
+    if (s < 0.12) {
+      if (v > 200) return 'pale neutral';
+      if (v < 70)  return 'near-black';
+      return 'soft grey';
+    }
+    if (h < 15 || h >= 345) return 'red';
+    if (h < 45)  return 'amber';
+    if (h < 75)  return 'yellow';
+    if (h < 105) return 'lime';
+    if (h < 165) return 'green';
+    if (h < 200) return 'teal';
+    if (h < 255) return 'blue';
+    if (h < 285) return 'violet';
+    if (h < 330) return 'magenta';
+    return 'pink';
+  }
+
+  function generateInsights(c) {
+    const f = c.features;
+    const colorName    = hueName(f.dominantHue, f.avgSat, f.avgLuma);
+    const contrastWord = f.contrast > 60 ? 'High' : f.contrast > 35 ? 'Moderate' : 'Soft';
+    const satWord      = f.avgSat > 0.45 ? 'saturated' : f.avgSat > 0.22 ? 'balanced' : 'restrained';
+    const tempWord     = f.warmth > 14 ? 'warm' : f.warmth < -14 ? 'cool' : 'neutral';
+    const brightWord   = f.avgLuma > 165 ? 'bright' : f.avgLuma < 95 ? 'low-key' : 'mid-tone';
+
+    const palette = `Your image leans <strong style="color:#fb7185">${tempWord}</strong> with ${satWord} <strong style="color:#fb7185">${colorName}</strong> tones — reads as ${c.subtype}.`;
+
+    const contrast = `<strong style="color:#fb7185">${contrastWord}</strong> tonal contrast adds ${
+      f.contrast > 50 ? 'visual presence and edge — the eye locks on'
+      : f.contrast > 25 ? 'depth without shouting'
+      : 'softness and approachability'
+    }.`;
+
+    const composition = f.contrast > 30
+      ? `${brightWord[0].toUpperCase()+brightWord.slice(1)} field with strong tonal range — composition has somewhere to breathe.`
+      : `${brightWord[0].toUpperCase()+brightWord.slice(1)} field, low variance — minimalist by nature.`;
+
+    return [
+      { label: 'Palette',     html: palette },
+      { label: 'Contrast',    html: contrast },
+      { label: 'Composition', html: composition }
+    ];
+  }
+
+  function generateTip(c) {
+    const f = c.features;
+    if (f.avgSat < 0.18 && f.warmth < 0)  return 'A single warm accent — cognac, rust, or terracotta — would deepen the cool restraint.';
+    if (f.avgSat < 0.18 && f.warmth >= 0) return 'A cool steel or navy layer would balance these warm neutrals beautifully.';
+    if (f.avgSat > 0.5 && f.hueDiversity >= 5) return 'Your palette is doing a lot — try anchoring with one neutral piece next time.';
+    if (f.contrast < 25) return 'Add a structured layer or darker piece for visual definition.';
+    if (f.contrast > 70) return 'Your contrast is the statement — keep accessories quiet and let it lead.';
+    if (f.warmth > 25)   return 'A cool accent — slate, navy, or charcoal — would sharpen the warmth.';
+    if (f.warmth < -25)  return 'A warm metal accent (gold, bronze) would soften the cool palette.';
+    return 'You\'re in a balanced zone — try one unexpected texture next time to elevate it.';
+  }
+
+  // ============================================================
+  // RETURNING USER GREETING — references Origin Vibe if present
+  // ============================================================
+  try {
+    if (originVibe) {
+      const days = Math.floor((Date.now() - originVibe.timestamp) / 86400000);
+      const when = days === 0 ? 'today' : days === 1 ? '1 day ago' : `${days} days ago`;
+      greetingTxt.textContent = `Your Origin Vibe: ${originVibe.archetype} · set ${when}.`;
+      greeting.classList.remove('hidden');
+    } else {
+      const saved = JSON.parse(localStorage.getItem('vai_last_result') || 'null');
+      if (saved && saved.vibeType && saved.timestamp) {
+        const days = Math.floor((Date.now() - saved.timestamp) / 86400000);
+        const when = days === 0 ? "today's" : days === 1 ? "yesterday's" : `your ${days}-day-old`;
+        greetingTxt.textContent = `After ${when} ${saved.vibeType} vibe — let's see today's.`;
+        greeting.classList.remove('hidden');
+      }
+    }
+  } catch (e) {}
+
+  // ============================================================
+  // STATE MANAGEMENT
+  // ============================================================
+  function show(state) {
+    [idle, mirror, loading, result].forEach(s => s.classList.add('hidden'));
+    state.classList.remove('hidden');
+  }
+
+  function stopCamera() {
+    if (stream) {
+      stream.getTracks().forEach(t => t.stop());
+      stream = null;
+    }
+    if (video) video.srcObject = null;
+  }
+
+  async function openMirror() {
+    camError.classList.add('hidden');
+    show(mirror);
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'user', width: { ideal: 720 }, height: { ideal: 900 } },
+        audio: false
+      });
+      video.srcObject = stream;
+    } catch (err) {
+      let msg = 'Camera unavailable.';
+      if (err && err.name === 'NotAllowedError') msg = 'Camera blocked. Enable it in browser settings.';
+      else if (err && err.name === 'NotFoundError') msg = 'No camera found on this device.';
+      else if (err && err.name === 'NotReadableError') msg = 'Camera in use by another app.';
+      camErrorTxt.textContent = msg;
+      camError.classList.remove('hidden');
+    }
+  }
+
+  function cancelMirror() {
+    stopCamera();
+    show(idle);
+  }
+
+  function captureSnapshot() {
+    if (!video || !video.videoWidth) return null;
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.translate(canvas.width, 0);
+    ctx.scale(-1, 1);
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL('image/jpeg', 0.85);
+  }
+
+  // ============================================================
+  // RUN SCAN — capture, analyze, validate, animate
+  // ============================================================
+  async function runScan() {
+    const snapshot = captureSnapshot();
+    if (!snapshot) {
+      camErrorTxt.textContent = 'Could not read camera frame. Try again.';
+      camError.classList.remove('hidden');
+      return;
+    }
+
+    // Run analysis IMMEDIATELY (parallel to loader animation)
+    let classification;
+    try {
+      const features = await analyzeImage(snapshot);
+      classification = classify(features);
+    } catch (e) {
+      camErrorTxt.textContent = 'Analysis failed. Try again.';
+      camError.classList.remove('hidden');
+      return;
+    }
+
+    // Reject invalid images BEFORE entering the loader
+    if (!classification.valid) {
+      camErrorTxt.textContent = "Let's get a clearer look — " + classification.reason + '.';
+      camError.classList.remove('hidden');
+      return;
+    }
+
+    // Valid — proceed
+    lastSnapshot = snapshot;
+    lastResult = classification;
+    snapLoad.src = snapshot;
+    snapResult.src = snapshot;
+
+    stopCamera();
+    show(loading);
+    fill.style.width = '0%';
+    dots.forEach(d => { d.classList.remove('bg-brand-500'); d.classList.add('bg-white/10'); });
+
+    const total = stages.reduce((s, x) => s + x.duration, 0);
+    let elapsed = 0;
+
+    function step(i) {
+      if (i >= stages.length) { showResult(classification); return; }
+      txt.textContent = stages[i].text;
+      dots[i].classList.remove('bg-white/10');
+      dots[i].classList.add('bg-brand-500');
+      const start = elapsed;
+      const t0 = performance.now();
+
+      function tick() {
+        const dt = performance.now() - t0;
+        const cur = Math.min(start + dt, start + stages[i].duration);
+        fill.style.width = ((cur / total) * 100) + '%';
+        if (dt < stages[i].duration) {
+          requestAnimationFrame(tick);
+        } else {
+          elapsed += stages[i].duration;
+          step(i + 1);
+        }
+      }
+      tick();
+    }
+    step(0);
+  }
+
+  // ============================================================
+  // SHOW RESULT — populate dynamic content
+  // ============================================================
+  function showResult(c) {
+    show(result);
+
+    vibeTypeEl.textContent = c.archetype;
+    vibeSubEl.textContent  = c.subtype;
+
+    // ---------- ORIGIN VIBE LOGIC ----------
+    originBadge.classList.add('hidden');
+    deltaBadge.classList.add('hidden');
+
+    const isFirstScan = !originVibe;
+    if (isFirstScan) {
+      // FIRST EVER SCAN → save as Origin
+      saveOrigin(c);
+      originBadge.classList.remove('hidden');
+      // Override insights to call out Origin status
+      insightEls[0] && (insightEls[0].dataset.originPrefix = '1');
+    } else {
+      // SUBSEQUENT SCAN → compute delta from Origin
+      const dScore = c.score - originVibe.score;
+      const sameArch = c.archetype === originVibe.archetype;
+      const sign = dScore > 0 ? '+' : '';
+      deltaBadge.textContent = sameArch
+        ? `${sign}${dScore} vs Origin`
+        : `Shifted from ${originVibe.archetype}`;
+      deltaBadge.className = 'text-[9px] uppercase tracking-[0.1em] font-bold px-2 py-0.5 rounded-full border ' + (
+        dScore > 0  ? 'bg-emerald-500/15 border-emerald-400/40 text-emerald-300' :
+        dScore < 0  ? 'bg-rose-500/15 border-rose-400/40 text-rose-300' :
+                      'bg-white/10 border-white/20 text-gray-300'
+      );
+      deltaBadge.classList.remove('hidden');
+    }
+
+    // ---------- INSIGHTS ----------
+    const insights = generateInsights(c);
+    insightEls.forEach((el, i) => {
+      if (insights[i]) {
+        el.innerHTML = `<span class="text-brand-400 font-bold">${insights[i].label} —</span> ${insights[i].html}`;
+      }
+    });
+
+    // ---------- TIP — origin-aware ----------
+    if (isFirstScan) {
+      tipEl.innerHTML = `This is your <strong style="color:#fb7185">Origin Vibe</strong> — the baseline the AI will measure every future scan against. ${generateTip(c)}`;
+    } else {
+      tipEl.textContent = generateTip(c);
+    }
+
+    // ---------- ANIMATE SCORE ----------
+    const target = c.score;
+    const t0 = performance.now();
+    const dur = 1400;
+    function up(t) {
+      const p = Math.min((t - t0) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      scoreEl.textContent = Math.round(eased * target);
+      if (p < 1) requestAnimationFrame(up);
+    }
+    requestAnimationFrame(up);
+
+    // Cascade insights
+    document.querySelectorAll('.vai-insight').forEach((el, i) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(8px)';
+      el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      setTimeout(() => {
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      }, 200 + i * 200);
+    });
+
+    // Persist last result (separate from Origin which never changes)
+    try {
+      localStorage.setItem('vai_last_result', JSON.stringify({
+        vibeType: c.archetype,
+        score: c.score,
+        timestamp: Date.now()
+      }));
+    } catch (e) {}
+  }
+
+  function reset() {
+    stopCamera();
+    show(idle);
+  }
+
+  // ============================================================
+  // WIRE UP
+  // ============================================================
+  $vai('vai-open-mirror-btn').addEventListener('click', openMirror);
+  $vai('vai-cancel-mirror-btn').addEventListener('click', cancelMirror);
+  $vai('vai-capture-btn').addEventListener('click', runScan);
+  $vai('vai-reset-btn').addEventListener('click', reset);
+  $vai('vai-share-btn').addEventListener('click', () => {
+    if (typeof window.openShareModal === 'function' && lastResult) {
+      window.openShareModal(lastResult.score, lastSnapshot || '');
+    }
+  });
+
+  window.addEventListener('pagehide', stopCamera);
 })();
 </script>
 
