@@ -3361,10 +3361,13 @@ $("aiMixBtn").addEventListener("click", () => {
     const modal = $("aiMixModal");
     const textEl = $("aiMixText");
     
+    const scoredOutfits = userCloset.outfits.filter(o => o.score != null);
     if (userCloset.outfits.length < 2) {
         textEl.innerHTML = "You need to save at least <strong>2 outfits</strong> to your Digital Closet to get personalized AI mix & match suggestions.";
+    } else if (scoredOutfits.length < 2) {
+        textEl.innerHTML = "You need at least <strong>2 scored outfits</strong> in your Digital Closet for AI mix & match. Run a DateScan on your uploads to score them!";
     } else {
-        const best = userCloset.outfits.reduce((max, o) => o.score > max.score ? o : max, userCloset.outfits[0]);
+        const best = scoredOutfits.reduce((max, o) => o.score > max.score ? o : max, scoredOutfits[0]);
         textEl.innerHTML = `Based on your archive, your <strong>${best.color}</strong> pieces score the highest (${best.score}/100). <br><br><strong>Tip:</strong> Try pairing the jacket from your best <em>${best.occasion.replace('_',' ')}</em> outfit with a crisp white shirt for an instant 10% boost on your next date!`;
     }
     
