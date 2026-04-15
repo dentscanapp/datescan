@@ -103,12 +103,10 @@
 
       <div class="p-6 rounded-2xl border border-red-500/20 bg-red-500/5">
         <h3 class="!mt-0 !mb-2 text-lg font-semibold text-white">Delete my account &amp; data</h3>
-        <p class="text-sm text-gray-300 mb-3 leading-relaxed">Permanently deletes your account and all data linked to your ID from our servers <strong class="text-white">and</strong> wipes everything on this device (closet, scan history, chat, settings, caches). This is immediate and cannot be undone.</p>
-        <p class="text-xs text-amber-300 mb-4 leading-relaxed"><strong>Heads up:</strong> deletion does not cancel an active Pro subscription. Cancel it first in the <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener" class="underline">Google Play Store</a>, otherwise you will keep being charged.</p>
-        <button id="deleteAllDataBtn" type="button" class="w-full py-3 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-sm font-semibold hover:bg-red-500/25 active:scale-[0.98] transition-all">
-          Delete My Account &amp; Data
-        </button>
-        <div id="deleteStatus" class="hidden mt-3 text-xs text-gray-300"></div>
+        <p class="text-sm text-gray-300 mb-4 leading-relaxed">To delete your account and all associated data, please copy your ID and visit our deletion page.</p>
+        <a href="https://datescan.app/delete-account.html" class="block text-center w-full py-3 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-sm font-semibold hover:bg-red-500/25 active:scale-[0.98] transition-all">
+          Go to Deletion Page
+        </a>
       </div>
     </section>
 
@@ -375,90 +373,6 @@
       }
     });
   }
-
-  // ---- Delete account & wipe everything ----
-  var btn = document.getElementById('deleteAllDataBtn');
-  var statusEl = document.getElementById('deleteStatus');
-  if (!btn) return;
-
-  function setStatus(msg, color) {
-    if (!statusEl) return;
-    statusEl.textContent = msg;
-    statusEl.className = 'mt-3 text-xs ' + (color || 'text-gray-300');
-    statusEl.classList.remove('hidden');
-  }
-
-  btn.addEventListener('click', async function () {
-    var ok = window.confirm("This will permanently delete your account and all your data from our servers AND erase everything on this device (closet, scan history, chat, settings). This cannot be undone. Continue?");
-    if (!ok) return;
-    btn.disabled = true;
-    btn.textContent = 'Deleting…';
-    setStatus('Contacting deletion server…', 'text-gray-300');
-
-    try {
-      // 1) Server-side deletion FIRST so userId is still present.
-      var res = await fetch('https://core.datescan.app/api/delete-account', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: currentUserId })
-      });
-      if (!res.ok) {
-        var bodyText = '';
-        try { bodyText = await res.text(); } catch (_) {}
-        throw new Error('HTTP ' + res.status + ' ' + bodyText.slice(0, 200));
-      }
-
-      setStatus('Server data deleted. Wiping local data…', 'text-gray-300');
-
-      // 2) IndexedDB
-      try {
-        if (indexedDB.databases) {
-          var dbs = await indexedDB.databases();
-          await Promise.all((dbs || []).map(function (db) {
-            return new Promise(function (resolve) {
-              if (!db.name) return resolve();
-              var req = indexedDB.deleteDatabase(db.name);
-              req.onsuccess = req.onerror = req.onblocked = function () { resolve(); };
-            });
-          }));
-        } else {
-          ['datescan', 'datescan-closet', 'datescan-history', 'datescan-db', 'keyval-store'].forEach(function (n) {
-            try { indexedDB.deleteDatabase(n); } catch (_) {}
-          });
-        }
-      } catch (_) {}
-
-      // 3) Cache Storage
-      try {
-        if (window.caches && caches.keys) {
-          var keys = await caches.keys();
-          await Promise.all(keys.map(function (k) { return caches.delete(k); }));
-        }
-      } catch (_) {}
-
-      // 4) localStorage + sessionStorage
-      try { localStorage.clear(); } catch (_) {}
-      try { sessionStorage.clear(); } catch (_) {}
-
-      // 5) Service workers — prevent stale caches from resurrecting state
-      try {
-        if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) {
-          var regs = await navigator.serviceWorker.getRegistrations();
-          await Promise.all(regs.map(function (r) { return r.unregister(); }));
-        }
-      } catch (_) {}
-
-      setStatus('Done. Redirecting…', 'text-emerald-400');
-      alert("Your account and all data have been deleted. You will now be returned to the home screen.");
-      // Force a clean reload of the app root.
-      window.location.replace('/');
-    } catch (e) {
-      console.error('[DateScan] delete failed:', e);
-      btn.disabled = false;
-      btn.textContent = 'Delete My Account & Data';
-      setStatus("Couldn't complete deletion: " + (e && e.message ? e.message : 'unknown error') + ". Please try again in a few minutes.", 'text-red-400');
-    }
-  });
 })();
 </script>
 
