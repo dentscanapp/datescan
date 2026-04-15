@@ -63,7 +63,8 @@
 <meta name="theme-color" content="#09090b" />
 
 <!-- SEO -->
-<meta name="description" content="DateScan is your personal AI style coach. Scan your outfit, get real-time feedback on fit, color, and grooming, and show up to your date at your best." />
+<meta name="description" content="DateScan is a Style & grooming coach for adults. Scan your outfit, get real-time AI feedback on fit, color, and grooming, and show up to your date at your best." />
+<meta name="playstore:category" content="Lifestyle" />
 <link rel="canonical" href="https://datescan.app/" />
 
 <!-- Open Graph / Facebook / Messenger -->
@@ -113,6 +114,8 @@
 <!-- Favicon Generated from the Logo SVG -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='40' y2='40' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%23ec4899'/%3E%3Cstop offset='1' stop-color='%239333ea'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M20 13.5C20 13.5 16 9 11.5 9C7.5 9 5 12.5 5 16.5C5 22 13 28 20 32C27 28 35 22 35 16.5C35 12.5 32.5 9 28.5 9C24 9 20 13.5 20 13.5Z' fill='url(%23bg)' fill-opacity='0.2' stroke='url(%23bg)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='4' y1='20' x2='36' y2='20' stroke='%23f472b6' stroke-width='1.5' stroke-dasharray='2 2' opacity='0.8'/%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/idb@8.0.0/build/umd.js"></script>
+<!-- MediaPipe Selfie Segmentation — on-device background removal for closet items -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1.1675465747/selfie_segmentation.js" crossorigin="anonymous"></script>
 <!-- Preconnect to Google Fonts before the stylesheet request is even made.
      This saves ~100-300ms on first paint by letting the browser open the
      TLS connection to fonts.gstatic.com (where the woff2 files live) in
@@ -289,14 +292,14 @@
     min-height: 50vh;
   }
   @supports (aspect-ratio: 1 / 1) {
-    .camera-container { min-height: min(50vh, 420px); }
+    .camera-container { min-height: min(45vh, 380px); }
   }
   /* On very small mobile viewports, ensure the camera container
      is tall enough so the tap-to-start overlay text doesn't
      overflow or clip. 320px is a safe floor that fits the ▶ icon,
      label, and any error text comfortably. */
   @media (max-width: 480px) {
-    .camera-container { min-height: max(320px, 60vh); }
+    .camera-container { min-height: max(260px, 45vh); }
   }
 
   /* High-specificity selector — without #video, the Tailwind preflight
@@ -1265,13 +1268,13 @@
       18+ Only
     </span>
     <h2 id="ag-title">Are you 18 or older?</h2>
-    <p>DateScan is an adult service. Before you can use the camera scanner or AI Style Coach, please confirm your age.</p>
+    <p>DateScan is a Style & grooming coach for adults. Before you can use the camera scanner or AI Style Coach, please confirm your age.</p>
     <div class="ag-actions">
       <button type="button" class="ag-primary" id="ag-yes">Yes, I'm 18 or older</button>
       <button type="button" class="ag-secondary" id="ag-no">No, I'm under 18</button>
     </div>
     <p class="ag-fineprint">
-      By tapping "Yes" you declare under our <a href="/terms.html">Terms of Service</a> that you are at least 18 years old. False declarations are a material breach of our Terms. We log the time of this confirmation as evidence. See our <a href="/privacy.html">Privacy Policy</a>.
+      By continuing, you confirm you are 18 or older. See our <a href="/terms.html">Terms of Service</a> and <a href="/privacy.html">Privacy Policy</a>.
     </p>
   </div>
 </div>
@@ -1319,6 +1322,44 @@
   </div>
 </div>
 
+<div id="dsc-upload" class="ds-consent" role="dialog" aria-modal="true" aria-labelledby="dsc-upload-title" hidden>
+  <div class="dsc-card">
+    <div class="dsc-icon">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+        <polyline points="21 15 16 10 5 21"/>
+      </svg>
+    </div>
+    <h2 id="dsc-upload-title">Before you upload</h2>
+    <p class="dsc-lede">Quick rules for chat image uploads.</p>
+    <ul class="dsc-list">
+      <li class="dsc-good">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><strong>Your photos only.</strong> Upload photos you own or have the right to use. No celebrity, stock, or copyrighted images.</span>
+      </li>
+      <li class="dsc-bad">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <span><strong>No people, no faces, no minors.</strong> Only the clothing item itself. Photos of people will be rejected.</span>
+      </li>
+      <li class="dsc-bad">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <span><strong>Nothing sexual, violent, or illegal.</strong> The image is sent to a vision model for a single request and not stored on our servers beyond the response.</span>
+      </li>
+      <li class="dsc-good">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><strong>I am 18+</strong> and I own or have the right to use the image.</span>
+      </li>
+    </ul>
+    <label class="dsc-check-row" style="display:flex;align-items:flex-start;gap:10px;margin:16px 0 20px;cursor:pointer;">
+      <input type="checkbox" id="dsc-upload-confirm" style="margin-top:2px;accent-color:#ec4899;width:16px;height:16px;flex-shrink:0;" />
+      <span style="font-size:13px;color:#d1d5db;">I accept these rules and the <a href="/terms.html" style="color:#ec4899;">Terms of Service</a> and <a href="/privacy.html" style="color:#ec4899;">Privacy Policy</a>.</span>
+    </label>
+    <div class="dsc-actions">
+      <button type="button" class="dsc-primary" id="dsc-upload-yes" disabled>Continue</button>
+      <button type="button" class="dsc-secondary" id="dsc-upload-no">Cancel</button>
+    </div>
+  </div>
+</div>
 
 <script>
 (function () {
@@ -1574,6 +1615,10 @@
       <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
       <span class="hidden sm:inline">Closet</span>
     </button>
+    <button id="navAiChatBtn" class="hidden lg:flex text-xs font-bold px-3 py-2 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors items-center gap-1.5" title="AI Chat">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span class="hidden sm:inline">AI Chat</span>
+    </button>
     <button id="navStoryModeBtn" class="hidden lg:flex text-xs font-bold px-3 py-2 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors items-center gap-1.5" title="Story Mode">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
       <span class="hidden sm:inline">Story Mode</span>
@@ -1693,6 +1738,8 @@
                 <button type="button" data-occ="fancy" aria-pressed="false" class="occ-btn border border-white/10 bg-black/40 text-gray-500 rounded-xl py-3 text-xs font-bold uppercase tracking-widest transition-all">Formal</button>
               </div>
             </div>
+
+
 
             <button id="scanBtn" class="w-full btn-primary py-4 rounded-2xl text-lg font-bold shadow-xl shadow-brand-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-3 transition-all" disabled>
               <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V6a2 2 0 0 1 2-2h2"/><path d="M16 4h2a2 2 0 0 1 2 2v2"/><path d="M20 16v2a2 2 0 0 1-2 2h-2"/><path d="M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="11" r="2.4"/><path d="M8 17c1-1.5 2.4-2.3 4-2.3s3 .8 4 2.3"/></svg>
@@ -1901,7 +1948,7 @@
             <!-- ============ STATE: MIRROR (live camera) ============ -->
             <div id="vai-state-mirror" class="relative z-10 hidden">
               <div class="relative rounded-2xl overflow-hidden bg-black border border-white/10 shadow-2xl shadow-black/50">
-                <video id="vai-webcam" autoplay playsinline muted class="w-full block" style="aspect-ratio: 4/5; object-fit: cover; transform: scaleX(-1);"></video>
+                <video id="vai-webcam" autoplay playsinline muted class="w-full block" style="aspect-ratio: 1/1; object-fit: cover; transform: scaleX(-1);"></video>
 
                 <!-- Frame guides (decorative corners) -->
                 <div class="absolute inset-3 pointer-events-none">
@@ -1940,7 +1987,7 @@
             <!-- ============ STATE: LOADING (snapshot + scan line) ============ -->
             <div id="vai-state-loading" class="relative z-10 hidden text-center">
               <!-- Snapshot with scanning line overlay -->
-              <div class="relative w-40 mx-auto rounded-2xl overflow-hidden border border-brand-500/30 shadow-xl shadow-brand-500/20 mb-5" style="aspect-ratio: 4/5;">
+              <div class="relative w-40 mx-auto rounded-2xl overflow-hidden border border-brand-500/30 shadow-xl shadow-brand-500/20 mb-5" style="aspect-ratio: 1/1;">
                 <img id="vai-snapshot-loading" alt="Captured frame" class="w-full h-full object-cover" />
                 <!-- Scanning line -->
                 <div class="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-brand-400 to-transparent shadow-[0_0_12px_rgba(236,72,153,0.8)]" id="vai-scan-line" style="top: 0; animation: vaiScanLine 1.6s ease-in-out infinite;"></div>
@@ -1964,7 +2011,7 @@
             <div id="vai-state-result" class="relative z-10 hidden">
               <!-- Snapshot + score side by side on desktop, stacked on mobile -->
               <div class="flex flex-col sm:flex-row sm:items-center gap-5 mb-5">
-                <div class="w-32 sm:w-36 mx-auto sm:mx-0 shrink-0 rounded-2xl overflow-hidden border border-brand-500/30 shadow-xl shadow-brand-500/20" style="aspect-ratio: 4/5;">
+                <div class="w-32 sm:w-36 mx-auto sm:mx-0 shrink-0 rounded-2xl overflow-hidden border border-brand-500/30 shadow-xl shadow-brand-500/20" style="aspect-ratio: 1/1;">
                   <img id="vai-snapshot-result" alt="Analyzed frame" class="w-full h-full object-cover" />
                 </div>
                 <div class="flex-1 text-center sm:text-left">
@@ -2081,6 +2128,76 @@
 
       </div>
 
+  <!-- ============================================================
+       VIBE SYNC — Full-width module inside viewScanner
+       Shows on the Scanner page below the camera area.
+       Uses Google Maps Places API for real venue search.
+       ============================================================ -->
+  <div id="vibeSyncModule" class="w-full mb-6 mt-4 relative z-10">
+    <div class="premium-glass rounded-[28px] p-5 sm:p-6 relative overflow-hidden border border-purple-500/15 max-w-2xl mx-auto">
+      <!-- Decorative glow -->
+      <div class="absolute -top-16 -right-16 w-40 h-40 rounded-full bg-purple-500/10 blur-[50px] pointer-events-none"></div>
+      <div class="absolute -bottom-10 -left-10 w-28 h-28 rounded-full bg-brand-500/8 blur-[40px] pointer-events-none"></div>
+
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-4 relative z-10">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500/20 to-brand-500/20 border border-purple-500/25 flex items-center justify-center text-lg shadow-lg shadow-purple-500/10">
+            <svg class="w-5 h-5 text-purple-300" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <h3 class="font-serif text-lg font-semibold text-white">Vibe Sync</h3>
+            <p class="text-[10px] uppercase tracking-widest text-purple-400/70 font-bold">Date Location Style</p>
+          </div>
+        </div>
+        <span id="vibeSyncStatusBadge" class="text-[9px] uppercase tracking-wider font-bold px-2 py-1 rounded-full bg-white/5 text-gray-500 border border-white/10">idle</span>
+      </div>
+
+      <p class="text-xs text-gray-400 mb-4 relative z-10 leading-relaxed">Search your date venue on Google Maps — we'll analyze the atmosphere, lighting, and style to optimize your outfit &amp; grooming.</p>
+
+      <!-- Venue Search Input -->
+      <div class="relative z-10 mb-3">
+        <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-purple-400/60 pointer-events-none">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <input id="venueInput" type="text" placeholder="Search venue: rooftop bar, cocktail lounge, sushi restaurant…" class="w-full pl-10 pr-10 py-3.5 rounded-xl bg-black/40 border border-purple-500/20 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-purple-500/50 focus:bg-white/5 focus:shadow-[0_0_15px_rgba(168,85,247,0.15)] transition-all" autocomplete="off" />
+        <button id="venueClearBtn" type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-300 transition hidden" aria-label="Clear venue">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Vibe Sync Result Card -->
+      <div id="vibeSyncCard" class="hidden relative z-10">
+        <div class="rounded-xl border border-purple-500/20 bg-black/30 p-4 relative overflow-hidden">
+          <div class="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-purple-500/8 blur-2xl pointer-events-none"></div>
+          <div class="flex items-start gap-3.5 relative z-10">
+            <div id="vibeSyncIcon" class="w-11 h-11 rounded-xl bg-purple-500/15 border border-purple-500/20 flex items-center justify-center shrink-0 text-xl shadow-lg shadow-purple-500/10">🍸</div>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span id="vibeSyncLabel" class="text-sm font-bold text-white">Vibe Synced</span>
+                <span id="vibeSyncBadge" class="text-[8px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/20">active</span>
+              </div>
+              <p id="vibeSyncSummary" class="text-xs text-gray-300 leading-relaxed mb-2"></p>
+              <div id="vibeSyncTags" class="flex flex-wrap gap-1.5 mb-3"></div>
+
+              <!-- Style Advice Panels -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div class="rounded-lg bg-purple-500/8 border border-purple-500/12 p-2.5">
+                  <div class="text-[9px] uppercase tracking-widest text-purple-400/70 font-bold mb-1">Color Advice</div>
+                  <p id="vibeSyncColorAdvice" class="text-[11px] text-gray-300 leading-relaxed"></p>
+                </div>
+                <div class="rounded-lg bg-brand-500/8 border border-brand-500/12 p-2.5">
+                  <div class="text-[9px] uppercase tracking-widest text-brand-400/70 font-bold mb-1">Grooming Tip</div>
+                  <p id="vibeSyncGroomingTip" class="text-[11px] text-gray-300 leading-relaxed"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   </div>
 
   <!-- DIGITAL CLOSET VIEW -->
@@ -2091,6 +2208,10 @@
             <p class="text-gray-400 text-sm font-medium">Your saved outfits and personal style archive.</p>
          </div>
          <div class="flex gap-2 w-full md:w-auto flex-wrap">
+            <button id="styleProfileBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-gradient-to-r from-purple-500/20 to-brand-500/20 border border-purple-500/30 text-purple-300 hover:from-purple-500/30 hover:to-brand-500/30 active:scale-[0.98] transition" title="Your personal style profile">
+               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+               Style Profile
+            </button>
             <button id="closetUploadBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-[0.98] transition">
                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/><circle cx="9" cy="10" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.814.014L6 21"/><path d="M19 2v6"/><path d="M22 5h-6"/></svg>
                Add Item
@@ -2143,7 +2264,7 @@
       <input type="file" id="closetUploadInput" accept="image/*" class="hidden" />
 
       <!-- Consent modal: shown on the FIRST ever upload attempt. Mandatory. -->
-      <div id="closetUploadConsent" class="hidden fixed inset-0 z-[110] bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+      <div id="closetUploadConsent" class="hidden fixed inset-0 z-[120] bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
         <div class="premium-glass rounded-3xl border border-brand-500/30 max-w-md w-full p-6 sm:p-7 relative">
           <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-500/20 to-purple-500/20 border border-brand-500/30 flex items-center justify-center mb-4 mx-auto">
             <svg class="w-7 h-7 text-brand-400" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
@@ -2189,108 +2310,6 @@
       <!-- features from each image, scores for the chosen      -->
       <!-- occasion, and produces a verdict with reasoning.     -->
       <!-- ================================================== -->
-      <div id="duelModal" class="hidden fixed inset-0 z-[115] bg-black/85 backdrop-blur-md items-center justify-center p-4 overflow-y-auto">
-        <div class="premium-glass rounded-3xl border border-brand-500/30 max-w-2xl w-full my-auto p-6 sm:p-8 relative">
-          <button id="duelCloseBtn" type="button" aria-label="Close" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
-
-          <div class="text-center mb-6">
-            <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-tr from-brand-500/20 to-purple-500/20 border border-brand-500/30 flex items-center justify-center mb-3">
-              <svg class="w-7 h-7 text-brand-400" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4l6 0 0 6"/><path d="M10 20l-6 0 0-6"/><path d="M20 4l-9 9"/><path d="M4 20l6-6"/></svg>
-            </div>
-            <h2 class="font-serif text-2xl sm:text-3xl font-semibold text-white mb-1">A/B Outfit Duel</h2>
-            <p class="text-gray-400 text-sm">Two looks. One winner. Decide the moment.</p>
-          </div>
-
-          <!-- Occasion selector -->
-          <div class="mb-5">
-            <div class="text-[11px] font-bold uppercase tracking-widest text-gray-500 mb-2">Occasion</div>
-            <div id="duelOccasion" class="flex gap-2 overflow-x-auto pb-1 scrollbar-none" role="group" aria-label="Duel occasion">
-              <button type="button" data-occ="casual"     aria-pressed="true"  class="duel-occ-btn border border-brand-500/50 bg-brand-500/20 text-white rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">Casual</button>
-              <button type="button" data-occ="first_date" aria-pressed="false" class="duel-occ-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">First Date</button>
-              <button type="button" data-occ="fancy"      aria-pressed="false" class="duel-occ-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">Fancy Dinner</button>
-              <button type="button" data-occ="night_out"  aria-pressed="false" class="duel-occ-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">Night Out</button>
-            </div>
-          </div>
-
-          <!-- Two upload slots -->
-          <div class="grid grid-cols-2 gap-3 sm:gap-4 mb-5">
-            <div>
-              <input type="file" id="duelFileA" accept="image/*" class="hidden" />
-              <button type="button" id="duelSlotA" class="duel-slot group w-full aspect-[3/4] rounded-2xl border-2 border-dashed border-white/15 bg-white/5 hover:bg-white/10 hover:border-brand-500/50 transition flex flex-col items-center justify-center gap-2 text-gray-400 relative overflow-hidden">
-                <svg class="w-8 h-8 opacity-60 group-hover:opacity-100 transition" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/><circle cx="9" cy="10" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.814.014L6 21"/><path d="M19 2v6"/><path d="M22 5h-6"/></svg>
-                <span class="text-xs font-bold">Upload A</span>
-                <img id="duelPreviewA" class="absolute inset-0 w-full h-full object-cover hidden" alt="Option A" />
-              </button>
-              <div class="text-center text-[11px] font-bold uppercase tracking-widest text-brand-400 mt-2">Option A</div>
-            </div>
-            <div>
-              <input type="file" id="duelFileB" accept="image/*" class="hidden" />
-              <button type="button" id="duelSlotB" class="duel-slot group w-full aspect-[3/4] rounded-2xl border-2 border-dashed border-white/15 bg-white/5 hover:bg-white/10 hover:border-purple-500/50 transition flex flex-col items-center justify-center gap-2 text-gray-400 relative overflow-hidden">
-                <svg class="w-8 h-8 opacity-60 group-hover:opacity-100 transition" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/><circle cx="9" cy="10" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.814.014L6 21"/><path d="M19 2v6"/><path d="M22 5h-6"/></svg>
-                <span class="text-xs font-bold">Upload B</span>
-                <img id="duelPreviewB" class="absolute inset-0 w-full h-full object-cover hidden" alt="Option B" />
-              </button>
-              <div class="text-center text-[11px] font-bold uppercase tracking-widest text-purple-400 mt-2">Option B</div>
-            </div>
-          </div>
-
-          <div class="flex gap-2">
-            <button id="duelResetBtn" type="button" class="px-4 py-3 rounded-xl text-sm font-bold bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 transition hidden">Reset</button>
-            <button id="duelRunBtn" type="button" disabled class="flex-1 btn-primary py-3 rounded-xl text-sm font-bold disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-              <span id="duelRunLabel">Upload both to start</span>
-            </button>
-          </div>
-
-          <!-- Result panel — populated by duel module -->
-          <div id="duelResult" class="hidden mt-6 pt-6 border-t border-white/10">
-            <!-- Winner banner -->
-            <div id="duelWinnerBanner" class="rounded-2xl p-4 mb-4 text-center border"></div>
-
-            <!-- Score comparison -->
-            <div class="grid grid-cols-2 gap-3 mb-4">
-              <div class="premium-glass rounded-2xl p-4 border border-white/10 text-center relative" id="duelCardA">
-                <div class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-1">Option A</div>
-                <div class="font-serif text-4xl font-bold text-white tabular-nums" id="duelScoreA">—</div>
-                <div class="text-[10px] text-gray-500 mt-1" id="duelArchA">&nbsp;</div>
-              </div>
-              <div class="premium-glass rounded-2xl p-4 border border-white/10 text-center relative" id="duelCardB">
-                <div class="text-[10px] font-bold uppercase tracking-widest text-purple-400 mb-1">Option B</div>
-                <div class="font-serif text-4xl font-bold text-white tabular-nums" id="duelScoreB">—</div>
-                <div class="text-[10px] text-gray-500 mt-1" id="duelArchB">&nbsp;</div>
-              </div>
-            </div>
-
-            <!-- Metric breakdown -->
-            <div class="grid grid-cols-3 gap-2 mb-4">
-              <div class="rounded-xl bg-white/5 border border-white/10 p-2.5 text-center">
-                <div class="text-[9px] text-gray-500 uppercase tracking-wider mb-0.5">Contrast</div>
-                <div class="text-xs font-mono font-bold text-white" id="duelMetricContrast">— vs —</div>
-              </div>
-              <div class="rounded-xl bg-white/5 border border-white/10 p-2.5 text-center">
-                <div class="text-[9px] text-gray-500 uppercase tracking-wider mb-0.5">Saturation</div>
-                <div class="text-xs font-mono font-bold text-white" id="duelMetricSat">— vs —</div>
-              </div>
-              <div class="rounded-xl bg-white/5 border border-white/10 p-2.5 text-center">
-                <div class="text-[9px] text-gray-500 uppercase tracking-wider mb-0.5">Warmth</div>
-                <div class="text-xs font-mono font-bold text-white" id="duelMetricWarmth">— vs —</div>
-              </div>
-            </div>
-
-            <!-- Verdict text -->
-            <div class="rounded-2xl bg-gradient-to-br from-brand-500/10 to-purple-500/10 border border-brand-500/20 p-4">
-              <div class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-1.5">Verdict</div>
-              <p id="duelVerdict" class="text-sm text-white leading-relaxed"></p>
-            </div>
-          </div>
-
-          <p class="text-[10px] text-gray-600 text-center mt-4 leading-relaxed">
-            On-device analysis · photos never leave your browser
-          </p>
-        </div>
-      </div>
       <div id="closetCategoryModal" class="hidden fixed inset-0 z-[110] bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
         <div class="premium-glass rounded-3xl border border-white/10 max-w-md w-full p-6 sm:p-7 relative max-h-[90vh] overflow-y-auto">
           <h3 class="font-serif text-2xl font-semibold text-white text-center mb-1">What is this?</h3>
@@ -2298,6 +2317,18 @@
 
           <div class="aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-black mb-5 relative">
             <img id="closetCategoryPreview" src="" alt="Upload preview" class="w-full h-full object-contain" />
+            <!-- Auto-detected tags appear here -->
+            <div id="closetAutoTags" class="absolute bottom-2 left-2 right-2 flex flex-wrap gap-1.5 hidden">
+            </div>
+          </div>
+
+          <!-- Auto-detected info (populated by auto-tagging) -->
+          <div id="closetAutoInfo" class="hidden mb-4 p-3 rounded-xl bg-purple-500/10 border border-purple-500/20">
+            <div class="flex items-center gap-2 mb-1.5">
+              <svg class="w-3.5 h-3.5 text-purple-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+              <span class="text-[10px] uppercase tracking-widest text-purple-300 font-bold">Auto-Detected</span>
+            </div>
+            <div id="closetAutoInfoContent" class="text-xs text-gray-300 leading-relaxed"></div>
           </div>
 
           <div id="closetCategoryOptions" class="grid grid-cols-3 gap-2 mb-5">
@@ -2325,6 +2356,61 @@
           </div>
         </div>
       </div>
+
+      <!-- ===== STYLE PROFILE MODAL ===== -->
+      <div id="styleProfileModal" class="hidden fixed inset-0 z-[120] bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="premium-glass rounded-3xl border border-purple-500/20 max-w-lg w-full p-6 sm:p-7 relative max-h-[90vh] overflow-y-auto">
+          <button id="styleProfileClose" type="button" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition" aria-label="Close">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-purple-500/20 to-brand-500/20 border border-purple-500/30 flex items-center justify-center mb-4 mx-auto">
+            <svg class="w-7 h-7 text-purple-300" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <h3 class="font-serif text-2xl font-semibold text-white text-center mb-1">Your Style Profile</h3>
+          <p class="text-sm text-gray-400 text-center mb-6 leading-relaxed">Tell your AI Coach about your preferences so it can give personalized advice.</p>
+
+          <!-- Color Palette Preference -->
+          <div class="mb-6">
+            <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-3">Color Palette</label>
+            <p class="text-xs text-gray-500 mb-3">Which color do you gravitate towards? Pick one.</p>
+            <div id="spColorPalette" class="flex flex-wrap gap-2">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Formality Preference -->
+          <div class="mb-6">
+            <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-3">Formality Level</label>
+            <div id="spFormality" class="grid grid-cols-3 gap-2">
+              <button type="button" data-val="casual" class="sp-formality-opt py-3 rounded-xl border border-white/10 bg-white/5 text-gray-300 text-xs font-bold transition flex flex-col items-center gap-1"><span class="text-xl">😎</span>Casual</button>
+              <button type="button" data-val="smart_casual" class="sp-formality-opt py-3 rounded-xl border border-white/10 bg-white/5 text-gray-300 text-xs font-bold transition flex flex-col items-center gap-1"><span class="text-xl">👔</span>Smart Casual</button>
+              <button type="button" data-val="formal" class="sp-formality-opt py-3 rounded-xl border border-white/10 bg-white/5 text-gray-300 text-xs font-bold transition flex flex-col items-center gap-1"><span class="text-xl">🤵</span>Formal</button>
+            </div>
+          </div>
+
+          <!-- Body Type (opt-in) -->
+          <div class="mb-6">
+            <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-3">Body Type <span class="text-gray-600 normal-case font-normal">(opt-in)</span></label>
+            <p class="text-xs text-gray-500 mb-3">Helps the Coach suggest better fits. Completely optional.</p>
+            <div id="spBodyType" class="grid grid-cols-3 gap-2">
+              <button type="button" data-val="lean" class="sp-body-opt py-3 rounded-xl border border-white/10 bg-white/5 text-gray-300 text-xs font-bold transition flex flex-col items-center gap-1"><span class="text-lg">🏃</span>Lean</button>
+              <button type="button" data-val="average" class="sp-body-opt py-3 rounded-xl border border-white/10 bg-white/5 text-gray-300 text-xs font-bold transition flex flex-col items-center gap-1"><span class="text-lg">💪</span>Athletic</button>
+              <button type="button" data-val="broad" class="sp-body-opt py-3 rounded-xl border border-white/10 bg-white/5 text-gray-300 text-xs font-bold transition flex flex-col items-center gap-1"><span class="text-lg">🐻</span>Broad</button>
+            </div>
+          </div>
+
+          <!-- Style Keywords -->
+          <div class="mb-6">
+            <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-3">Style Vibe</label>
+            <div id="spStyleVibe" class="flex flex-wrap gap-2">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <button id="styleProfileSave" type="button" class="w-full py-3.5 rounded-xl btn-primary text-sm font-bold">Save Profile</button>
+        </div>
+      </div>
+
   </div>
 
   <!-- AI CHAT VIEW — Phase 2 extraction.
@@ -2392,6 +2478,12 @@
         </form>
 
         <!-- Suggestion chips removed per user request -->
+
+        <!-- AI perception disclaimer — required on every scan/chat window -->
+        <div class="relative z-10 text-center text-[9px] font-mono text-gray-600 mt-5 tracking-wide leading-relaxed">
+          <div>AI-GENERATED PERCEPTION · VISUAL ANALYSIS</div>
+          <div class="mt-0.5">NOT A JUDGMENT</div>
+        </div>
       </div>
     </div>
   </div>
@@ -2640,7 +2732,7 @@
 <nav id="mobileBottomNav" class="lg:hidden fixed bottom-0 left-0 right-0 z-[80] px-3 pt-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] bg-gradient-to-t from-[#09090b] via-[#09090b]/95 to-transparent pointer-events-none">
   <div class="max-w-md mx-auto grid grid-cols-4 gap-2 pointer-events-auto">
     <button id="mobileNavScan" class="mobile-nav-btn bg-dark-950/80 backdrop-blur-xl rounded-2xl p-3 border border-white/10 flex flex-col items-center gap-1 transition-all active:scale-95">
-      <svg class="w-[22px] h-[22px] text-brand-400" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+      <svg class="w-[22px] h-[22px] text-white" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M4 8V6a2 2 0 0 1 2-2h2"/>
         <path d="M16 4h2a2 2 0 0 1 2 2v2"/>
         <path d="M20 16v2a2 2 0 0 1-2 2h-2"/>
@@ -2903,37 +2995,6 @@ document.addEventListener('DOMContentLoaded', function () {
   </div>
 </div>
 
-<!-- Ask an Expert Modal -->
-<div id="askExpertModal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[#09090b]/95 backdrop-blur-xl transition-opacity duration-300">
-  <div class="premium-glass border border-brand-500/20 rounded-[32px] p-6 max-w-sm w-full relative overflow-hidden fade-up">
-     <div class="absolute -top-12 -left-12 w-32 h-32 bg-purple-500 rounded-full mix-blend-screen filter blur-[50px] opacity-30 pointer-events-none"></div>
-     <div class="text-center mb-4 relative z-10">
-        <div class="text-4xl mb-3 filter drop-shadow-[0_0_10px_rgba(236,72,153,0.5)]">&#128218;</div>
-        <h2 class="font-serif text-2xl font-bold text-white mb-2">Ask an Expert</h2>
-        <p class="text-sm text-gray-400 leading-relaxed">Get personalized style advice from a certified image consultant. Share your scan results and receive tailored feedback.</p>
-     </div>
-     <div class="relative z-10 space-y-3 mb-6">
-        <div class="bg-white/5 border border-white/10 rounded-xl p-4">
-          <div class="text-[11px] uppercase tracking-widest text-brand-400 font-bold mb-1">How it works</div>
-          <ol class="text-xs text-gray-300 space-y-1.5 list-decimal list-inside">
-            <li>Your current scan data is shared with the expert</li>
-            <li>Receive a written style consultation within 24h</li>
-            <li>Get actionable tips specific to your body type and preferences</li>
-          </ol>
-        </div>
-        <div class="bg-gradient-to-r from-amber-500/10 to-brand-500/10 border border-amber-500/20 rounded-xl p-4">
-          <div class="flex items-center gap-2 mb-1">
-            <span class="text-[11px] uppercase tracking-widest text-amber-400 font-bold">Pro Feature</span>
-          </div>
-          <p class="text-xs text-gray-300">Ask an Expert is available with DateScan Pro. Upgrade to unlock unlimited consultations.</p>
-        </div>
-     </div>
-     <div class="relative z-10 flex gap-2">
-        <button onclick="document.getElementById('askExpertModal').classList.add('hidden')" class="flex-1 py-3 rounded-xl bg-white/5 border border-white/10 text-gray-300 text-sm font-bold hover:bg-white/10 transition">Close</button>
-        <button onclick="document.getElementById('askExpertModal').classList.add('hidden'); if(typeof window.openPaywall==='function') window.openPaywall();" class="flex-1 py-3 rounded-xl btn-primary text-sm font-bold">Upgrade to Pro</button>
-     </div>
-  </div>
-</div>
 
 <!-- Delete Confirm Modal -->
 <div id="deleteModal" class="hidden fixed inset-0 z-[80] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
@@ -3034,7 +3095,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
           }));
         } else {
-          ['datescan', 'datescan-closet', 'datescan-history', 'keyval-store'].forEach(function (n) {
+          ['datescan', 'datescan-closet', 'datescan-history', 'datescan-db', 'keyval-store'].forEach(function (n) {
             try { indexedDB.deleteDatabase(n); } catch (_) {}
           });
         }
@@ -3096,6 +3157,116 @@ document.addEventListener('DOMContentLoaded', function () {
 <div id="dsToast" class="hidden fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] px-4 py-2.5 rounded-full bg-black/85 border border-white/15 backdrop-blur-md text-xs text-white shadow-xl pointer-events-none"></div>
 
 <!-- Share Modal -->
+      <div id="duelModal" class="hidden fixed inset-0 z-[115] bg-black/85 backdrop-blur-md items-center justify-center p-4 overflow-y-auto">
+        <div class="premium-glass rounded-3xl border border-brand-500/30 max-w-2xl w-full my-auto p-6 sm:p-8 relative">
+          <button id="duelCloseBtn" type="button" aria-label="Close" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+
+          <div class="text-center mb-6">
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-tr from-brand-500/20 to-purple-500/20 border border-brand-500/30 flex items-center justify-center mb-3">
+              <svg class="w-7 h-7 text-brand-400" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4l6 0 0 6"/><path d="M10 20l-6 0 0-6"/><path d="M20 4l-9 9"/><path d="M4 20l6-6"/></svg>
+            </div>
+            <h2 class="font-serif text-2xl sm:text-3xl font-semibold text-white mb-1">A/B Outfit Duel</h2>
+            <p class="text-gray-400 text-sm">Two looks. One winner. Decide the moment.</p>
+          </div>
+
+          <!-- Occasion selector -->
+          <div class="mb-5">
+            <div class="text-[11px] font-bold uppercase tracking-widest text-gray-500 mb-2">Occasion</div>
+            <div id="duelOccasion" class="flex gap-2 overflow-x-auto pb-1 scrollbar-none" role="group" aria-label="Duel occasion">
+              <button type="button" data-occ="casual"     aria-pressed="true"  class="duel-occ-btn border border-brand-500/50 bg-brand-500/20 text-white rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">Casual</button>
+              <button type="button" data-occ="first_date" aria-pressed="false" class="duel-occ-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">First Date</button>
+              <button type="button" data-occ="fancy"      aria-pressed="false" class="duel-occ-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">Fancy Dinner</button>
+              <button type="button" data-occ="night_out"  aria-pressed="false" class="duel-occ-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">Night Out</button>
+            </div>
+          </div>
+
+          <!-- Two upload slots -->
+          <div class="grid grid-cols-2 gap-3 sm:gap-4 mb-5">
+            <div>
+              <input type="file" id="duelFileA" accept="image/*" class="hidden" />
+              <button type="button" id="duelSlotA" class="duel-slot group w-full aspect-[3/4] rounded-2xl border-2 border-dashed border-white/15 bg-white/5 hover:bg-white/10 hover:border-brand-500/50 transition flex flex-col items-center justify-center gap-2 text-gray-400 relative overflow-hidden">
+                <svg class="w-8 h-8 opacity-60 group-hover:opacity-100 transition" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/><circle cx="9" cy="10" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.814.014L6 21"/><path d="M19 2v6"/><path d="M22 5h-6"/></svg>
+                <span class="text-xs font-bold">Upload A</span>
+                <img id="duelPreviewA" class="absolute inset-0 w-full h-full object-cover hidden" alt="Option A" />
+              </button>
+              <div class="text-center text-[11px] font-bold uppercase tracking-widest text-brand-400 mt-2">Option A</div>
+            </div>
+            <div>
+              <input type="file" id="duelFileB" accept="image/*" class="hidden" />
+              <button type="button" id="duelSlotB" class="duel-slot group w-full aspect-[3/4] rounded-2xl border-2 border-dashed border-white/15 bg-white/5 hover:bg-white/10 hover:border-purple-500/50 transition flex flex-col items-center justify-center gap-2 text-gray-400 relative overflow-hidden">
+                <svg class="w-8 h-8 opacity-60 group-hover:opacity-100 transition" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/><circle cx="9" cy="10" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.814.014L6 21"/><path d="M19 2v6"/><path d="M22 5h-6"/></svg>
+                <span class="text-xs font-bold">Upload B</span>
+                <img id="duelPreviewB" class="absolute inset-0 w-full h-full object-cover hidden" alt="Option B" />
+              </button>
+              <div class="text-center text-[11px] font-bold uppercase tracking-widest text-purple-400 mt-2">Option B</div>
+            </div>
+          </div>
+
+          <div class="flex gap-2">
+            <button id="duelResetBtn" type="button" class="px-4 py-3 rounded-xl text-sm font-bold bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 transition hidden">Reset</button>
+            <button id="duelRunBtn" type="button" disabled class="flex-1 btn-primary py-3 rounded-xl text-sm font-bold disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              <span id="duelRunLabel">Upload both to start</span>
+            </button>
+          </div>
+
+          <!-- Result panel — populated by duel module -->
+          <div id="duelResult" class="hidden mt-6 pt-6 border-t border-white/10">
+            <!-- Winner banner -->
+            <div id="duelWinnerBanner" class="rounded-2xl p-4 mb-4 text-center border"></div>
+
+            <!-- Score comparison -->
+            <div class="grid grid-cols-2 gap-3 mb-4">
+              <div class="premium-glass rounded-2xl p-4 border border-white/10 text-center relative" id="duelCardA">
+                <div class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-1">Option A</div>
+                <div class="font-serif text-4xl font-bold text-white tabular-nums" id="duelScoreA">—</div>
+                <div class="text-[10px] text-gray-500 mt-1" id="duelArchA">&nbsp;</div>
+              </div>
+              <div class="premium-glass rounded-2xl p-4 border border-white/10 text-center relative" id="duelCardB">
+                <div class="text-[10px] font-bold uppercase tracking-widest text-purple-400 mb-1">Option B</div>
+                <div class="font-serif text-4xl font-bold text-white tabular-nums" id="duelScoreB">—</div>
+                <div class="text-[10px] text-gray-500 mt-1" id="duelArchB">&nbsp;</div>
+              </div>
+            </div>
+
+            <!-- Metric breakdown -->
+            <div class="grid grid-cols-3 gap-2 mb-4">
+              <div class="rounded-xl bg-white/5 border border-white/10 p-2.5 text-center">
+                <div class="text-[9px] text-gray-500 uppercase tracking-wider mb-0.5">Contrast</div>
+                <div class="text-xs font-mono font-bold text-white" id="duelMetricContrast">— vs —</div>
+              </div>
+              <div class="rounded-xl bg-white/5 border border-white/10 p-2.5 text-center">
+                <div class="text-[9px] text-gray-500 uppercase tracking-wider mb-0.5">Saturation</div>
+                <div class="text-xs font-mono font-bold text-white" id="duelMetricSat">— vs —</div>
+              </div>
+              <div class="rounded-xl bg-white/5 border border-white/10 p-2.5 text-center">
+                <div class="text-[9px] text-gray-500 uppercase tracking-wider mb-0.5">Warmth</div>
+                <div class="text-xs font-mono font-bold text-white" id="duelMetricWarmth">— vs —</div>
+              </div>
+            </div>
+
+            <!-- Verdict text -->
+            <div class="rounded-2xl bg-gradient-to-br from-brand-500/10 to-purple-500/10 border border-brand-500/20 p-4">
+              <div class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-1.5">Verdict</div>
+              <p id="duelVerdict" class="text-sm text-white leading-relaxed"></p>
+            </div>
+
+            <!-- Ask your friends -->
+            <button id="duelShareBtn" type="button" class="w-full mt-4 py-3 rounded-xl text-sm font-bold bg-white/5 border border-white/15 text-gray-200 hover:bg-white/10 hover:border-brand-500/40 active:scale-[0.98] transition-all inline-flex items-center justify-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              Ask your friends
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-500 text-white">+5 XP</span>
+            </button>
+          </div>
+
+          <p class="text-[10px] text-gray-600 text-center mt-4 leading-relaxed">
+            On-device analysis · photos never leave your browser
+          </p>
+        </div>
+      </div>
+
 <div id="shareModal" class="hidden fixed inset-0 z-[90] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl">
   <div class="premium-glass border border-brand-500/30 rounded-[32px] p-5 sm:p-6 max-w-sm w-full relative overflow-hidden fade-up max-h-[92vh] overflow-y-auto" style="padding-bottom:calc(1.25rem + env(safe-area-inset-bottom));">
     <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-500 rounded-full mix-blend-screen filter blur-[60px] opacity-30 pointer-events-none"></div>
@@ -3146,7 +3317,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
       </div>
       <h2 class="font-serif text-2xl sm:text-[26px] font-bold mb-2 leading-tight">You’re 1 tweak away from a better first impression.</h2>
-      <p class="text-sm text-gray-400">Most users improve +8–15 points with the full breakdown.</p>
+      <p class="text-sm text-gray-400">AI-Powered Style Insights.</p>
     </div>
 
     <div class="relative z-10 mb-4 rounded-2xl border border-white/10 bg-white/5 p-3.5 space-y-1.5">
@@ -3243,6 +3414,7 @@ const appReducer = (state, action) => {
     case 'CAMERA_READY': return { ...state, cameraReady: true };
     case 'SET_VIEW': return { ...state, activeView: action.payload };
     case 'SET_OCCASION': return { ...state, occasion: action.payload };
+    case 'SET_VENUE_VIBE': return { ...state, venueVibe: action.payload };
     case 'SCAN_START': return { ...state, isScanning: true };
     case 'SCAN_END': return { ...state, isScanning: false };
     case 'SCAN_RESULT':
@@ -3264,8 +3436,9 @@ const store = createStore({
   aiReady: false,
   cameraReady: false,
   isScanning: false, 
-  occasion: 'casual', 
-  lastItems: null, 
+  occasion: 'casual',
+  venueVibe: null,
+  lastItems: null,
   lastColor: null,
   activeView: 'scanner'
 }, appReducer);
@@ -3668,8 +3841,20 @@ function toggleView(targetView) {
     const viewHistory = $("viewHistory");
     const navBtn = $("navClosetBtn");
     const storyBtn = $("navStoryModeBtn");
+    const aiChatBtn = $("navAiChatBtn");
 
-    // Swap Story Mode top-bar btn between idle ("Story Mode") and
+    function resetAiChatNavBtn() {
+      if (!aiChatBtn) return;
+      aiChatBtn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="hidden sm:inline">AI Chat</span>`;
+      aiChatBtn.classList.remove('bg-brand-500/20', 'text-brand-300', 'border-brand-500/40');
+      aiChatBtn.classList.add('bg-white/5', 'text-white', 'border-white/10');
+    }
+    function activateAiChatNavBtn() {
+      if (!aiChatBtn) return;
+      aiChatBtn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V6a2 2 0 0 1 2-2h2"/><path d="M16 4h2a2 2 0 0 1 2 2v2"/><path d="M20 16v2a2 2 0 0 1-2 2h-2"/><path d="M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="11" r="2.4"/><path d="M8 17c1-1.5 2.4-2.3 4-2.3s3 .8 4 2.3"/></svg><span class="hidden sm:inline">Scanner</span>`;
+      aiChatBtn.classList.remove('bg-white/5', 'text-white', 'border-white/10');
+      aiChatBtn.classList.add('bg-brand-500/20', 'text-brand-300', 'border-brand-500/40');
+    }
     // active ("Scanner") states, matching the Closet btn pattern.
     function resetStoryNavBtn() {
       if (!storyBtn) return;
@@ -3743,6 +3928,7 @@ function toggleView(targetView) {
         hideOverlay(viewHistory);
         showOverlay(viewCloset);
         resetStoryNavBtn();
+        resetAiChatNavBtn();
         stopCameraIfLeavingScanner();
 
         if (navBtn) {
@@ -3770,8 +3956,8 @@ function toggleView(targetView) {
         showOverlay(viewChat);
         resetClosetNavBtn();
         resetStoryNavBtn();
+        activateAiChatNavBtn();
         stopCameraIfLeavingScanner();
-
         store.set({ activeView: 'chat' });
         if (location.hash !== '#chat') {
             history.replaceState(null, '', '#chat');
@@ -3783,6 +3969,7 @@ function toggleView(targetView) {
         showOverlay(viewHistory);
         resetClosetNavBtn();
         activateStoryNavBtn();
+        resetAiChatNavBtn();
         stopCameraIfLeavingScanner();
 
         // Render history content when entering the view
@@ -3803,6 +3990,7 @@ function toggleView(targetView) {
         setTimeout(showScanner, 300);
         resetClosetNavBtn();
         resetStoryNavBtn();
+        resetAiChatNavBtn();
 
         // Re-acquire the camera stream now that we're back on the
         // scanner. Mirrors the visibilitychange → safeReinitCamera
@@ -3824,6 +4012,27 @@ $("navClosetBtn").addEventListener("click", () => {
     const s = store.get();
     toggleView(s.activeView === 'closet' ? 'scanner' : 'closet');
 });
+
+// Story Mode button — desktop top-bar equivalent of the mobile Story tab.
+// Toggles between the scanner and the Style Story (history) view.
+try {
+    const _navAiChatBtn = $("navAiChatBtn");
+    if (_navAiChatBtn) {
+        _navAiChatBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            try { triggerHaptic('tap'); } catch (_) {}
+            const s = store.get();
+            const next = s.activeView === 'chat' ? 'scanner' : 'chat';
+            if (typeof window.toggleView === 'function') {
+                window.toggleView(next);
+            } else if (typeof toggleView === 'function') {
+                toggleView(next);
+            }
+        });
+    }
+} catch (err) {
+    console.error('[nav] AI Chat wire-up failed:', err);
+}
 
 // Story Mode button — desktop top-bar equivalent of the mobile Story tab.
 // Toggles between the scanner and the Style Story (history) view.
@@ -3878,11 +4087,30 @@ const closetDB = (function () {
       if (!window.idb || !window.idb.openDB) {
         return Promise.reject(new Error('idb library not loaded'));
       }
-      dbPromise = window.idb.openDB('datescan-db', 1, {
-        upgrade(db) {
+      dbPromise = window.idb.openDB('datescan-db', 4, {
+        upgrade(db, oldVersion) {
           if (!db.objectStoreNames.contains('outfits')) {
             const store = db.createObjectStore('outfits', { keyPath: 'id' });
             store.createIndex('date', 'date');
+          }
+          // v2: add chat history store
+          if (!db.objectStoreNames.contains('chats')) {
+            const chatStore = db.createObjectStore('chats', { keyPath: 'id', autoIncrement: true });
+            chatStore.createIndex('ts', 'ts');
+          }
+          // v3: add AI feedback store for on-device feedback loop
+          if (!db.objectStoreNames.contains('feedback')) {
+            const fbStore = db.createObjectStore('feedback', { keyPath: 'id', autoIncrement: true });
+            fbStore.createIndex('ts', 'ts');
+            fbStore.createIndex('sentiment', 'sentiment');
+            fbStore.createIndex('category', 'category');
+          }
+          // v4: add season index for tag-based queries on outfits
+          if (oldVersion < 4 && db.objectStoreNames.contains('outfits')) {
+            const outfitStore = db.transaction('outfits', 'versionchange').store;
+            if (!outfitStore.indexNames.contains('tags.season')) {
+              outfitStore.createIndex('tags.season', 'tags.season');
+            }
           }
         }
       });
@@ -3910,6 +4138,157 @@ const closetDB = (function () {
       await db.clear('outfits');
     }
   };
+})();
+
+// Chat history IDB store — persists the conversation so it survives
+// page reloads / app restarts. Uses the same datescan-db so it's
+// covered by the existing "Delete all my data" wipe.
+const chatDB = (function () {
+  async function getDB() {
+    // Reuse the same database promise from closetDB — it already
+    // ensures the 'chats' object store exists (v2 upgrade).
+    if (!window.idb || !window.idb.openDB) {
+      return Promise.reject(new Error('idb library not loaded'));
+    }
+    return window.idb.openDB('datescan-db', 4);
+  }
+  return {
+    async getAll() {
+      const db = await getDB();
+      const all = await db.getAllFromIndex('chats', 'ts');
+      return all; // already in chronological order via the ts index
+    },
+    async add(msg) {
+      // msg: { role, content, ts }
+      const db = await getDB();
+      await db.add('chats', { ...msg, ts: msg.ts || Date.now() });
+    },
+    async clear() {
+      const db = await getDB();
+      await db.clear('chats');
+    }
+  };
+})();
+window.chatDB = chatDB;
+
+// ===== AI Feedback IDB store =====
+// Stores 👍/👎 feedback on assistant responses so we can run a
+// lightweight on-device classifier that adjusts future responses.
+// Covered by the existing "Delete all my data" wipe.
+const feedbackDB = (function () {
+  async function getDB() {
+    if (!window.idb || !window.idb.openDB) {
+      return Promise.reject(new Error('idb library not loaded'));
+    }
+    return window.idb.openDB('datescan-db', 4);
+  }
+  return {
+    async add(entry) {
+      // entry: { sentiment: 'positive'|'negative', category, responseSnippet, applied, ts }
+      const db = await getDB();
+      await db.add('feedback', { ...entry, ts: entry.ts || Date.now() });
+    },
+    async getAll() {
+      const db = await getDB();
+      return db.getAllFromIndex('feedback', 'ts');
+    },
+    async getRecent(limit) {
+      const db = await getDB();
+      const all = await db.getAllFromIndex('feedback', 'ts');
+      return all.slice(-(limit || 100));
+    },
+    async getStats() {
+      const db = await getDB();
+      const all = await db.getAll('feedback');
+      let positive = 0, negative = 0, applied = 0;
+      const categories = {};
+      for (const f of all) {
+        if (f.sentiment === 'positive') positive++;
+        else if (f.sentiment === 'negative') negative++;
+        if (f.applied) applied++;
+        if (f.category) categories[f.category] = (categories[f.category] || 0) + 1;
+      }
+      return { positive, negative, applied, categories, total: all.length };
+    },
+    async clear() {
+      const db = await getDB();
+      await db.clear('feedback');
+    }
+  };
+})();
+window.feedbackDB = feedbackDB;
+
+// ===== On-device Lightweight Feedback Classifier =====
+// Analyzes accumulated feedback to produce rule-based adjustments
+// that influence the system prompt sent to the AI model.
+// This runs entirely on-device — no data leaves the browser.
+window.FeedbackClassifier = (function () {
+  // Category keywords detected in assistant responses
+  const CATEGORY_PATTERNS = [
+    { category: 'color',     pattern: /\b(colou?r|palette|hue|saturation|contrast|warm|cool|tone)\b/i },
+    { category: 'fit',       pattern: /\b(fit|tailor|loose|tight|silhouette|drape|proportion)\b/i },
+    { category: 'grooming',  pattern: /\b(groom|hair|beard|skin|skincare|moistur|facial)\b/i },
+    { category: 'accessory', pattern: /\b(accessor|watch|belt|scarf|jewelr|ring|necklace|bag)\b/i },
+    { category: 'occasion',  pattern: /\b(date|casual|formal|business|interview|wedding|party|dinner)\b/i },
+    { category: 'confidence',pattern: /\b(confiden|bold|subtle|statement|risk|safe|daring)\b/i },
+  ];
+
+  function classifyCategory(text) {
+    if (!text) return 'general';
+    for (const cp of CATEGORY_PATTERNS) {
+      if (cp.pattern.test(text)) return cp.category;
+    }
+    return 'general';
+  }
+
+  // Build a system-prompt appendix from accumulated feedback
+  // that steers the model toward what the user likes and away
+  // from what they don't.
+  async function buildFeedbackHint() {
+    try {
+      if (!window.feedbackDB) return '';
+      const stats = await window.feedbackDB.getStats();
+      if (!stats || stats.total < 2) return ''; // need at least 2 data points
+
+      const recent = await window.feedbackDB.getRecent(50);
+      // Weight recent feedback more heavily (last 20 entries)
+      const weighted = recent.slice(-20);
+      let posByCategory = {};
+      let negByCategory = {};
+
+      for (const f of weighted) {
+        const cat = f.category || 'general';
+        if (f.sentiment === 'positive') posByCategory[cat] = (posByCategory[cat] || 0) + 1;
+        else if (f.sentiment === 'negative') negByCategory[cat] = (negByCategory[cat] || 0) + 1;
+      }
+
+      const hints = [];
+      const catNames = new Set([...Object.keys(posByCategory), ...Object.keys(negByCategory)]);
+      for (const cat of catNames) {
+        const pos = posByCategory[cat] || 0;
+        const neg = negByCategory[cat] || 0;
+        if (pos > neg + 1) {
+          hints.push('User tends to like your ' + cat + ' advice — keep it up.');
+        } else if (neg > pos + 1) {
+          hints.push('User tends to dislike your ' + cat + ' advice — try a different approach.');
+        }
+      }
+
+      // Global sentiment bias
+      if (stats.positive > stats.negative * 2) {
+        hints.push('Overall, the user is happy with your suggestions. Stay confident.');
+      } else if (stats.negative > stats.positive * 2) {
+        hints.push('Overall, the user has been critical. Be more measured and offer alternatives.');
+      }
+
+      return hints.length ? '\n\n[Feedback-based adjustments]: ' + hints.join(' ') : '';
+    } catch (e) {
+      console.warn('[FeedbackClassifier] buildFeedbackHint failed:', e);
+      return '';
+    }
+  }
+
+  return { classifyCategory, buildFeedbackHint };
 })();
 
 async function closetInit() {
@@ -3980,6 +4359,7 @@ window.renderCloset = function(filter = 'all') {
 
     grid.innerHTML = filtered.map(outfit => {
         const TYPE_LABELS = { shirt:'👕 Shirt', pants:'👖 Pants', jacket:'🧥 Jacket', dress:'👗 Dress', shoes:'👟 Shoes', accessory:'👜 Accessory' };
+        const SEASON_EMOJI = { summer: '☀️', winter: '❄️', autumn: '🍂', spring: '🌸', 'all-season': '🔄' };
         const typeBadge = outfit.type && TYPE_LABELS[outfit.type]
           ? `<div class="absolute top-2 left-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-white border border-white/10 z-10">${TYPE_LABELS[outfit.type]}</div>`
           : '';
@@ -3987,6 +4367,22 @@ window.renderCloset = function(filter = 'all') {
           ? `<div class="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-xs font-bold ${outfit.score >= 80 ? 'text-emerald-400' : 'text-brand-400'} border border-white/10 z-10">${outfit.score}/100</div>`
           : '';
         const occasion = (outfit.occasion || 'casual').replace('_', ' ');
+        // Auto-tag pills for scanned outfits
+        const scanTagPills = [];
+        if (outfit.tags) {
+          if (outfit.tags.season && outfit.tags.season !== 'all-season') {
+            scanTagPills.push(`<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-purple-500/60 text-white">${SEASON_EMOJI[outfit.tags.season] || ''} ${outfit.tags.season}</span>`);
+          }
+          if (outfit.tags.material && outfit.tags.material !== 'unknown') {
+            scanTagPills.push(`<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-brand-500/60 text-white">${outfit.tags.material}</span>`);
+          }
+          if (outfit.tags.colors && outfit.tags.colors.length) {
+            outfit.tags.colors.forEach(c => {
+              if (c !== 'Mixed') scanTagPills.push(`<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-black/60 text-white border border-white/10">${c}</span>`);
+            });
+          }
+        }
+        const scanTagRow = scanTagPills.length ? `<div class="flex flex-wrap gap-1 mt-1.5">${scanTagPills.join('')}</div>` : '';
         return `
         <div class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-default relative">
             <div class="aspect-[3/4] bg-black relative">
@@ -4011,6 +4407,7 @@ window.renderCloset = function(filter = 'all') {
                    <div class="w-2.5 h-2.5 rounded-full border border-white/20" style="background-color: ${outfit.colorHex || '#ccc'};"></div>
                    ${outfit.color || 'Mixed'} Palette
                 </div>
+                ${scanTagRow}
             </div>
         </div>`;
     }).join('');
@@ -4035,8 +4432,25 @@ window.renderClosetItems = function(typeFilter = 'all') {
     }
 
     const TYPE_LABELS = { shirt:'👕 Shirt', pants:'👖 Pants', jacket:'🧥 Jacket', dress:'👗 Dress', shoes:'👟 Shoes', accessory:'👜 Accessory' };
+    const SEASON_EMOJI = { summer: '☀️', winter: '❄️', autumn: '🍂', spring: '🌸', 'all-season': '🔄' };
 
-    grid.innerHTML = filtered.map(item => `
+    grid.innerHTML = filtered.map(item => {
+        // Build auto-tag pills if tags exist
+        const tagPills = [];
+        if (item.tags) {
+          if (item.tags.season && item.tags.season !== 'all-season') {
+            tagPills.push(`<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-purple-500/60 text-white">${SEASON_EMOJI[item.tags.season] || ''} ${item.tags.season}</span>`);
+          }
+          if (item.tags.material && item.tags.material !== 'unknown') {
+            tagPills.push(`<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-brand-500/60 text-white">${item.tags.material}</span>`);
+          }
+        }
+        if (item.color && item.color !== 'Mixed') {
+          tagPills.push(`<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-black/60 text-white border border-white/10">${item.color}</span>`);
+        }
+        const tagRow = tagPills.length ? `<div class="flex flex-wrap gap-1 mt-1.5">${tagPills.join('')}</div>` : '';
+
+        return `
         <div class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-default relative">
             <div class="aspect-[3/4] bg-black relative">
                 <img src="${item.image}" class="w-full h-full object-cover opacity-90 transition-opacity" alt="Saved Item" />
@@ -4056,8 +4470,10 @@ window.renderClosetItems = function(typeFilter = 'all') {
                   <div class="text-[9px] text-gray-500">${new Date(item.date).toLocaleDateString()}</div>
                 </div>
                 <div class="text-sm text-white font-medium truncate">${TYPE_LABELS[item.type] || 'Item'}</div>
+                ${tagRow}
             </div>
-        </div>`).join('');
+        </div>`;
+    }).join('');
 };
 
 // Type filter buttons for the Items section
@@ -4376,15 +4792,28 @@ window.saveCurrentOutfit = function() {
 
     const newItem = {
       id: 'item_' + Date.now(),
-      image: pendingImage,
+      image: (typeof window._getCurrentBgRemoved === 'function' && window._getCurrentBgRemoved()) || pendingImage,
       type: pendingType,
       occasion: catOccasion.value || 'casual',
       date: Date.now(),
       color: 'Mixed',
       colorHex: '#888',
       score: null,
-      source: 'upload'
+      source: 'upload',
+      bgRemoved: !!(typeof window._getCurrentBgRemoved === 'function' && window._getCurrentBgRemoved())
     };
+
+    // Merge auto-tagging results if available
+    const autoTags = typeof window._getCurrentAutoTags === 'function' ? window._getCurrentAutoTags() : null;
+    if (autoTags) {
+      newItem.color = (autoTags.colors && autoTags.colors[0]) || 'Mixed';
+      newItem.colorHex = (typeof getHexForColorName === 'function') ? getHexForColorName(newItem.color) : '#888';
+      newItem.tags = {
+        colors: autoTags.colors || [],
+        season: autoTags.season || 'all-season',
+        material: autoTags.material || 'unknown'
+      };
+    }
 
     try {
       await closetDB.put(newItem);
@@ -4404,6 +4833,555 @@ window.saveCurrentOutfit = function() {
       catSave.textContent = 'Save to Closet';
     }
   });
+})();
+
+// ============================================================
+// PERSONAL STYLE PROFILE — persistent preferences that adapt
+// the AI Coach's responses. Stored in localStorage as
+// 'datescan.styleProfile' so it survives reloads and is easy
+// to wipe with the existing "Delete all my data" flow.
+// ============================================================
+(function () {
+  const STORAGE_KEY = 'datescan.styleProfile';
+  const DEFAULT_PROFILE = {
+    colors: [],         // e.g. ['black','navy','white']
+    formality: '',      // 'casual' | 'smart_casual' | 'formal'
+    bodyType: '',       // 'lean' | 'average' | 'broad' | ''
+    styleVibes: [],     // e.g. ['minimalist','streetwear']
+    updatedAt: null
+  };
+
+  // Color options with hex swatches
+  const COLOR_OPTIONS = [
+    { name: 'Black', hex: '#1a1a1a' },
+    { name: 'White', hex: '#f5f5f5' },
+    { name: 'Navy', hex: '#1e3a5f' },
+    { name: 'Charcoal', hex: '#36454f' },
+    { name: 'Olive', hex: '#556b2f' },
+    { name: 'Burgundy', hex: '#800020' },
+    { name: 'Camel', hex: '#c19a6b' },
+    { name: 'Beige', hex: '#d4c5a9' },
+    { name: 'Denim', hex: '#4a6fa5' },
+    { name: 'Forest', hex: '#228b22' },
+    { name: 'Rust', hex: '#b7410e' },
+    { name: 'Slate', hex: '#708090' },
+    { name: 'Cream', hex: '#fffdd0' },
+    { name: 'Red', hex: '#c41e3a' },
+    { name: 'Teal', hex: '#008080' }
+  ];
+
+  const STYLE_VIBES = [
+    'Minimalist', 'Streetwear', 'Classic', 'Preppy', 'Bohemian',
+    'Athleisure', 'Rock', 'Scandinavian', 'Vintage', 'Techwear'
+  ];
+
+  // Load / save helpers
+  function loadProfile() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        return Object.assign({}, DEFAULT_PROFILE, parsed);
+      }
+    } catch (e) {}
+    return Object.assign({}, DEFAULT_PROFILE);
+  }
+
+  function saveProfile(profile) {
+    try {
+      profile.updatedAt = Date.now();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+    } catch (e) {}
+  }
+
+  // Expose globally so the AI Coach prompt builder can read it
+  window.getStyleProfile = loadProfile;
+
+  // --- Build the Style Profile modal UI ---
+  const modal = document.getElementById('styleProfileModal');
+  const openBtn = document.getElementById('styleProfileBtn');
+  const closeBtn = document.getElementById('styleProfileClose');
+  const saveBtn = document.getElementById('styleProfileSave');
+  const paletteEl = document.getElementById('spColorPalette');
+  const formalityEl = document.getElementById('spFormality');
+  const bodyTypeEl = document.getElementById('spBodyType');
+  const vibeEl = document.getElementById('spStyleVibe');
+
+  if (!modal || !openBtn) return;
+
+  // Helper: read current UI state and persist to localStorage
+  function autoSaveProfile() {
+    const profile = loadProfile();
+    const colorSel = paletteEl?.querySelector('.is-selected');
+    profile.colors = colorSel ? [colorSel.dataset.color] : [];
+    const formSel = formalityEl?.querySelector('.is-selected');
+    profile.formality = formSel ? formSel.dataset.val : '';
+    const bodySel = bodyTypeEl?.querySelector('.is-selected');
+    profile.bodyType = bodySel ? bodySel.dataset.val : '';
+    profile.styleVibes = Array.from(vibeEl?.querySelectorAll('.is-selected') || []).map(b => b.dataset.vibe);
+    saveProfile(profile);
+  }
+
+  // Helper: apply glow to a color button
+  function applyColorGlow(btn) {
+    btn.classList.add('is-selected');
+    btn.style.boxShadow = '0 0 16px 3px rgba(180,180,180,0.35), 0 0 6px 1px rgba(200,200,200,0.25)';
+    btn.style.borderColor = 'rgba(200,200,200,0.5)';
+    btn.querySelector('.sp-check')?.classList.remove('opacity-0');
+  }
+  // Helper: remove glow from a color button
+  function removeColorGlow(btn) {
+    btn.classList.remove('is-selected');
+    btn.style.boxShadow = '';
+    btn.style.borderColor = '';
+    btn.querySelector('.sp-check')?.classList.add('opacity-0');
+  }
+
+  // Populate color palette — SINGLE SELECT with brand-pink glow
+  if (paletteEl) {
+    COLOR_OPTIONS.forEach(c => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.dataset.color = c.name;
+      btn.className = 'sp-color-opt relative w-10 h-10 rounded-xl border-2 border-white/10 transition-all duration-200 hover:scale-110 flex items-center justify-center overflow-hidden';
+      btn.style.backgroundColor = c.hex;
+      btn.setAttribute('aria-label', c.name);
+      btn.title = c.name;
+      // Check mark — white with dark shadow for visibility on any color
+      const check = document.createElement('svg');
+      check.className = 'sp-check w-5 h-5 opacity-0 transition-opacity pointer-events-none relative z-10';
+      check.setAttribute('fill', 'none');
+      check.setAttribute('stroke', 'white');
+      check.setAttribute('stroke-width', '3');
+      check.setAttribute('viewBox', '0 0 24 24');
+      check.style.filter = 'drop-shadow(0 1px 3px rgba(0,0,0,0.9))';
+      check.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>';
+      btn.appendChild(check);
+      btn.addEventListener('click', () => {
+        // Single-select: deselect previous, select this one
+        const prev = paletteEl.querySelector('.is-selected');
+        if (prev && prev !== btn) removeColorGlow(prev);
+        if (btn.classList.contains('is-selected')) {
+          removeColorGlow(btn);
+        } else {
+          applyColorGlow(btn);
+        }
+        autoSaveProfile();
+      });
+      paletteEl.appendChild(btn);
+    });
+  }
+
+  // Populate style vibes
+  if (vibeEl) {
+    STYLE_VIBES.forEach(vibe => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.dataset.vibe = vibe;
+      btn.className = 'sp-vibe-opt px-3 py-2 rounded-xl border border-white/10 bg-white/5 text-gray-300 text-xs font-bold transition hover:bg-white/10';
+      btn.textContent = vibe;
+      btn.addEventListener('click', () => {
+        if (btn.classList.contains('is-selected')) {
+          btn.classList.remove('is-selected', 'border-purple-400', 'bg-purple-500/15', 'text-purple-300');
+        } else {
+          const selected = vibeEl.querySelectorAll('.is-selected');
+          if (selected.length >= 4) return; // max 4
+          btn.classList.add('is-selected', 'border-purple-400', 'bg-purple-500/15', 'text-purple-300');
+        }
+        autoSaveProfile();
+      });
+      vibeEl.appendChild(btn);
+    });
+  }
+
+  // Formality toggle
+  document.querySelectorAll('.sp-formality-opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      formalityEl.querySelectorAll('.sp-formality-opt').forEach(b =>
+        b.classList.remove('is-selected', 'border-purple-400', 'bg-purple-500/15', 'text-purple-300'));
+      btn.classList.add('is-selected', 'border-purple-400', 'bg-purple-500/15', 'text-purple-300');
+      autoSaveProfile();
+    });
+  });
+
+  // Body type toggle
+  document.querySelectorAll('.sp-body-opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      bodyTypeEl.querySelectorAll('.sp-body-opt').forEach(b =>
+        b.classList.remove('is-selected', 'border-purple-400', 'bg-purple-500/15', 'text-purple-300'));
+      btn.classList.add('is-selected', 'border-purple-400', 'bg-purple-500/15', 'text-purple-300');
+      autoSaveProfile();
+    });
+  });
+
+  // Open modal → populate from saved profile
+  openBtn.addEventListener('click', () => {
+    if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+    const profile = loadProfile();
+
+    // Reset all selections
+    paletteEl?.querySelectorAll('.sp-color-opt').forEach(b => removeColorGlow(b));
+    formalityEl?.querySelectorAll('.sp-formality-opt').forEach(b =>
+      b.classList.remove('is-selected', 'border-purple-400', 'bg-purple-500/15', 'text-purple-300'));
+    bodyTypeEl?.querySelectorAll('.sp-body-opt').forEach(b =>
+      b.classList.remove('is-selected', 'border-purple-400', 'bg-purple-500/15', 'text-purple-300'));
+    vibeEl?.querySelectorAll('.sp-vibe-opt').forEach(b =>
+      b.classList.remove('is-selected', 'border-purple-400', 'bg-purple-500/15', 'text-purple-300'));
+
+    // Restore saved color (single select)
+    if (profile.colors && profile.colors[0]) {
+      const colorBtn = paletteEl?.querySelector(`[data-color="${profile.colors[0]}"]`);
+      if (colorBtn) applyColorGlow(colorBtn);
+    }
+    if (profile.formality) {
+      const btn = formalityEl?.querySelector(`[data-val="${profile.formality}"]`);
+      if (btn) btn.classList.add('is-selected', 'border-purple-400', 'bg-purple-500/15', 'text-purple-300');
+    }
+    if (profile.bodyType) {
+      const btn = bodyTypeEl?.querySelector(`[data-val="${profile.bodyType}"]`);
+      if (btn) btn.classList.add('is-selected', 'border-purple-400', 'bg-purple-500/15', 'text-purple-300');
+    }
+    profile.styleVibes.forEach(name => {
+      const btn = vibeEl?.querySelector(`[data-vibe="${name}"]`);
+      if (btn) btn.classList.add('is-selected', 'border-purple-400', 'bg-purple-500/15', 'text-purple-300');
+    });
+
+    modal.classList.remove('hidden');
+  });
+
+  closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
+  modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.add('hidden'); });
+
+  // Save
+  saveBtn.addEventListener('click', () => {
+    if (typeof triggerHaptic === 'function') triggerHaptic('success');
+    const profile = loadProfile();
+    profile.colors = Array.from(paletteEl?.querySelectorAll('.is-selected') || []).map(b => b.dataset.color);
+    const formSel = formalityEl?.querySelector('.is-selected');
+    profile.formality = formSel ? formSel.dataset.val : '';
+    const bodySel = bodyTypeEl?.querySelector('.is-selected');
+    profile.bodyType = bodySel ? bodySel.dataset.val : '';
+    profile.styleVibes = Array.from(vibeEl?.querySelectorAll('.is-selected') || []).map(b => b.dataset.vibe);
+    saveProfile(profile);
+    modal.classList.add('hidden');
+  });
+})();
+
+// ============================================================
+// BACKGROUND REMOVAL — on-device via MediaPipe Selfie Segmentation
+// Removes the background from closet item images so they appear
+// on a clean transparent canvas. Runs entirely on-device; no
+// image data leaves the browser.
+// ============================================================
+window.removeBackground = async function (imageDataURL) {
+  return new Promise(async (resolve) => {
+    try {
+      // Check if MediaPipe SelfieSegmentation is available
+      if (typeof SelfieSegmentation === 'undefined') {
+        console.warn('[bg-removal] MediaPipe SelfieSegmentation not loaded, skipping');
+        resolve(imageDataURL);
+        return;
+      }
+
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = async () => {
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+
+          const selfieSegmentation = new SelfieSegmentation({
+            locateFile: (file) =>
+              `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1.1675465747/${file}`
+          });
+
+          selfieSegmentation.setOptions({ modelSelection: 1, selfieMode: false });
+
+          selfieSegmentation.onResults((results) => {
+            try {
+              const outCanvas = document.createElement('canvas');
+              outCanvas.width = img.naturalWidth;
+              outCanvas.height = img.naturalHeight;
+              const outCtx = outCanvas.getContext('2d');
+
+              // Draw the original image
+              outCtx.drawImage(results.image, 0, 0);
+
+              // Use the segmentation mask to make the background transparent
+              if (results.segmentationMask) {
+                outCtx.globalCompositeOperation = 'destination-in';
+                outCtx.drawImage(results.segmentationMask, 0, 0, img.naturalWidth, img.naturalHeight);
+              }
+
+              // Convert to data URL with transparency
+              const result = outCanvas.toDataURL('image/png');
+              resolve(result);
+            } catch (e) {
+              console.warn('[bg-removal] render failed:', e);
+              resolve(imageDataURL);
+            }
+          });
+
+          await selfieSegmentation.send({ image: canvas });
+        } catch (e) {
+          console.warn('[bg-removal] processing failed:', e);
+          resolve(imageDataURL);
+        }
+      };
+      img.onerror = () => resolve(imageDataURL);
+      img.src = imageDataURL;
+    } catch (e) {
+      console.warn('[bg-removal] init failed:', e);
+      resolve(imageDataURL);
+    }
+  });
+};
+
+// ============================================================
+// AUTO-TAGGING — extracts dominant colors, infers material
+// and season from the image. All processing is on-device via
+// canvas pixel sampling.
+// ============================================================
+window.autoTagItem = function (imageDataURL) {
+  return new Promise((resolve) => {
+    try {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const canvas = document.createElement('canvas');
+          // Downscale for fast sampling — max 100px wide
+          const scale = Math.min(1, 100 / img.naturalWidth);
+          canvas.width = Math.round(img.naturalWidth * scale);
+          canvas.height = Math.round(img.naturalHeight * scale);
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const data = imageData.data;
+
+          // Collect color samples (skip transparent pixels)
+          const colorBuckets = {};
+          const STEP = 4; // sample every 4th pixel for speed
+          for (let i = 0; i < data.length; i += 4 * STEP) {
+            const r = data[i], g = data[i + 1], b = data[i + 2], a = data[i + 3];
+            if (a < 128) continue; // skip transparent
+
+            // Classify into a named color bucket
+            const colorName = classifyColor(r, g, b);
+            colorBuckets[colorName] = (colorBuckets[colorName] || 0) + 1;
+          }
+
+          // Sort by frequency and take top 3
+          const sortedColors = Object.entries(colorBuckets)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 3)
+            .map(([name]) => name);
+
+          // Infer season from color palette
+          const season = inferSeason(sortedColors);
+
+          // Infer material from brightness/texture heuristics
+          const material = inferMaterial(data, canvas.width, canvas.height);
+
+          resolve({
+            colors: sortedColors,
+            season: season,
+            material: material
+          });
+        } catch (e) {
+          console.warn('[auto-tag] analysis failed:', e);
+          resolve({ colors: ['Mixed'], season: 'all-season', material: 'unknown' });
+        }
+      };
+      img.onerror = () => resolve({ colors: ['Mixed'], season: 'all-season', material: 'unknown' });
+      img.src = imageDataURL;
+    } catch (e) {
+      resolve({ colors: ['Mixed'], season: 'all-season', material: 'unknown' });
+    }
+  });
+};
+
+// Map a named color to a hex code (used by auto-tagging)
+window.getHexForColorName = function (name) {
+  const MAP = {
+    'Black': '#1a1a1a', 'White': '#f5f5f5', 'Navy': '#1e3a5f',
+    'Charcoal': '#36454f', 'Olive': '#556b2f', 'Burgundy': '#800020',
+    'Camel': '#c19a6b', 'Beige': '#d4c5a9', 'Denim': '#4a6fa5',
+    'Forest': '#228b22', 'Rust': '#b7410e', 'Slate': '#708090',
+    'Cream': '#fffdd0', 'Red': '#c41e3a', 'Teal': '#008080',
+    'Mixed': '#888888'
+  };
+  return MAP[name] || '#888';
+};
+
+// Classify an RGB pixel into a named color category
+function classifyColor(r, g, b) {
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  const s = max === min ? 0 : (l > 127 ? (max - min) / (510 - max - min) : (max - min) / (max + min));
+
+  // Near-black / near-white
+  if (l < 25) return 'Black';
+  if (l > 230 && s < 0.1) return 'White';
+  if (l > 200 && s < 0.15) return 'Cream';
+
+  // Low saturation = grays
+  if (s < 0.08) {
+    if (l < 80) return 'Charcoal';
+    if (l < 160) return 'Slate';
+    return 'Beige';
+  }
+
+  // Dominant channel determines hue
+  let h = 0;
+  if (max !== min) {
+    const d = max - min;
+    if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) * 60;
+    else if (max === g) h = ((b - r) / d + 2) * 60;
+    else h = ((r - g) / d + 4) * 60;
+  }
+
+  if (h < 15 || h >= 345) return l < 100 ? 'Burgundy' : 'Red';
+  if (h < 45) return l < 100 ? 'Rust' : 'Camel';
+  if (h < 70) return 'Olive';
+  if (h < 160) return 'Forest';
+  if (h < 200) return 'Teal';
+  if (h < 260) return 'Navy';
+  if (h < 310) return 'Burgundy';
+  return 'Red';
+}
+
+// Infer the best season from dominant colors
+function inferSeason(colors) {
+  const WARM_COLORS = ['Camel', 'Rust', 'Olive', 'Burgundy', 'Cream', 'Beige'];
+  const COOL_COLORS = ['Navy', 'Charcoal', 'Slate', 'Forest', 'Teal', 'White'];
+  const SUMMER_COLORS = ['White', 'Cream', 'Beige', 'Teal'];
+
+  const warm = colors.filter(c => WARM_COLORS.includes(c)).length;
+  const cool = colors.filter(c => COOL_COLORS.includes(c)).length;
+  const summer = colors.filter(c => SUMMER_COLORS.includes(c)).length;
+
+  if (summer >= 2) return 'summer';
+  if (warm > cool) return 'autumn';
+  if (cool > warm) return 'winter';
+  if (warm === cool && warm > 0) return 'spring';
+  return 'all-season';
+}
+
+// Infer material from pixel statistics
+function inferMaterial(data, w, h) {
+  // Sample brightness variance as a rough texture proxy
+  let sum = 0, sumSq = 0, count = 0;
+  const STEP = 16;
+  for (let i = 0; i < data.length; i += 4 * STEP) {
+    const l = (data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114);
+    sum += l;
+    sumSq += l * l;
+    count++;
+  }
+  if (count === 0) return 'unknown';
+  const mean = sum / count;
+  const variance = (sumSq / count) - (mean * mean);
+
+  // High brightness → likely cotton/linen; low → denim/leather
+  // High variance → textured (knit, denim); low → smooth (silk, polyester)
+  if (mean > 180 && variance < 800) return 'cotton';
+  if (mean > 160 && variance < 500) return 'silk';
+  if (mean < 80 && variance > 1000) return 'denim';
+  if (mean < 100) return 'leather';
+  if (variance > 1200) return 'knit';
+  if (variance < 300) return 'polyester';
+  return 'cotton';
+}
+
+// ============================================================
+// ENHANCED UPLOAD FLOW — hooks auto-tagging + background
+// removal into the existing closet category modal.
+// When an image is selected, we run both in parallel, then
+// display the results in the "Auto-Detected" info panel.
+// ============================================================
+(function () {
+  const catPreview = document.getElementById('closetCategoryPreview');
+  const autoTags = document.getElementById('closetAutoTags');
+  const autoInfo = document.getElementById('closetAutoInfo');
+  const autoInfoContent = document.getElementById('closetAutoInfoContent');
+  if (!catPreview) return;
+
+  // We hook into the existing openCategory flow by observing
+  // when the preview image src changes.
+  let currentAutoTags = null;
+  let currentBgRemoved = null;
+
+  const observer = new MutationObserver(async (mutations) => {
+    for (const m of mutations) {
+      if (m.type === 'attributes' && m.attributeName === 'src') {
+        const src = catPreview.src;
+        if (!src || src === '') {
+          autoTags?.classList.add('hidden');
+          autoInfo?.classList.add('hidden');
+          currentAutoTags = null;
+          currentBgRemoved = null;
+          continue;
+        }
+
+        // Run auto-tagging and background removal in parallel
+        currentAutoTags = null;
+        currentBgRemoved = null;
+
+        const [tags, bgRemoved] = await Promise.all([
+          window.autoTagItem(src),
+          window.removeBackground(src).catch(() => src)
+        ]);
+
+        currentAutoTags = tags;
+        currentBgRemoved = bgRemoved;
+
+        // Show auto-detected tags on the preview
+        if (autoTags && tags) {
+          autoTags.innerHTML = '';
+          const SEASON_LABELS = { summer: 'Summer', winter: 'Winter', autumn: 'Autumn', spring: 'Spring', 'all-season': 'All Season' };
+          const tagData = [
+            ...(tags.colors || []).map(c => ({ label: c, cls: 'bg-black/70 text-white' })),
+            { label: SEASON_LABELS[tags.season] || tags.season, cls: 'bg-purple-500/70 text-white' },
+            { label: tags.material, cls: 'bg-brand-500/70 text-white' }
+          ];
+          tagData.forEach(t => {
+            const span = document.createElement('span');
+            span.className = `text-[9px] font-bold px-2 py-0.5 rounded-md ${t.cls}`;
+            span.textContent = t.label;
+            autoTags.appendChild(span);
+          });
+          autoTags.classList.remove('hidden');
+        }
+
+        // Show auto-info panel
+        if (autoInfoContent && tags) {
+          const SEASON_LABELS = { summer: 'Summer', winter: 'Winter', autumn: 'Autumn', spring: 'Spring', 'all-season': 'All Season' };
+          const colorStr = (tags.colors || []).join(', ');
+          autoInfoContent.innerHTML =
+            `<strong>Colors:</strong> ${colorStr || 'Mixed'} &nbsp;·&nbsp; ` +
+            `<strong>Season:</strong> ${SEASON_LABELS[tags.season] || tags.season} &nbsp;·&nbsp; ` +
+            `<strong>Material:</strong> ${tags.material}`;
+          autoInfo.classList.remove('hidden');
+        }
+
+        // Update the preview with the background-removed image
+        if (bgRemoved && bgRemoved !== src) {
+          catPreview.src = bgRemoved;
+        }
+      }
+    }
+  });
+
+  observer.observe(catPreview, { attributes: true });
+
+  // Expose the current auto-tags so the save handler can use them
+  window._getCurrentAutoTags = () => currentAutoTags;
+  window._getCurrentBgRemoved = () => currentBgRemoved;
 })();
 
 $("aiMixBtn").addEventListener("click", () => {
@@ -4876,11 +5854,12 @@ async function initFaceLandmarker() {
 
   try {
     const usePrivate = !!(window.dsPrivacy && window.dsPrivacy.isPrivateMode());
+    const delegate = usePrivate ? "CPU" : "GPU";
     const landmarker = await FaceLandmarker.createFromOptions(fileset, {
       baseOptions: {
         modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
         // Private mode → CPU (WASM) backend, no GPU fingerprint surface.
-        delegate: usePrivate ? "CPU" : "GPU",
+        delegate: delegate,
       },
       runningMode: "IMAGE",
       numFaces: 1,
@@ -4895,11 +5874,35 @@ async function initFaceLandmarker() {
       );
     }
     // GPU delegate can fail on locked-down browsers / virtualized GPUs.
+    // Instead of surfacing a hard error, automatically retry with the
+    // CPU (WASM) delegate. This significantly increases compatibility
+    // with older mobile devices where WebGL is broken or blocked.
     if (/webgl|gpu|delegate|context/i.test(e?.message || '')) {
-      throw new AIEngineError(
-        "Your browser couldn't initialize the GPU for the AI engine. Try enabling Private Mode in Privacy details to use the slower CPU backend, or update your graphics drivers.",
-        { kind: 'unsupported', retryable: false }
-      );
+      console.warn('[ai] GPU delegate failed, falling back to CPU delegate');
+      try {
+        loadingText.textContent = "Fallback to CPU mode…";
+        const cpuLandmarker = await FaceLandmarker.createFromOptions(fileset, {
+          baseOptions: {
+            modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
+            delegate: "CPU",
+          },
+          runningMode: "IMAGE",
+          numFaces: 1,
+        });
+        store.set({ faceLandmarker: cpuLandmarker, aiReady: true, cpuFallback: true });
+        // Show a brief, non-blocking toast so the user knows CPU
+        // mode is active — no critical error overlay needed.
+        if (window.dsPrivacy && typeof window.dsPrivacy.showToast === 'function') {
+          window.dsPrivacy.showToast('Running in CPU mode — analysis may be slightly slower');
+        }
+        return; // success via CPU fallback
+      } catch (cpuErr) {
+        console.error('[ai] CPU delegate also failed', cpuErr);
+        throw new AIEngineError(
+          "The AI engine couldn't start on this device. Please try a different browser or update your graphics drivers.",
+          { kind: 'unsupported', retryable: false }
+        );
+      }
     }
     throw new AIEngineError(
       "The AI engine couldn't load. Please refresh and try again.",
@@ -5833,6 +6836,175 @@ function runWorkerAnalysis(pixelBuffer, W, H, landmarks) {
 }
 
 // ============================================================
+// DUEL / COLOR-HISTOGRAM IMAGE WORKER
+// ============================================================
+// A second inline Web Worker for offloading image analysis that
+// doesn't need face-landmark context. Used by the Duel feature
+// (compute contrast/saturation/warmth/hue for two uploaded photos)
+// and by the scan flow's full color-histogram analysis (which
+// includes RGB quantization, top-color extraction, and Laplacian
+// blur detection on the 96px thumbnail).
+//
+// Running these pixel-heavy loops off the main thread prevents UI
+// jank when processing 2–5 MB phone photos, especially on mid-
+// range devices where the main thread can block for 30–80ms.
+//
+// The worker receives the raw RGBA pixel buffer (transferable),
+// the dimensions, and a `mode` flag that selects the analysis
+// depth: 'duel' (lightweight) or 'scan' (full histogram + blur).
+// ============================================================
+
+const imageAnalysisWorkerCode = `
+// ---- Worker-side image analysis ----
+// Operates on a flat Uint8ClampedArray (RGBA) representing a
+// downscaled thumbnail (typically 96px wide). No Canvas needed.
+
+self.onmessage = function(e) {
+  var d = e.data;
+  var pixels = new Uint8ClampedArray(d.pixelBuffer);
+  var W = d.W, H = d.H;
+  var mode = d.mode || 'duel'; // 'duel' or 'scan'
+
+  var rSum = 0, gSum = 0, bSum = 0;
+  var lumaSum = 0, lumaSqSum = 0, satSum = 0;
+  var hueBins = new Array(12).fill(0);
+  var n = W * H;
+
+  // Extra state for 'scan' mode
+  var rgbBuckets = mode === 'scan' ? {} : null;
+
+  for (var i = 0; i < pixels.length; i += 4) {
+    var r = pixels[i], g = pixels[i+1], b = pixels[i+2];
+    rSum += r; gSum += g; bSum += b;
+    var luma = 0.299 * r + 0.587 * g + 0.114 * b;
+    lumaSum += luma; lumaSqSum += luma * luma;
+
+    var max = Math.max(r, g, b);
+    var min = Math.min(r, g, b);
+    var v = max / 255;
+    var s = max === 0 ? 0 : (max - min) / max;
+    satSum += s;
+
+    if (s > 0.18 && v > 0.15 && v < 0.95) {
+      var h;
+      if (max === min) h = 0;
+      else if (max === r) h = ((g - b) / (max - min) + 6) % 6;
+      else if (max === g) h = (b - r) / (max - min) + 2;
+      else h = (r - g) / (max - min) + 4;
+      h *= 60;
+      hueBins[Math.floor(h / 30) % 12]++;
+    }
+
+    // RGB quantization for dominant color extraction (scan mode only)
+    if (mode === 'scan') {
+      var qr = r >> 6, qg = g >> 6, qb = b >> 6;
+      var key = (qr << 4) | (qg << 2) | qb;
+      if (!rgbBuckets[key]) rgbBuckets[key] = { r: 0, g: 0, b: 0, count: 0 };
+      rgbBuckets[key].r += r;
+      rgbBuckets[key].g += g;
+      rgbBuckets[key].b += b;
+      rgbBuckets[key].count += 1;
+    }
+  }
+
+  var avgR = rSum / n, avgG = gSum / n, avgB = bSum / n;
+  var avgLuma = lumaSum / n;
+  var variance = (lumaSqSum / n) - (avgLuma * avgLuma);
+  var contrast = Math.sqrt(Math.max(0, variance));
+  var avgSat = satSum / n;
+  var warmth = avgR - avgB;
+
+  var maxBin = 0, maxIdx = 0;
+  for (var bi = 0; bi < hueBins.length; bi++) {
+    if (hueBins[bi] > maxBin) { maxBin = hueBins[bi]; maxIdx = bi; }
+  }
+  var dominantHue = maxIdx * 30 + 15;
+  var hueDiversity = 0;
+  for (var hj = 0; hj < hueBins.length; hj++) {
+    if (hueBins[hj] > n * 0.025) hueDiversity++;
+  }
+
+  var results = {
+    avgR: avgR, avgG: avgG, avgB: avgB,
+    avgLuma: avgLuma, contrast: contrast, avgSat: avgSat,
+    warmth: warmth, dominantHue: dominantHue, hueDiversity: hueDiversity,
+    pixelCount: n
+  };
+
+  // --- Scan-mode extras: top colors + blur detection ---
+  if (mode === 'scan') {
+    // Top 3 dominant colors
+    var sortedBuckets = Object.values(rgbBuckets).sort(function(a, b) { return b.count - a.count; });
+    var topColors = sortedBuckets.slice(0, 3).map(function(bk) {
+      return {
+        r: Math.round(bk.r / bk.count),
+        g: Math.round(bk.g / bk.count),
+        b: Math.round(bk.b / bk.count),
+        pct: bk.count / n
+      };
+    });
+    results.topColors = topColors;
+
+    // Laplacian blur detection
+    var lapSum = 0, lapSqSum = 0, lapCount = 0;
+    for (var ly = 1; ly < H - 1; ly++) {
+      for (var lx = 1; lx < W - 1; lx++) {
+        var idx = (ly * W + lx) * 4;
+        var lumaC = 0.299*pixels[idx] + 0.587*pixels[idx+1] + 0.114*pixels[idx+2];
+        var idxU = ((ly-1) * W + lx) * 4;
+        var lumaU = 0.299*pixels[idxU] + 0.587*pixels[idxU+1] + 0.114*pixels[idxU+2];
+        var idxD = ((ly+1) * W + lx) * 4;
+        var lumaD = 0.299*pixels[idxD] + 0.587*pixels[idxD+1] + 0.114*pixels[idxD+2];
+        var idxL = (ly * W + lx - 1) * 4;
+        var lumaL = 0.299*pixels[idxL] + 0.587*pixels[idxL+1] + 0.114*pixels[idxL+2];
+        var idxR = (ly * W + lx + 1) * 4;
+        var lumaR = 0.299*pixels[idxR] + 0.587*pixels[idxR+1] + 0.114*pixels[idxR+2];
+        var lap = -4 * lumaC + lumaU + lumaD + lumaL + lumaR;
+        lapSum += lap; lapSqSum += lap * lap; lapCount++;
+      }
+    }
+    var lapMean = lapCount ? lapSum / lapCount : 0;
+    var lapVar = lapCount ? (lapSqSum / lapCount) - (lapMean * lapMean) : 0;
+    var blurScore = Math.sqrt(Math.max(0, lapVar));
+    results.blurScore = blurScore;
+    results.isBlurry = blurScore < 6;
+  }
+
+  self.postMessage(results);
+};
+`;
+
+// Create the image analysis worker from the inline code blob
+var _imgAnalysisWorkerBlob = new Blob([imageAnalysisWorkerCode], { type: 'application/javascript' });
+var _imgAnalysisWorkerUrl = URL.createObjectURL(_imgAnalysisWorkerBlob);
+var imageAnalysisWorker = new Worker(_imgAnalysisWorkerUrl);
+
+// Promise wrapper for the image analysis worker.
+// `pixelBuffer` is transferred (zero-copy). `mode` is 'duel' or 'scan'.
+function runImageAnalysis(pixelBuffer, W, H, mode) {
+  return new Promise(function(resolve, reject) {
+    var timeout = setTimeout(function() {
+      imageAnalysisWorker.onmessage = null;
+      reject(new Error('Image analysis worker timed out'));
+    }, 10000);
+    imageAnalysisWorker.onmessage = function(e) {
+      clearTimeout(timeout);
+      imageAnalysisWorker.onmessage = null;
+      resolve(e.data);
+    };
+    imageAnalysisWorker.onerror = function(err) {
+      clearTimeout(timeout);
+      imageAnalysisWorker.onmessage = null;
+      reject(err);
+    };
+    imageAnalysisWorker.postMessage(
+      { pixelBuffer: pixelBuffer, W: W, H: H, mode: mode || 'duel' },
+      [pixelBuffer]
+    );
+  });
+}
+
+// ============================================================
 // SCAN IMAGE COMPRESSION
 // ============================================================
 // Compresses the captured scan frame before storing it as lastCap
@@ -6522,6 +7694,26 @@ function generateStyleAnalysis(colorData, occasion, items) {
     rules.push({ passed: false, text: "Approachability: Soften any rigid edges" });
   }
 
+  // ── Vibe Sync venue-aware rules ──
+  try {
+    const vibe = typeof window.getVenueVibe === 'function' ? window.getVenueVibe() : null;
+    if (vibe && vibe.key) {
+      rules.push({ passed: true, text: `Vibe Sync: ${vibe.label} detected — ${vibe.atmosphere}` });
+      if (vibe.lighting && vibe.lighting.includes('dim') || vibe.lighting?.includes('low') || vibe.lighting?.includes('candle')) {
+        if (colorData?.id === 'black' || colorData?.id === 'navy') {
+          rules.push({ passed: true, text: "Venue Match: Dark palette suits dim lighting" });
+        } else if (colorData?.isLight) {
+          rules.push({ passed: false, text: "Venue Mismatch: Bright colors may wash out in dim " + vibe.label.toLowerCase() + " lighting" });
+        }
+      }
+      if (vibe.lighting && (vibe.lighting.includes('daylight') || vibe.lighting.includes('natural'))) {
+        if (colorData?.isLight || colorData?.id === 'white' || colorData?.id === 'cream') {
+          rules.push({ passed: true, text: "Venue Match: Light palette catches natural light beautifully" });
+        }
+      }
+    }
+  } catch (e) {}
+
   let fixes = generateImprovements(items, colorData, occasion);
   const maxGain = 92 - score;
   let used = 0;
@@ -6756,10 +7948,6 @@ function renderStyleCoach(colorData, occasion, locked = false, items = null) {
         </div>
       </div>
       <div class="flex gap-2">
-        <button id="askExpertBtn" onclick="window.openAskExpert()" class="group relative inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider px-3 py-2 rounded-full bg-white/5 border border-white/15 text-white hover:bg-white/10 transition-all">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-          Expert
-        </button>
         <button id="openShareBtn" onclick="window.openShareModal()" class="group relative inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider px-3 py-2 rounded-full bg-gradient-to-r from-brand-500 to-purple-500 text-white shadow-[0_0_20px_rgba(236,72,153,0.4)] hover:scale-105 transition-transform">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
           Share
@@ -8228,6 +9416,538 @@ boot();
 // listeners attached above will keep it in sync from here on.
 applyOfflineState(!navigator.onLine);
 </script>
+
+<!-- ============================================================
+     VIBE SYNC MODULE — Standalone venue style detection
+     Uses Google Maps Places API (Autocomplete + Place Details)
+     to identify the date venue, then maps it to a vibe profile
+     with atmosphere, lighting, color & grooming advice.
+     Falls back to keyword heuristics when Google Maps is unavailable.
+     ============================================================ -->
+<script>
+(function initVibeSync() {
+  'use strict';
+
+  const VIBE_STORAGE_KEY = 'datescan.venueVibe';
+
+  // ── Venue vibe knowledge base ──
+  const VIBE_PROFILES = {
+    cocktail_bar: {
+      keywords: ['cocktail', 'bar', 'lounge', 'speakeasy', 'mixology', 'whiskey', 'gin bar', 'wine bar', 'martini', 'negroni'],
+      googleTypes: ['bar', 'night_club', 'liquor_store'],
+      icon: '🍸',
+      label: 'Cocktail Bar / Lounge',
+      atmosphere: 'dim, moody, intimate',
+      lighting: 'low warm amber and candlelight',
+      colorAdvice: 'Deep jewel tones (burgundy, navy, emerald) or sleek monochrome. Avoid neon brights — they clash with the warm low light.',
+      groomingTip: 'Matte skin finish, subtle fragrance, well-groomed facial hair. Low light forgives minor imperfections but amplifies shine.',
+      formality: 'smart_casual',
+      season: 'all',
+      tags: ['dim lighting', 'intimate', 'warm tones', 'evening', 'sophisticated']
+    },
+    rooftop: {
+      keywords: ['rooftop', 'roof', 'terrace', 'skybar', 'sky bar', 'penthouse', 'view', 'panoramic'],
+      googleTypes: [],
+      icon: '🌆',
+      label: 'Rooftop / Terrace',
+      atmosphere: 'open air, breezy, golden-hour glow',
+      lighting: 'natural sunset then ambient string lights',
+      colorAdvice: 'Warm earth tones, soft pastels, or crisp white that catches golden light. Blues photograph beautifully against sky backgrounds.',
+      groomingTip: 'Wind-proof hair (use hold product), sun protection, light fragrance (breeze carries it). Fresh, natural look works best.',
+      formality: 'smart_casual',
+      season: 'spring_summer',
+      tags: ['outdoor', 'golden hour', 'breezy', 'natural light', 'evening']
+    },
+    fine_dining: {
+      keywords: ['fine dining', 'michelin', 'tasting menu', 'gastronomy', 'restaurant', 'bistro', 'brasserie', 'ristorante', 'omakase', 'chef\'s table'],
+      googleTypes: ['restaurant'],
+      icon: '🍽️',
+      label: 'Fine Dining',
+      atmosphere: 'elegant, hushed, refined',
+      lighting: 'soft focused table lighting, chandeliers',
+      colorAdvice: 'Classic darks — black, charcoal, deep navy. A single accent color (tie, pocket square, jewelry) adds personality without shouting.',
+      groomingTip: 'Impeccable grooming: clean nails, polished shoes, subtle cologne applied sparingly. Details matter under close-range conversation.',
+      formality: 'formal',
+      season: 'all',
+      tags: ['elegant', 'intimate', 'refined', 'indoor', 'evening']
+    },
+    coffee: {
+      keywords: ['coffee', 'cafe', 'café', 'coffee shop', 'espresso', 'latte', 'cappuccino', 'bakery', 'brunch'],
+      googleTypes: ['cafe', 'bakery'],
+      icon: '☕',
+      label: 'Coffee Shop / Café',
+      atmosphere: 'casual, warm, laid-back',
+      lighting: 'soft natural window light, warm Edison bulbs',
+      colorAdvice: 'Effortless neutrals, cozy textures (knit, flannel), muted earth tones. Look put-together but not trying too hard.',
+      groomingTip: 'Natural, fresh-faced. "I woke up like this" effortlessness. Light moisturizer, lip balm, clean hair. Casual but intentional.',
+      formality: 'casual',
+      season: 'all',
+      tags: ['casual', 'daytime', 'cozy', 'natural light', 'relaxed']
+    },
+    club: {
+      keywords: ['club', 'nightclub', 'dj', 'dance', 'disco', 'rave', 'techno', 'house music', 'vip'],
+      googleTypes: ['night_club'],
+      icon: '🪩',
+      label: 'Nightclub / Dance Floor',
+      atmosphere: 'loud, energetic, dark with neon accents',
+      lighting: 'strobe, neon, LED, colored spotlights',
+      colorAdvice: 'Bold contrasts — black base with a statement piece that catches light (metallic, sequin, white accent). Fluorescent and UV-reactive colors pop under club lighting.',
+      groomingTip: 'Strong hold hair, long-lasting fragrance (you will sweat), oil-control skincare. Bold but low-maintenance — no touch-ups possible.',
+      formality: 'casual',
+      season: 'all',
+      tags: ['neon lighting', 'high energy', 'dark', 'loud', 'night']
+    },
+    park: {
+      keywords: ['park', 'garden', 'botanical', 'outdoor', 'picnic', 'walk', 'hike', 'trail', 'lake', 'beach', 'seaside'],
+      googleTypes: ['park', 'natural_feature', 'campground'],
+      icon: '🌿',
+      label: 'Outdoor / Nature',
+      atmosphere: 'natural, relaxed, sun-dappled',
+      lighting: 'full daylight, dappled shade, open sky',
+      colorAdvice: 'Breathable fabrics in earth and sky tones. Whites and creams stay cool and photograph well. Avoid heavy darks that absorb heat.',
+      groomingTip: 'Sunscreen is non-negotiable. Sweat-proof grooming, light deodorant, hat or sunglasses as functional accessories. Fresh and clean.',
+      formality: 'casual',
+      season: 'spring_summer',
+      tags: ['outdoor', 'daylight', 'natural', 'relaxed', 'active']
+    },
+    cinema: {
+      keywords: ['cinema', 'movie', 'theater', 'film', 'imax', 'screening'],
+      googleTypes: ['movie_theater'],
+      icon: '🎬',
+      label: 'Cinema / Theater',
+      atmosphere: 'dark, intimate, shared experience',
+      lighting: 'near darkness, screen glow',
+      colorAdvice: 'Comfort is king — soft fabrics, relaxed fit. Dark colors blend into the environment; a subtle pattern or texture adds interest in the lobby.',
+      groomingTip: 'Focus on scent (close proximity) and comfort. No strong fragrances in enclosed spaces. Soft, touchable fabrics invite closeness.',
+      formality: 'casual',
+      season: 'all',
+      tags: ['dark', 'indoor', 'cozy', 'intimate', 'shared']
+    },
+    museum: {
+      keywords: ['museum', 'gallery', 'exhibition', 'art', 'culture', 'opera', 'concert', 'philharmonic', 'ballet'],
+      googleTypes: ['museum', 'art_gallery', 'library'],
+      icon: '🎭',
+      label: 'Cultural Venue',
+      atmosphere: 'curated, intellectual, composed',
+      lighting: 'controlled gallery lighting, stage lighting',
+      colorAdvice: 'Sophisticated palette — muted tones, architectural silhouettes. Express personal style subtly; let the art be the statement.',
+      groomingTip: 'Polished and thoughtful. Clean lines, attention to accessories. Intellectual elegance rather than flashy.',
+      formality: 'smart_casual',
+      season: 'all',
+      tags: ['curated', 'indoor', 'sophisticated', 'cultural', 'evening']
+    },
+    sushi: {
+      keywords: ['sushi', 'ramen', 'izakaya', 'japanese', 'thai', 'vietnamese', 'asian', 'noodle', 'dim sum'],
+      googleTypes: ['meal_takeaway', 'meal_delivery'],
+      icon: '🍣',
+      label: 'Asian Restaurant',
+      atmosphere: 'intimate, warm, zen-inspired',
+      lighting: 'warm pendant lights, paper lanterns, soft glow',
+      colorAdvice: 'Clean minimalism works — monochrome with one accent, or soft neutrals. Avoid overly heavy layering; the setting is already rich.',
+      groomingTip: 'Minimalist grooming — clean scent, neat hair, fresh breath especially. Remove shoes? Clean socks, polished nails.',
+      formality: 'smart_casual',
+      season: 'all',
+      tags: ['warm', 'intimate', 'minimalist', 'indoor', 'evening']
+    },
+    sport: {
+      keywords: ['gym', 'sport', 'basketball', 'football', 'soccer', 'tennis', 'bowling', 'mini golf', 'escape room', 'climbing', 'axe throwing'],
+      googleTypes: ['gym', 'bowling_alley', 'stadium', 'amusement_park'],
+      icon: '⚽',
+      label: 'Active / Sports Date',
+      atmosphere: 'energetic, casual, fun',
+      lighting: 'harsh fluorescent or outdoor daylight',
+      colorAdvice: 'Performance fabrics, athletic-casual blend. Dark colors hide sweat. Bring a layer for post-activity cool-down.',
+      groomingTip: 'Deodorant is critical. Quick-dry everything. Freshen-up kit for after: wipes, travel cologne, comb. Embrace the casual energy.',
+      formality: 'casual',
+      season: 'all',
+      tags: ['active', 'casual', 'energetic', 'daytime', 'fun']
+    },
+    spa: {
+      keywords: ['spa', 'massage', 'wellness', 'sauna', 'thermal bath', 'hot spring', 'hammam'],
+      googleTypes: ['spa'],
+      icon: '🧖',
+      label: 'Spa / Wellness',
+      atmosphere: 'serene, soft, tranquil',
+      lighting: 'ambient warm diffused light, candle accents',
+      colorAdvice: 'Clean, minimalist whites and soft earth tones. You may be in a robe — accessories (watch, subtle jewelry) elevate the look before and after.',
+      groomingTip: 'Fresh-faced and hydrated skin. Skip heavy cologne — strong scents are overwhelming in enclosed spa environments. Moisturize.',
+      formality: 'casual',
+      season: 'all',
+      tags: ['relaxing', 'soft lighting', 'minimalist', 'indoor', 'tranquil']
+    },
+    shopping: {
+      keywords: ['shopping', 'mall', 'boutique', 'store', 'market', 'vintage shop', 'outlet'],
+      googleTypes: ['shopping_mall', 'clothing_store', 'department_store', 'store'],
+      icon: '🛍️',
+      label: 'Shopping Date',
+      atmosphere: 'bright, social, walk-and-talk',
+      lighting: 'bright retail or natural skylight',
+      colorAdvice: 'Stylish but comfortable — you will walk a lot. Layered looks that photograph well in mirrors. Statement piece that says "I have taste."',
+      groomingTip: 'Polished casual — you may try things on. Comfortable shoes, minimal layers for fitting rooms. Confident, effortless style.',
+      formality: 'smart_casual',
+      season: 'all',
+      tags: ['bright', 'social', 'walkable', 'casual', 'daytime']
+    }
+  };
+
+  // ── Google Place Type → Vibe profile mapping ──
+  const GOOGLE_TYPE_MAP = {};
+  for (const [key, profile] of Object.entries(VIBE_PROFILES)) {
+    (profile.googleTypes || []).forEach(t => { GOOGLE_TYPE_MAP[t] = key; });
+  }
+
+  // ── Analyze venue text against knowledge base (keyword fallback) ──
+  function analyzeVenueKeywords(text) {
+    if (!text || !text.trim()) return null;
+    const lower = text.toLowerCase().trim();
+
+    let bestMatch = null;
+    let bestScore = 0;
+
+    for (const [key, profile] of Object.entries(VIBE_PROFILES)) {
+      let score = 0;
+      for (const kw of profile.keywords) {
+        if (lower.includes(kw)) score += kw.length;
+      }
+      if (score > bestScore) {
+        bestScore = score;
+        bestMatch = { key, ...profile };
+      }
+    }
+
+    if (!bestMatch) {
+      const nightWords = ['bar', 'club', 'lounge', 'night', 'evening', 'dinner'];
+      const dayWords = ['lunch', 'brunch', 'morning', 'breakfast', 'afternoon', 'cafe'];
+      const formalWords = ['restaurant', 'dining', 'reservations', 'private'];
+
+      let isNight = nightWords.some(w => lower.includes(w));
+      let isDay = dayWords.some(w => lower.includes(w));
+      let isFormal = formalWords.some(w => lower.includes(w));
+
+      if (isFormal && isNight) {
+        bestMatch = { key: 'fine_dining', ...VIBE_PROFILES.fine_dining };
+      } else if (isNight) {
+        bestMatch = { key: 'cocktail_bar', ...VIBE_PROFILES.cocktail_bar };
+      } else if (isDay) {
+        bestMatch = { key: 'coffee', ...VIBE_PROFILES.coffee };
+      }
+    }
+
+    return bestMatch;
+  }
+
+  // ── Analyze Google Place types → Vibe profile ──
+  function analyzeGoogleTypes(place) {
+    if (!place) return null;
+    const types = place.types || [];
+
+    // Check each Google type against our mapping
+    for (const t of types) {
+      if (GOOGLE_TYPE_MAP[t]) {
+        const profile = VIBE_PROFILES[GOOGLE_TYPE_MAP[t]];
+        if (profile) return { key: GOOGLE_TYPE_MAP[t], ...profile };
+      }
+    }
+
+    // Price level & rating heuristics for restaurants
+    if (types.includes('restaurant') || types.includes('food')) {
+      const priceLevel = place.price_level;
+      if (priceLevel >= 3) {
+        return { key: 'fine_dining', ...VIBE_PROFILES.fine_dining };
+      }
+      return { key: 'fine_dining', ...VIBE_PROFILES.fine_dining };
+    }
+
+    return null;
+  }
+
+  // ── Render vibe sync result card ──
+  function renderVibeSync(vibe, venueName, source) {
+    const card = document.getElementById('vibeSyncCard');
+    const icon = document.getElementById('vibeSyncIcon');
+    const summary = document.getElementById('vibeSyncSummary');
+    const tags = document.getElementById('vibeSyncTags');
+    const badge = document.getElementById('vibeSyncBadge');
+    const label = document.getElementById('vibeSyncLabel');
+    const colorAdvice = document.getElementById('vibeSyncColorAdvice');
+    const groomingTip = document.getElementById('vibeSyncGroomingTip');
+    const statusBadge = document.getElementById('vibeSyncStatusBadge');
+
+    if (!vibe || !card) {
+      card?.classList.add('hidden');
+      if (statusBadge) {
+        statusBadge.textContent = 'idle';
+        statusBadge.className = 'text-[9px] uppercase tracking-wider font-bold px-2 py-1 rounded-full bg-white/5 text-gray-500 border border-white/10';
+      }
+      return;
+    }
+
+    icon.textContent = vibe.icon;
+    if (label) label.textContent = vibe.label;
+    summary.textContent = vibe.atmosphere + '. Lighting: ' + vibe.lighting + '.';
+
+    // Color advice & grooming tip
+    if (colorAdvice) colorAdvice.textContent = vibe.colorAdvice || '';
+    if (groomingTip) groomingTip.textContent = vibe.groomingTip || '';
+
+    // Update badges
+    if (badge) {
+      if (source === 'google') {
+        badge.textContent = 'Google Maps';
+        badge.className = 'text-[8px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded-full bg-blue-500/15 text-blue-300 border border-blue-500/20';
+      } else {
+        badge.textContent = 'Keyword';
+        badge.className = 'text-[8px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/20';
+      }
+    }
+
+    if (statusBadge) {
+      if (source === 'google') {
+        statusBadge.textContent = 'maps synced';
+        statusBadge.className = 'text-[9px] uppercase tracking-wider font-bold px-2 py-1 rounded-full bg-blue-500/15 text-blue-300 border border-blue-500/25';
+      } else {
+        statusBadge.textContent = 'synced';
+        statusBadge.className = 'text-[9px] uppercase tracking-wider font-bold px-2 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/25';
+      }
+    }
+
+    tags.innerHTML = '';
+    vibe.tags.forEach(t => {
+      const span = document.createElement('span');
+      span.className = 'text-[9px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-300/80 border border-purple-500/15';
+      span.textContent = t;
+      tags.appendChild(span);
+    });
+
+    card.classList.remove('hidden');
+  }
+
+  // ── Persist vibe to localStorage + store ──
+  function saveVibe(vibe, venueName, source) {
+    try {
+      const data = vibe ? {
+        venue: venueName,
+        key: vibe.key,
+        label: vibe.label,
+        atmosphere: vibe.atmosphere,
+        lighting: vibe.lighting,
+        colorAdvice: vibe.colorAdvice,
+        groomingTip: vibe.groomingTip,
+        formality: vibe.formality,
+        season: vibe.season,
+        tags: vibe.tags,
+        icon: vibe.icon,
+        source: source || 'keyword'
+      } : null;
+      localStorage.setItem(VIBE_STORAGE_KEY, JSON.stringify(data));
+      if (window.store) {
+        window.store.dispatch({ type: 'SET_VENUE_VIBE', payload: data });
+      }
+    } catch (e) {}
+  }
+
+  function loadVibe() {
+    try {
+      const raw = localStorage.getItem(VIBE_STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) { return null; }
+  }
+
+  // ── Debounce helper ──
+  let debounceTimer = null;
+  function debounce(fn, ms) {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(fn, ms);
+  }
+
+  // ── Google Maps Places Autocomplete setup ──
+  let autocomplete = null;
+  let placesService = null;
+  let googleMapsReady = false;
+
+  function initGoogleMapsAutocomplete() {
+    const gmapsInput = document.getElementById('venueInputGmaps');
+    if (!gmapsInput || !window.google || !window.google.maps || !window.google.maps.places) {
+      console.log('[VibeSync] Google Maps Places not available, using keyword fallback');
+      return;
+    }
+
+    try {
+      // Bind Autocomplete to the HIDDEN input (not the visible one)
+      // to prevent Google Maps from locking/taking over the user's input field
+      autocomplete = new google.maps.places.Autocomplete(gmapsInput, {
+        types: ['establishment'],
+        fields: ['name', 'types', 'formatted_address', 'price_level', 'rating', 'geometry']
+      });
+
+      placesService = new google.maps.places.PlacesService(document.createElement('div'));
+      googleMapsReady = true;
+
+      // Style the autocomplete dropdown to match the app's dark theme
+      const styleEl = document.createElement('style');
+      styleEl.textContent = `
+        .pac-container { background: #18181b !important; border: 1px solid rgba(168,85,247,0.3) !important; border-radius: 12px !important; margin-top: 4px !important; box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important; overflow: hidden !important; z-index: 9999 !important; }
+        .pac-item { color: #d1d5db !important; border-top: 1px solid rgba(255,255,255,0.05) !important; padding: 10px 14px !important; font-size: 13px !important; cursor: pointer !important; }
+        .pac-item:hover { background: rgba(168,85,247,0.1) !important; }
+        .pac-item-selected { background: rgba(168,85,247,0.15) !important; }
+        .pac-icon { display: none !important; }
+        .pac-item-query { color: #f3f4f6 !important; font-size: 13px !important; }
+        .pac-item-query .pac-matched { color: #c084fc !important; font-weight: 600 !important; }
+        .pac-secondary-query, .pac-logo { color: #6b7280 !important; font-size: 11px !important; }
+        .pac-logo::after { display: none !important; }
+        .hdpi.pac-logo { background: none !important; }
+      `;
+      document.head.appendChild(styleEl);
+
+      // When user selects a place from Google's suggestions
+      autocomplete.addListener('place_changed', () => {
+        const place = autocomplete.getPlace();
+        if (!place || !place.name) return;
+
+        const venueName = place.name;
+        window._lastGmapsSelection = Date.now();
+
+        // Copy the selected place name into the VISIBLE input
+        const visibleInput = document.getElementById('venueInput');
+        if (visibleInput) visibleInput.value = venueName;
+
+        // Try Google type-based analysis first
+        let vibe = analyzeGoogleTypes(place);
+
+        // If Google types don't match, fall back to keyword analysis on the place name
+        if (!vibe) {
+          const fullText = venueName + ' ' + (place.formatted_address || '');
+          vibe = analyzeVenueKeywords(fullText);
+        }
+
+        renderVibeSync(vibe, venueName, 'google');
+        saveVibe(vibe, venueName, 'google');
+
+        const clearBtn = document.getElementById('venueClearBtn');
+        if (clearBtn) clearBtn.classList.remove('hidden');
+      });
+
+      console.log('[VibeSync] Google Maps Autocomplete initialized on hidden input');
+    } catch (err) {
+      console.warn('[VibeSync] Google Maps init failed:', err);
+    }
+  }
+
+  // ── Bind input (with keyword fallback when Google Maps unavailable) ──
+  function bindVibeSync() {
+    const input = document.getElementById('venueInput');
+    const gmapsInput = document.getElementById('venueInputGmaps');
+    const clearBtn = document.getElementById('venueClearBtn');
+
+    if (!input) return;
+
+    // Restore previously saved venue
+    const saved = loadVibe();
+    if (saved && saved.venue) {
+      input.value = saved.venue;
+      clearBtn?.classList.remove('hidden');
+      renderVibeSync(saved, saved.venue, saved.source);
+      if (window.store) {
+        window.store.dispatch({ type: 'SET_VENUE_VIBE', payload: saved });
+      }
+    }
+
+    // Keyword-based input handler — runs on every keystroke
+    input.addEventListener('input', () => {
+      const val = input.value.trim();
+      if (val) {
+        clearBtn?.classList.remove('hidden');
+      } else {
+        clearBtn?.classList.add('hidden');
+      }
+      // Sync text to the hidden Google Maps input so Autocomplete can show suggestions
+      if (gmapsInput) gmapsInput.value = input.value;
+
+      // Debounced keyword analysis (also acts as fallback if Google Maps doesn't fire)
+      debounce(() => {
+        // Skip if Google Maps recently selected a place (within 800ms)
+        if (googleMapsReady && Date.now() - (window._lastGmapsSelection || 0) < 800) return;
+        const vibe = analyzeVenueKeywords(val);
+        renderVibeSync(vibe, val, 'keyword');
+        saveVibe(vibe, val, 'keyword');
+      }, 600);
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const vibe = analyzeVenueKeywords(input.value.trim());
+        renderVibeSync(vibe, input.value.trim(), 'keyword');
+        saveVibe(vibe, input.value.trim(), 'keyword');
+      }
+    });
+
+    // Also trigger Google Maps autocomplete on focus
+    input.addEventListener('focus', () => {
+      if (gmapsInput && input.value.trim()) {
+        gmapsInput.value = input.value;
+        // Trigger Google's autocomplete by focusing the hidden input briefly
+        if (googleMapsReady && autocomplete) {
+          try {
+            google.maps.event.trigger(gmapsInput, 'focus', {});
+            google.maps.event.trigger(gmapsInput, 'keydown', { keyCode: 40 });
+          } catch (e) {}
+        }
+      }
+    });
+
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        input.value = '';
+        if (gmapsInput) gmapsInput.value = '';
+        clearBtn.classList.add('hidden');
+        document.getElementById('vibeSyncCard')?.classList.add('hidden');
+        // Reset status badge
+        const statusBadge = document.getElementById('vibeSyncStatusBadge');
+        if (statusBadge) {
+          statusBadge.textContent = 'idle';
+          statusBadge.className = 'text-[9px] uppercase tracking-wider font-bold px-2 py-1 rounded-full bg-white/5 text-gray-500 border border-white/10';
+        }
+        saveVibe(null, '');
+      });
+    }
+
+    // Try Google Maps initialization
+    initGoogleMapsAutocomplete();
+  }
+
+  // ── Boot the module ──
+  function bootVibeSync() {
+    bindVibeSync();
+  }
+
+  // Wait for DOM
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootVibeSync);
+  } else {
+    bootVibeSync();
+  }
+
+  // Expose for AI Coach context + Google Maps callback
+  window.getVenueVibe = () => loadVibe();
+  window.initVibeSync = initGoogleMapsAutocomplete;
+
+})();
+
+// Google Maps Places API — loaded asynchronously.
+// The callback reinitializes the Autocomplete after the API is ready.
+// If the API fails to load (no key, offline, blocked), the module
+// gracefully falls back to keyword-based venue detection.
+function onGoogleMapsLoaded() {
+  if (typeof window.initVibeSync === 'function') {
+    window.initVibeSync();
+  }
+}
+</script>
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBz1MZW2fA5jOqfMKwGnnbD0C0g3Y0c7fk&libraries=places&callback=onGoogleMapsLoaded"
+  onerror="console.warn('[VibeSync] Google Maps script failed to load — using keyword fallback');">
+</script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -8449,7 +10169,50 @@ applyOfflineState(!navigator.onLine);
   if (!form || !input || !messagesEl) return;
 
   let pendingAttachments = [];
-  const history = [];
+  // Chat history — persisted to IndexedDB (datescan-db → 'chats' store)
+  // so the conversation survives page reloads and app restarts.
+  let history = [];
+  let chatHistoryLoaded = false;
+
+  // Load previous conversation from IndexedDB and re-render the UI.
+  async function initChatHistory() {
+    try {
+      if (!window.chatDB) return;
+      const saved = await window.chatDB.getAll();
+      if (saved && saved.length) {
+        history = saved.map(m => ({ role: m.role, content: m.content }));
+        chatHistoryLoaded = true;
+        // Re-render saved messages into the chat UI
+        for (const msg of saved) {
+          const imageUrls = [];
+          // Extract image URLs from content if it's an array (multimodal)
+          if (Array.isArray(msg.content)) {
+            let text = '';
+            for (const part of msg.content) {
+              if (part.type === 'text') text = part.text;
+              else if (part.type === 'image_url' && part.image_url?.url) imageUrls.push(part.image_url.url);
+            }
+            addMessage(msg.role, text, imageUrls);
+          } else {
+            addMessage(msg.role, msg.content, imageUrls);
+          }
+        }
+        scrollDown();
+      }
+    } catch (e) {
+      console.warn('[chat] failed to load history from IDB:', e);
+    }
+  }
+  initChatHistory();
+
+  // Persist a message to IndexedDB. Non-blocking — errors are logged
+  // but never prevent the UI from updating.
+  function persistMessage(role, content) {
+    if (!window.chatDB) return;
+    window.chatDB.add({ role, content }).catch(e => {
+      console.warn('[chat] failed to persist message to IDB:', e);
+    });
+  }
 
   const CACHE_KEY = 'datescan.chatCache';
   const CACHE_MAX = 50;          
@@ -8551,6 +10314,24 @@ applyOfflineState(!navigator.onLine);
     });
   }
 
+  // Safely set the bubble's text content while preserving
+  // the action bar (👍/👎 + Apply + Report) that lives at the
+  // bottom of every assistant bubble. Using `bubble.textContent = …`
+  // wipes all child elements including the buttons; this helper
+  // only updates the `.bubble-text` div and re-appends the action
+  // bar and cached badge if they existed.
+  function setBubbleText(bubble, text) {
+    const actionBar = bubble.querySelector('.action-bar');
+    const cachedBadge = bubble.querySelector('[data-cached-badge]');
+    bubble.textContent = '';
+    const t = document.createElement('div');
+    t.className = 'bubble-text';
+    t.textContent = text;
+    bubble.appendChild(t);
+    if (cachedBadge) bubble.appendChild(cachedBadge);
+    if (actionBar) bubble.appendChild(actionBar);
+  }
+
   function scrollDown(){ messagesEl.scrollTop = messagesEl.scrollHeight; }
 
   function addMessage(role, text, imageUrls) {
@@ -8581,30 +10362,117 @@ applyOfflineState(!navigator.onLine);
     }
     if (text) {
       const t = document.createElement('div');
+      t.className = 'bubble-text';
       t.textContent = text;
       bubble.appendChild(t);
     }
     // Google Play Generative AI policy: users must be able to report
-    // offensive / harmful AI-generated content. We attach a small
+    // offensive / harmful AI-generated content. We attach a visible
     // "Report" affordance to every assistant bubble (skip user bubbles
     // and empty placeholders used by the typing indicator — those get
-    // their report button after the final text is set).
+    // their action bar after the final text is set).
+    //
+    // AI Feedback Loop: 👍/👎 + "Apply suggestion" buttons enable a
+    // lightweight on-device classifier to adjust future responses.
     if (role === 'assistant') {
-      const reportRow = document.createElement('div');
-      reportRow.className = 'mt-1.5 flex justify-end';
+      const actionBar = document.createElement('div');
+      actionBar.className = 'action-bar mt-2 flex items-center gap-1.5 flex-wrap';
+
+      // Will hold the "Apply suggestion" button if the response
+      // contains actionable advice. Declared at this scope so the
+      // 👍 handler can reference it safely.
+      let applyBtn = null;
+
+      // --- 👍 Thumbs Up ---
+      const thumbUp = document.createElement('button');
+      thumbUp.type = 'button';
+      thumbUp.className = 'feedback-btn thumb-up text-[11px] text-gray-400 hover:text-emerald-400 transition-all inline-flex items-center gap-0.5 px-1.5 py-1 rounded-md border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/10';
+      thumbUp.setAttribute('aria-label', 'Good response');
+      thumbUp.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><path stroke-linecap="round" stroke-linejoin="round" d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg>';
+      thumbUp.addEventListener('click', function () {
+        if (thumbUp.dataset.voted) return;
+        thumbUp.dataset.voted = '1';
+        thumbUp.classList.add('text-emerald-400', 'border-emerald-500/40', 'bg-emerald-500/10');
+        thumbUp.classList.remove('text-gray-400');
+        thumbDown.classList.add('opacity-30', 'pointer-events-none');
+        if (applyBtn) applyBtn.classList.remove('opacity-30', 'pointer-events-none');
+        const snippet = (bubble.querySelector('.bubble-text')?.textContent || '').slice(0, 500);
+        const category = window.FeedbackClassifier?.classifyCategory?.(snippet) || 'general';
+        if (window.feedbackDB) {
+          window.feedbackDB.add({ sentiment: 'positive', category: category, responseSnippet: snippet, applied: false }).catch(e => console.warn('[feedback] save failed:', e));
+        }
+        try { if (typeof triggerHaptic === 'function') triggerHaptic('tap'); } catch (_) {}
+      });
+
+      // --- 👎 Thumbs Down ---
+      const thumbDown = document.createElement('button');
+      thumbDown.type = 'button';
+      thumbDown.className = 'feedback-btn thumb-down text-[11px] text-gray-400 hover:text-red-400 transition-all inline-flex items-center gap-0.5 px-1.5 py-1 rounded-md border border-white/5 hover:border-red-500/30 hover:bg-red-500/10';
+      thumbDown.setAttribute('aria-label', 'Poor response');
+      thumbDown.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9a2 2 0 002 2.3H10z"/><path stroke-linecap="round" stroke-linejoin="round" d="M17 2h2.67A2.31 2.31 0 0122 4v7a2.31 2.31 0 01-2.33 2H17"/></svg>';
+      thumbDown.addEventListener('click', function () {
+        if (thumbDown.dataset.voted) return;
+        thumbDown.dataset.voted = '1';
+        thumbDown.classList.add('text-red-400', 'border-red-500/40', 'bg-red-500/10');
+        thumbDown.classList.remove('text-gray-400');
+        thumbUp.classList.add('opacity-30', 'pointer-events-none');
+        const snippet = (bubble.querySelector('.bubble-text')?.textContent || '').slice(0, 500);
+        const category = window.FeedbackClassifier?.classifyCategory?.(snippet) || 'general';
+        if (window.feedbackDB) {
+          window.feedbackDB.add({ sentiment: 'negative', category: category, responseSnippet: snippet, applied: false }).catch(e => console.warn('[feedback] save failed:', e));
+        }
+        try { if (typeof triggerHaptic === 'function') triggerHaptic('tap'); } catch (_) {}
+      });
+
+      actionBar.appendChild(thumbUp);
+      actionBar.appendChild(thumbDown);
+
+      // --- "Apply suggestion" button ---
+      // Detects if the assistant response contains actionable advice
+      // (pattern: imperative sentences, "try", "wear", "avoid", "swap", etc.)
+      // and shows a one-tap "Apply" affordance that marks the suggestion
+      // as applied in the feedback DB for the classifier.
+      const bubbleText = text || '';
+      const APPLY_PATTERN = /\b(try|wear|swap|avoid|go for|opt for|switch|replace|add|skip|choose|pick|pair|combine|layer|mix)\b/i;
+      if (APPLY_PATTERN.test(bubbleText)) {
+        applyBtn = document.createElement('button');
+        applyBtn.type = 'button';
+        applyBtn.className = 'feedback-btn apply-suggestion text-[10px] text-brand-400 hover:text-brand-300 transition-all inline-flex items-center gap-1 px-2 py-1 rounded-md border border-brand-500/20 hover:border-brand-500/40 hover:bg-brand-500/10 ml-1';
+        applyBtn.setAttribute('aria-label', 'Apply this suggestion');
+        applyBtn.innerHTML = '<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span>Apply</span>';
+        applyBtn.addEventListener('click', function () {
+          if (applyBtn.dataset.applied) return;
+          applyBtn.dataset.applied = '1';
+          applyBtn.innerHTML = '<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span>Applied</span>';
+          applyBtn.classList.add('text-emerald-400', 'border-emerald-500/30');
+          applyBtn.classList.remove('text-brand-400', 'border-brand-500/20');
+          const snippet = (bubble.querySelector('.bubble-text')?.textContent || '').slice(0, 500);
+          const category = window.FeedbackClassifier?.classifyCategory?.(snippet) || 'general';
+          if (window.feedbackDB) {
+            window.feedbackDB.add({ sentiment: 'positive', category: category, responseSnippet: snippet, applied: true }).catch(e => console.warn('[feedback] save failed:', e));
+          }
+          try { if (typeof triggerHaptic === 'function') triggerHaptic('tap'); } catch (_) {}
+        });
+        actionBar.appendChild(applyBtn);
+      }
+
+      // --- Spacer ---
+      const spacer = document.createElement('div');
+      spacer.className = 'flex-1';
+      actionBar.appendChild(spacer);
+
+      // --- Report button ---
       const reportBtn = document.createElement('button');
       reportBtn.type = 'button';
-      reportBtn.className = 'text-[10px] text-gray-500 hover:text-brand-400 transition-colors inline-flex items-center gap-1 px-1.5 py-0.5 rounded';
+      reportBtn.className = 'text-[10px] text-gray-400 hover:text-red-400 transition-colors inline-flex items-center gap-1 px-2 py-1 rounded-md border border-white/5 hover:border-red-500/30 hover:bg-red-500/10';
       reportBtn.setAttribute('aria-label', 'Report this AI response');
       reportBtn.innerHTML = '<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21V4a1 1 0 011-1h12l-2 4 2 4H4"/></svg><span>Report</span>';
       reportBtn.addEventListener('click', function () {
-        if (typeof window.openReportModal === 'function') {
-          const bodyText = (bubble.querySelector('div:not(.flex)')?.textContent || '').slice(0, 2000);
-          window.openReportModal(bodyText);
-        }
+        window.location.href = '/contact.html';
       });
-      reportRow.appendChild(reportBtn);
-      bubble.appendChild(reportRow);
+      actionBar.appendChild(reportBtn);
+
+      bubble.appendChild(actionBar);
     }
     wrap.appendChild(avatar);
     wrap.appendChild(bubble);
@@ -8629,6 +10497,8 @@ applyOfflineState(!navigator.onLine);
 
   function startTypingIndicator(bubble) {
     bubble.classList.remove('animate-pulse');
+    // Preserve the action bar (👍/👎 + Apply + Report) before clearing bubble contents.
+    const actionBar = bubble.querySelector('.action-bar');
     // The assistant bubble has `whitespace-pre-wrap` so chat replies keep
     // their newlines. That means an innerHTML template with indentation
     // would render every leading-space and newline as visible whitespace,
@@ -8650,6 +10520,9 @@ applyOfflineState(!navigator.onLine);
     const hintEl = document.createElement('div');
     hintEl.className = 'text-[10px] text-gray-500 mt-1 italic opacity-0 transition-opacity duration-500';
     bubble.appendChild(hintEl);
+
+    // Re-attach the action bar at the bottom after typing indicator elements.
+    if (actionBar) bubble.appendChild(actionBar);
 
     let idx = Math.floor(Math.random() * TYPING_HINTS.length);
 
@@ -8740,6 +10613,54 @@ applyOfflineState(!navigator.onLine);
       }
     } catch(e){}
 
+    // ---- Vibe Sync — venue context ----
+    try {
+      if (typeof window.getVenueVibe === 'function') {
+        const vibe = window.getVenueVibe();
+        if (vibe && vibe.venue) {
+          const vibeParts = ['Date venue: ' + vibe.venue];
+          if (vibe.label) vibeParts.push('Venue type: ' + vibe.label);
+          if (vibe.atmosphere) vibeParts.push('Atmosphere: ' + vibe.atmosphere);
+          if (vibe.lighting) vibeParts.push('Lighting: ' + vibe.lighting);
+          if (vibe.colorAdvice) vibeParts.push('Color advice for this venue: ' + vibe.colorAdvice);
+          if (vibe.groomingTip) vibeParts.push('Grooming tip for this venue: ' + vibe.groomingTip);
+          if (vibe.formality) vibeParts.push('Suggested formality: ' + vibe.formality.replace('_', ' '));
+          if (vibe.tags && vibe.tags.length) vibeParts.push('Vibe tags: ' + vibe.tags.join(', '));
+          lines.push(vibeParts.join('. ') + '.');
+        }
+      }
+    } catch(e){}
+
+    // ---- Style Profile ----
+    try {
+      if (typeof window.getStyleProfile === 'function') {
+        const profile = window.getStyleProfile();
+        const parts = [];
+        if (profile.colors && profile.colors.length) parts.push('Favorite colors: ' + profile.colors.join(', '));
+        if (profile.formality) parts.push('Formality preference: ' + profile.formality.replace('_', ' '));
+        if (profile.bodyType) parts.push('Body type: ' + profile.bodyType);
+        if (profile.styleVibes && profile.styleVibes.length) parts.push('Style vibes: ' + profile.styleVibes.join(', '));
+        if (parts.length) lines.push('User style profile — ' + parts.join('. ') + '.');
+      }
+    } catch(e){}
+
+    // ---- Closet summary ----
+    try {
+      const allItems = window.userCloset && window.userCloset.outfits ? window.userCloset.outfits : [];
+      if (allItems.length > 0) {
+        const types = allItems.filter(i => i.type).map(i => i.type);
+        const typeCounts = {};
+        types.forEach(t => { typeCounts[t] = (typeCounts[t] || 0) + 1; });
+        const typeSummary = Object.entries(typeCounts).map(([k, v]) => v + ' ' + k + (v > 1 ? 's' : '')).join(', ');
+        const topColors = allItems.filter(i => i.color && i.color !== 'Mixed').map(i => i.color);
+        const uniqueColors = [...new Set(topColors)].slice(0, 5);
+        const closetSummary = 'Digital Closet: ' + allItems.length + ' items total' +
+          (typeSummary ? ' (' + typeSummary + ')' : '') +
+          (uniqueColors.length ? '. Dominant colors in closet: ' + uniqueColors.join(', ') : '');
+        lines.push(closetSummary + '.');
+      }
+    } catch(e){}
+
     return lines.join('\n');
   }
 
@@ -8752,7 +10673,9 @@ applyOfflineState(!navigator.onLine);
       "and how it suits the occasion. Give concrete, actionable advice. " +
       "Keep answers concise (3-6 short sentences) unless the user asks for more detail. " +
       "\n\n" +
-      "SCOPE — what you can help with: outfits, colors, fit, grooming, confidence, date-night planning, and tonight's weather only. " +
+      "SCOPE — what you can help with: outfits, colors, fit, grooming, confidence, date-night planning, venue-specific styling, and tonight's weather only. " +
+      "When a date venue is set via Vibe Sync, you MUST tailor your color and grooming advice to that venue's atmosphere, lighting, and formality level. " +
+      "For example, a dim cocktail bar calls for different colors than a sunny rooftop. Use the venue context proactively — don't wait for the user to ask. " +
       "You are NOT a weather forecaster. The Weather Check card only tells you about TONIGHT (current temp + evening low). " +
       "You do NOT know tomorrow's weather, next week's weather, or any forecast beyond tonight. " +
       "If asked about weather outside tonight, say naturally (in the user's language) something like: " +
@@ -8861,12 +10784,20 @@ applyOfflineState(!navigator.onLine);
     }
 
     history.push({ role: 'user', content: userContent });
+    persistMessage('user', userContent);
     addMessage('user', text, attachments.map(a => a.url));
 
     const thinking = addMessage('assistant', '');
     startTypingIndicator(thinking);
 
-    const systemPrompt = buildSystemPrompt();
+    let systemPrompt = buildSystemPrompt();
+    // Append on-device feedback hints so the model adjusts based on
+    // accumulated 👍/👎 signals. Runs entirely locally — no data leaves the browser.
+    try {
+      const feedbackHint = await (window.FeedbackClassifier?.buildFeedbackHint?.() || Promise.resolve(''));
+      if (feedbackHint) systemPrompt += feedbackHint;
+    } catch (_) {}
+
     const messagesForApi = [
       { role: 'system', content: systemPrompt },
       ...history
@@ -8877,12 +10808,14 @@ applyOfflineState(!navigator.onLine);
     if (cachedReply) {
       stopTypingIndicator(thinking);
       thinking.classList.remove('animate-pulse');
-      thinking.textContent = cachedReply;
+      setBubbleText(thinking, cachedReply);
       const badge = document.createElement('div');
       badge.className = 'text-[9px] uppercase tracking-widest text-purple-300/60 mt-1.5 font-bold';
+      badge.setAttribute('data-cached-badge', '1');
       badge.textContent = '⚡ cached';
       thinking.appendChild(badge);
       history.push({ role: 'assistant', content: cachedReply });
+      persistMessage('assistant', cachedReply);
       scrollDown();
       return;
     }
@@ -8904,15 +10837,16 @@ applyOfflineState(!navigator.onLine);
       stopTypingIndicator(thinking);
       thinking.classList.remove('animate-pulse');
       const finalReply = (reply || '').trim() || "Hmm, I didn't catch that. Try again?";
-      thinking.textContent = finalReply;
+      setBubbleText(thinking, finalReply);
       history.push({ role: 'assistant', content: finalReply });
+      persistMessage('assistant', finalReply);
       if (reply && !finalReply.startsWith('⚠️')) {
         setCached(cacheKey, finalReply);
       }
     } catch (err) {
       stopTypingIndicator(thinking);
       thinking.classList.remove('animate-pulse');
-      thinking.textContent = "⚠️ Couldn't reach the stylist right now. Please try again in a moment.";
+      setBubbleText(thinking, "⚠️ Couldn't reach the stylist right now. Please try again in a moment.");
       console.error('Style Coach chat error:', err);
     }
     scrollDown();
@@ -9183,7 +11117,7 @@ applyOfflineState(!navigator.onLine);
       return {
         allowed: false,
         category: 'minor',
-        message: "DateScan is an 18+ styling tool. I can't give styling or dating advice involving minors. If you're under 18, please talk to a trusted adult instead."
+        message: "DateScan is a Style & grooming coach for adults. I can't give styling or dating advice involving minors. If you're under 18, please talk to a trusted adult instead."
       };
     }
     if (SEXUAL_PATTERNS.some(function (re) { return re.test(text); })) {
@@ -9277,10 +11211,14 @@ applyOfflineState(!navigator.onLine);
   // ============================================================
   // REAL IMAGE ANALYSIS — runs on captured snapshot, no backend
   // ============================================================
+  // Offloads pixel-heavy computation (luma, saturation, hue bins,
+  // RGB quantization, Laplacian blur) to the imageAnalysisWorker
+  // so the main thread stays responsive. Falls back to synchronous
+  // main-thread analysis if the worker is unavailable.
   function analyzeImage(dataURL) {
     return new Promise((resolve, reject) => {
       const img = new Image();
-      img.onload = () => {
+      img.onload = async () => {
         try {
           const c = document.createElement('canvas');
           const W = 96;
@@ -9288,100 +11226,105 @@ applyOfflineState(!navigator.onLine);
           c.width = W; c.height = H;
           const ctx = c.getContext('2d');
           ctx.drawImage(img, 0, 0, W, H);
-          const data = ctx.getImageData(0, 0, W, H).data;
+          const imgData = ctx.getImageData(0, 0, W, H);
 
-          let rSum=0, gSum=0, bSum=0;
-          let lumaSum=0, lumaSqSum=0;
-          let satSum=0;
-          const hueBins = new Array(12).fill(0);
-          // Color quantization buckets: 4 levels per channel → 64 buckets
-          const rgbBuckets = {};
-          const n = W * H;
+          // Clone the pixel buffer for zero-copy transfer to the worker.
+          const pixelBuffer = imgData.data.buffer.slice(0);
 
-          for (let i = 0; i < data.length; i += 4) {
-            const r = data[i], g = data[i+1], b = data[i+2];
-            rSum += r; gSum += g; bSum += b;
-            const luma = 0.299*r + 0.587*g + 0.114*b;
-            lumaSum += luma; lumaSqSum += luma*luma;
+          try {
+            // Offload to the image analysis worker ('scan' mode = full
+            // histogram + RGB quantization + Laplacian blur detection)
+            const results = await runImageAnalysis(pixelBuffer, W, H, 'scan');
+            resolve(results);
+          } catch (workerErr) {
+            // Worker failed — fall back to main-thread analysis
+            console.warn('[scan] image worker failed, main-thread fallback:', workerErr);
+            const data = imgData.data;
+            let rSum=0, gSum=0, bSum=0;
+            let lumaSum=0, lumaSqSum=0;
+            let satSum=0;
+            const hueBins = new Array(12).fill(0);
+            const rgbBuckets = {};
+            const n = W * H;
 
-            const max = Math.max(r, g, b);
-            const min = Math.min(r, g, b);
-            const v = max / 255;
-            const s = max === 0 ? 0 : (max - min) / max;
-            satSum += s;
+            for (let i = 0; i < data.length; i += 4) {
+              const r = data[i], g = data[i+1], b = data[i+2];
+              rSum += r; gSum += g; bSum += b;
+              const luma = 0.299*r + 0.587*g + 0.114*b;
+              lumaSum += luma; lumaSqSum += luma*luma;
 
-            // Bin colorful pixels into hue buckets
-            if (s > 0.18 && v > 0.15 && v < 0.95) {
-              let h;
-              if (max === min) h = 0;
-              else if (max === r) h = ((g - b) / (max - min) + 6) % 6;
-              else if (max === g) h = (b - r) / (max - min) + 2;
-              else h = (r - g) / (max - min) + 4;
-              h *= 60;
-              hueBins[Math.floor(h / 30) % 12]++;
+              const max = Math.max(r, g, b);
+              const min = Math.min(r, g, b);
+              const v = max / 255;
+              const s = max === 0 ? 0 : (max - min) / max;
+              satSum += s;
+
+              if (s > 0.18 && v > 0.15 && v < 0.95) {
+                let h;
+                if (max === min) h = 0;
+                else if (max === r) h = ((g - b) / (max - min) + 6) % 6;
+                else if (max === g) h = (b - r) / (max - min) + 2;
+                else h = (r - g) / (max - min) + 4;
+                h *= 60;
+                hueBins[Math.floor(h / 30) % 12]++;
+              }
+
+              const qr = r >> 6, qg = g >> 6, qb = b >> 6;
+              const key = (qr << 4) | (qg << 2) | qb;
+              if (!rgbBuckets[key]) rgbBuckets[key] = { r: 0, g: 0, b: 0, count: 0 };
+              rgbBuckets[key].r += r;
+              rgbBuckets[key].g += g;
+              rgbBuckets[key].b += b;
+              rgbBuckets[key].count += 1;
             }
 
-            // RGB quantization for dominant color extraction (64 buckets)
-            const qr = r >> 6; // 0..3
-            const qg = g >> 6;
-            const qb = b >> 6;
-            const key = (qr << 4) | (qg << 2) | qb;
-            if (!rgbBuckets[key]) rgbBuckets[key] = { r: 0, g: 0, b: 0, count: 0 };
-            rgbBuckets[key].r += r;
-            rgbBuckets[key].g += g;
-            rgbBuckets[key].b += b;
-            rgbBuckets[key].count += 1;
-          }
+            const avgR = rSum / n, avgG = gSum / n, avgB = bSum / n;
+            const avgLuma = lumaSum / n;
+            const variance = (lumaSqSum / n) - (avgLuma * avgLuma);
+            const contrast = Math.sqrt(Math.max(0, variance));
+            const avgSat = satSum / n;
+            const warmth = avgR - avgB;
 
-          const avgR = rSum / n, avgG = gSum / n, avgB = bSum / n;
-          const avgLuma = lumaSum / n;
-          const variance = (lumaSqSum / n) - (avgLuma * avgLuma);
-          const contrast = Math.sqrt(Math.max(0, variance));
-          const avgSat = satSum / n;
-          const warmth = avgR - avgB;
+            let maxBin = 0, maxIdx = 0;
+            hueBins.forEach((v, i) => { if (v > maxBin) { maxBin = v; maxIdx = i; } });
+            const dominantHue = maxIdx * 30 + 15;
+            const hueDiversity = hueBins.filter(v => v > n * 0.025).length;
 
-          let maxBin = 0, maxIdx = 0;
-          hueBins.forEach((v, i) => { if (v > maxBin) { maxBin = v; maxIdx = i; } });
-          const dominantHue = maxIdx * 30 + 15;
-          const hueDiversity = hueBins.filter(v => v > n * 0.025).length;
+            const sortedBuckets = Object.values(rgbBuckets).sort((a, b) => b.count - a.count);
+            const topColors = sortedBuckets.slice(0, 3).map(bk => ({
+              r: Math.round(bk.r / bk.count),
+              g: Math.round(bk.g / bk.count),
+              b: Math.round(bk.b / bk.count),
+              pct: bk.count / n
+            }));
 
-          // Top 3 dominant colors (by bucket population)
-          const sortedBuckets = Object.values(rgbBuckets).sort((a, b) => b.count - a.count);
-          const topColors = sortedBuckets.slice(0, 3).map(bk => ({
-            r: Math.round(bk.r / bk.count),
-            g: Math.round(bk.g / bk.count),
-            b: Math.round(bk.b / bk.count),
-            pct: bk.count / n
-          }));
-
-          // Blur detection via Laplacian variance on the 96px thumbnail.
-          // Low variance indicates a blurry/out-of-focus image.
-          let lapSum = 0, lapSqSum = 0, lapCount = 0;
-          for (let ly = 1; ly < H - 1; ly++) {
-            for (let lx = 1; lx < W - 1; lx++) {
-              const idx = (ly * W + lx) * 4;
-              const lumaC = 0.299*data[idx] + 0.587*data[idx+1] + 0.114*data[idx+2];
-              const idxU = ((ly-1) * W + lx) * 4;
-              const lumaU = 0.299*data[idxU] + 0.587*data[idxU+1] + 0.114*data[idxU+2];
-              const idxD = ((ly+1) * W + lx) * 4;
-              const lumaD = 0.299*data[idxD] + 0.587*data[idxD+1] + 0.114*data[idxD+2];
-              const idxL = (ly * W + lx - 1) * 4;
-              const lumaL = 0.299*data[idxL] + 0.587*data[idxL+1] + 0.114*data[idxL+2];
-              const idxR = (ly * W + lx + 1) * 4;
-              const lumaR = 0.299*data[idxR] + 0.587*data[idxR+1] + 0.114*data[idxR+2];
-              const lap = -4 * lumaC + lumaU + lumaD + lumaL + lumaR;
-              lapSum += lap; lapSqSum += lap * lap; lapCount++;
+            let lapSum = 0, lapSqSum = 0, lapCount = 0;
+            for (let ly = 1; ly < H - 1; ly++) {
+              for (let lx = 1; lx < W - 1; lx++) {
+                const idx = (ly * W + lx) * 4;
+                const lumaC = 0.299*data[idx] + 0.587*data[idx+1] + 0.114*data[idx+2];
+                const idxU = ((ly-1) * W + lx) * 4;
+                const lumaU = 0.299*data[idxU] + 0.587*data[idxU+1] + 0.114*data[idxU+2];
+                const idxD = ((ly+1) * W + lx) * 4;
+                const lumaD = 0.299*data[idxD] + 0.587*data[idxD+1] + 0.114*data[idxD+2];
+                const idxL = (ly * W + lx - 1) * 4;
+                const lumaL = 0.299*data[idxL] + 0.587*data[idxL+1] + 0.114*data[idxL+2];
+                const idxR = (ly * W + lx + 1) * 4;
+                const lumaR = 0.299*data[idxR] + 0.587*data[idxR+1] + 0.114*data[idxR+2];
+                const lap = -4 * lumaC + lumaU + lumaD + lumaL + lumaR;
+                lapSum += lap; lapSqSum += lap * lap; lapCount++;
+              }
             }
-          }
-          const lapMean = lapCount ? lapSum / lapCount : 0;
-          const lapVar = lapCount ? (lapSqSum / lapCount) - (lapMean * lapMean) : 0;
-          const blurScore = Math.sqrt(Math.max(0, lapVar));
+            const lapMean = lapCount ? lapSum / lapCount : 0;
+            const lapVar = lapCount ? (lapSqSum / lapCount) - (lapMean * lapMean) : 0;
+            const blurScore = Math.sqrt(Math.max(0, lapVar));
 
-          resolve({
-            avgR, avgG, avgB, avgLuma, contrast, avgSat,
-            warmth, dominantHue, hueDiversity, pixelCount: n,
-            topColors, blurScore, isBlurry: blurScore < 6
-          });
+            resolve({
+              avgR, avgG, avgB, avgLuma, contrast, avgSat,
+              warmth, dominantHue, hueDiversity, pixelCount: n,
+              topColors, blurScore, isBlurry: blurScore < 6
+            });
+          }
         } catch (e) { reject(e); }
       };
       img.onerror = reject;
@@ -10205,15 +12148,9 @@ applyOfflineState(!navigator.onLine);
 })();
 
 // ============================================================
-// SOCIAL FEATURES — Ask an Expert + Community Voting
+// SOCIAL FEATURES — Community Voting
 // ============================================================
 
-// Ask an Expert
-window.openAskExpert = function() {
-  if (typeof triggerHaptic === 'function') triggerHaptic('tap');
-  const modal = document.getElementById('askExpertModal');
-  if (modal) modal.classList.remove('hidden');
-};
 
 // Community Voting — removed (Community Rating section deleted)
 </script>
@@ -10288,8 +12225,6 @@ window.openAskExpert = function() {
           : 'border-white/10 bg-white/5 text-gray-400 hover:bg-white/10'
       );
     });
-    // Re-score immediately if both features are already loaded
-    if (featuresA && featuresB) runDuel();
   });
 
   // ---------- File handling ----------
@@ -10375,8 +12310,6 @@ window.openAskExpert = function() {
       runBtn.disabled = false;
       runLabel.textContent = 'Run Duel';
       resetBtn.classList.remove('hidden');
-      // Auto-run the first time both are loaded
-      if (resultEl.classList.contains('hidden')) runDuel();
     } else {
       runBtn.disabled = true;
       runLabel.textContent = featuresA || featuresB
@@ -10400,13 +12333,13 @@ window.openAskExpert = function() {
   });
 
   // ---------- Image analysis ----------
-  // Same feature pipeline as the Magic Mirror: downscale to ~96px,
-  // compute color stats on the thumbnail. Fast enough to run
-  // synchronously on the main thread for a 2–5 MB phone photo.
+  // Downscale to ~96px and offload pixel computation to the
+  // imageAnalysisWorker so the main thread stays responsive
+  // while processing 2–5 MB phone photos.
   function analyzeImage(dataURL) {
     return new Promise((resolve, reject) => {
       const img = new Image();
-      img.onload = () => {
+      img.onload = async () => {
         try {
           const W = 96;
           const H = Math.max(1, Math.round(W * img.height / img.width));
@@ -10414,45 +12347,58 @@ window.openAskExpert = function() {
           c.width = W; c.height = H;
           const ctx = c.getContext('2d');
           ctx.drawImage(img, 0, 0, W, H);
-          const data = ctx.getImageData(0, 0, W, H).data;
+          const imgData = ctx.getImageData(0, 0, W, H);
 
-          let rSum=0, gSum=0, bSum=0;
-          let lumaSum=0, lumaSqSum=0, satSum=0;
-          const hueBins = new Array(12).fill(0);
-          const n = W * H;
+          // Clone the buffer — the original ImageData may be needed
+          // again if the user re-runs the duel.
+          const pixelBuffer = imgData.data.buffer.slice(0);
 
-          for (let i = 0; i < data.length; i += 4) {
-            const r = data[i], g = data[i+1], b = data[i+2];
-            rSum += r; gSum += g; bSum += b;
-            const luma = 0.299*r + 0.587*g + 0.114*b;
-            lumaSum += luma; lumaSqSum += luma*luma;
-            const max = Math.max(r, g, b);
-            const min = Math.min(r, g, b);
-            const v = max / 255;
-            const s = max === 0 ? 0 : (max - min) / max;
-            satSum += s;
-            if (s > 0.18 && v > 0.15 && v < 0.95) {
-              let h;
-              if (max === min) h = 0;
-              else if (max === r) h = ((g - b) / (max - min) + 6) % 6;
-              else if (max === g) h = (b - r) / (max - min) + 2;
-              else h = (r - g) / (max - min) + 4;
-              h *= 60;
-              hueBins[Math.floor(h / 30) % 12]++;
+          try {
+            // Offload to the image analysis worker ('duel' mode)
+            const results = await runImageAnalysis(pixelBuffer, W, H, 'duel');
+            resolve(results);
+          } catch (workerErr) {
+            // Worker failed — fall back to main-thread analysis
+            // so the duel still works (just with potential jank).
+            console.warn('[duel] image worker failed, main-thread fallback:', workerErr);
+            const data = imgData.data;
+            let rSum=0, gSum=0, bSum=0;
+            let lumaSum=0, lumaSqSum=0, satSum=0;
+            const hueBins = new Array(12).fill(0);
+            const n = W * H;
+
+            for (let i = 0; i < data.length; i += 4) {
+              const r = data[i], g = data[i+1], b = data[i+2];
+              rSum += r; gSum += g; bSum += b;
+              const luma = 0.299*r + 0.587*g + 0.114*b;
+              lumaSum += luma; lumaSqSum += luma*luma;
+              const max = Math.max(r, g, b);
+              const min = Math.min(r, g, b);
+              const v = max / 255;
+              const s = max === 0 ? 0 : (max - min) / max;
+              satSum += s;
+              if (s > 0.18 && v > 0.15 && v < 0.95) {
+                let h;
+                if (max === min) h = 0;
+                else if (max === r) h = ((g - b) / (max - min) + 6) % 6;
+                else if (max === g) h = (b - r) / (max - min) + 2;
+                else h = (r - g) / (max - min) + 4;
+                h *= 60;
+                hueBins[Math.floor(h / 30) % 12]++;
+              }
             }
+            const avgR = rSum / n, avgG = gSum / n, avgB = bSum / n;
+            const avgLuma = lumaSum / n;
+            const variance = (lumaSqSum / n) - (avgLuma * avgLuma);
+            const contrast = Math.sqrt(Math.max(0, variance));
+            const avgSat = satSum / n;
+            const warmth = avgR - avgB;
+            let maxBin = 0, maxIdx = 0;
+            hueBins.forEach((v, i) => { if (v > maxBin) { maxBin = v; maxIdx = i; } });
+            const dominantHue = maxIdx * 30 + 15;
+            const hueDiversity = hueBins.filter(v => v > n * 0.025).length;
+            resolve({ avgR, avgG, avgB, avgLuma, contrast, avgSat, warmth, dominantHue, hueDiversity });
           }
-          const avgR = rSum / n, avgG = gSum / n, avgB = bSum / n;
-          const avgLuma = lumaSum / n;
-          const variance = (lumaSqSum / n) - (avgLuma * avgLuma);
-          const contrast = Math.sqrt(Math.max(0, variance));
-          const avgSat = satSum / n;
-          const warmth = avgR - avgB;
-          let maxBin = 0, maxIdx = 0;
-          hueBins.forEach((v, i) => { if (v > maxBin) { maxBin = v; maxIdx = i; } });
-          const dominantHue = maxIdx * 30 + 15;
-          const hueDiversity = hueBins.filter(v => v > n * 0.025).length;
-
-          resolve({ avgR, avgG, avgB, avgLuma, contrast, avgSat, warmth, dominantHue, hueDiversity });
         } catch (e) { reject(e); }
       };
       img.onerror = reject;
@@ -10633,7 +12579,7 @@ window.openAskExpert = function() {
       return `${av} · ${bv}`;
     };
     $('duelMetricContrast').textContent = fmt(featuresA.contrast, featuresB.contrast);
-    $('duelMetricSat').textContent      = fmt(featuresA.avgSat*100, featuresB.avgSat*100) + '%';
+    $('duelMetricSat').textContent      = Math.round(featuresA.avgSat*100) + '% · ' + Math.round(featuresB.avgSat*100) + '%';
     $('duelMetricWarmth').textContent   = (featuresA.warmth>=0?'+':'') + Math.round(featuresA.warmth) + ' · ' + (featuresB.warmth>=0?'+':'') + Math.round(featuresB.warmth);
 
     // Highlight winner card
@@ -10663,8 +12609,156 @@ window.openAskExpert = function() {
     $('duelVerdict').innerHTML = verdictText(featuresA, featuresB, occasion, winner);
     resultEl.classList.remove('hidden');
   }
+
+  // ---------- "Ask your friends" share ----------
+  // ---------- XP reward for sharing ----------
+  function awardDuelShareXP() {
+    try {
+      const key = 'datescan.missions';
+      const m = JSON.parse(localStorage.getItem(key) || '{"count":0,"log":[],"xp":0}');
+      m.xp = (m.xp || 0) + 5;
+      localStorage.setItem(key, JSON.stringify(m));
+      // Update every XP counter element in the DOM directly
+      const xp = m.xp;
+      const el = document.getElementById('missionCount');
+      if (el) el.textContent = xp;
+      // Re-run the global badge updater if available
+      if (typeof updateMissionBadge === 'function') updateMissionBadge();
+    } catch (e) { console.warn('[duel] awardDuelShareXP failed', e); }
+    if (window.dsPrivacy && window.dsPrivacy.showToast) {
+      window.dsPrivacy.showToast('Shared! +5 XP');
+    }
+  }
+
+  // Creates a side-by-side composite image of both outfits with
+  // their scores, then uses the Web Share API (or a download
+  // fallback) so the user can send it to friends for a second
+  // opinion. All rendering happens on an off-screen canvas —
+  // no data leaves the device unless the user explicitly shares.
+  const shareBtn = $('duelShareBtn');
+  shareBtn && shareBtn.addEventListener('click', async () => {
+    try { if (typeof triggerHaptic === 'function') triggerHaptic('tap'); } catch (_) {}
+
+    const srcA = previewA.src;
+    const srcB = previewB.src;
+    if (!srcA || !srcB) return;
+
+    // Load both images
+    const [imgA, imgB] = await Promise.all([
+      new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = srcA; }),
+      new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = srcB; }),
+    ]);
+
+    // Draw composite
+    const CARD_W = 600;
+    const IMG_H = 500;
+    const LABEL_H = 80;
+    const TOTAL_H = IMG_H + LABEL_H;
+    const canvas = document.createElement('canvas');
+    canvas.width = CARD_W;
+    canvas.height = TOTAL_H;
+    const c = canvas.getContext('2d');
+
+    // Background
+    const grad = c.createLinearGradient(0, 0, CARD_W, TOTAL_H);
+    grad.addColorStop(0, '#09090b');
+    grad.addColorStop(1, '#18181b');
+    c.fillStyle = grad;
+    c.fillRect(0, 0, CARD_W, TOTAL_H);
+
+    // Draw both images side by side, cover-fitted
+    const halfW = CARD_W / 2;
+    function drawCover(img, dx, dw, dh) {
+      const ir = img.width / img.height;
+      const cr = dw / dh;
+      let sx, sy, sw, sh;
+      if (ir > cr) { sh = img.height; sw = sh * cr; sx = (img.width - sw) / 2; sy = 0; }
+      else { sw = img.width; sh = sw / cr; sx = 0; sy = (img.height - sh) / 2; }
+      c.drawImage(img, sx, sy, sw, sh, dx, 0, dw, dh);
+    }
+    drawCover(imgA, 0, halfW, IMG_H);
+    drawCover(imgB, halfW, halfW, IMG_H);
+
+    // Divider
+    c.fillStyle = 'rgba(255,255,255,0.25)';
+    c.fillRect(halfW - 1, 0, 2, IMG_H);
+
+    // Labels
+    const sA = featuresA ? scoreFor(featuresA, occasion) : '—';
+    const sB = featuresB ? scoreFor(featuresB, occasion) : '—';
+    const archA = featuresA ? archetype(featuresA) : '';
+    const archB = featuresB ? archetype(featuresB) : '';
+
+    c.fillStyle = '#09090b';
+    c.fillRect(0, IMG_H, CARD_W, LABEL_H);
+
+    // Option A label
+    c.fillStyle = '#f472b6';
+    c.font = 'bold 12px Inter, sans-serif';
+    c.textAlign = 'center';
+    c.fillText('OPTION A', halfW / 2, IMG_H + 26);
+    c.fillStyle = '#ffffff';
+    c.font = 'bold 28px Playfair Display, serif';
+    c.fillText(String(sA), halfW / 2, IMG_H + 56);
+    c.fillStyle = '#9ca3af';
+    c.font = '11px Inter, sans-serif';
+    c.fillText(archA, halfW / 2, IMG_H + 72);
+
+    // Option B label
+    c.fillStyle = '#c084fc';
+    c.font = 'bold 12px Inter, sans-serif';
+    c.fillText('OPTION B', halfW + halfW / 2, IMG_H + 26);
+    c.fillStyle = '#ffffff';
+    c.font = 'bold 28px Playfair Display, serif';
+    c.fillText(String(sB), halfW + halfW / 2, IMG_H + 56);
+    c.fillStyle = '#9ca3af';
+    c.font = '11px Inter, sans-serif';
+    c.fillText(archB, halfW + halfW / 2, IMG_H + 72);
+
+    // Watermark
+    c.fillStyle = 'rgba(255,255,255,0.18)';
+    c.font = '9px Inter, sans-serif';
+    c.textAlign = 'right';
+    c.fillText('DateScan · A/B Duel', CARD_W - 10, IMG_H + 72);
+    c.textAlign = 'start';
+
+    // Convert to blob
+    const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+    if (!blob) { console.warn('[duel] share: canvas blob failed'); return; }
+
+    const file = new File([blob], 'datescan-duel.png', { type: 'image/png' });
+    const shareData = {
+      title: 'DateScan A/B Duel',
+      text: `Option A scored ${sA}, Option B scored ${sB}. Which would you pick? 🤔`,
+      files: [file],
+    };
+
+    // Try Web Share API first (available on most mobile browsers)
+    if (navigator.canShare && navigator.canShare(shareData) && navigator.share) {
+      try {
+        await navigator.share(shareData);
+        awardDuelShareXP();
+        return;
+      } catch (err) {
+        // User cancelled or share failed — fall through to download
+        if (err.name === 'AbortError') return;
+      }
+    }
+
+    // Fallback: download the image
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'datescan-duel.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+    awardDuelShareXP();
+  });
 })();
 </script>
+
 
 </body>
 </html>
