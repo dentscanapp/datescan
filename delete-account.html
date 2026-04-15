@@ -111,25 +111,25 @@
   <div class="mb-8 pb-8 border-b border-white/10">
     <div class="text-[10px] uppercase tracking-widest text-red-400 font-bold mb-3">Account &amp; data deletion</div>
     <h1 class="font-serif text-4xl sm:text-5xl font-medium text-white mb-3">Delete your account</h1>
-    <p class="text-sm text-gray-500">Permanent. No login required. We respond within 30 days.</p>
+    <p class="text-sm text-gray-500">Immediate. No login required. Data is removed from our servers as soon as you submit.</p>
   </div>
 
   <article class="prose-custom">
-    <p>This page lets you request the permanent deletion of your DateScan account and all associated data. You do <strong>not</strong> need to log in or have an active subscription to use this form. This is the official account deletion URL we submit to the Google Play Store.</p>
+    <p>This page lets you permanently delete all DateScan data linked to your anonymous account ID. You do <strong>not</strong> need to log in. This is the official account deletion URL we submit to the Google Play Store.</p>
 
     <h2>What gets deleted</h2>
-    <p>When your request is processed (within 30 days), we will permanently erase:</p>
+    <p>When you submit the form below, we immediately erase from our servers:</p>
     <ul>
       <li>Your <strong>AI Style Coach chat history</strong>, including any photos you attached</li>
       <li>Any <strong>content moderation reports</strong> you submitted</li>
-      <li>Your <strong>subscription and entitlement records</strong> linked to your email or device identifier</li>
+      <li>Your <strong>subscription and entitlement records</strong> linked to your account ID</li>
       <li>Server-side <strong>usage logs</strong> keyed to your account</li>
     </ul>
 
     <h2>What we can't delete from here</h2>
     <ul>
-      <li><strong>On-device data</strong> (closet, scan history, local settings) — this lives only on your phone or browser. Open the DateScan app → Privacy panel → "Erase everything on this device", or uninstall the app.</li>
-      <li><strong>Google Play payment records</strong> — handled by Google under their own retention rules. You can cancel your subscription in the <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">Google Play Store subscriptions page</a>. Google keeps billing records as long as required by tax law.</li>
+      <li><strong>On-device data</strong> (closet, scan history, local settings) — this lives only on your phone or browser. Open the DateScan app → Privacy → "Delete My Account &amp; Data" to wipe it (that button does both server and local deletion in one go), or simply uninstall the app.</li>
+      <li><strong>Google Play payment records</strong> — handled by Google under their own retention rules. You can cancel your subscription on the <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">Google Play subscriptions page</a>. Google keeps billing records as long as required by tax law.</li>
       <li><strong>Backup snapshots</strong> — we keep encrypted backups for 35 days for disaster recovery. Your data will be purged from backups on the normal rotation schedule and will not be restored to any live system.</li>
     </ul>
 
@@ -142,55 +142,35 @@
 
   <!-- Deletion Request Form -->
   <section class="mt-10 p-6 sm:p-7 rounded-2xl border border-red-500/20 bg-red-500/5">
-    <h2 class="font-serif text-2xl font-semibold text-white mb-2">Deletion request form</h2>
-    <p class="text-sm text-gray-400 mb-6">Fill in your details below and submit the form. We'll process your request within 30 days and notify you by email once the deletion is complete.</p>
+    <h2 class="font-serif text-2xl font-semibold text-white mb-2">Delete my data</h2>
+    <p class="text-sm text-gray-400 mb-6">Paste your DateScan account ID below. We'll permanently delete all server-side data linked to that ID immediately. Action is irreversible.</p>
+
+    <div class="mb-6 p-4 rounded-xl border border-white/10 bg-white/5">
+      <h3 class="text-sm font-semibold text-white mb-2">Where do I find my account ID?</h3>
+      <ol class="text-xs text-gray-400 space-y-1.5 list-decimal pl-4 leading-relaxed">
+        <li>Open the DateScan app on your phone.</li>
+        <li>Go to <strong class="text-gray-200">Privacy</strong>.</li>
+        <li>Find the <strong class="text-gray-200">"Your account ID"</strong> box and tap <strong class="text-gray-200">Copy</strong>.</li>
+        <li>Paste it into the field below.</li>
+      </ol>
+      <p class="text-[11px] text-gray-500 mt-3">It looks like <code class="text-[11px] bg-white/10 px-1.5 py-0.5 rounded">ds_7f3a8b2c…</code></p>
+    </div>
 
     <form id="deleteForm" class="space-y-5" novalidate>
       <div>
-        <label class="form-label" for="email">Email address <span class="text-red-400">*</span></label>
-        <input type="email" id="email" name="email" required class="form-input" placeholder="you@example.com" autocomplete="email" />
-        <p class="text-[11px] text-gray-500 mt-1.5">Use the email you subscribed with, or — if you never subscribed — the address where we should send the deletion confirmation.</p>
-      </div>
-
-      <div>
-        <label class="form-label" for="deviceId">Device identifier (optional)</label>
-        <input type="text" id="deviceId" name="deviceId" class="form-input" placeholder="e.g. ds_7f3a..." />
-        <p class="text-[11px] text-gray-500 mt-1.5">If you know your DateScan device ID (visible in the app under Privacy → Advanced), include it so we can match you faster. Not required.</p>
-      </div>
-
-      <div>
-        <label class="form-label" for="purchase">Purchase source (if any)</label>
-        <select id="purchase" name="purchase" class="form-input">
-          <option value="">— Select one —</option>
-          <option value="google_play">Google Play Store</option>
-          <option value="free">Never subscribed — free tier only</option>
-          <option value="unknown">I don't remember</option>
-        </select>
-      </div>
-
-      <div>
-        <label class="form-label" for="orderId">Order ID (optional)</label>
-        <input type="text" id="orderId" name="orderId" class="form-input" placeholder="e.g. GPA.1234-5678-9012-34567 or #DS-0001" />
-        <p class="text-[11px] text-gray-500 mt-1.5">From your purchase receipt. Helps us find you more reliably.</p>
-      </div>
-
-      <div>
-        <label class="form-label" for="reason">Reason (optional)</label>
-        <textarea id="reason" name="reason" rows="3" class="form-input resize-none" placeholder="Any feedback you'd like to share — completely optional."></textarea>
+        <label class="form-label" for="userId">Account ID <span class="text-red-400">*</span></label>
+        <input type="text" id="userId" name="userId" required class="form-input font-mono" placeholder="ds_..." autocomplete="off" spellcheck="false" />
+        <p class="text-[11px] text-gray-500 mt-1.5">The anonymous identifier we use to match your data. We don't ask for an email — DateScan accounts are not linked to one.</p>
       </div>
 
       <div class="space-y-2 pt-2">
         <label class="checkbox-row">
           <input type="checkbox" id="confirmDelete" required>
-          <span class="text-sm text-gray-200"><strong class="text-white">I understand</strong> this request is <strong class="text-white">permanent and irreversible</strong>. My AI chat history, reports, and server-side records will be erased within 30 days and cannot be recovered.</span>
+          <span class="text-sm text-gray-200"><strong class="text-white">I understand this is permanent and irreversible.</strong></span>
         </label>
         <label class="checkbox-row">
           <input type="checkbox" id="confirmCancel" required>
-          <span class="text-sm text-gray-200"><strong class="text-white">I have cancelled</strong> any active Pro subscription (or I am on the free tier). I understand that deleting my data does not cancel billing.</span>
-        </label>
-        <label class="checkbox-row">
-          <input type="checkbox" id="confirmAdult" required>
-          <span class="text-sm text-gray-200">I confirm that I am the owner of the email address above and that I am <strong class="text-white">18 years of age or older</strong>.</span>
+          <span class="text-sm text-gray-200"><strong class="text-white">I have cancelled any active Pro subscription.</strong> (Deleting data does not cancel Google Play billing.)</span>
         </label>
       </div>
 
@@ -201,7 +181,7 @@
       </div>
 
       <button type="submit" id="submitBtn" class="btn-danger">
-        Request permanent deletion
+        Delete my data
       </button>
 
       <p class="text-[11px] text-gray-500 text-center">By submitting, you agree to our <a href="/terms.html">Terms</a> and <a href="/privacy.html">Privacy Policy</a>.</p>
@@ -212,8 +192,8 @@
       <div class="flex items-start gap-3">
         <svg class="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         <div>
-          <h3 class="text-white font-semibold mb-1">Request received</h3>
-          <p class="text-sm text-gray-300 leading-relaxed">We've received your deletion request for <strong id="successEmail" class="text-white"></strong>. We'll process it within 30 days and notify you by email once the deletion is complete. If you change your mind in the meantime, contact <a href="/contact.html" class="text-brand-400 underline">support</a>.</p>
+          <h3 class="text-white font-semibold mb-1">Data deleted</h3>
+          <p class="text-sm text-gray-300 leading-relaxed">All server-side data for account ID <strong id="successUserId" class="text-white font-mono break-all"></strong> has been permanently deleted. To also wipe data stored on your phone, open the DateScan app → Settings → Privacy, or simply uninstall the app.</p>
         </div>
       </div>
     </div>
@@ -223,7 +203,7 @@
         <svg class="w-6 h-6 text-red-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         <div>
           <h3 class="text-white font-semibold mb-1">Something went wrong</h3>
-          <p id="errorMessage" class="text-sm text-gray-300 leading-relaxed">Please try again or email <a href="/contact.html" class="text-brand-400 underline">support</a> with the subject "Data Deletion Request".</p>
+          <p id="errorMessage" class="text-sm text-gray-300 leading-relaxed">Please try again or contact <a href="/contact.html" class="text-brand-400 underline">support</a>.</p>
         </div>
       </div>
     </div>
@@ -240,66 +220,52 @@
   var submitBtn = document.getElementById('submitBtn');
   var successState = document.getElementById('successState');
   var errorState = document.getElementById('errorState');
-  var successEmail = document.getElementById('successEmail');
+  var successUserId = document.getElementById('successUserId');
   var errorMessage = document.getElementById('errorMessage');
 
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
     errorState.classList.add('hidden');
 
-    // Honeypot — if filled, silently "succeed" without doing anything.
+    // Honeypot — silently "succeed" if filled.
     var hp = document.getElementById('website').value;
     if (hp) {
       form.classList.add('hidden');
-      successEmail.textContent = document.getElementById('email').value;
+      successUserId.textContent = document.getElementById('userId').value;
       successState.classList.remove('hidden');
       return;
     }
 
-    // Validate required fields
-    var email = document.getElementById('email').value.trim();
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      showError("Please enter a valid email address.");
+    var userId = document.getElementById('userId').value.trim();
+    if (!userId || userId.length < 6) {
+      showError("Please paste a valid account ID. It usually starts with \"ds_\" and is copied from the DateScan app under Settings → Privacy.");
       return;
     }
     if (!document.getElementById('confirmDelete').checked ||
-        !document.getElementById('confirmCancel').checked ||
-        !document.getElementById('confirmAdult').checked) {
-      showError("Please check all three confirmation boxes to continue.");
+        !document.getElementById('confirmCancel').checked) {
+      showError("Please check both confirmation boxes to continue.");
       return;
     }
 
-    var payload = {
-      email: email,
-      deviceId: document.getElementById('deviceId').value.trim() || null,
-      purchase: document.getElementById('purchase').value || null,
-      orderId: document.getElementById('orderId').value.trim() || null,
-      reason: document.getElementById('reason').value.trim() || null,
-      website: document.getElementById('website').value,
-      ts: Date.now(),
-      ua: navigator.userAgent.slice(0, 200)
-    };
-
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Submitting…';
+    submitBtn.textContent = 'Deleting…';
 
     try {
-      var res = await fetch('https://privacy.datescan.app/delete-account', {
+      var res = await fetch('https://core.datescan.app/api/delete-account', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({ userId: userId })
       });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       form.classList.add('hidden');
-      successEmail.textContent = email;
+      successUserId.textContent = userId;
       successState.classList.remove('hidden');
-      // Scroll success into view on mobile
       successState.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } catch (err) {
       console.error('[DateScan] delete request failed:', err);
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Request permanent deletion';
-      showError("We couldn't submit your request automatically. Please try again in a few minutes, or DM us on social media (links in the footer) with the subject \"Data Deletion Request\" and include your email address.");
+      submitBtn.textContent = 'Delete my data';
+      showError("We couldn't process your request right now. Please try again in a few minutes, or contact support if the problem persists.");
     }
   });
 

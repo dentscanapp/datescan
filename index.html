@@ -3071,16 +3071,14 @@ document.addEventListener('DOMContentLoaded', function () {
       <div id="privateModeStatus" class="text-[11px] text-gray-500">Status: <span class="text-gray-300">Off</span> — image uploads in chat are allowed after consent.</div>
     </div>
 
-    <!-- Data deletion — required by Google Play's data deletion policy.
-         Wipes IndexedDB (closet, history), localStorage (consent, Pro
-         status, usage counters), and sessionStorage. Server-side Pro
-         entitlements must be revoked separately via /contact. -->
+    <!-- Account & data deletion lives on /privacy.html as required by
+         Google Play's data deletion policy. Single source of truth. -->
     <div class="rounded-2xl border border-red-500/20 bg-red-500/5 p-4 mb-4">
-      <div class="text-sm font-semibold text-white mb-1">Delete all my data</div>
-      <p class="text-xs text-gray-400 mb-3 leading-relaxed">Wipes your closet, scan history, and local settings from this device. If you have a Pro subscription, this does not cancel it — use the link in your receipt email, or email <a href="/contact.html" class="text-brand-400 hover:text-brand-500 underline">support</a> to request full account and server-side deletion.</p>
-      <button id="deleteAllDataBtn" type="button" class="w-full py-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-sm font-semibold hover:bg-red-500/25 active:scale-[0.98] transition-all">
-        Erase everything on this device
-      </button>
+      <div class="text-sm font-semibold text-white mb-1">Delete my account &amp; data</div>
+      <p class="text-xs text-gray-400 mb-3 leading-relaxed">View your account ID and permanently delete your account &amp; all data (server-side and on this device) on our Privacy page.</p>
+      <a href="/privacy.html#delete" class="block text-center w-full py-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-sm font-semibold hover:bg-red-500/25 active:scale-[0.98] transition-all">
+        Open Privacy &amp; Data page
+      </a>
     </div>
 
     <button id="privacyDoneBtn" class="w-full btn-primary py-3 rounded-xl font-semibold text-sm">Done</button>
@@ -3088,65 +3086,22 @@ document.addEventListener('DOMContentLoaded', function () {
 </div>
 
 <script>
+// Ensure a stable, anonymous DateScan user ID exists from the very first
+// app load. This ID is the only key the server uses to find a user's
+// data, so it must be created before any network call. The same ID is
+// shown on /privacy.html so users can copy it for web-based deletion.
 (function () {
-  var btn = document.getElementById('deleteAllDataBtn');
-  if (!btn) return;
-  btn.addEventListener('click', async function () {
-    var ok = window.confirm("This will permanently erase your closet, scan history, chat history, and all local settings on this device. Continue?");
-    if (!ok) return;
-    btn.disabled = true;
-    btn.textContent = 'Erasing…';
-    try {
-      // 1) IndexedDB: drop every database we can enumerate. Falls back
-      // to deleting the known app DBs by name on browsers that don't
-      // support indexedDB.databases() (Firefox).
-      try {
-        if (indexedDB.databases) {
-          var dbs = await indexedDB.databases();
-          await Promise.all((dbs || []).map(function (db) {
-            return new Promise(function (res) {
-              if (!db.name) return res();
-              var req = indexedDB.deleteDatabase(db.name);
-              req.onsuccess = req.onerror = req.onblocked = function () { res(); };
-            });
-          }));
-        } else {
-          ['datescan', 'datescan-closet', 'datescan-history', 'datescan-db', 'keyval-store'].forEach(function (n) {
-            try { indexedDB.deleteDatabase(n); } catch (_) {}
-          });
-        }
-      } catch (_) {}
-
-      // 2) Caches API (service worker caches)
-      try {
-        if (window.caches && caches.keys) {
-          var keys = await caches.keys();
-          await Promise.all(keys.map(function (k) { return caches.delete(k); }));
-        }
-      } catch (_) {}
-
-      // 3) localStorage + sessionStorage
-      try { localStorage.clear(); } catch (_) {}
-      try { sessionStorage.clear(); } catch (_) {}
-
-      // 4) Unregister any service workers so a stale SW doesn't
-      // resurrect cached state on next load.
-      try {
-        if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) {
-          var regs = await navigator.serviceWorker.getRegistrations();
-          await Promise.all(regs.map(function (r) { return r.unregister(); }));
-        }
-      } catch (_) {}
-
-      alert("All local data has been erased. The app will now reload.");
-      location.reload();
-    } catch (e) {
-      console.error('[DateScan] data wipe failed:', e);
-      btn.disabled = false;
-      btn.textContent = 'Erase everything on this device';
-      alert("Something went wrong while erasing your data. Please try again, or contact support.");
+  try {
+    var id = localStorage.getItem("datescan.userId");
+    if (!id) {
+      if (window.crypto && crypto.randomUUID) {
+        id = "ds_" + crypto.randomUUID().replace(/-/g, '');
+      } else {
+        id = "ds_" + Date.now().toString(36) + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+      }
+      localStorage.setItem("datescan.userId", id);
     }
-  });
+  } catch (_) { /* localStorage blocked — skip silently */ }
 })();
 </script>
 
