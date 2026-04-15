@@ -10673,7 +10673,7 @@ function onGoogleMapsLoaded() {
     return lines.join('\n');
   }
 
-  function buildSystemPrompt() {
+  function buildSystemPrompt(recentHistory) {
     const base =
       "You are the in-app AI Style Coach for DateScan, a dating-prep app. " +
       "You are a warm, direct, confidence-boosting personal stylist with vision. " +
@@ -10697,8 +10697,56 @@ function onGoogleMapsLoaded() {
       "Never mention that you receive any information from the app — just talk like a coach who happens to know the user's situation. " +
       "\n\n" +
       "Use the LIVE APP CONTEXT silently to personalize advice (weather, countdown, grooming status). Never acknowledge it exists.";
+
+    // ── Múltidéző: recent conversation memory ──────────────────
+    // Injects the last 3–4 message exchanges into the system prompt
+    // so the AI always has the freshest context front-and-center.
+    // This is the "memory" layer — without it, every question
+    // feels disconnected from what was just discussed.
+    let memorySection = '';
+    if (Array.isArray(recentHistory) && recentHistory.length > 0) {
+      // Take the last 3 complete exchanges (user + assistant = 1 exchange).
+      // We walk backwards and collect pairs until we have 3 exchanges
+      // or run out of history. Image content is summarised as [kép].
+      const exchanges = [];
+      let i = recentHistory.length - 1;
+      while (i >= 0 && exchanges.length < 3) {
+        const assistantMsg = recentHistory[i];
+        if (assistantMsg.role === 'assistant' && i - 1 >= 0) {
+          const userMsg = recentHistory[i - 1];
+          if (userMsg.role === 'user') {
+            const userText = typeof userMsg.content === 'string'
+              ? userMsg.content
+              : Array.isArray(userMsg.content)
+                ? userMsg.content.map(p => p.type === 'text' ? p.text : '[kép]').join(' ')
+                : '[kép]';
+            const assistantText = typeof assistantMsg.content === 'string'
+              ? assistantMsg.content
+              : '';
+            exchanges.unshift({ user: userText, assistant: assistantText });
+            i -= 2;
+            continue;
+          }
+        }
+        i -= 1;
+      }
+      if (exchanges.length > 0) {
+        memorySection = '\n\n=== RECENT CONVERSATION HISTORY ===\n';
+        memorySection += 'The following is a summary of the most recent exchanges with the user. '; 
+        memorySection += 'Use this to maintain continuity — if the user asks "what about the shoes?" they mean shoes that go with what was just discussed.\n';
+        exchanges.forEach((ex, idx) => {
+          memorySection += '\n[Exchange ' + (idx + 1) + ']\n';
+          memorySection += 'User: ' + ex.user + '\n';
+          memorySection += 'Coach: ' + ex.assistant + '\n';
+        });
+      }
+    }
+
     const ctx = getModuleContext();
-    return ctx ? base + "\n\n=== LIVE APP CONTEXT ===\n" + ctx : base;
+    let result = base;
+    if (ctx) result += '\n\n=== LIVE APP CONTEXT ===\n' + ctx;
+    if (memorySection) result += memorySection;
+    return result;
   }
 
   function openClosetPicker() {
@@ -10799,7 +10847,7 @@ function onGoogleMapsLoaded() {
     const thinking = addMessage('assistant', '');
     startTypingIndicator(thinking);
 
-    let systemPrompt = buildSystemPrompt();
+    let systemPrompt = buildSystemPrompt(history);
     // Append on-device feedback hints so the model adjusts based on
     // accumulated 👍/👎 signals. Runs entirely locally — no data leaves the browser.
     try {
