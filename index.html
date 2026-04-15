@@ -235,6 +235,13 @@
     box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.45), 0 8px 24px -8px rgba(236, 72, 153, 0.35);
   }
 
+  /* Outfit Builder slot animation */
+  .ob-slot { transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s; }
+  .ob-slot:active { transform: scale(0.97); }
+  .ob-slot.border-emerald-500\/30 { box-shadow: 0 0 20px -5px rgba(16, 185, 129, 0.25); }
+  .ob-pick-item { transition: border-color 0.15s, transform 0.12s, opacity 0.15s; }
+  .ob-pick-item:active { transform: scale(0.95); }
+
   /* Gradient Text */
   .text-gradient {
     background: linear-gradient(135deg, #f472b6 0%, #db2777 100%);
@@ -985,6 +992,317 @@
   .scorecal-bar-fill--good  { background: #ec4899; }
   .scorecal-bar-fill--fair  { background: #fbbf24; }
   .scorecal-bar-fill--low   { background: #ef4444; }
+
+  /* ===== Style Calendar — outfit-thumbnail grid ===== */
+  .stylecal-date-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    position: relative;
+    z-index: 1;
+  }
+  .stylecal-date-cell {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: transform 0.15s ease, border-color 0.15s ease;
+    cursor: default;
+    min-height: 48px;
+  }
+  .stylecal-date-cell--has-outfit {
+    cursor: pointer;
+    border-color: rgba(236,72,153,0.25);
+  }
+  .stylecal-date-cell--has-outfit:hover {
+    transform: scale(1.04);
+    border-color: rgba(236,72,153,0.6);
+  }
+  .stylecal-date-cell--today {
+    border-color: rgba(236,72,153,0.6);
+    box-shadow: 0 0 0 2px rgba(236,72,153,0.18);
+  }
+  .stylecal-date-cell--other-month { opacity: 0.35; }
+  .stylecal-date-cell img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .stylecal-date-cell .stylecal-num {
+    position: absolute;
+    top: 3px; left: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    z-index: 2;
+  }
+  .stylecal-date-cell--no-outfit .stylecal-num {
+    text-shadow: none;
+    color: rgba(255,255,255,0.5);
+    font-weight: 500;
+  }
+  .stylecal-date-cell .stylecal-count {
+    position: absolute;
+    bottom: 3px; right: 4px;
+    font-size: 9px;
+    font-weight: 700;
+    background: rgba(0,0,0,0.65);
+    color: #fff;
+    border-radius: 8px;
+    padding: 1px 5px;
+    z-index: 2;
+  }
+  .stylecal-date-cell .stylecal-warn {
+    position: absolute;
+    top: 3px; right: 4px;
+    font-size: 11px;
+    color: #fbbf24;
+    text-shadow: 0 0 4px rgba(0,0,0,0.9);
+    z-index: 2;
+  }
+  .stylecal-date-cell--has-outfit::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.35) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.4) 100%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Day-detail modal outfit cards */
+  .stylecal-outfit-card {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .stylecal-outfit-card img {
+    width: 80px; height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+  .stylecal-warn-banner {
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.4);
+    border-radius: 12px;
+    padding: 10px 12px;
+    color: #fbbf24;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .stylecal-input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 8px 10px;
+    color: #fff;
+    font-size: 13px;
+  }
+  .stylecal-input:focus {
+    outline: none;
+    border-color: rgba(236,72,153,0.6);
+    background: rgba(255,255,255,0.08);
+  }
+  .stylecal-loc-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(236,72,153,0.18), rgba(168,85,247,0.18));
+    border: 1px solid rgba(236,72,153,0.4);
+    color: #f9a8d4;
+    font-size: 12px;
+    font-weight: 600;
+    max-width: 100%;
+  }
+  .stylecal-loc-pill span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .stylecal-loc-pill--empty {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,255,255,0.1);
+    color: #6b7280;
+    font-weight: 500;
+  }
+
+  /* ===== Weather-Aware Styling row ===== */
+  .weather-rec-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(58px, 1fr));
+    gap: 6px;
+  }
+  .weather-rec-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+  }
+  .weather-rec-thumb {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(236,72,153,0.3);
+    display: flex; align-items: center; justify-content: center;
+    color: #9ca3af;
+  }
+  .weather-rec-thumb--empty {
+    border-style: dashed;
+    border-color: rgba(255,255,255,0.18);
+    background: transparent;
+  }
+  .weather-rec-label {
+    font-size: 9px;
+    font-weight: 700;
+    color: #d1d5db;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    line-height: 1.2;
+  }
+  .weather-rec-label--missing {
+    color: #6b7280;
+    font-weight: 500;
+  }
+
+  /* ===== Style DNA Report ===== */
+  .dna-range-btn {
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: transparent;
+    border: 0;
+    color: #9ca3af;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+  .dna-range-btn:hover { color: #fff; }
+  .dna-range-btn.active {
+    background: linear-gradient(135deg, rgba(236,72,153,0.25), rgba(168,85,247,0.18));
+    color: #fff;
+    box-shadow: 0 0 0 1px rgba(236,72,153,0.35);
+  }
+  .dna-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  @media (min-width: 480px) {
+    .dna-stat-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+  .dna-stat-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 12px;
+    text-align: center;
+  }
+  .dna-stat-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #6b7280;
+    margin-bottom: 4px;
+  }
+  .dna-stat-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.1;
+  }
+  .dna-stat-sub {
+    font-size: 10px;
+    color: #9ca3af;
+    margin-top: 2px;
+  }
+  .dna-palette-bar {
+    display: flex;
+    height: 14px;
+    width: 100%;
+    border-radius: 999px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .dna-palette-bar > span {
+    display: block;
+    height: 100%;
+    transition: width 0.4s ease;
+  }
+  .dna-palette-legend {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .dna-palette-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #d1d5db;
+  }
+  .dna-palette-legend-item .swatch {
+    width: 10px; height: 10px;
+    border-radius: 3px;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .dna-color-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    font-size: 11px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .dna-color-chip .swatch {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .dna-insight {
+    background: linear-gradient(135deg, rgba(236,72,153,0.12), rgba(168,85,247,0.08));
+    border: 1px solid rgba(236,72,153,0.3);
+    border-radius: 14px;
+    padding: 12px 14px;
+    color: #fce7f3;
+    font-size: 13px;
+    line-height: 1.5;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .dna-insight-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    line-height: 1.2;
+  }
+  .dna-empty {
+    text-align: center;
+    padding: 24px 12px;
+    color: #6b7280;
+    font-size: 13px;
+  }
 
   /* Vibe Check — corner badge overlays so the date number / score stay readable */
   .scorecal-vibe-plus {
@@ -2329,12 +2647,86 @@
                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4l6 0 0 6"/><path d="M10 20l-6 0 0-6"/><path d="M20 4l-9 9"/><path d="M4 20l6-6"/></svg>
                A/B Duel
             </button>
-            <button id="aiMixBtn" class="btn-primary px-5 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center flex-1 md:flex-none justify-center">
-               <span class="text-lg leading-none">✨</span> AI Suggestion
+
+            <button id="outfitBuilderBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 text-emerald-300 hover:from-emerald-500/30 hover:to-teal-500/30 active:scale-[0.98] transition" title="Build an outfit from your closet items">
+               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+               Build Outfit
             </button>
          </div>
       </div>
        
+      <!-- Search & Filter bar -->
+      <div class="mb-4 space-y-3" id="closetSearchWrap">
+        <div class="flex gap-2 items-center">
+          <!-- Magnifying glass icon outside input, at the front -->
+          <div class="shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 border border-white/10 text-gray-400">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          </div>
+          <!-- Search input in the middle -->
+          <div class="flex-1 relative">
+            <input id="closetSearchInput" type="text" placeholder="Search by color, type, occasion..." class="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-500/50 focus:bg-white/[0.07] transition" autocomplete="off" />
+          </div>
+          <!-- Clear button outside input, at the end -->
+          <button id="closetSearchClear" class="shrink-0 w-10 h-10 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition" style="display:none">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+          <!-- Filter toggle button -->
+          <button id="closetFilterToggle" class="shrink-0 h-10 px-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition flex items-center gap-2" title="Advanced filters">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+            <span class="text-xs font-bold">Filters</span>
+            <span id="closetFilterBadge" class="min-w-[20px] h-5 rounded-full bg-brand-500 text-white text-[11px] font-bold flex items-center justify-center px-1.5 leading-none" style="display:none">0</span>
+          </button>
+        </div>
+        <div id="closetSearchResults" class="hidden text-[11px] text-gray-500 font-medium px-1"></div>
+        <!-- Advanced filter panel (collapsed by default) -->
+        <div id="closetFilterPanel" class="hidden premium-glass rounded-2xl border border-white/10 p-4 space-y-4">
+          <!-- Source filter -->
+          <div>
+            <div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-2">Source</div>
+            <div class="flex flex-wrap gap-1.5" id="closetSourceFilters">
+              <button data-source="all" class="closet-source-btn py-1.5 px-3 rounded-lg border text-[11px] font-bold transition-colors border-brand-500/40 bg-brand-500/15 text-brand-300">All</button>
+              <button data-source="scan" class="closet-source-btn py-1.5 px-3 rounded-lg border text-[11px] font-bold transition-colors border-white/10 bg-white/5 text-gray-400 hover:bg-white/10">Scanned</button>
+              <button data-source="builder" class="closet-source-btn py-1.5 px-3 rounded-lg border text-[11px] font-bold transition-colors border-white/10 bg-white/5 text-gray-400 hover:bg-white/10">Built</button>
+              <button data-source="upload" class="closet-source-btn py-1.5 px-3 rounded-lg border text-[11px] font-bold transition-colors border-white/10 bg-white/5 text-gray-400 hover:bg-white/10">Uploaded</button>
+            </div>
+          </div>
+          <!-- Color filter -->
+          <div>
+            <div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-2">Color</div>
+            <div class="flex flex-wrap gap-1.5" id="closetColorFilters">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+          <!-- Score filter -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Min Score</div>
+              <div id="closetScoreValue" class="text-xs font-bold text-brand-300">0</div>
+            </div>
+            <input id="closetScoreRange" type="range" min="0" max="100" step="5" value="0" class="w-full h-1.5 rounded-full appearance-none bg-white/10 accent-brand-500 cursor-pointer" />
+          </div>
+          <!-- Date filter -->
+          <div>
+            <div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-2">Date Range</div>
+            <div class="flex gap-2">
+              <div class="flex-1">
+                <label class="text-[9px] text-gray-500 uppercase tracking-wider block mb-1">From</label>
+                <input id="closetDateFrom" type="text" placeholder="YYYY-MM-DD" maxlength="10" class="w-full px-2.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-brand-500/50 transition" inputmode="numeric" />
+              </div>
+              <div class="flex-1">
+                <label class="text-[9px] text-gray-500 uppercase tracking-wider block mb-1">To</label>
+                <input id="closetDateTo" type="text" placeholder="YYYY-MM-DD" maxlength="10" class="w-full px-2.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-brand-500/50 transition" inputmode="numeric" />
+              </div>
+            </div>
+          </div>
+          <!-- Active filter count + Clear all -->
+          <div class="flex items-center justify-between pt-2 border-t border-white/5">
+            <div id="closetActiveFilterCount" class="text-[11px] text-gray-500"></div>
+            <button id="closetClearFilters" class="text-xs font-bold text-brand-300 hover:text-brand-200 transition">Clear All Filters</button>
+          </div>
+        </div>
+      </div>
+
       <div class="mb-6 flex gap-2 overflow-x-auto pb-2" id="closetFilters" role="group" aria-label="Closet category filter">
           <button type="button" data-filter="all" aria-pressed="true" class="closet-filter-btn border border-brand-500/50 bg-brand-500/20 text-white rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">All Outfits</button>
           <button type="button" data-filter="casual" aria-pressed="false" class="closet-filter-btn border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 rounded-xl py-1.5 px-4 text-xs font-semibold shrink-0 transition-colors">Casual</button>
@@ -2739,6 +3131,94 @@
         </div>
       </div>
 
+      <!-- Style Calendar — which outfit on which day -->
+      <div class="premium-glass rounded-[32px] p-6 sm:p-8 relative overflow-hidden mb-8">
+        <div class="glow-orb glow-orb--pink"></div>
+        <div class="glow-orb glow-orb--purple"></div>
+
+        <div class="scorecal-header">
+          <div class="scorecal-title">Style Calendar</div>
+          <div class="scorecal-nav-group">
+            <button class="scorecal-today-btn" onclick="stylecalGoToToday()">
+              <span class="scorecal-dot"></span> Today
+            </button>
+            <button class="scorecal-nav-btn" onclick="stylecalChangeMonth(-1)" title="Previous month">&#8249;</button>
+            <button class="scorecal-nav-btn" onclick="stylecalChangeMonth(1)" title="Next month">&#8250;</button>
+          </div>
+        </div>
+
+        <div class="scorecal-sub-header">
+          <div>
+            <div class="scorecal-month-label" id="stylecalMonthLabel"></div>
+            <div class="scorecal-year-label" id="stylecalYearLabel"></div>
+          </div>
+          <div class="text-[11px] text-gray-400 max-w-[55%] text-right leading-snug">Tap a day. See outfit. Log location. Skip repeats.</div>
+        </div>
+
+        <div class="scorecal-weekday-row">
+          <div class="scorecal-weekday-cell">Sun</div>
+          <div class="scorecal-weekday-cell">Mon</div>
+          <div class="scorecal-weekday-cell">Tue</div>
+          <div class="scorecal-weekday-cell">Wed</div>
+          <div class="scorecal-weekday-cell">Thu</div>
+          <div class="scorecal-weekday-cell">Fri</div>
+          <div class="scorecal-weekday-cell">Sat</div>
+        </div>
+
+        <div class="stylecal-date-grid" id="stylecalDateGrid">
+          <!-- Populated by JS -->
+        </div>
+
+        <div id="stylecalEmpty" class="hidden text-center py-6 text-gray-500 text-sm">
+          No saved outfits yet. Save an outfit from the scanner.
+        </div>
+
+        <div class="scorecal-legend mt-3" style="flex-wrap:wrap;gap:10px;">
+          <div class="scorecal-legend-item"><span style="display:inline-block;width:14px;height:14px;border-radius:4px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);"></span> Empty day</div>
+          <div class="scorecal-legend-item"><span style="display:inline-block;width:14px;height:14px;border-radius:4px;background:linear-gradient(135deg,#ec4899,#a855f7);"></span> Outfit logged</div>
+          <div class="scorecal-legend-item"><span class="text-amber-400">&#9888;</span> Repeat at same place</div>
+        </div>
+      </div>
+
+      <!-- Style Calendar — Day Detail Modal -->
+      <div id="stylecalDayModal" class="hidden fixed inset-0 z-[110] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="premium-glass rounded-3xl max-w-md w-full max-h-[85vh] overflow-hidden flex flex-col">
+          <div class="flex items-center justify-between p-5 border-b border-white/10">
+            <div>
+              <h3 class="font-serif text-xl font-semibold text-white" id="stylecalModalTitle">Day</h3>
+              <p class="text-[11px] text-gray-400 mt-0.5" id="stylecalModalSub"></p>
+            </div>
+            <button id="stylecalModalClose" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center transition">&#10005;</button>
+          </div>
+          <div id="stylecalModalBody" class="p-5 overflow-y-auto space-y-4">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Style DNA Report — weekly/monthly insights -->
+      <div class="premium-glass rounded-[32px] p-6 sm:p-8 relative overflow-hidden mb-8">
+        <div class="absolute -top-12 -left-12 w-40 h-40 rounded-full bg-purple-500/10 mix-blend-screen filter blur-[50px] pointer-events-none"></div>
+        <div class="absolute -bottom-12 -right-12 w-40 h-40 rounded-full bg-brand-500/10 mix-blend-screen filter blur-[50px] pointer-events-none"></div>
+        <div class="relative z-10">
+          <div class="flex items-start justify-between mb-5 gap-3 flex-wrap">
+            <div>
+              <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-1">Style DNA</div>
+              <h3 class="font-serif text-xl font-semibold text-white">Your Style Report</h3>
+              <p class="text-[11px] text-gray-400 mt-1">Insights you wouldn't notice yourself.</p>
+            </div>
+            <div class="flex gap-1 bg-white/5 rounded-full p-0.5">
+              <button data-dna-range="7"  class="dna-range-btn active" onclick="switchDnaRange(7)">Week</button>
+              <button data-dna-range="30" class="dna-range-btn"        onclick="switchDnaRange(30)">Month</button>
+            </div>
+          </div>
+
+          <div id="dnaContent">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
       <!-- Timeline -->
       <div class="premium-glass rounded-[32px] p-6 sm:p-8 relative overflow-hidden mb-8">
         <div class="absolute -top-12 -right-12 w-36 h-36 rounded-full bg-brand-500/15 mix-blend-screen filter blur-[40px] pointer-events-none"></div>
@@ -2774,6 +3254,43 @@
       </div>
       <div id="coachClosetPickerGrid" class="p-5 grid grid-cols-2 sm:grid-cols-3 gap-3 overflow-y-auto">
         <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Outfit Duplicate Detector — Confirm Modal (top-level so it works from any view) -->
+  <div id="dupCheckModal" class="hidden fixed inset-0 z-[120] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="premium-glass rounded-3xl max-w-md w-full overflow-hidden">
+      <div class="p-5 border-b border-amber-500/30 bg-amber-500/5 flex items-start gap-3">
+        <div class="text-2xl leading-none">&#9888;</div>
+        <div>
+          <h3 class="font-serif text-xl font-semibold text-white leading-tight">Looks like a duplicate</h3>
+          <p class="text-xs text-gray-400 mt-1">This is very similar to something already in your closet.</p>
+        </div>
+      </div>
+      <div class="p-5">
+        <div class="flex items-center justify-center gap-3 mb-4">
+          <div class="text-center">
+            <img id="dupCheckNewImg" class="w-24 h-24 object-cover rounded-xl border border-white/10" alt="">
+            <div class="text-[10px] uppercase tracking-widest text-gray-400 mt-2 font-bold">New</div>
+          </div>
+          <div class="text-center px-2">
+            <div class="font-serif text-3xl font-bold bg-gradient-to-br from-amber-400 to-orange-500 bg-clip-text text-transparent leading-none" id="dupCheckPct">&mdash;</div>
+            <div class="text-[10px] uppercase tracking-widest text-amber-400 mt-1 font-bold">Match</div>
+          </div>
+          <div class="text-center">
+            <img id="dupCheckOldImg" class="w-24 h-24 object-cover rounded-xl border border-brand-500/30" alt="">
+            <div class="text-[10px] uppercase tracking-widest text-brand-400 mt-2 font-bold">In closet</div>
+          </div>
+        </div>
+        <div class="text-center mb-5">
+          <div class="text-sm font-semibold text-white" id="dupCheckName">&mdash;</div>
+          <div class="text-[11px] text-gray-500 mt-0.5" id="dupCheckDate"></div>
+        </div>
+        <div class="flex gap-2">
+          <button id="dupCheckCancel" class="flex-1 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm font-bold hover:bg-white/10 transition">Don't save</button>
+          <button id="dupCheckSave" class="flex-1 py-3 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-400 text-sm font-bold hover:bg-amber-500/25 transition">Save anyway</button>
+        </div>
       </div>
     </div>
   </div>
@@ -3170,20 +3687,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 <canvas id="analysisCanvas" aria-hidden="true"></canvas>
 
-<!-- AI Suggestion Modal -->
-<div id="aiMixModal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[#09090b]/95 backdrop-blur-xl transition-opacity duration-300">
-  <div class="premium-glass border border-brand-500/20 rounded-[32px] p-6 max-w-sm w-full relative overflow-hidden fade-up">
-     <div class="absolute -top-12 -right-12 w-32 h-32 bg-purple-500 rounded-full mix-blend-screen filter blur-[50px] opacity-30 pointer-events-none"></div>
-     <div class="text-center mb-4">
-        <div class="text-4xl mb-3 filter drop-shadow-[0_0_10px_rgba(236,72,153,0.5)]">✨</div>
-        <h2 class="font-serif text-2xl font-bold text-white mb-2">AI Mix & Match</h2>
-     </div>
-     <div id="aiMixText" class="text-sm text-gray-300 mb-6 leading-relaxed bg-white/5 p-4 rounded-xl border border-white/5 text-center"></div>
-     <button onclick="document.getElementById('aiMixModal').classList.add('hidden')" class="btn-primary w-full py-3.5 rounded-xl font-bold">Got it</button>
-  </div>
-</div>
-
-
 <!-- Delete Confirm Modal -->
 <div id="deleteModal" class="hidden fixed inset-0 z-[80] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
     <div class="premium-glass border border-red-500/30 rounded-[24px] p-6 max-w-sm w-full text-center fade-up">
@@ -3195,6 +3698,127 @@ document.addEventListener('DOMContentLoaded', function () {
             <button id="confirmDeleteBtn" class="flex-1 py-3 rounded-xl bg-red-500 text-white font-bold hover:bg-red-600 transition shadow-lg shadow-red-500/20">Delete</button>
         </div>
     </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     OUTFIT BUILDER MODAL — assemble outfits from closet items
+     ═══════════════════════════════════════════════════════════════ -->
+<div id="outfitBuilderModal" class="fixed inset-0 bg-black/85 flex items-end sm:items-center justify-center" style="display:none; z-index:9999 !important; -webkit-transform:translateZ(0); transform:translateZ(0); pointer-events:auto;">
+  <div class="premium-glass rounded-t-[28px] sm:rounded-[28px] border-t border-brand-500/20 w-full sm:max-w-lg max-h-[92vh] overflow-hidden flex flex-col" style="pointer-events:auto; position:relative; z-index:1;">
+    <!-- Header -->
+    <div class="p-5 pb-4">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-500/20 to-purple-500/20 border border-brand-500/30 flex items-center justify-center">
+            <svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          </div>
+          <div>
+            <h3 class="font-serif text-xl font-semibold text-white">Outfit Builder</h3>
+            <p class="text-[11px] text-gray-400">Tap items below to fill each slot</p>
+          </div>
+        </div>
+        <button id="obCloseBtn" class="shrink-0 w-9 h-9 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition" aria-label="Close">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <!-- Slot row — horizontal, compact -->
+      <div id="obSlots" class="grid grid-cols-4 gap-2">
+        <!-- Top slot -->
+        <div class="ob-slot rounded-xl border border-dashed border-white/15 hover:border-brand-500/40 transition-colors cursor-pointer flex flex-col items-center justify-center aspect-[3/4] bg-white/[0.02] relative overflow-hidden" data-slot="top">
+          <div class="ob-slot-placeholder flex flex-col items-center justify-center text-gray-500 gap-0.5">
+            <span class="text-lg">👕</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider">Top</span>
+          </div>
+          <div class="ob-slot-filled hidden absolute inset-0">
+            <img class="w-full h-full object-cover" alt="Top" />
+            <button class="ob-slot-remove absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-black/60 text-white text-[10px] flex items-center justify-center hover:bg-red-500/80 transition z-10">&#x2715;</button>
+          </div>
+        </div>
+        <!-- Bottom slot -->
+        <div class="ob-slot rounded-xl border border-dashed border-white/15 hover:border-brand-500/40 transition-colors cursor-pointer flex flex-col items-center justify-center aspect-[3/4] bg-white/[0.02] relative overflow-hidden" data-slot="bottom">
+          <div class="ob-slot-placeholder flex flex-col items-center justify-center text-gray-500 gap-0.5">
+            <span class="text-lg">👖</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider">Bottom</span>
+          </div>
+          <div class="ob-slot-filled hidden absolute inset-0">
+            <img class="w-full h-full object-cover" alt="Bottom" />
+            <button class="ob-slot-remove absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-black/60 text-white text-[10px] flex items-center justify-center hover:bg-red-500/80 transition z-10">&#x2715;</button>
+          </div>
+        </div>
+        <!-- Shoes slot -->
+        <div class="ob-slot rounded-xl border border-dashed border-white/15 hover:border-brand-500/40 transition-colors cursor-pointer flex flex-col items-center justify-center aspect-[3/4] bg-white/[0.02] relative overflow-hidden" data-slot="shoes">
+          <div class="ob-slot-placeholder flex flex-col items-center justify-center text-gray-500 gap-0.5">
+            <span class="text-lg">👟</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider">Shoes</span>
+          </div>
+          <div class="ob-slot-filled hidden absolute inset-0">
+            <img class="w-full h-full object-cover" alt="Shoes" />
+            <button class="ob-slot-remove absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-black/60 text-white text-[10px] flex items-center justify-center hover:bg-red-500/80 transition z-10">&#x2715;</button>
+          </div>
+        </div>
+        <!-- Accessory slot -->
+        <div class="ob-slot rounded-xl border border-dashed border-white/15 hover:border-brand-500/40 transition-colors cursor-pointer flex flex-col items-center justify-center aspect-[3/4] bg-white/[0.02] relative overflow-hidden" data-slot="accessory">
+          <div class="ob-slot-placeholder flex flex-col items-center justify-center text-gray-500 gap-0.5">
+            <span class="text-lg">👜</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider">Acc.</span>
+          </div>
+          <div class="ob-slot-filled hidden absolute inset-0">
+            <img class="w-full h-full object-cover" alt="Accessory" />
+            <button class="ob-slot-remove absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-black/60 text-white text-[10px] flex items-center justify-center hover:bg-red-500/80 transition z-10">&#x2715;</button>
+          </div>
+        </div>
+      </div>
+      <!-- Occasion -->
+      <div class="mt-3 flex items-center gap-2">
+        <span class="text-[10px] uppercase tracking-widest text-gray-500 font-bold shrink-0">Occasion</span>
+        <div id="obOccasionChips" class="flex gap-1.5 overflow-x-auto">
+          <button type="button" data-occasion="casual" class="ob-occasion-chip py-1.5 px-3 rounded-lg border text-[11px] font-bold transition-colors border-brand-500/40 bg-brand-500/15 text-brand-300">Casual</button>
+          <button type="button" data-occasion="first_date" class="ob-occasion-chip py-1.5 px-3 rounded-lg border text-[11px] font-bold transition-colors border-white/10 bg-white/5 text-gray-400 hover:bg-white/10">Date</button>
+          <button type="button" data-occasion="fancy" class="ob-occasion-chip py-1.5 px-3 rounded-lg border text-[11px] font-bold transition-colors border-white/10 bg-white/5 text-gray-400 hover:bg-white/10">Fancy</button>
+          <button type="button" data-occasion="night_out" class="ob-occasion-chip py-1.5 px-3 rounded-lg border text-[11px] font-bold transition-colors border-white/10 bg-white/5 text-gray-400 hover:bg-white/10">Night Out</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item Picker -->
+    <div class="flex-1 overflow-y-auto px-5 pb-3 min-h-0 border-t border-white/5 pt-3">
+      <div class="flex items-center justify-between mb-2">
+        <div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Your Items</div>
+      </div>
+      <div id="obPickerTabs" class="flex gap-1.5 mb-3 overflow-x-auto pb-1">
+        <button class="ob-tab text-[10px] font-bold px-3 py-1.5 rounded-lg border transition-colors border-brand-500/40 bg-brand-500/15 text-brand-300" data-pick="all">All</button>
+        <button class="ob-tab text-[10px] font-bold px-3 py-1.5 rounded-lg border transition-colors border-white/10 bg-white/5 text-gray-400 hover:bg-white/10" data-pick="shirt">👕</button>
+        <button class="ob-tab text-[10px] font-bold px-3 py-1.5 rounded-lg border transition-colors border-white/10 bg-white/5 text-gray-400 hover:bg-white/10" data-pick="pants">👖</button>
+        <button class="ob-tab text-[10px] font-bold px-3 py-1.5 rounded-lg border transition-colors border-white/10 bg-white/5 text-gray-400 hover:bg-white/10" data-pick="jacket">🧥</button>
+        <button class="ob-tab text-[10px] font-bold px-3 py-1.5 rounded-lg border transition-colors border-white/10 bg-white/5 text-gray-400 hover:bg-white/10" data-pick="dress">👗</button>
+        <button class="ob-tab text-[10px] font-bold px-3 py-1.5 rounded-lg border transition-colors border-white/10 bg-white/5 text-gray-400 hover:bg-white/10" data-pick="shoes">👟</button>
+        <button class="ob-tab text-[10px] font-bold px-3 py-1.5 rounded-lg border transition-colors border-white/10 bg-white/5 text-gray-400 hover:bg-white/10" data-pick="accessory">👜</button>
+      </div>
+      <div id="obPickerGrid" class="grid grid-cols-3 sm:grid-cols-4 gap-2 pb-2">
+        <!-- Populated by JS -->
+      </div>
+      <div id="obPickerEmpty" class="hidden py-8 text-center text-gray-500 text-sm">No items yet. Upload clothes first!</div>
+    </div>
+
+    <!-- Actions — brand-pink primary, matches app theme -->
+    <div class="p-4 border-t border-white/5 flex gap-2">
+      <button id="obClearBtn" class="px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-gray-400 hover:bg-white/10 hover:text-gray-300 transition flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+        Clear
+      </button>
+      <button id="obSaveBtn" disabled class="flex-1 py-3 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-gray-400 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/10 transition flex items-center justify-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        Save
+      </button>
+      <button id="obSaveAsNewBtn" disabled class="hidden flex-1 py-3 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-gray-400 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/10 transition flex items-center justify-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        Save as New
+      </button>
+      <button id="obAiBtn" disabled class="flex-1 py-3 rounded-xl btn-primary text-xs font-bold disabled:opacity-30 disabled:cursor-not-allowed transition flex items-center justify-center gap-1.5">
+        <span class="text-sm leading-none">✨</span> Ask AI
+      </button>
+    </div>
+  </div>
 </div>
 
 <!-- Privacy & Data Modal -->
@@ -4499,6 +5123,314 @@ function generateThumbnail(dataUrl, callback) {
     img.src = dataUrl;
 }
 
+// ═══════════════════════════════════════════════════════════════
+// CLOSET SEARCH & FILTER SYSTEM
+// Unified search + advanced filters for both outfits and items
+// ═══════════════════════════════════════════════════════════════
+(function initClosetSearch() {
+  'use strict';
+
+  const searchInput    = document.getElementById('closetSearchInput');
+  const searchClear    = document.getElementById('closetSearchClear');
+  const filterToggle   = document.getElementById('closetFilterToggle');
+  const filterPanel    = document.getElementById('closetFilterPanel');
+  const filterBadge    = document.getElementById('closetFilterBadge');
+  const scoreRange     = document.getElementById('closetScoreRange');
+  const scoreValue     = document.getElementById('closetScoreValue');
+  const dateFrom       = document.getElementById('closetDateFrom');
+  const dateTo         = document.getElementById('closetDateTo');
+  const colorFilters   = document.getElementById('closetColorFilters');
+  const sourceFilters  = document.getElementById('closetSourceFilters');
+  const clearFiltersBtn = document.getElementById('closetClearFilters');
+  const activeFilterCount = document.getElementById('closetActiveFilterCount');
+
+  if (!searchInput) return;
+
+  // Filter state
+  let searchQuery    = '';
+  let sourceFilter   = 'all';    // all | scan | builder | upload
+  let colorFilter    = null;     // null = any, or a color string
+  let minScore       = 0;
+  let dateRangeFrom  = null;     // null or timestamp
+  let dateRangeTo    = null;     // null or timestamp
+  let filterOpen     = false;
+
+  // ── Populate color chips dynamically from closet data ──
+  function populateColorChips() {
+    if (!colorFilters) return;
+    const allItems = (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits : [];
+    // Collect unique colors
+    const colorSet = new Set();
+    allItems.forEach(o => {
+      if (o.color && o.color !== 'Mixed') colorSet.add(o.color);
+      if (o.tags && o.tags.colors) {
+        o.tags.colors.forEach(c => { if (c && c !== 'Mixed') colorSet.add(c); });
+      }
+    });
+    const colors = [...colorSet].sort();
+    if (!colors.length) {
+      colorFilters.innerHTML = '<span class="text-[11px] text-gray-500">No colors detected yet.</span>';
+      return;
+    }
+    colorFilters.innerHTML = colors.map(c => {
+      const hex = getColorHex(c);
+      return `<button data-color="${c}" class="closet-color-btn flex items-center gap-1.5 py-1.5 px-3 rounded-lg border text-[11px] font-bold transition-colors border-white/10 bg-white/5 text-gray-400 hover:bg-white/10">
+        <span class="w-3 h-3 rounded-full border border-white/20 shrink-0" style="background:${hex}"></span>${c}
+      </button>`;
+    }).join('');
+
+    // Click handlers
+    colorFilters.querySelectorAll('.closet-color-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+        const c = btn.dataset.color;
+        if (colorFilter === c) {
+          colorFilter = null; // toggle off
+        } else {
+          colorFilter = c;
+        }
+        updateColorBtnStyles();
+        applyClosetSearch();
+      });
+    });
+  }
+
+  function updateColorBtnStyles() {
+    colorFilters.querySelectorAll('.closet-color-btn').forEach(btn => {
+      const active = btn.dataset.color === colorFilter;
+      btn.classList.toggle('border-brand-500/40', active);
+      btn.classList.toggle('bg-brand-500/15', active);
+      btn.classList.toggle('text-brand-300', active);
+      btn.classList.toggle('border-white/10', !active);
+      btn.classList.toggle('bg-white/5', !active);
+      btn.classList.toggle('text-gray-400', !active);
+    });
+  }
+
+  // Map common color names to hex for the swatch
+  function getColorHex(name) {
+    const map = {
+      'Black':'#111','White':'#f5f5f5','Red':'#ef4444','Blue':'#3b82f6','Navy':'#1e3a5f',
+      'Green':'#22c55e','Yellow':'#eab308','Orange':'#f97316','Pink':'#ec4899','Purple':'#a855f7',
+      'Brown':'#92400e','Beige':'#d4b896','Gray':'#6b7280','Grey':'#6b7280','Teal':'#14b8a6',
+      'Cyan':'#06b6d4','Maroon':'#7f1d1d','Olive':'#84cc16','Coral':'#fb7185','Gold':'#fbbf24',
+      'Silver':'#d1d5db','Burgundy':'#881337','Khaki':'#a3a06c','Cream':'#fef3c7','Tan':'#c4a882',
+      'Charcoal':'#374151','Rust':'#b45309','Lavender':'#c4b5fd','Mint':'#6ee7b7','Ivory':'#fffbeb'
+    };
+    return map[name] || '#888';
+  }
+
+  // ── Source filter buttons ──
+  sourceFilters.querySelectorAll('.closet-source-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+      sourceFilter = btn.dataset.source;
+      updateSourceBtnStyles();
+      applyClosetSearch();
+    });
+  });
+
+  function updateSourceBtnStyles() {
+    sourceFilters.querySelectorAll('.closet-source-btn').forEach(btn => {
+      const active = btn.dataset.source === sourceFilter;
+      btn.classList.toggle('border-brand-500/40', active);
+      btn.classList.toggle('bg-brand-500/15', active);
+      btn.classList.toggle('text-brand-300', active);
+      btn.classList.toggle('border-white/10', !active);
+      btn.classList.toggle('bg-white/5', !active);
+      btn.classList.toggle('text-gray-400', !active);
+    });
+  }
+
+  // ── Score range ──
+  scoreRange.addEventListener('input', () => {
+    minScore = parseInt(scoreRange.value, 10);
+    scoreValue.textContent = minScore;
+    applyClosetSearch();
+  });
+
+  // ── Date inputs (type=text with YYYY-MM-DD format) ──
+  function parseDateInput(val) {
+    if (!val || !/^\d{4}-\d{2}-\d{2}$/.test(val)) return null;
+    const parts = val.split('-');
+    return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2])).getTime();
+  }
+  function autoFormatDate(e) {
+    let v = e.target.value.replace(/[^\d-]/g, '');
+    // Auto-insert dashes
+    const digits = v.replace(/-/g, '');
+    if (digits.length > 8) {
+      v = digits.slice(0, 4) + '-' + digits.slice(4, 6) + '-' + digits.slice(6, 8);
+    } else if (digits.length > 6) {
+      v = digits.slice(0, 4) + '-' + digits.slice(4, 6) + '-' + digits.slice(6);
+    } else if (digits.length > 4) {
+      v = digits.slice(0, 4) + '-' + digits.slice(4);
+    } else {
+      v = digits;
+    }
+    e.target.value = v;
+  }
+  dateFrom.addEventListener('input', (e) => {
+    autoFormatDate(e);
+    dateRangeFrom = parseDateInput(e.target.value);
+    applyClosetSearch();
+  });
+  dateTo.addEventListener('input', (e) => {
+    autoFormatDate(e);
+    const ts = parseDateInput(e.target.value);
+    dateRangeTo = ts ? ts + 86400000 : null; // end of day
+    applyClosetSearch();
+  });
+
+  // ── Search input ──
+  let searchDebounce;
+  searchInput.addEventListener('input', () => {
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(() => {
+      searchQuery = searchInput.value.trim().toLowerCase();
+      searchClear.style.display = searchQuery ? 'flex' : 'none';
+      applyClosetSearch();
+    }, 200);
+  });
+
+  searchClear.addEventListener('click', () => {
+    searchInput.value = '';
+    searchQuery = '';
+    searchClear.style.display = 'none';
+    applyClosetSearch();
+  });
+
+  // ── Filter panel toggle ──
+  filterToggle.addEventListener('click', () => {
+    if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+    filterOpen = !filterOpen;
+    filterPanel.classList.toggle('hidden', !filterOpen);
+    if (filterOpen) populateColorChips(); // refresh colors
+  });
+
+  // ── Clear all filters ──
+  clearFiltersBtn.addEventListener('click', () => {
+    if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+    searchInput.value = '';
+    searchQuery = '';
+    searchClear.style.display = 'none';
+    sourceFilter = 'all';
+    updateSourceBtnStyles();
+    colorFilter = null;
+    updateColorBtnStyles();
+    minScore = 0;
+    scoreRange.value = 0;
+    scoreValue.textContent = '0';
+    dateRangeFrom = null;
+    dateRangeTo = null;
+    dateFrom.value = '';
+    dateTo.value = '';
+    applyClosetSearch();
+  });
+
+  // ── Count active filters (for badge) ──
+  function countActiveFilters() {
+    let count = 0;
+    if (searchQuery) count++;
+    if (sourceFilter !== 'all') count++;
+    if (colorFilter) count++;
+    if (minScore > 0) count++;
+    if (dateRangeFrom || dateRangeTo) count++;
+    return count;
+  }
+
+  function updateFilterBadge() {
+    const count = countActiveFilters();
+    filterBadge.textContent = count;
+    // Show/hide badge: use style.display instead of 'hidden' class to avoid flex conflict
+    filterBadge.style.display = count > 0 ? 'flex' : 'none';
+    if (activeFilterCount) {
+      activeFilterCount.textContent = count > 0 ? `${count} filter${count > 1 ? 's' : ''} active` : '';
+    }
+  }
+
+  // ── Core: apply all filters and re-render both grids ──
+  function applyClosetSearch() {
+    updateFilterBadge();
+    // Re-render both grids, preserving current occasion/type filter
+    const activeFilterBtn = document.querySelector('.closet-filter-btn[aria-pressed="true"]');
+    const occasion = activeFilterBtn ? activeFilterBtn.dataset.filter : 'all';
+    const activeTypeBtn = document.querySelector('.closet-type-btn[aria-pressed="true"]');
+    const typeFilter = activeTypeBtn ? activeTypeBtn.dataset.typeFilter : 'all';
+    if (typeof window.renderCloset === 'function') window.renderCloset(occasion);
+    if (typeof window.renderClosetItems === 'function') window.renderClosetItems(typeFilter);
+
+    // Show results count if search/filters are active
+    const resultsEl = document.getElementById('closetSearchResults');
+    if (resultsEl) {
+      const total = (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits.length : 0;
+      let matchCount = 0;
+      if (total > 0 && typeof window._closetFilterItem === 'function') {
+        matchCount = window.userCloset.outfits.filter(o => window._closetFilterItem(o)).length;
+      }
+      const searchActive = searchQuery || sourceFilter !== 'all' || colorFilter || minScore > 0 || dateRangeFrom || dateRangeTo;
+      if (searchActive && total > 0) {
+        resultsEl.textContent = `${matchCount} of ${total} items match`;
+        resultsEl.classList.remove('hidden');
+      } else {
+        resultsEl.classList.add('hidden');
+      }
+    }
+  }
+
+  // ── Expose a filter function for renderCloset/renderClosetItems to call ──
+  // This applies all active search/filter criteria to an item
+  window._closetFilterItem = function(item) {
+    // Search query
+    if (searchQuery) {
+      const haystack = [
+        item.color || '',
+        item.type || '',
+        item.occasion || '',
+        item.source === 'builder' ? 'built outfit' : '',
+        item.source === 'upload' ? 'uploaded' : '',
+        item.source === 'scan' || (!item.source && item.score != null) ? 'scanned' : '',
+        ...(item.tags && item.tags.colors ? item.tags.colors : [])
+      ].join(' ').toLowerCase();
+      if (!haystack.includes(searchQuery)) return false;
+    }
+    // Source filter
+    if (sourceFilter !== 'all') {
+      if (sourceFilter === 'scan') {
+        // Scanned = not upload, not builder (original scans)
+        if (item.source === 'upload' || item.source === 'builder') return false;
+      } else if (item.source !== sourceFilter) {
+        return false;
+      }
+    }
+    // Color filter
+    if (colorFilter) {
+      const itemColors = [];
+      if (item.color && item.color !== 'Mixed') itemColors.push(item.color.toLowerCase());
+      if (item.tags && item.tags.colors) {
+        item.tags.colors.forEach(c => { if (c && c !== 'Mixed') itemColors.push(c.toLowerCase()); });
+      }
+      if (!itemColors.includes(colorFilter.toLowerCase())) return false;
+    }
+    // Score filter
+    if (minScore > 0) {
+      if (item.score == null || item.score < minScore) return false;
+    }
+    // Date range
+    if (dateRangeFrom && item.date < dateRangeFrom) return false;
+    if (dateRangeTo && item.date > dateRangeTo) return false;
+
+    return true;
+  };
+
+  // ── Expose search state for renderCloset to use ──
+  window._closetSearchActive = function() { return searchQuery || sourceFilter !== 'all' || colorFilter || minScore > 0 || dateRangeFrom || dateRangeTo; };
+
+  // Populate colors on first load if closet has data
+  setTimeout(populateColorChips, 500);
+
+})();
+
 window._closetPage = 1;
 const CLOSET_PAGE_SIZE = 20;
 
@@ -4514,10 +5446,16 @@ window.renderCloset = function(filter = 'all', append = false) {
         return;
     }
 
-    const filtered = filter === 'all' ? outfitsOnly : outfitsOnly.filter(o => o.occasion === filter);
+    let filtered = filter === 'all' ? outfitsOnly : outfitsOnly.filter(o => o.occasion === filter);
+
+    // Apply search & advanced filters
+    if (typeof window._closetFilterItem === 'function') {
+        filtered = filtered.filter(o => window._closetFilterItem(o));
+    }
 
     if (filtered.length === 0) {
-        grid.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500"><p>No saved outfits found for this category.</p></div>`;
+        const searchActive = typeof window._closetSearchActive === 'function' && window._closetSearchActive();
+        grid.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500"><div class="text-4xl mb-3 opacity-40">🔍</div><p class="text-sm">${searchActive ? 'No outfits match your search or filters.' : 'No saved outfits found for this category.'}</p>${searchActive ? '<p class="text-xs text-gray-600 mt-2">Try adjusting your filters or search terms.</p>' : ''}</div>`;
         if (moreWrap) moreWrap.classList.add('hidden');
         return;
     }
@@ -4531,7 +5469,9 @@ window.renderCloset = function(filter = 'all', append = false) {
         const TYPE_LABELS = { shirt:'👕 Shirt', pants:'👖 Pants', jacket:'🧥 Jacket', dress:'👗 Dress', shoes:'👟 Shoes', accessory:'👜 Accessory' };
         const typeBadge = outfit.type && TYPE_LABELS[outfit.type]
           ? `<div class="absolute top-2 left-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-white border border-white/10 z-10">${TYPE_LABELS[outfit.type]}</div>`
-          : '';
+          : outfit.source === 'builder'
+            ? `<div class="absolute top-2 left-2 bg-emerald-500/70 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-white border border-emerald-400/30 z-10">✨ Built Outfit</div>`
+            : '';
         const scoreBadge = outfit.score != null
           ? `<div class="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-xs font-bold ${outfit.score >= 80 ? 'text-emerald-400' : 'text-brand-400'} border border-white/10 z-10">${outfit.score}/100</div>`
           : '';
@@ -4557,6 +5497,9 @@ window.renderCloset = function(filter = 'all', append = false) {
                 ${scoreBadge}
                 ${luckyBadge}
                 <div class="absolute bottom-3 right-3 flex gap-2.5 z-20">
+                     ${outfit.source === 'builder' ? `<button onclick="window.editBuilderOutfit('${outfit.id}')" class="w-12 h-12 rounded-full bg-black/70 hover:bg-emerald-500/90 active:scale-95 flex items-center justify-center backdrop-blur-md text-white transition-all border border-white/20 shadow-lg" title="Edit Outfit">
+                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                     </button>` : ''}
                      <button onclick="window.triggerDeleteOutfit('${outfit.id}')" class="w-12 h-12 rounded-full bg-black/70 hover:bg-red-500/90 active:scale-95 flex items-center justify-center backdrop-blur-md text-white transition-all border border-white/20 shadow-lg" title="Delete">
                          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                      </button>
@@ -4568,7 +5511,7 @@ window.renderCloset = function(filter = 'all', append = false) {
             <div class="p-3.5 bg-gradient-to-t from-dark-900 to-transparent">
                 <div class="flex items-center justify-between mb-1">
                   <div class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">${occasion}</div>
-                  <div class="text-[9px] text-gray-500">${new Date(outfit.date).toLocaleDateString()}</div>
+                  <div class="text-[9px] text-gray-500">${(() => { const d = new Date(outfit.date); return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`; })()}</div>
                 </div>
                 <div class="text-sm text-white font-medium truncate flex items-center gap-1.5">
                    <div class="w-2.5 h-2.5 rounded-full border border-white/20" style="background-color: ${outfit.colorHex || '#ccc'};"></div>
@@ -4611,10 +5554,16 @@ window.renderClosetItems = function(typeFilter = 'all', append = false) {
         return;
     }
 
-    const filtered = typeFilter === 'all' ? items : items.filter(i => i.type === typeFilter);
+    let filtered = typeFilter === 'all' ? items : items.filter(i => i.type === typeFilter);
+
+    // Apply search & advanced filters
+    if (typeof window._closetFilterItem === 'function') {
+        filtered = filtered.filter(i => window._closetFilterItem(i));
+    }
 
     if (!filtered.length) {
-        grid.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500"><p class="text-sm">No items in this category yet.</p></div>`;
+        const searchActive = typeof window._closetSearchActive === 'function' && window._closetSearchActive();
+        grid.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500"><div class="text-4xl mb-3 opacity-40">🔍</div><p class="text-sm">${searchActive ? 'No items match your search or filters.' : 'No items in this category yet.'}</p>${searchActive ? '<p class="text-xs text-gray-600 mt-2">Try adjusting your filters or search terms.</p>' : ''}</div>`;
         if (moreWrap) moreWrap.classList.add('hidden');
         return;
     }
@@ -4652,7 +5601,7 @@ window.renderClosetItems = function(typeFilter = 'all', append = false) {
             <div class="p-3.5 bg-gradient-to-t from-dark-900 to-transparent">
                 <div class="flex items-center justify-between mb-1">
                   <div class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">${(item.occasion || 'casual').replace('_', ' ')}</div>
-                  <div class="text-[9px] text-gray-500">${new Date(item.date).toLocaleDateString()}</div>
+                  <div class="text-[9px] text-gray-500">${(() => { const d = new Date(item.date); return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`; })()}</div>
                 </div>
                 <div class="text-sm text-white font-medium truncate">${TYPE_LABELS[item.type] || 'Item'}</div>
                 ${tagRow}
@@ -4850,6 +5799,24 @@ window.saveCurrentOutfit = function() {
     btn.disabled = true;
 
     generateThumbnail(s.lastCap, async (thumbBase64) => {
+        // Duplicate check before saving — never block save longer than 5s.
+        let _newHash = null;
+        if (window.outfitDupCheck && typeof window.outfitDupCheck.checkAndConfirm === 'function') {
+          try {
+            const dupRes = await Promise.race([
+              window.outfitDupCheck.checkAndConfirm(thumbBase64, { sourceFilter: 'scan' }),
+              new Promise((res) => setTimeout(() => res({ proceed: true, hash: null, _timeout: true }), 8000))
+            ]);
+            if (dupRes && dupRes._timeout) console.warn('[dup] scan check timed out — proceeding without dedup');
+            if (dupRes && dupRes.proceed === false) {
+              btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg> Save to Digital Closet`;
+              btn.disabled = false;
+              return;
+            }
+            if (dupRes && dupRes.hash) _newHash = dupRes.hash;
+          } catch (e) { console.warn('[dup] scan check failed', e); }
+        }
+
         const newOutfit = {
             id: 'outfit_' + Date.now(),
             image: thumbBase64,
@@ -4857,7 +5824,8 @@ window.saveCurrentOutfit = function() {
             color: s.lastColor ? s.lastColor.name : 'Mixed',
             colorHex: s.lastColor ? s.lastColor.hex : '#888',
             occasion: s.occasion,
-            date: Date.now()
+            date: Date.now(),
+            phash: _newHash
         };
 
         try {
@@ -5057,10 +6025,31 @@ window.saveCurrentOutfit = function() {
       };
     }
 
+    // Duplicate check before saving — never block save longer than 8s.
+    if (window.outfitDupCheck && typeof window.outfitDupCheck.checkAndConfirm === 'function') {
+      try {
+        const dupRes = await Promise.race([
+          window.outfitDupCheck.checkAndConfirm(newItem.image, { sourceFilter: 'upload' }),
+          new Promise((res) => setTimeout(() => res({ proceed: true, hash: null, _timeout: true }), 8000))
+        ]);
+        if (dupRes && dupRes._timeout) console.warn('[dup] upload check timed out — proceeding without dedup');
+        if (dupRes && dupRes.proceed === false) {
+          catSave.disabled = false;
+          catSave.textContent = 'Save to Closet';
+          return;
+        }
+        if (dupRes && dupRes.hash) newItem.phash = dupRes.hash;
+      } catch (e) { console.warn('[dup] upload check failed', e); }
+    }
+
     try {
       await closetDB.put(newItem);
       if (window.userCloset && Array.isArray(window.userCloset.outfits)) {
         window.userCloset.outfits.unshift(newItem);
+      }
+      // Refresh the weather-aware outfit recommendations now that the closet changed
+      if (window._lastWeatherSummary && typeof window.renderWeatherOutfit === 'function') {
+        try { window.renderWeatherOutfit(window._lastWeatherSummary); } catch (e) {}
       }
       // Reset the type filter to 'all' so the new item is always visible
       if (typeof window.setClosetTypeFilter === 'function') {
@@ -5599,77 +6588,558 @@ function classifyColor(r, g, b) {
   window._getCurrentBgRemoved = () => currentBgRemoved;
 })();
 
-$("aiMixBtn").addEventListener("click", () => {
-    triggerHaptic('success');
-    const modal = $("aiMixModal");
-    const textEl = $("aiMixText");
-    
-    const allItems = userCloset.outfits || [];
-    const uploadedItems = allItems.filter(o => o.source === 'upload');
-    const scoredOutfits = allItems.filter(o => o.score != null);
-    
-    if (allItems.length === 0) {
-        textEl.innerHTML = "Your Digital Closet is empty! <strong>Save a scan</strong> or <strong>upload an item</strong> to get AI-powered outfit suggestions.";
-    } else if (uploadedItems.length >= 2) {
-        // Build outfit combinations from uploaded items
-        const shirts = uploadedItems.filter(i => i.type === 'shirt');
-        const pants = uploadedItems.filter(i => i.type === 'pants');
-        const jackets = uploadedItems.filter(i => i.type === 'jacket');
-        const shoes = uploadedItems.filter(i => i.type === 'shoes');
-        const accessories = uploadedItems.filter(i => i.type === 'accessory');
-        const dresses = uploadedItems.filter(i => i.type === 'dress');
-        
-        let suggestions = [];
-        
-        // Strategy 1: Complete outfit from individual pieces
-        if ((shirts.length > 0 || dresses.length > 0) && pants.length > 0) {
-            const top = shirts.length > 0 ? shirts[0] : dresses[0];
-            const bottom = pants[0];
-            const jacketNote = jackets.length > 0 ? ` Layer with your ${jackets[0].color || 'favorite'} jacket for extra style points.` : ' Add a jacket to take this look up a notch.';
-            const shoeNote = shoes.length > 0 ? ` Finish with your ${shoes[0].color || ''} shoes.` : ' Add shoes to complete the look.';
-            suggestions.push(`<strong>${top.color || 'Your'} ${top.type === 'dress' ? 'dress' : 'top'}</strong> + <strong>${bottom.color || 'your'} pants</strong>${jacketNote}${shoeNote}`);
+// ═══════════════════════════════════════════════════════════════
+// OUTFIT BUILDER — assemble outfits from closet items
+// ═══════════════════════════════════════════════════════════════
+(function initOutfitBuilder() {
+  'use strict';
+
+  const modal = document.getElementById('outfitBuilderModal');
+  if (!modal) return;
+
+  const closeBtn     = document.getElementById('obCloseBtn');
+  const clearBtn     = document.getElementById('obClearBtn');
+  const saveBtn      = document.getElementById('obSaveBtn');
+  const aiBtn        = document.getElementById('obAiBtn');
+  const pickerGrid   = document.getElementById('obPickerGrid');
+  const pickerEmpty  = document.getElementById('obPickerEmpty');
+  const slotEls      = modal.querySelectorAll('.ob-slot');
+  const tabBtns      = modal.querySelectorAll('.ob-tab');
+  const occasionChips = modal.querySelectorAll('.ob-occasion-chip');
+
+  // Slot state: { top: null, bottom: null, shoes: null, accessory: null }
+  const slots = { top: null, bottom: null, shoes: null, accessory: null };
+
+  // If editing an existing outfit, track its ID so we can update instead of creating new
+  let editingOutfitId = null;
+
+  // Map item types to outfit slots
+  const TYPE_TO_SLOT = {
+    shirt: 'top',
+    jacket: 'top',      // jackets also go to top
+    dress: 'top',        // dresses occupy top slot
+    pants: 'bottom',
+    shoes: 'shoes',
+    accessory: 'accessory'
+  };
+
+  const SLOT_LABELS = { top: 'Top', bottom: 'Bottom', shoes: 'Shoes', accessory: 'Accessory' };
+
+  let currentPickFilter = 'all';
+  let selectedOccasion = 'casual';
+
+  // ── Occasion chips ──
+  occasionChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+      selectedOccasion = chip.dataset.occasion;
+      occasionChips.forEach(c => {
+        const active = c.dataset.occasion === selectedOccasion;
+        c.classList.toggle('border-brand-500/40', active);
+        c.classList.toggle('bg-brand-500/15', active);
+        c.classList.toggle('text-brand-300', active);
+        c.classList.toggle('border-white/10', !active);
+        c.classList.toggle('bg-white/5', !active);
+        c.classList.toggle('text-gray-400', !active);
+      });
+    });
+  });
+
+  // ── Open / Close ──
+  function openBuilder(outfitIdToEdit) {
+    if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+    clearAllSlots();
+    editingOutfitId = null;
+    updateBuilderUI();
+
+    // If editing an existing outfit, load its items into slots
+    if (outfitIdToEdit) {
+      const allItems = (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits : [];
+      const outfit = allItems.find(o => o.id === outfitIdToEdit);
+      if (outfit && outfit.source === 'builder' && outfit.builderItems) {
+        editingOutfitId = outfitIdToEdit;
+        // Restore occasion
+        if (outfit.occasion) {
+          selectedOccasion = outfit.occasion;
+          occasionChips.forEach(c => {
+            const active = c.dataset.occasion === selectedOccasion;
+            c.classList.toggle('border-brand-500/40', active);
+            c.classList.toggle('bg-brand-500/15', active);
+            c.classList.toggle('text-brand-300', active);
+            c.classList.toggle('border-white/10', !active);
+            c.classList.toggle('bg-white/5', !active);
+            c.classList.toggle('text-gray-400', !active);
+          });
         }
-        
-        // Strategy 2: Dress-based outfit
-        if (dresses.length > 0) {
-            const dress = dresses[0];
-            const shoeNote = shoes.length > 0 ? ` Pair with your ${shoes[0].color || ''} shoes for a complete look.` : ' Add heels or clean sneakers to complete the look.';
-            const accNote = accessories.length > 0 ? ` Your ${accessories[0].color || ''} accessory adds the perfect finishing touch.` : '';
-            suggestions.push(`Your <strong>${dress.color || ''} dress</strong> is a statement piece.${shoeNote}${accNote}`);
-        }
-        
-        // Strategy 3: Color coordination from scored outfits
-        if (scoredOutfits.length >= 2) {
-            const best = scoredOutfits.reduce((max, o) => o.score > max.score ? o : max, scoredOutfits[0]);
-            suggestions.push(`Your best-scoring <strong>${best.color}</strong> outfit (${best.score}/100) proves that color works for you. Try building more looks around ${best.color} tones.`);
-        }
-        
-        // Strategy 4: What's missing
-        const hasTop = shirts.length > 0 || dresses.length > 0;
-        const hasBottom = pants.length > 0 || dresses.length > 0;
-        const hasShoes = shoes.length > 0;
-        if (!hasTop || !hasBottom || !hasShoes) {
-            const missing = [];
-            if (!hasTop) missing.push('a shirt or top');
-            if (!hasBottom) missing.push('pants or a dress');
-            if (!hasShoes) missing.push('shoes');
-            suggestions.push(`Missing pieces: Upload ${missing.join(', ')} so I can suggest complete outfit combinations!`);
-        }
-        
-        if (suggestions.length === 0) {
-            textEl.innerHTML = "Upload more varied items (shirts, pants, shoes) and I'll suggest complete outfit combinations!";
-        } else {
-            textEl.innerHTML = suggestions.map((s, i) => `<div class="mb-2 last:mb-0">${i === 0 ? '✨ ' : '• '}${s}</div>`).join('');
-        }
-    } else if (scoredOutfits.length >= 2) {
-        const best = scoredOutfits.reduce((max, o) => o.score > max.score ? o : max, scoredOutfits[0]);
-        textEl.innerHTML = `Based on your archive, your <strong>${best.color}</strong> pieces score the highest (${best.score}/100). <br><br><strong>Tip:</strong> Upload individual clothing items to get personalized mix & match outfit suggestions!`;
-    } else {
-        textEl.innerHTML = "You need at least <strong>2 items</strong> in your Digital Closet for AI mix & match. Try saving a scan or uploading some clothes!";
+        // Load items into slots by matching their IDs from builderItems
+        outfit.builderItems.forEach(bi => {
+          const closetItem = allItems.find(i => i.id === bi.id && i.source === 'upload');
+          if (closetItem && slots.hasOwnProperty(bi.slot)) {
+            slots[bi.slot] = closetItem;
+          }
+        });
+        renderSlots();
+        updateActionButtons();
+      }
     }
-    
-    modal.classList.remove("hidden");
-});
+
+    updateBuilderUI();
+    renderPicker();
+    // Force modal to top of DOM so no parent stacking context interferes
+    document.body.appendChild(modal);
+    modal.style.display = 'flex';
+    modal.style.zIndex = '9999';
+    modal.style.pointerEvents = 'auto';
+    // Use a lightweight scroll-lock that doesn't change body position,
+    // because position:fixed on body breaks fixed child click handling
+    // on mobile WebKit.
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+  }
+
+  // Update builder header and save button based on edit mode
+  function updateBuilderUI() {
+    const headerTitle = modal.querySelector('h3');
+    if (editingOutfitId) {
+      if (headerTitle) headerTitle.textContent = 'Edit Outfit';
+      saveBtn.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Update';
+      // Show "Save as New" button
+      const saveAsNewBtn = document.getElementById('obSaveAsNewBtn');
+      if (saveAsNewBtn) saveAsNewBtn.classList.remove('hidden');
+    } else {
+      if (headerTitle) headerTitle.textContent = 'Outfit Builder';
+      saveBtn.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Save';
+      const saveAsNewBtn = document.getElementById('obSaveAsNewBtn');
+      if (saveAsNewBtn) saveAsNewBtn.classList.add('hidden');
+    }
+  }
+
+  function closeBuilder() {
+    if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+    modal.style.display = 'none';
+    editingOutfitId = null;
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('outfitBuilderBtn')?.addEventListener('click', () => openBuilder());
+
+  // Expose edit function globally so closet cards can call it
+  window.editBuilderOutfit = function(outfitId) {
+    openBuilder(outfitId);
+  };
+
+  closeBtn.addEventListener('click', closeBuilder);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeBuilder(); });
+
+  // ── Slot management ──
+  function clearAllSlots() {
+    Object.keys(slots).forEach(k => { slots[k] = null; });
+    renderSlots();
+    updateActionButtons();
+  }
+
+  function setSlot(slotName, item) {
+    slots[slotName] = item;
+    renderSlots();
+    updateActionButtons();
+  }
+
+  function removeSlot(slotName) {
+    slots[slotName] = null;
+    renderSlots();
+    updateActionButtons();
+    renderPicker(); // re-render so item appears again
+  }
+
+  function renderSlots() {
+    slotEls.forEach(el => {
+      const slotName = el.dataset.slot;
+      const item = slots[slotName];
+      const placeholder = el.querySelector('.ob-slot-placeholder');
+      const filled = el.querySelector('.ob-slot-filled');
+      const img = filled?.querySelector('img');
+
+      if (item) {
+        placeholder.classList.add('hidden');
+        filled.classList.remove('hidden');
+        if (img) img.src = item.image;
+        el.classList.remove('border-dashed', 'border-white/10');
+        el.classList.add('border-solid', 'border-emerald-500/30');
+      } else {
+        placeholder.classList.remove('hidden');
+        filled.classList.add('hidden');
+        if (img) img.src = '';
+        el.classList.add('border-dashed', 'border-white/10');
+        el.classList.remove('border-solid', 'border-emerald-500/30');
+      }
+    });
+  }
+
+  function updateActionButtons() {
+    const filledCount = Object.values(slots).filter(Boolean).length;
+    saveBtn.disabled = filledCount < 2;
+    aiBtn.disabled = filledCount < 2;
+    const saveAsNewEl = document.getElementById('obSaveAsNewBtn');
+    if (saveAsNewEl) saveAsNewEl.disabled = filledCount < 2;
+  }
+
+  // ── Slot click → auto-assign next item of matching type ──
+  slotEls.forEach(el => {
+    el.addEventListener('click', (e) => {
+      // If clicking remove button, don't open picker
+      if (e.target.closest('.ob-slot-remove')) return;
+      if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+
+      const slotName = el.dataset.slot;
+      // If slot is filled, remove it
+      if (slots[slotName]) {
+        removeSlot(slotName);
+        return;
+      }
+      // Otherwise, filter picker to matching types and scroll to it
+      const matchingTypes = Object.entries(TYPE_TO_SLOT)
+        .filter(([, s]) => s === slotName)
+        .map(([t]) => t);
+
+      // Switch tab to the first matching type, or 'all'
+      if (matchingTypes.length === 1) {
+        switchTab(matchingTypes[0]);
+      } else {
+        switchTab('all');
+      }
+      // Scroll picker into view
+      pickerGrid.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    // Remove button inside slot
+    el.querySelector('.ob-slot-remove')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+      removeSlot(el.dataset.slot);
+    });
+  });
+
+  // ── Clear button ──
+  clearBtn.addEventListener('click', () => {
+    if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+    clearAllSlots();
+    renderPicker();
+  });
+
+  // ── Picker tabs ──
+  function switchTab(filter) {
+    currentPickFilter = filter;
+    tabBtns.forEach(b => {
+      const active = b.dataset.pick === filter;
+      b.classList.toggle('border-emerald-500/50', active);
+      b.classList.toggle('bg-emerald-500/20', active);
+      b.classList.toggle('text-emerald-300', active);
+      b.classList.toggle('border-white/10', !active);
+      b.classList.toggle('bg-white/5', !active);
+      b.classList.toggle('text-gray-400', !active);
+    });
+    renderPicker();
+  }
+
+  tabBtns.forEach(b => {
+    b.addEventListener('click', () => {
+      if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+      switchTab(b.dataset.pick);
+    });
+  });
+
+  // ── Render picker grid ──
+  function renderPicker() {
+    const allItems = (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits : [];
+    // Only uploaded items have a type; scanned outfits don't fit individual slots
+    const uploadItems = allItems.filter(o => o.source === 'upload' && o.type);
+    let filtered = currentPickFilter === 'all'
+      ? uploadItems
+      : uploadItems.filter(o => o.type === currentPickFilter);
+
+    // Items already in slots should be shown with a check mark, not hidden
+    const slotItemIds = new Set(Object.values(slots).filter(Boolean).map(i => i.id));
+
+    if (!filtered.length) {
+      pickerGrid.innerHTML = '';
+      pickerEmpty.classList.remove('hidden');
+      return;
+    }
+    pickerEmpty.classList.add('hidden');
+
+    const TYPE_ICONS = { shirt: '👕', pants: '👖', jacket: '🧥', dress: '👗', shoes: '👟', accessory: '👜' };
+
+    pickerGrid.innerHTML = filtered.map(item => {
+      const inSlot = slotItemIds.has(item.id);
+      return `
+        <div class="ob-pick-item rounded-xl overflow-hidden border ${inSlot ? 'border-emerald-500/50 ring-1 ring-emerald-500/30' : 'border-white/10 hover:border-emerald-500/40'} cursor-pointer transition-colors relative aspect-[3/4] bg-black" data-item-id="${item.id}">
+          <img src="${item.image}" class="w-full h-full object-cover ${inSlot ? 'opacity-40' : 'opacity-90'}" alt="${item.type}" loading="lazy" />
+          <div class="absolute top-1 left-1 bg-black/60 backdrop-blur-md px-1.5 py-0.5 rounded text-[9px] font-bold text-white border border-white/10 z-10">${TYPE_ICONS[item.type] || ''} ${item.type}</div>
+          ${inSlot ? '<div class="absolute inset-0 flex items-center justify-center z-10"><div class="w-8 h-8 rounded-full bg-emerald-500/80 flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div></div>' : ''}
+        </div>`;
+    }).join('');
+
+    // Click handler for picker items
+    pickerGrid.querySelectorAll('.ob-pick-item').forEach(el => {
+      el.addEventListener('click', () => {
+        if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+        const itemId = el.dataset.itemId;
+        const item = uploadItems.find(i => i.id === itemId);
+        if (!item) return;
+
+        // Determine which slot this item belongs to
+        const targetSlot = TYPE_TO_SLOT[item.type];
+        if (!targetSlot) return;
+
+        // If already in a slot, remove it
+        if (slots[targetSlot] && slots[targetSlot].id === itemId) {
+          removeSlot(targetSlot);
+        } else {
+          // Place item in slot
+          setSlot(targetSlot, item);
+        }
+        renderPicker();
+      });
+    });
+  }
+
+  // ── Save Outfit (handles both new save and update) ──
+  async function doSaveOutfit(saveAsNew) {
+    const filledSlots = Object.entries(slots).filter(([, v]) => v);
+    if (filledSlots.length < 2) return;
+
+    const isUpdate = editingOutfitId && !saveAsNew;
+
+    // 200-item closet limit (only for new outfits)
+    if (!isUpdate) {
+      const totalItems = (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits.length : 0;
+      if (totalItems >= 200) {
+        if (typeof showToast === 'function') showToast('Closet full! Delete some items first (max 200).');
+        else alert('Closet full! Delete some items first (max 200).');
+        return;
+      }
+    }
+
+    if (typeof triggerHaptic === 'function') triggerHaptic('success');
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="animate-pulse">Saving...</span>';
+
+    // Build a composite image on canvas
+    const canvas = document.createElement('canvas');
+    const W = 800, H = 1200;
+    canvas.width = W;
+    canvas.height = H;
+    const ctx = canvas.getContext('2d');
+
+    // Dark background
+    ctx.fillStyle = '#111';
+    ctx.fillRect(0, 0, W, H);
+
+    // Draw each slotted image in a quadrant
+    const positions = {
+      top:       { x: 0,   y: 0,   w: W/2, h: H/2 },
+      bottom:    { x: W/2, y: 0,   w: W/2, h: H/2 },
+      shoes:     { x: 0,   y: H/2, w: W/2, h: H/2 },
+      accessory: { x: W/2, y: H/2, w: W/2, h: H/2 }
+    };
+
+    // Load all images, then draw
+    const loadImg = (src) => new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => resolve(null);
+      img.src = src;
+    });
+
+    const slotOrder = ['top', 'bottom', 'shoes', 'accessory'];
+    const images = await Promise.all(slotOrder.map(s => slots[s] ? loadImg(slots[s].image) : Promise.resolve(null)));
+
+    images.forEach((img, i) => {
+      if (!img) return;
+      const pos = positions[slotOrder[i]];
+      // Cover-fit
+      const ir = img.width / img.height;
+      const fr = pos.w / pos.h;
+      let sw, sh, sx, sy;
+      if (ir > fr) { sh = img.height; sw = sh * fr; sx = (img.width - sw) / 2; sy = 0; }
+      else { sw = img.width; sh = sw / fr; sx = 0; sy = (img.height - sh) / 2; }
+      ctx.drawImage(img, sx, sy, sw, sh, pos.x, pos.y, pos.w, pos.h);
+
+      // Slot label
+      ctx.fillStyle = 'rgba(0,0,0,0.6)';
+      ctx.fillRect(pos.x + 8, pos.y + 8, 70, 24);
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.fillText(SLOT_LABELS[slotOrder[i]], pos.x + 16, pos.y + 25);
+    });
+
+    const compositeImage = canvas.toDataURL('image/webp', 0.85);
+
+    if (isUpdate) {
+      // ── Update existing outfit ──
+      const allItems = (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits : [];
+      const idx = allItems.findIndex(o => o.id === editingOutfitId);
+      if (idx === -1) {
+        if (typeof showToast === 'function') showToast('Original outfit not found.');
+        saveBtn.disabled = false;
+        updateBuilderUI();
+        return;
+      }
+      const existing = allItems[idx];
+      existing.image = compositeImage;
+      existing.occasion = selectedOccasion || 'casual';
+      existing.builderItems = filledSlots.map(([slotName, item]) => ({ slot: slotName, id: item.id, type: item.type }));
+      existing.date = Date.now();
+      // Set color from first item
+      if (filledSlots[0] && filledSlots[0][1].color) {
+        existing.color = filledSlots[0][1].color;
+        existing.colorHex = filledSlots[0][1].colorHex || '#888';
+      }
+
+      try {
+        if (window.closetDB && typeof window.closetDB.put === 'function') {
+          await window.closetDB.put(existing);
+        }
+        if (typeof window.renderCloset === 'function') window.renderCloset();
+        if (typeof showToast === 'function') showToast('Outfit updated!');
+      } catch (err) {
+        console.error('[Outfit Builder] update failed:', err);
+        if (typeof showToast === 'function') showToast('Update failed. Try again.');
+      }
+    } else {
+      // ── Save new outfit ──
+      const newItem = {
+        id: 'outfit_' + Date.now(),
+        image: compositeImage,
+        score: null,
+        color: 'Mixed',
+        colorHex: '#888',
+        occasion: selectedOccasion || 'casual',
+        date: Date.now(),
+        source: 'builder',
+        builderItems: filledSlots.map(([slotName, item]) => ({ slot: slotName, id: item.id, type: item.type }))
+      };
+
+      // Set color from first item
+      if (filledSlots[0] && filledSlots[0][1].color) {
+        newItem.color = filledSlots[0][1].color;
+        newItem.colorHex = filledSlots[0][1].colorHex || '#888';
+      }
+
+      try {
+        if (window.closetDB && typeof window.closetDB.put === 'function') {
+          await window.closetDB.put(newItem);
+        }
+        if (window.userCloset && Array.isArray(window.userCloset.outfits)) {
+          window.userCloset.outfits.unshift(newItem);
+        }
+        if (typeof window.renderCloset === 'function') window.renderCloset();
+        if (typeof updateUsageBadge === 'function') updateUsageBadge();
+        if (typeof showToast === 'function') showToast('Outfit saved to closet!');
+      } catch (err) {
+        console.error('[Outfit Builder] save failed:', err);
+        if (typeof showToast === 'function') showToast('Save failed. Try again.');
+      }
+    }
+
+    saveBtn.disabled = false;
+    updateBuilderUI();
+    closeBuilder();
+  }
+
+  saveBtn.addEventListener('click', () => doSaveOutfit(false));
+
+  // ── Save as New button (only visible when editing) ──
+  const saveAsNewBtn = document.getElementById('obSaveAsNewBtn');
+  if (saveAsNewBtn) {
+    saveAsNewBtn.addEventListener('click', () => doSaveOutfit(true));
+  }
+
+  // ── Ask AI ──
+  aiBtn.addEventListener('click', async () => {
+    const filledSlots = Object.entries(slots).filter(([, v]) => v);
+    if (filledSlots.length < 2) return;
+
+    if (typeof triggerHaptic === 'function') triggerHaptic('success');
+
+    // Build composite image for AI
+    const canvas = document.createElement('canvas');
+    const W = 800, H = 1200;
+    canvas.width = W;
+    canvas.height = H;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#111';
+    ctx.fillRect(0, 0, W, H);
+
+    const positions = {
+      top:       { x: 0,   y: 0,   w: W/2, h: H/2 },
+      bottom:    { x: W/2, y: 0,   w: W/2, h: H/2 },
+      shoes:     { x: 0,   y: H/2, w: W/2, h: H/2 },
+      accessory: { x: W/2, y: H/2, w: W/2, h: H/2 }
+    };
+
+    const loadImg = (src) => new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => resolve(null);
+      img.src = src;
+    });
+
+    const slotOrder = ['top', 'bottom', 'shoes', 'accessory'];
+    const images = await Promise.all(slotOrder.map(s => slots[s] ? loadImg(slots[s].image) : Promise.resolve(null)));
+
+    images.forEach((img, i) => {
+      if (!img) return;
+      const pos = positions[slotOrder[i]];
+      const ir = img.width / img.height;
+      const fr = pos.w / pos.h;
+      let sw, sh, sx, sy;
+      if (ir > fr) { sh = img.height; sw = sh * fr; sx = (img.width - sw) / 2; sy = 0; }
+      else { sw = img.width; sh = sw / fr; sx = 0; sy = (img.height - sh) / 2; }
+      ctx.drawImage(img, sx, sy, sw, sh, pos.x, pos.y, pos.w, pos.h);
+      ctx.fillStyle = 'rgba(0,0,0,0.6)';
+      ctx.fillRect(pos.x + 8, pos.y + 8, 70, 24);
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.fillText(SLOT_LABELS[slotOrder[i]], pos.x + 16, pos.y + 25);
+    });
+
+    const compositeImage = canvas.toDataURL('image/webp', 0.85);
+
+    // Build description of what's in the outfit
+    const outfitDesc = filledSlots.map(([slotName, item]) => {
+      const TYPE_LABELS = { shirt: 'Shirt', pants: 'Pants', jacket: 'Jacket', dress: 'Dress', shoes: 'Shoes', accessory: 'Accessory' };
+      return `${SLOT_LABELS[slotName]}: ${item.color || 'Unknown color'} ${TYPE_LABELS[item.type] || item.type}`;
+    }).join(', ');
+
+    const occasion = (selectedOccasion || 'casual').replace('_', ' ');
+    const prompt = `Rate and review this outfit combination for a "${occasion}" occasion. The outfit consists of: ${outfitDesc}. Give me a score out of 100, what works well, what could be improved, and specific styling tips.`;
+
+    // Close builder and switch to AI chat
+    closeBuilder();
+
+    // Switch to chat view
+    if (typeof window.toggleView === 'function') {
+      window.toggleView('chat');
+    } else {
+      const chatView = document.getElementById('viewChat');
+      if (chatView) {
+        document.querySelectorAll('[id^="view"]').forEach(v => { v.classList.add('hidden'); v.classList.add('opacity-0'); });
+        chatView.classList.remove('hidden');
+        setTimeout(() => chatView.classList.remove('opacity-0'), 10);
+      }
+    }
+
+    // Send to chat with the composite image attached
+    setTimeout(() => {
+      if (typeof window._sendBuilderToChat === 'function') {
+        window._sendBuilderToChat(prompt, compositeImage);
+      }
+    }, 400);
+  });
+
+})();
 
 const shareModal = $("shareModal");
 const shareCanvas = $("shareCanvas");
@@ -8557,9 +10027,161 @@ function renderWeatherCard({ data, latitude, longitude, locName, cacheStale, cac
       <div class="text-[10px] font-bold uppercase tracking-widest mb-1">${adviceTitle}</div>
       <div class="text-xs text-gray-200 leading-relaxed">${advice}</div>
     </div>
+    <div id="weatherOutfitRecs" class="mt-4"></div>
     <button onclick="window.loadWeather(true)" class="mt-3 text-[10px] text-gray-500 hover:text-gray-300 uppercase tracking-widest">Refresh</button>
   `;
+
+  // Weather-aware styling: pick closet items that match tonight's conditions
+  try {
+    window._lastWeatherSummary = { minTemp, maxRain, maxWind, currentTemp };
+    renderWeatherOutfit(window._lastWeatherSummary);
+  } catch (e) { console.warn('[weather-outfit] render failed', e); }
 }
+
+// ============================================================
+// WEATHER-AWARE STYLING — pick from closet by tonight's weather
+// ============================================================
+function _weatherNeeds({ minTemp, maxRain, maxWind, currentTemp }) {
+  const needs = {
+    coldLayer: minTemp < 8,            // need coat / heavy jacket
+    lightLayer: minTemp >= 8 && minTemp < 16,  // need a light jacket
+    breathable: minTemp >= 23,         // hot — light shirt
+    closedShoes: minTemp < 12 || maxRain >= 35,
+    avoidDress:  maxWind >= 30 || minTemp < 10,
+    rainProtection: maxRain >= 35
+  };
+  return needs;
+}
+
+function _pickClosetByType(type) {
+  const arr = (window.userCloset && window.userCloset.outfits) || [];
+  return arr.filter(o => o && o.source === 'upload' && o.type === type);
+}
+
+function _buildWeatherOutfit(needs) {
+  // Returns ordered list of slots: { label, type, item|null, reason }
+  const slots = [];
+
+  // Top
+  if (needs.coldLayer) {
+    const j = _pickClosetByType('jacket')[0];
+    slots.push({ label: 'Heavy jacket', type: 'jacket', item: j || null, reason: 'Below 8°C — coat is essential' });
+  } else if (needs.lightLayer) {
+    const j = _pickClosetByType('jacket')[0];
+    slots.push({ label: 'Light jacket', type: 'jacket', item: j || null, reason: 'Cool evening — bring a layer' });
+  }
+
+  // Shirt / Dress
+  if (needs.avoidDress || needs.coldLayer) {
+    const s = _pickClosetByType('shirt')[0];
+    slots.push({ label: needs.breathable ? 'Breathable top' : 'Top', type: 'shirt', item: s || null, reason: needs.breathable ? 'Hot night — go breathable' : 'Layer under your jacket' });
+  } else {
+    // Mild + not windy → either dress or shirt; prefer dress if available
+    const d = _pickClosetByType('dress')[0];
+    if (d) {
+      slots.push({ label: 'Dress', type: 'dress', item: d, reason: 'Mild evening — dress works' });
+    } else {
+      const s = _pickClosetByType('shirt')[0];
+      slots.push({ label: 'Top', type: 'shirt', item: s || null, reason: 'Mild evening' });
+    }
+  }
+
+  // Bottoms (skip if dress picked)
+  const lastSlot = slots[slots.length - 1];
+  if (!lastSlot || lastSlot.type !== 'dress') {
+    const p = _pickClosetByType('pants')[0];
+    slots.push({ label: 'Pants', type: 'pants', item: p || null, reason: needs.coldLayer ? 'Long pants for the cold' : 'Pair with your top' });
+  }
+
+  // Shoes
+  const sh = _pickClosetByType('shoes')[0];
+  slots.push({
+    label: needs.closedShoes ? 'Closed shoes' : 'Shoes',
+    type: 'shoes',
+    item: sh || null,
+    reason: needs.rainProtection ? 'Rain — keep feet dry'
+          : needs.closedShoes ? 'Cold ground — closed shoes'
+          : 'Finish the look'
+  });
+
+  return slots;
+}
+
+function renderWeatherOutfit(weather) {
+  const wrap = document.getElementById('weatherOutfitRecs');
+  if (!wrap) return;
+
+  const closet = (window.userCloset && window.userCloset.outfits) || [];
+  const uploads = closet.filter(o => o && o.source === 'upload');
+  if (uploads.length === 0) {
+    wrap.innerHTML = `
+      <div class="rounded-xl border border-white/10 bg-white/[0.03] p-3 text-center">
+        <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-1">Tonight's Pick</div>
+        <div class="text-xs text-gray-400 leading-relaxed">Add items to your closet to get weather-matched outfit picks.</div>
+      </div>`;
+    return;
+  }
+
+  const needs = _weatherNeeds(weather);
+  const slots = _buildWeatherOutfit(needs);
+  if (slots.length === 0) { wrap.innerHTML = ''; return; }
+
+  // Headline based on the strongest signal
+  let headline = 'Tonight\'s Pick';
+  let sub = `${Math.round(weather.minTemp)}° tonight — your closet match`;
+  if (needs.rainProtection) sub = `Rain ${weather.maxRain}% — stay dry`;
+  else if (needs.coldLayer) sub = `${Math.round(weather.minTemp)}° — bundle up`;
+  else if (needs.breathable) sub = `${Math.round(weather.minTemp)}°+ — go light`;
+
+  const slotsHtml = slots.map(s => {
+    if (s.item) {
+      const img = s.item.image
+        ? `<img src="${s.item.image}" alt="" class="w-full h-full object-cover">`
+        : '';
+      return `<div class="weather-rec-slot weather-rec-slot--filled" title="${_escAttr(s.reason)}">
+        <div class="weather-rec-thumb">${img}</div>
+        <div class="weather-rec-label">${_escHtml(s.label)}</div>
+      </div>`;
+    }
+    return `<div class="weather-rec-slot weather-rec-slot--empty" title="${_escAttr(s.reason)}">
+      <div class="weather-rec-thumb weather-rec-thumb--empty">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </div>
+      <div class="weather-rec-label weather-rec-label--missing">${_escHtml(s.label)}</div>
+    </div>`;
+  }).join('');
+
+  // Concise rationale line
+  const reasons = [];
+  if (needs.rainProtection) reasons.push('rain ' + weather.maxRain + '%');
+  if (needs.coldLayer) reasons.push('cold ' + Math.round(weather.minTemp) + '°');
+  else if (needs.lightLayer) reasons.push('cool ' + Math.round(weather.minTemp) + '°');
+  if (needs.avoidDress && weather.maxWind >= 30) reasons.push('windy ' + Math.round(weather.maxWind) + ' km/h');
+  if (needs.breathable && reasons.length === 0) reasons.push('warm ' + Math.round(weather.minTemp) + '°');
+  const reasonStr = reasons.length ? reasons.join(' · ') : 'mild';
+
+  wrap.innerHTML = `
+    <div class="rounded-xl border border-brand-500/30 bg-gradient-to-br from-brand-500/10 to-purple-500/5 p-3">
+      <div class="flex items-center justify-between mb-2.5">
+        <div>
+          <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold">${headline}</div>
+          <div class="text-[11px] text-gray-300 mt-0.5">${_escHtml(sub)}</div>
+        </div>
+        <span class="text-[9px] text-gray-500 uppercase tracking-widest">${_escHtml(reasonStr)}</span>
+      </div>
+      <div class="weather-rec-row">
+        ${slotsHtml}
+      </div>
+    </div>
+  `;
+}
+
+function _escHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function _escAttr(s) { return _escHtml(s); }
+
+window.renderWeatherOutfit = renderWeatherOutfit;
 window.loadWeather = loadWeather;
 
 // When connectivity returns, automatically refresh the weather card so the
@@ -10534,6 +12156,18 @@ function onGoogleMapsLoaded() {
       attachBox.appendChild(chip);
     });
   }
+
+  // Bridge for Outfit Builder to send composite outfit image + prompt to chat
+  window._sendBuilderToChat = function(prompt, imageDataUrl) {
+    if (!input || !form) return;
+    pendingAttachments = [{ url: imageDataUrl }];
+    input.value = prompt;
+    renderAttachments();
+    // Small delay to ensure the UI renders the attachment
+    setTimeout(() => {
+      form.dispatchEvent(new Event('submit', { cancelable: true }));
+    }, 100);
+  };
 
   // Safely set the bubble's text content while preserving
   // the action bar (👍/👎 + Apply + Report) that lives at the
@@ -12855,12 +14489,542 @@ function onGoogleMapsLoaded() {
     }).join('');
   }
 
-  window.renderHistoryView = renderHistoryView;
+  // ============================================================
+  // STYLE CALENDAR — which outfit, which day, which place
+  // ============================================================
+  const _stylecalState = { year: null, month: null }; // month: 0-11
+  const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  function _stylecalKey(d) {
+    return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+  }
+  function _stylecalKeyFromTs(ts) {
+    const d = new Date(ts);
+    return _stylecalKey(d);
+  }
+  function _getOutfits() {
+    const arr = (window.userCloset && Array.isArray(window.userCloset.outfits))
+      ? window.userCloset.outfits : [];
+    // Skip uploaded closet items — we only want scanned outfits
+    return arr.filter(o => o && o.source !== 'upload' && o.date);
+  }
+  function _outfitsByDay() {
+    const map = {};
+    _getOutfits().forEach(o => {
+      const k = _stylecalKeyFromTs(o.date);
+      (map[k] = map[k] || []).push(o);
+    });
+    return map;
+  }
+  function _normLoc(s) {
+    return (s || '').trim().toLowerCase();
+  }
+
+  function renderStyleCalendar() {
+    const grid = document.getElementById('stylecalDateGrid');
+    const empty = document.getElementById('stylecalEmpty');
+    if (!grid) return;
+
+    const outfits = _getOutfits();
+    if (empty) empty.classList.toggle('hidden', outfits.length > 0);
+
+    if (_stylecalState.year === null) {
+      const now = new Date();
+      _stylecalState.year = now.getFullYear();
+      _stylecalState.month = now.getMonth();
+    }
+    const y = _stylecalState.year, m = _stylecalState.month;
+
+    document.getElementById('stylecalMonthLabel').textContent = MONTH_NAMES[m];
+    document.getElementById('stylecalYearLabel').textContent  = String(y);
+
+    const byDay = _outfitsByDay();
+    const today = new Date();
+    const todayKey = _stylecalKey(today);
+
+    const firstOfMonth = new Date(y, m, 1);
+    const startDay = firstOfMonth.getDay(); // 0=Sun
+    const daysInMonth = new Date(y, m+1, 0).getDate();
+    const daysInPrev = new Date(y, m, 0).getDate();
+
+    let html = '';
+    // leading days from previous month
+    for (let i = startDay - 1; i >= 0; i--) {
+      const day = daysInPrev - i;
+      const dt = new Date(y, m-1, day);
+      html += _stylecalCellHtml(dt, byDay, todayKey, true);
+    }
+    // current month
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dt = new Date(y, m, d);
+      html += _stylecalCellHtml(dt, byDay, todayKey, false);
+    }
+    // trailing days to fill 6 rows of 7
+    const cellsSoFar = startDay + daysInMonth;
+    const trailing = (7 - (cellsSoFar % 7)) % 7;
+    for (let d = 1; d <= trailing; d++) {
+      const dt = new Date(y, m+1, d);
+      html += _stylecalCellHtml(dt, byDay, todayKey, true);
+    }
+    grid.innerHTML = html;
+
+    // wire click handlers
+    grid.querySelectorAll('[data-stylecal-day]').forEach(el => {
+      el.addEventListener('click', () => openStylecalDay(el.getAttribute('data-stylecal-day')));
+    });
+  }
+
+  function _stylecalCellHtml(dt, byDay, todayKey, otherMonth) {
+    const k = _stylecalKey(dt);
+    const list = byDay[k] || [];
+    const has = list.length > 0;
+    const isToday = k === todayKey;
+
+    // repeat detection: any outfit this day shares wornAt with another day's outfit
+    let repeat = false;
+    if (has) {
+      const allOther = _getOutfits().filter(o => _stylecalKeyFromTs(o.date) !== k);
+      for (const o of list) {
+        const loc = _normLoc(o.wornAt);
+        if (!loc) continue;
+        if (allOther.some(x => _normLoc(x.wornAt) === loc)) { repeat = true; break; }
+      }
+    }
+
+    const cls = ['stylecal-date-cell'];
+    if (otherMonth) cls.push('stylecal-date-cell--other-month');
+    if (isToday) cls.push('stylecal-date-cell--today');
+    if (has) cls.push('stylecal-date-cell--has-outfit');
+    else cls.push('stylecal-date-cell--no-outfit');
+
+    const clickAttr = has ? `data-stylecal-day="${k}"` : '';
+    const img = has && list[0].image
+      ? `<img src="${list[0].image}" alt="" loading="lazy">` : '';
+    const count = list.length > 1 ? `<span class="stylecal-count">+${list.length-1}</span>` : '';
+    const warn = repeat ? `<span class="stylecal-warn" title="Repeat at same place">&#9888;</span>` : '';
+
+    return `<div class="${cls.join(' ')}" ${clickAttr}>
+      ${img}
+      <span class="stylecal-num">${dt.getDate()}</span>
+      ${count}${warn}
+    </div>`;
+  }
+
+  window.stylecalChangeMonth = function(delta) {
+    if (_stylecalState.year === null) {
+      const n = new Date();
+      _stylecalState.year = n.getFullYear();
+      _stylecalState.month = n.getMonth();
+    }
+    let m = _stylecalState.month + delta;
+    let y = _stylecalState.year;
+    while (m < 0)  { m += 12; y--; }
+    while (m > 11) { m -= 12; y++; }
+    _stylecalState.month = m; _stylecalState.year = y;
+    renderStyleCalendar();
+  };
+  window.stylecalGoToToday = function() {
+    const n = new Date();
+    _stylecalState.year = n.getFullYear();
+    _stylecalState.month = n.getMonth();
+    renderStyleCalendar();
+  };
+
+  // ---------- Day-detail modal ----------
+  function openStylecalDay(key) {
+    const modal = document.getElementById('stylecalDayModal');
+    const body  = document.getElementById('stylecalModalBody');
+    const title = document.getElementById('stylecalModalTitle');
+    const sub   = document.getElementById('stylecalModalSub');
+    if (!modal || !body) return;
+
+    const [yy, mm, dd] = key.split('-').map(Number);
+    const dt = new Date(yy, mm-1, dd);
+    title.textContent = dt.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+
+    const list = (_outfitsByDay()[key] || []).slice().sort((a,b) => (b.date||0) - (a.date||0));
+    sub.textContent = list.length === 1 ? '1 outfit' : list.length + ' outfits';
+
+    body.innerHTML = list.map(o => _stylecalOutfitCardHtml(o, key)).join('') ||
+      '<div class="text-gray-500 text-sm text-center py-6">No outfits this day.</div>';
+
+    // wire wornAt save buttons
+    body.querySelectorAll('[data-stylecal-save]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-stylecal-save');
+        const input = body.querySelector(`[data-stylecal-input="${id}"]`);
+        if (!input) return;
+        const val = input.value.trim();
+
+        // Find live reference in userCloset; fall back to fetching from IDB
+        let outfit = (window.userCloset && window.userCloset.outfits || []).find(x => x && x.id === id);
+        if (!outfit && window.closetDB && typeof window.closetDB.getAll === 'function') {
+          try {
+            const all = await window.closetDB.getAll();
+            outfit = all.find(x => x && x.id === id);
+            if (outfit && window.userCloset) window.userCloset.outfits.unshift(outfit);
+          } catch(e) {}
+        }
+        if (!outfit) { btn.textContent = 'Error'; return; }
+
+        outfit.wornAt = val;
+        const origLabel = 'Save';
+        btn.disabled = true;
+        btn.textContent = 'Saving...';
+        try {
+          if (window.closetDB && typeof window.closetDB.put === 'function') {
+            await window.closetDB.put(outfit);
+          }
+          btn.textContent = '\u2713 Saved';
+          btn.classList.remove('bg-brand-500/20','border-brand-500/40','text-brand-400');
+          btn.classList.add('bg-emerald-500/20','border-emerald-500/40','text-emerald-400');
+
+          // Refresh calendar grid (cheap), but keep modal so user sees confirmation.
+          try { renderStyleCalendar(); } catch(e) {}
+
+          // Update or insert warning banner inline (no full modal re-render)
+          const card = body.querySelector(`[data-stylecal-card="${id}"]`);
+          const slot = card ? card.querySelector('.stylecal-warn-slot') : null;
+          // Update location pill inline
+          const pill = body.querySelector(`[data-stylecal-locpill="${id}"]`);
+          if (pill) {
+            const loc = (val || '').trim();
+            const iconSvg = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`;
+            if (loc) {
+              pill.classList.remove('stylecal-loc-pill--empty');
+              pill.innerHTML = iconSvg + `<span>${_escapeHtml(loc)}</span>`;
+            } else {
+              pill.classList.add('stylecal-loc-pill--empty');
+              pill.innerHTML = iconSvg + `<span>No location yet</span>`;
+            }
+          }
+          if (slot) {
+            const loc = (val || '').trim();
+            let banner = '';
+            if (loc) {
+              const prior = _getOutfits().filter(x =>
+                x.id !== id &&
+                _normLoc(x.wornAt) === _normLoc(loc) &&
+                (x.date || 0) < (outfit.date || 0)
+              ).sort((a,b) => (b.date||0) - (a.date||0));
+              if (prior.length) {
+                const lastDate = new Date(prior[0].date).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+                banner = `<div class="stylecal-warn-banner">&#9888; You wore an outfit at <strong>${_escapeHtml(loc)}</strong> on <strong>${lastDate}</strong>. Try a different look.</div>`;
+              }
+            }
+            slot.innerHTML = banner;
+          }
+
+          setTimeout(() => {
+            btn.disabled = false;
+            btn.textContent = origLabel;
+            btn.classList.remove('bg-emerald-500/20','border-emerald-500/40','text-emerald-400');
+            btn.classList.add('bg-brand-500/20','border-brand-500/40','text-brand-400');
+          }, 1400);
+        } catch(e) {
+          console.warn('[stylecal] save wornAt failed', e);
+          btn.disabled = false;
+          btn.textContent = 'Retry';
+        }
+      });
+    });
+
+    modal.classList.remove('hidden');
+  }
+
+  function _stylecalOutfitCardHtml(o, dayKey) {
+    const loc = (o.wornAt || '').trim();
+    // find prior wear at same place
+    let warnHtml = '';
+    if (loc) {
+      const prior = _getOutfits().filter(x =>
+        x.id !== o.id &&
+        _normLoc(x.wornAt) === _normLoc(loc) &&
+        (x.date || 0) < (o.date || 0)
+      ).sort((a,b) => (b.date||0) - (a.date||0));
+      if (prior.length > 0) {
+        const last = prior[0];
+        const lastDate = new Date(last.date).toLocaleDateString('en-US', { month:'short', day:'numeric' });
+        warnHtml = `<div class="stylecal-warn-banner mt-2">
+          &#9888; You wore an outfit at <strong>${_escapeHtml(loc)}</strong> on <strong>${lastDate}</strong>. Try a different look.
+        </div>`;
+      }
+    }
+    const colorChip = o.colorHex
+      ? `<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${o.colorHex};vertical-align:middle;margin-right:4px;border:1px solid rgba(255,255,255,0.2);"></span>` : '';
+    const occ = o.occasion ? `<span class="text-[10px] uppercase tracking-widest text-gray-400">${_escapeHtml(o.occasion)}</span>` : '';
+    const img = o.image
+      ? `<img src="${o.image}" alt="">`
+      : `<div style="width:80px;height:80px;border-radius:10px;background:rgba(255,255,255,0.05);flex-shrink:0;"></div>`;
+    const locPill = loc
+      ? `<div class="stylecal-loc-pill" data-stylecal-locpill="${o.id}">
+           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+           <span>${_escapeHtml(loc)}</span>
+         </div>`
+      : `<div class="stylecal-loc-pill stylecal-loc-pill--empty" data-stylecal-locpill="${o.id}">
+           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+           <span>No location yet</span>
+         </div>`;
+
+    return `<div class="stylecal-outfit-card" data-stylecal-card="${o.id}">
+      ${img}
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+          ${locPill}
+          ${occ}
+        </div>
+        <div class="text-xs text-gray-300 mb-2">${colorChip}${_escapeHtml(o.color || 'Mixed')}</div>
+        <div class="flex gap-2">
+          <input type="text" class="stylecal-input" placeholder="Where did you wear this?"
+            value="${_escapeAttr(loc)}" data-stylecal-input="${o.id}" maxlength="60">
+          <button class="text-xs font-bold px-3 py-2 rounded-lg bg-brand-500/20 border border-brand-500/40 text-brand-400 hover:bg-brand-500/25 transition shrink-0"
+            data-stylecal-save="${o.id}">Save</button>
+        </div>
+        <div class="stylecal-warn-slot mt-2">${warnHtml}</div>
+      </div>
+    </div>`;
+  }
+  function _escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function _escapeAttr(s) { return _escapeHtml(s); }
+
+  // close modal handlers
+  document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('stylecalDayModal');
+    const close = document.getElementById('stylecalModalClose');
+    if (close) close.addEventListener('click', () => modal.classList.add('hidden'));
+    if (modal) modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.classList.add('hidden');
+    });
+  });
+
+  window.renderStyleCalendar = renderStyleCalendar;
+
+  // ============================================================
+  // STYLE DNA REPORT — weekly/monthly summary
+  // ============================================================
+  let _dnaRange = 7; // days
+
+  window.switchDnaRange = function(days) {
+    _dnaRange = days;
+    document.querySelectorAll('.dna-range-btn').forEach(b => {
+      b.classList.toggle('active', Number(b.dataset.dnaRange) === days);
+    });
+    renderStyleDna();
+  };
+
+  function _hexLuminance(hex) {
+    if (!hex || typeof hex !== 'string') return 128;
+    let h = hex.replace('#','');
+    if (h.length === 3) h = h.split('').map(c => c + c).join('');
+    if (h.length !== 6) return 128;
+    const r = parseInt(h.slice(0,2), 16);
+    const g = parseInt(h.slice(2,4), 16);
+    const b = parseInt(h.slice(4,6), 16);
+    if ([r,g,b].some(x => isNaN(x))) return 128;
+    return Math.round(0.299*r + 0.587*g + 0.114*b);
+  }
+  function _luminanceBucket(lum) {
+    if (lum < 96)  return 'dark';
+    if (lum > 180) return 'light';
+    return 'mid';
+  }
+
+  function renderStyleDna() {
+    const wrap = document.getElementById('dnaContent');
+    if (!wrap) return;
+
+    const arr = (window.userCloset && window.userCloset.outfits) || [];
+    const cutoff = Date.now() - _dnaRange * 24 * 60 * 60 * 1000;
+    // Worn outfits = scanned (not uploaded closet items)
+    const items = arr.filter(o =>
+      o && o.source !== 'upload' && (o.date || 0) >= cutoff
+    );
+
+    if (items.length === 0) {
+      const label = _dnaRange === 7 ? 'this week' : 'this month';
+      wrap.innerHTML = `<div class="dna-empty">No outfits saved ${label} yet.<br><span class="text-[11px]">Scan and save outfits to build your Style DNA.</span></div>`;
+      return;
+    }
+
+    // Average score
+    const scores = items.map(o => o.score).filter(s => typeof s === 'number');
+    const avgScore = scores.length ? Math.round(scores.reduce((a,b) => a+b, 0) / scores.length) : null;
+    const bestScore = scores.length ? Math.max(...scores) : null;
+
+    // Color luminance breakdown
+    const bucket = { dark: 0, mid: 0, light: 0 };
+    items.forEach(o => {
+      const b = _luminanceBucket(_hexLuminance(o.colorHex));
+      bucket[b] += 1;
+    });
+    const total = items.length;
+    const pct = {
+      dark:  Math.round((bucket.dark  / total) * 100),
+      mid:   Math.round((bucket.mid   / total) * 100),
+      light: Math.round((bucket.light / total) * 100)
+    };
+
+    // Top color
+    const colorCount = {};
+    items.forEach(o => {
+      const name = (o.color || 'Mixed');
+      colorCount[name] = (colorCount[name] || 0) + 1;
+    });
+    const topColorEntry = Object.entries(colorCount).sort((a,b) => b[1]-a[1])[0];
+    const topColor = topColorEntry ? topColorEntry[0] : '—';
+    const topColorHex = items.find(o => (o.color || 'Mixed') === topColor)?.colorHex || '#888';
+    const topColorPct = topColorEntry ? Math.round((topColorEntry[1] / total) * 100) : 0;
+
+    // Top occasion
+    const occCount = {};
+    items.forEach(o => {
+      const occ = (o.occasion || 'casual').toLowerCase();
+      occCount[occ] = (occCount[occ] || 0) + 1;
+    });
+    const topOccEntry = Object.entries(occCount).sort((a,b) => b[1]-a[1])[0];
+    const topOcc = topOccEntry ? topOccEntry[0] : '—';
+    const topOccPct = topOccEntry ? Math.round((topOccEntry[1] / total) * 100) : 0;
+
+    // Variety: unique colors / total (capped at 100)
+    const uniqueColors = Object.keys(colorCount).length;
+    const variety = Math.min(100, Math.round((uniqueColors / Math.max(1,total)) * 100));
+
+    // Build smart insight (the single most interesting line)
+    const insight = _buildDnaInsight({
+      total, pct, topColor, topColorPct, topOcc, topOccPct,
+      avgScore, bestScore, variety, uniqueOcc: Object.keys(occCount).length, range: _dnaRange
+    });
+
+    // Format occasion nicely
+    const occLabel = topOcc.charAt(0).toUpperCase() + topOcc.slice(1);
+
+    wrap.innerHTML = `
+      <div class="dna-stat-grid mb-5">
+        <div class="dna-stat-card">
+          <div class="dna-stat-label">Outfits</div>
+          <div class="dna-stat-value">${total}</div>
+        </div>
+        <div class="dna-stat-card">
+          <div class="dna-stat-label">Avg score</div>
+          <div class="dna-stat-value">${avgScore != null ? avgScore : '—'}<span class="text-xs text-gray-500 font-normal">/100</span></div>
+        </div>
+        <div class="dna-stat-card">
+          <div class="dna-stat-label">Top occasion</div>
+          <div class="dna-stat-value text-base">${_escHtml(occLabel)}</div>
+          <div class="dna-stat-sub">${topOccPct}% of fits</div>
+        </div>
+        <div class="dna-stat-card">
+          <div class="dna-stat-label">Variety</div>
+          <div class="dna-stat-value">${variety}<span class="text-xs text-gray-500 font-normal">%</span></div>
+          <div class="dna-stat-sub">${uniqueColors} colors</div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <div class="flex items-center justify-between mb-2">
+          <div class="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Color palette</div>
+          <div class="dna-color-chip">
+            <span class="swatch" style="background:${topColorHex}"></span>
+            ${_escHtml(topColor)} · ${topColorPct}%
+          </div>
+        </div>
+        <div class="dna-palette-bar">
+          ${pct.dark  > 0 ? `<span style="width:${pct.dark}%;background:linear-gradient(90deg,#1f2937,#374151)"></span>`     : ''}
+          ${pct.mid   > 0 ? `<span style="width:${pct.mid}%;background:linear-gradient(90deg,#9ca3af,#d1d5db)"></span>`     : ''}
+          ${pct.light > 0 ? `<span style="width:${pct.light}%;background:linear-gradient(90deg,#f3f4f6,#ffffff)"></span>`   : ''}
+        </div>
+        <div class="dna-palette-legend">
+          <div class="dna-palette-legend-item"><span class="swatch" style="background:#1f2937"></span> Dark ${pct.dark}%</div>
+          <div class="dna-palette-legend-item"><span class="swatch" style="background:#9ca3af"></span> Mid ${pct.mid}%</div>
+          <div class="dna-palette-legend-item"><span class="swatch" style="background:#f3f4f6"></span> Light ${pct.light}%</div>
+        </div>
+      </div>
+
+      <div class="dna-insight">
+        <div class="dna-insight-icon">${insight.icon}</div>
+        <div>${insight.text}</div>
+      </div>
+    `;
+  }
+
+  function _buildDnaInsight(s) {
+    const period = s.range === 7 ? 'this week' : 'this month';
+    const insights = [];
+
+    // Color dominance
+    if (s.pct.dark >= 60) {
+      insights.push({ priority: 9, icon: '🌑',
+        text: `You wore <strong>dark colors ${s.pct.dark}%</strong> of the time ${period}. Try a lighter piece next time to break the pattern.` });
+    } else if (s.pct.light >= 60) {
+      insights.push({ priority: 9, icon: '☀️',
+        text: `<strong>${s.pct.light}% light tones</strong> ${period}. A darker accent would add visual contrast.` });
+    } else if (s.pct.dark >= 40 && s.pct.light >= 30) {
+      insights.push({ priority: 6, icon: '⚖️',
+        text: `Nice color balance — ${s.pct.dark}% dark, ${s.pct.light}% light ${period}. You're playing the full spectrum.` });
+    }
+
+    // Occasion lock-in
+    if (s.uniqueOcc === 1 && s.total >= 3) {
+      const occLabel = s.topOcc.charAt(0).toUpperCase() + s.topOcc.slice(1);
+      insights.push({ priority: 8, icon: '🎯',
+        text: `Every fit was <strong>${_escHtml(occLabel)}</strong> ${period}. Try mixing in another occasion to expand your range.` });
+    } else if (s.topOccPct >= 70) {
+      insights.push({ priority: 7, icon: '📌',
+        text: `<strong>${s.topOccPct}% ${_escHtml(s.topOcc)}</strong> ${period}. Heavy lean — consider switching it up.` });
+    }
+
+    // Score trends
+    if (s.avgScore != null) {
+      if (s.avgScore >= 85) {
+        insights.push({ priority: 6, icon: '🔥',
+          text: `Average score <strong>${s.avgScore}/100</strong> ${period}. You're consistently dialed in.` });
+      } else if (s.avgScore < 60) {
+        insights.push({ priority: 8, icon: '📈',
+          text: `Average score <strong>${s.avgScore}/100</strong> ${period}. Plenty of room to push higher — focus on color contrast and fit.` });
+      }
+    }
+
+    // Variety
+    if (s.variety >= 70 && s.total >= 4) {
+      insights.push({ priority: 5, icon: '🎨',
+        text: `High variety — <strong>${s.variety}%</strong> color diversity ${period}. You experiment a lot.` });
+    } else if (s.variety < 30 && s.total >= 4) {
+      insights.push({ priority: 7, icon: '🔁',
+        text: `Color variety only <strong>${s.variety}%</strong> ${period}. Same palette on repeat — try one new shade.` });
+    }
+
+    // Most-worn color call-out
+    if (s.topColorPct >= 50 && s.total >= 3) {
+      insights.push({ priority: 6, icon: '🎨',
+        text: `<strong>${s.topColorPct}% ${_escHtml(s.topColor)}</strong> ${period}. That's your signature shade.` });
+    }
+
+    // Default
+    if (insights.length === 0) {
+      insights.push({ priority: 1, icon: '💫',
+        text: `<strong>${s.total} outfits</strong> logged ${period}. Keep building your Style DNA.` });
+    }
+
+    insights.sort((a,b) => b.priority - a.priority);
+    return insights[0];
+  }
+
+  window.renderStyleDna = renderStyleDna;
+
+  // Wrap renderHistoryView so the Style Calendar refreshes too
+  const _origRenderHistoryView = renderHistoryView;
+  window.renderHistoryView = function() {
+    _origRenderHistoryView();
+    try { renderStyleCalendar(); } catch(e) { console.warn('[stylecal] render failed', e); }
+    try { renderStyleDna(); }       catch(e) { console.warn('[styledna] render failed', e); }
+  };
 
   // Auto-render when view becomes visible
   const observer = new MutationObserver(() => {
     const el = document.getElementById('viewHistory');
-    if (el && !el.classList.contains('hidden')) renderHistoryView();
+    if (el && !el.classList.contains('hidden')) window.renderHistoryView();
   });
   document.addEventListener('DOMContentLoaded', () => {
     const el = document.getElementById('viewHistory');
@@ -12874,6 +15038,240 @@ function onGoogleMapsLoaded() {
 
 
 // Community Voting — removed (Community Rating section deleted)
+</script>
+
+<script>
+// ============================================================
+// OUTFIT DUPLICATE DETECTOR
+// Computes a 256-bit dHash per outfit image. On save, compares
+// against the existing closet and prompts the user when an item
+// scores >= threshold% similarity (Hamming distance).
+// ============================================================
+(function () {
+  const DH_W = 17, DH_H = 16;          // dHash grid → 16*16 = 256 bits
+  const DEFAULT_THRESHOLD = 78;        // % similarity that triggers warning
+  const HASH_CONCURRENCY = 6;          // Parallel hash workers
+
+  function computeHash(dataUrl) {
+    return new Promise((resolve, reject) => {
+      if (!dataUrl) return reject(new Error('no image'));
+      const img = new Image();
+      let done = false;
+      const finish = (err, val) => {
+        if (done) return;
+        done = true;
+        clearTimeout(to);
+        if (err) reject(err); else resolve(val);
+      };
+      // Hard 3s timeout so a stuck image load can never block the save flow.
+      const to = setTimeout(() => finish(new Error('image load timeout')), 3000);
+      img.onload = () => {
+        try {
+          const c = document.createElement('canvas');
+          c.width = DH_W; c.height = DH_H;
+          const ctx = c.getContext('2d');
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, DH_W, DH_H);
+          ctx.drawImage(img, 0, 0, DH_W, DH_H);
+          const data = ctx.getImageData(0, 0, DH_W, DH_H).data;
+          const gray = new Uint8Array(DH_W * DH_H);
+          for (let i = 0; i < DH_W * DH_H; i++) {
+            const r = data[i*4], g = data[i*4+1], b = data[i*4+2];
+            gray[i] = (0.299*r + 0.587*g + 0.114*b) | 0;
+          }
+          let bits = '';
+          for (let y = 0; y < DH_H; y++) {
+            for (let x = 0; x < DH_W - 1; x++) {
+              bits += (gray[y*DH_W + x] < gray[y*DH_W + x + 1]) ? '1' : '0';
+            }
+          }
+          let hex = '';
+          for (let i = 0; i < bits.length; i += 4) {
+            hex += parseInt(bits.substr(i, 4), 2).toString(16);
+          }
+          finish(null, hex);
+        } catch (e) { finish(e); }
+      };
+      img.onerror = () => finish(new Error('image load failed'));
+      img.src = dataUrl;
+    });
+  }
+
+  function hexToBits(hex) {
+    let out = '';
+    for (let i = 0; i < hex.length; i++) {
+      out += parseInt(hex[i], 16).toString(2).padStart(4, '0');
+    }
+    return out;
+  }
+
+  function similarityPct(a, b) {
+    if (!a || !b || a.length !== b.length) return 0;
+    const A = hexToBits(a), B = hexToBits(b);
+    let dist = 0;
+    for (let i = 0; i < A.length; i++) if (A[i] !== B[i]) dist++;
+    return Math.round((1 - dist / A.length) * 100);
+  }
+
+  function generateName(target, allItems) {
+    const color = (target.color && target.color !== 'Mixed') ? target.color : '';
+    const typeRaw = target.type || (target.source === 'upload' ? 'item' : 'outfit');
+    const type = typeRaw.charAt(0).toUpperCase() + typeRaw.slice(1);
+    const base = ((color ? color + ' ' : '') + type).trim();
+    const sameBase = (allItems || [])
+      .filter(x => x && (x.color || '') === (target.color || '') && (x.type || '') === (target.type || ''))
+      .sort((a, b) => (a.date || 0) - (b.date || 0));
+    if (sameBase.length > 1) {
+      const idx = sameBase.indexOf(target);
+      return base + ' #' + (idx >= 0 ? (idx + 1) : sameBase.length);
+    }
+    return base;
+  }
+
+  async function checkDuplicate(imageDataUrl, options) {
+    options = options || {};
+    const threshold = options.threshold || DEFAULT_THRESHOLD;
+    const sourceFilter = options.sourceFilter; // 'upload' | 'scan' | undefined
+
+    let newHash = null;
+    try { newHash = await computeHash(imageDataUrl); }
+    catch (e) { console.warn('[dup] hash compute failed', e); return { newHash: null }; }
+
+    const arr = (window.userCloset && window.userCloset.outfits) || [];
+
+    // Filter targets by source
+    const targets = arr.filter(o => {
+      if (!o || !o.image) return false;
+      if (sourceFilter === 'upload' && o.source !== 'upload') return false;
+      if (sourceFilter === 'scan'   && o.source === 'upload') return false;
+      return true;
+    });
+
+    // Compute missing hashes in parallel chunks
+    const missing = targets.filter(o => !o.phash);
+    for (let i = 0; i < missing.length; i += HASH_CONCURRENCY) {
+      const chunk = missing.slice(i, i + HASH_CONCURRENCY);
+      await Promise.all(chunk.map(async (o) => {
+        try {
+          o.phash = await computeHash(o.image);
+          if (window.closetDB && typeof window.closetDB.put === 'function') {
+            window.closetDB.put(o).catch(() => {});
+          }
+        } catch (e) { /* skip */ }
+      }));
+    }
+
+    let best = null, bestSim = 0;
+    for (const o of targets) {
+      if (!o.phash) continue;
+      const sim = similarityPct(newHash, o.phash);
+      if (sim > bestSim) { bestSim = sim; best = o; }
+    }
+
+    console.log('[dup] best match:', bestSim + '%', best ? best.id : '(none)', '/ threshold:', threshold + '%');
+
+    if (best && bestSim >= threshold) {
+      return { match: best, similarity: bestSim, name: generateName(best, arr), newHash };
+    }
+    return { newHash, closest: best, closestSim: bestSim };
+  }
+
+  function showModal(newImage, match, similarity, name) {
+    return new Promise((resolve) => {
+      const modal     = document.getElementById('dupCheckModal');
+      const newImg    = document.getElementById('dupCheckNewImg');
+      const oldImg    = document.getElementById('dupCheckOldImg');
+      const pct       = document.getElementById('dupCheckPct');
+      const nameEl    = document.getElementById('dupCheckName');
+      const dateEl    = document.getElementById('dupCheckDate');
+      const cancelBtn = document.getElementById('dupCheckCancel');
+      const saveBtn   = document.getElementById('dupCheckSave');
+      if (!modal || !newImg || !oldImg) { resolve(true); return; }
+
+      newImg.src = newImage;
+      oldImg.src = match.image;
+      pct.textContent = similarity + '%';
+      nameEl.textContent = name || 'Existing item';
+      dateEl.textContent = match.date
+        ? 'Saved ' + new Date(match.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+        : '';
+
+      modal.classList.remove('hidden');
+
+      const cleanup = () => {
+        modal.classList.add('hidden');
+        cancelBtn.removeEventListener('click', onCancel);
+        saveBtn.removeEventListener('click', onSave);
+        modal.removeEventListener('click', onBackdrop);
+      };
+      const onCancel   = () => { cleanup(); resolve(false); };
+      const onSave     = () => { cleanup(); resolve(true); };
+      const onBackdrop = (e) => { if (e.target === modal) onCancel(); };
+      cancelBtn.addEventListener('click', onCancel);
+      saveBtn.addEventListener('click', onSave);
+      modal.addEventListener('click', onBackdrop);
+    });
+  }
+
+  async function checkAndConfirm(imageDataUrl, options) {
+    const opts = options || {};
+    const threshold = opts.threshold || DEFAULT_THRESHOLD;
+    const res = await checkDuplicate(imageDataUrl, opts);
+    if (res && res.match && res.similarity >= threshold) {
+      const ok = await showModal(imageDataUrl, res.match, res.similarity, res.name);
+      return { proceed: ok, hash: res.newHash };
+    }
+    return { proceed: true, hash: (res && res.newHash) || null };
+  }
+
+  async function backfillHashes() {
+    const arr = (window.userCloset && window.userCloset.outfits) || [];
+    const need = arr.filter(o => o && o.image && !o.phash);
+    if (need.length === 0) return;
+    console.log('[dup] backfilling hashes for', need.length, 'items');
+    let updated = 0;
+    for (let i = 0; i < need.length; i += HASH_CONCURRENCY) {
+      const chunk = need.slice(i, i + HASH_CONCURRENCY);
+      await Promise.all(chunk.map(async (o) => {
+        try {
+          o.phash = await computeHash(o.image);
+          if (window.closetDB && typeof window.closetDB.put === 'function') {
+            await window.closetDB.put(o);
+          }
+          updated++;
+        } catch (e) {}
+      }));
+    }
+    console.log('[dup] backfilled phash for', updated, 'items');
+  }
+
+  window.outfitDupCheck = {
+    compute:        computeHash,
+    similarity:     similarityPct,
+    check:          checkDuplicate,
+    confirm:        showModal,
+    checkAndConfirm: checkAndConfirm,
+    backfill:       backfillHashes
+  };
+
+  // Lazy backfill — wait for closet to load
+  function scheduleBackfill() {
+    let tries = 0;
+    const id = setInterval(() => {
+      tries++;
+      const ready = window.userCloset && Array.isArray(window.userCloset.outfits) && window.userCloset.outfits.length > 0;
+      if (ready || tries > 30) {
+        clearInterval(id);
+        if (ready) backfillHashes();
+      }
+    }, 1000);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', scheduleBackfill);
+  } else {
+    scheduleBackfill();
+  }
+})();
 </script>
 
 <!-- ============================================================ -->
