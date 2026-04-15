@@ -2194,7 +2194,7 @@
       <input type="file" id="closetUploadInput" accept="image/*" class="hidden" />
 
       <!-- Consent modal: shown on the FIRST ever upload attempt. Mandatory. -->
-      <div id="closetUploadConsent" class="hidden fixed inset-0 z-[120] bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+      <div id="closetUploadConsent" class="hidden fixed inset-0 z-[115] bg-black/85 backdrop-blur-md flex items-center justify-center p-4" style="z-index:120">
         <div class="premium-glass rounded-3xl border border-brand-500/30 max-w-md w-full p-6 sm:p-7 relative">
           <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-500/20 to-purple-500/20 border border-brand-500/30 flex items-center justify-center mb-4 mx-auto">
             <svg class="w-7 h-7 text-brand-400" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
@@ -2288,7 +2288,7 @@
       </div>
 
       <!-- ===== STYLE PROFILE MODAL ===== -->
-      <div id="styleProfileModal" class="hidden fixed inset-0 z-[120] bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+      <div id="styleProfileModal" class="hidden fixed inset-0 z-[115] bg-black/85 backdrop-blur-md flex items-center justify-center p-4" style="z-index:120">
         <div class="premium-glass rounded-3xl border border-purple-500/20 max-w-lg w-full p-6 sm:p-7 relative max-h-[90vh] overflow-y-auto">
           <button id="styleProfileClose" type="button" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition" aria-label="Close">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -4018,7 +4018,7 @@ const closetDB = (function () {
         return Promise.reject(new Error('idb library not loaded'));
       }
       dbPromise = window.idb.openDB('datescan-db', 4, {
-        upgrade(db, oldVersion) {
+        upgrade(db, oldVersion, newVersion, transaction) {
           if (!db.objectStoreNames.contains('outfits')) {
             const store = db.createObjectStore('outfits', { keyPath: 'id' });
             store.createIndex('date', 'date');
@@ -4037,7 +4037,7 @@ const closetDB = (function () {
           }
           // v4: add season index for tag-based queries on outfits
           if (oldVersion < 4 && db.objectStoreNames.contains('outfits')) {
-            const outfitStore = db.transaction('outfits', 'versionchange').store;
+            const outfitStore = transaction.objectStore('outfits');
             if (!outfitStore.indexNames.contains('tags.season')) {
               outfitStore.createIndex('tags.season', 'tags.season');
             }
@@ -4750,7 +4750,14 @@ window.saveCurrentOutfit = function() {
       if (window.userCloset && Array.isArray(window.userCloset.outfits)) {
         window.userCloset.outfits.unshift(newItem);
       }
-      if (typeof window.renderClosetItems === 'function') window.renderClosetItems();
+      // Reset the type filter to 'all' so the new item is always visible
+      if (typeof window.setClosetTypeFilter === 'function') {
+        window.setClosetTypeFilter('all');
+      } else if (typeof window.renderClosetItems === 'function') {
+        window.renderClosetItems('all');
+      }
+      // Also refresh outfits grid so empty/non-empty states stay correct
+      if (typeof window.renderCloset === 'function') window.renderCloset();
       closeCategory();
       catSave.textContent = 'Save to Closet';
     } catch (err) {
@@ -4838,6 +4845,12 @@ window.saveCurrentOutfit = function() {
   const vibeEl = document.getElementById('spStyleVibe');
 
   if (!modal || !openBtn) return;
+
+  // Move modal to <body> so its z-index isn't trapped in a parent
+  // stacking context (the closet view uses transforms which create one).
+  if (modal.parentElement !== document.body) {
+    document.body.appendChild(modal);
+  }
 
   // Helper: read current UI state and persist to localStorage
   function autoSaveProfile() {
@@ -5036,6 +5049,27 @@ window.removeBackground = async function (imageDataURL) {
               outCanvas.width = img.naturalWidth;
               outCanvas.height = img.naturalHeight;
               const outCtx = outCanvas.getContext('2d');
+
+              // Check mask coverage — SelfieSegmentation targets people.
+              // Clothing-only photos produce near-empty masks, which would
+              // wipe the whole image. Fall back to original in that case.
+              if (results.segmentationMask) {
+                const probeCanvas = document.createElement('canvas');
+                const PW = 64, PH = 64;
+                probeCanvas.width = PW; probeCanvas.height = PH;
+                const probeCtx = probeCanvas.getContext('2d');
+                probeCtx.drawImage(results.segmentationMask, 0, 0, PW, PH);
+                const data = probeCtx.getImageData(0, 0, PW, PH).data;
+                let covered = 0;
+                for (let i = 0; i < data.length; i += 4) {
+                  if (data[i] > 32) covered++;
+                }
+                const ratio = covered / (PW * PH);
+                if (ratio < 0.15) {
+                  resolve(imageDataURL);
+                  return;
+                }
+              }
 
               // Draw the original image
               outCtx.drawImage(results.image, 0, 0);
@@ -5245,10 +5279,12 @@ function inferMaterial(data, w, h) {
   // when the preview image src changes.
   let currentAutoTags = null;
   let currentBgRemoved = null;
+  let suppressObserver = false;
 
   const observer = new MutationObserver(async (mutations) => {
     for (const m of mutations) {
       if (m.type === 'attributes' && m.attributeName === 'src') {
+        if (suppressObserver) continue;
         const src = catPreview.src;
         if (!src || src === '') {
           autoTags?.classList.add('hidden');
@@ -5301,7 +5337,10 @@ function inferMaterial(data, w, h) {
 
         // Update the preview with the background-removed image
         if (bgRemoved && bgRemoved !== src) {
+          suppressObserver = true;
           catPreview.src = bgRemoved;
+          // Release after the mutation has been queued
+          setTimeout(() => { suppressObserver = false; }, 0);
         }
       }
     }
