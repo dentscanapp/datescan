@@ -12397,7 +12397,9 @@ function onGoogleMapsLoaded() {
   }
   openBtn && openBtn.addEventListener('click', () => {
     try { if (typeof triggerHaptic === 'function') triggerHaptic('tap'); } catch (_) {}
-    open();
+    // Show consent BEFORE opening the duel modal so the popup isn't
+    // trapped behind it. If already accepted, opens immediately.
+    requestConsentThen(open);
   });
   closeBtn && closeBtn.addEventListener('click', close);
   modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
@@ -12474,8 +12476,8 @@ function onGoogleMapsLoaded() {
     consentChk.addEventListener('change', onChk, true);
   }
 
-  slotA.addEventListener('click', () => requestConsentThen(() => fileA.click()));
-  slotB.addEventListener('click', () => requestConsentThen(() => fileB.click()));
+  slotA.addEventListener('click', () => fileA.click());
+  slotB.addEventListener('click', () => fileB.click());
 
   fileA.addEventListener('change', (e) => handleFile(e.target.files[0], 'A'));
   fileB.addEventListener('change', (e) => handleFile(e.target.files[0], 'B'));
