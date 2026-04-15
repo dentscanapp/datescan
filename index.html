@@ -2128,76 +2128,6 @@
 
       </div>
 
-  <!-- ============================================================
-       VIBE SYNC — Full-width module inside viewScanner
-       Shows on the Scanner page below the camera area.
-       Uses Google Maps Places API for real venue search.
-       ============================================================ -->
-  <div id="vibeSyncModule" class="w-full mb-6 mt-4 relative z-10">
-    <div class="premium-glass rounded-[28px] p-5 sm:p-6 relative overflow-hidden border border-purple-500/15 max-w-2xl mx-auto">
-      <!-- Decorative glow -->
-      <div class="absolute -top-16 -right-16 w-40 h-40 rounded-full bg-purple-500/10 blur-[50px] pointer-events-none"></div>
-      <div class="absolute -bottom-10 -left-10 w-28 h-28 rounded-full bg-brand-500/8 blur-[40px] pointer-events-none"></div>
-
-      <!-- Header -->
-      <div class="flex items-center justify-between mb-4 relative z-10">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500/20 to-brand-500/20 border border-purple-500/25 flex items-center justify-center text-lg shadow-lg shadow-purple-500/10">
-            <svg class="w-5 h-5 text-purple-300" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          </div>
-          <div>
-            <h3 class="font-serif text-lg font-semibold text-white">Vibe Sync</h3>
-            <p class="text-[10px] uppercase tracking-widest text-purple-400/70 font-bold">Date Location Style</p>
-          </div>
-        </div>
-        <span id="vibeSyncStatusBadge" class="text-[9px] uppercase tracking-wider font-bold px-2 py-1 rounded-full bg-white/5 text-gray-500 border border-white/10">idle</span>
-      </div>
-
-      <p class="text-xs text-gray-400 mb-4 relative z-10 leading-relaxed">Search your date venue on Google Maps — we'll analyze the atmosphere, lighting, and style to optimize your outfit &amp; grooming.</p>
-
-      <!-- Venue Search Input -->
-      <div class="relative z-10 mb-3">
-        <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-purple-400/60 pointer-events-none">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        </div>
-        <input id="venueInput" type="text" placeholder="Search venue: rooftop bar, cocktail lounge, sushi restaurant…" class="w-full pl-10 pr-10 py-3.5 rounded-xl bg-black/40 border border-purple-500/20 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-purple-500/50 focus:bg-white/5 focus:shadow-[0_0_15px_rgba(168,85,247,0.15)] transition-all" autocomplete="off" />
-        <button id="venueClearBtn" type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-300 transition hidden" aria-label="Clear venue">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
-      </div>
-
-      <!-- Vibe Sync Result Card -->
-      <div id="vibeSyncCard" class="hidden relative z-10">
-        <div class="rounded-xl border border-purple-500/20 bg-black/30 p-4 relative overflow-hidden">
-          <div class="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-purple-500/8 blur-2xl pointer-events-none"></div>
-          <div class="flex items-start gap-3.5 relative z-10">
-            <div id="vibeSyncIcon" class="w-11 h-11 rounded-xl bg-purple-500/15 border border-purple-500/20 flex items-center justify-center shrink-0 text-xl shadow-lg shadow-purple-500/10">🍸</div>
-            <div class="min-w-0 flex-1">
-              <div class="flex items-center gap-2 mb-1">
-                <span id="vibeSyncLabel" class="text-sm font-bold text-white">Vibe Synced</span>
-                <span id="vibeSyncBadge" class="text-[8px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/20">active</span>
-              </div>
-              <p id="vibeSyncSummary" class="text-xs text-gray-300 leading-relaxed mb-2"></p>
-              <div id="vibeSyncTags" class="flex flex-wrap gap-1.5 mb-3"></div>
-
-              <!-- Style Advice Panels -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <div class="rounded-lg bg-purple-500/8 border border-purple-500/12 p-2.5">
-                  <div class="text-[9px] uppercase tracking-widest text-purple-400/70 font-bold mb-1">Color Advice</div>
-                  <p id="vibeSyncColorAdvice" class="text-[11px] text-gray-300 leading-relaxed"></p>
-                </div>
-                <div class="rounded-lg bg-brand-500/8 border border-brand-500/12 p-2.5">
-                  <div class="text-[9px] uppercase tracking-widest text-brand-400/70 font-bold mb-1">Grooming Tip</div>
-                  <p id="vibeSyncGroomingTip" class="text-[11px] text-gray-300 leading-relaxed"></p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   </div>
 
   <!-- DIGITAL CLOSET VIEW -->
@@ -9766,16 +9696,14 @@ applyOfflineState(!navigator.onLine);
   let googleMapsReady = false;
 
   function initGoogleMapsAutocomplete() {
-    const gmapsInput = document.getElementById('venueInputGmaps');
-    if (!gmapsInput || !window.google || !window.google.maps || !window.google.maps.places) {
+    const input = document.getElementById('venueInput');
+    if (!input || !window.google || !window.google.maps || !window.google.maps.places) {
       console.log('[VibeSync] Google Maps Places not available, using keyword fallback');
       return;
     }
 
     try {
-      // Bind Autocomplete to the HIDDEN input (not the visible one)
-      // to prevent Google Maps from locking/taking over the user's input field
-      autocomplete = new google.maps.places.Autocomplete(gmapsInput, {
+      autocomplete = new google.maps.places.Autocomplete(input, {
         types: ['establishment'],
         fields: ['name', 'types', 'formatted_address', 'price_level', 'rating', 'geometry']
       });
@@ -9805,11 +9733,6 @@ applyOfflineState(!navigator.onLine);
         if (!place || !place.name) return;
 
         const venueName = place.name;
-        window._lastGmapsSelection = Date.now();
-
-        // Copy the selected place name into the VISIBLE input
-        const visibleInput = document.getElementById('venueInput');
-        if (visibleInput) visibleInput.value = venueName;
 
         // Try Google type-based analysis first
         let vibe = analyzeGoogleTypes(place);
@@ -9827,7 +9750,7 @@ applyOfflineState(!navigator.onLine);
         if (clearBtn) clearBtn.classList.remove('hidden');
       });
 
-      console.log('[VibeSync] Google Maps Autocomplete initialized on hidden input');
+      console.log('[VibeSync] Google Maps Autocomplete initialized');
     } catch (err) {
       console.warn('[VibeSync] Google Maps init failed:', err);
     }
@@ -9836,7 +9759,6 @@ applyOfflineState(!navigator.onLine);
   // ── Bind input (with keyword fallback when Google Maps unavailable) ──
   function bindVibeSync() {
     const input = document.getElementById('venueInput');
-    const gmapsInput = document.getElementById('venueInputGmaps');
     const clearBtn = document.getElementById('venueClearBtn');
 
     if (!input) return;
@@ -9852,7 +9774,7 @@ applyOfflineState(!navigator.onLine);
       }
     }
 
-    // Keyword-based input handler — runs on every keystroke
+    // Keyword-based fallback input handler (when Google Maps doesn't trigger)
     input.addEventListener('input', () => {
       const val = input.value.trim();
       if (val) {
@@ -9860,46 +9782,42 @@ applyOfflineState(!navigator.onLine);
       } else {
         clearBtn?.classList.add('hidden');
       }
-      // Sync text to the hidden Google Maps input so Autocomplete can show suggestions
-      if (gmapsInput) gmapsInput.value = input.value;
-
-      // Debounced keyword analysis (also acts as fallback if Google Maps doesn't fire)
+      // Only run keyword analysis if Google Maps hasn't handled this
+      // (Autocomplete replaces the input value with the selected place,
+      //  which also fires 'input' — but the place_changed listener already
+      //  handled the vibe sync, so we debounce and only run if no recent
+      //  Google Maps selection happened)
       debounce(() => {
-        // Skip if Google Maps recently selected a place (within 800ms)
-        if (googleMapsReady && Date.now() - (window._lastGmapsSelection || 0) < 800) return;
+        // Skip if Google Maps recently selected a place (within 500ms)
+        if (googleMapsReady && Date.now() - (window._lastGmapsSelection || 0) < 500) return;
         const vibe = analyzeVenueKeywords(val);
         renderVibeSync(vibe, val, 'keyword');
         saveVibe(vibe, val, 'keyword');
-      }, 600);
+      }, 500);
     });
 
     input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
+        // If Google Maps autocomplete is open, let it handle the selection
+        if (googleMapsReady && document.querySelector('.pac-container:not(.pac-container:empty)')) return;
         const vibe = analyzeVenueKeywords(input.value.trim());
         renderVibeSync(vibe, input.value.trim(), 'keyword');
         saveVibe(vibe, input.value.trim(), 'keyword');
       }
     });
 
-    // Also trigger Google Maps autocomplete on focus
-    input.addEventListener('focus', () => {
-      if (gmapsInput && input.value.trim()) {
-        gmapsInput.value = input.value;
-        // Trigger Google's autocomplete by focusing the hidden input briefly
-        if (googleMapsReady && autocomplete) {
-          try {
-            google.maps.event.trigger(gmapsInput, 'focus', {});
-            google.maps.event.trigger(gmapsInput, 'keydown', { keyCode: 40 });
-          } catch (e) {}
-        }
-      }
-    });
+    // Track when Google Maps made a selection (to prevent double keyword analysis)
+    if (autocomplete) {
+      const origPlaceChanged = autocomplete.addListener;
+      autocomplete.addListener('place_changed', () => {
+        window._lastGmapsSelection = Date.now();
+      });
+    }
 
     if (clearBtn) {
       clearBtn.addEventListener('click', () => {
         input.value = '';
-        if (gmapsInput) gmapsInput.value = '';
         clearBtn.classList.add('hidden');
         document.getElementById('vibeSyncCard')?.classList.add('hidden');
         // Reset status badge
