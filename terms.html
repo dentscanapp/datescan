@@ -71,7 +71,7 @@
   <div class="mb-10 pb-8 border-b border-white/10">
     <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-3">Legal</div>
     <h1 class="font-serif text-4xl sm:text-5xl font-medium text-white mb-3">Terms of Service</h1>
-    <p class="text-sm text-gray-500">Last updated: April 10, 2026</p>
+    <p class="text-sm text-gray-500">Last updated: April 15, 2026</p>
   </div>
 
   <article class="prose-custom">
@@ -82,11 +82,18 @@
       <p class="text-white text-base mb-0"><strong>DateScan is intended exclusively for adults aged 18 or older.</strong> By using the service you represent and warrant that you meet this age requirement. We do not knowingly allow minors to use DateScan.</p>
     </div>
 
+    <div class="my-6 p-6 rounded-2xl border-2 border-amber-500/50 bg-gradient-to-br from-amber-500/15 to-red-500/5">
+      <div class="text-[10px] uppercase tracking-widest text-amber-400 font-bold mb-3">Important — Please Read</div>
+      <p class="text-white text-base mb-3"><strong>Disclaimer: DateScan is an AI-powered tool designed for entertainment and confidence-boosting purposes only. We do not guarantee dating success or specific social outcomes.</strong></p>
+      <p class="text-gray-100 text-sm mb-3"><strong>We do not accept any liability for advice, suggestions, scores, or any other output produced by the artificial intelligence — including outputs that may turn out to be inaccurate, misleading, biased, offensive, or otherwise inappropriate.</strong> AI models can and do make mistakes. The AI Style Coach is not a substitute for professional advice (fashion, medical, psychological, legal, dating, or otherwise) and any reliance you place on its output is strictly at your own risk.</p>
+      <p class="text-gray-100 text-sm mb-0">Use of DateScan signifies your acknowledgement and acceptance of this disclaimer. The full terms governing warranties and liability are set out in <a href="#section-10" class="text-amber-300 underline">§10</a> and <a href="#section-11" class="text-amber-300 underline">§11</a> below.</p>
+    </div>
+
     <h2>1. The Service</h2>
     <p>DateScan is an AI-powered style coach available (a) as a Progressive Web App at <a href="https://datescan.app/">https://datescan.app/</a> and (b) as an Android app distributed via the Google Play Store. It offers two main features:</p>
     <ul>
       <li><strong>On-device camera scan</strong> — uses browser-based AI (MediaPipe) to analyze your outfit, grooming, posture, and lighting from a live camera feed. All scan processing happens locally on your device; no images are uploaded.</li>
-      <li><strong>AI Style Coach chat</strong> — a text/image chat that sends your messages to our backend and forwards them to a third-party vision-language model (OpenAI and/or Anthropic) to generate replies. See our <a href="/privacy.html">Privacy Policy</a> for the data flow.</li>
+      <li><strong>AI Style Coach chat</strong> — a text/image chat that sends your messages over HTTPS to our Cloudflare Workers backend, which forwards them to our inference partner (Novita.ai, GLM-4.6V) to generate replies. See our <a href="/privacy.html">Privacy Policy</a> for the data flow.</li>
     </ul>
 
     <h2>2. Suggestions, Not Professional Advice</h2>
@@ -184,8 +191,8 @@
     </ul>
     <p>All paid options are <strong>one-time purchases</strong>. They do not auto-renew, you will not be charged again automatically, and there is nothing to cancel. Refunds are governed by our <a href="/refund.html">Refund Policy</a> and by Google Play's own refund process.</p>
 
-    <h2>10. Disclaimer of Warranties</h2>
-    <p>DateScan is provided <strong>"AS IS" and "AS AVAILABLE"</strong>, without warranties of any kind, express or implied. We do not warrant that:</p>
+    <h2 id="section-10">10. Disclaimer of Warranties</h2>
+    <p>DateScan is provided <strong>"AS IS" and "AS AVAILABLE"</strong>, without warranties of any kind, express or implied. <strong>You expressly acknowledge that DateScan is an entertainment and confidence-boosting product, that the AI Style Coach can produce inaccurate, biased, or occasionally offensive output, and that we accept no responsibility for any reliance you place on such output.</strong> We do not warrant that:</p>
     <ul>
       <li>The service will be uninterrupted, error-free, or secure.</li>
       <li>The analysis or feedback will be accurate, complete, or suitable for your purpose.</li>
@@ -194,7 +201,7 @@
       <li>AI-generated content will be free of inaccuracies, biases, or occasional inappropriate output.</li>
     </ul>
 
-    <h2>11. Limitation of Liability</h2>
+    <h2 id="section-11">11. Limitation of Liability</h2>
     <p>To the maximum extent permitted by law, DateScan and its operators shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or related to your use of the service. Our total aggregate liability for any claim shall not exceed the amount you paid us in the twelve months preceding the claim, or <strong>€50</strong>, whichever is greater. Some jurisdictions do not allow the exclusion of certain warranties or limitations on liability, so some of the above may not apply to you. Nothing in these Terms limits liability that cannot be limited under applicable mandatory law (including liability for death or personal injury caused by negligence, or for fraud).</p>
 
     <h2>12. Termination</h2>
