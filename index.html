@@ -985,6 +985,56 @@
   .scorecal-bar-fill--good  { background: #ec4899; }
   .scorecal-bar-fill--fair  { background: #fbbf24; }
   .scorecal-bar-fill--low   { background: #ef4444; }
+
+  /* Vibe Check — corner badge overlays so the date number / score stay readable */
+  .scorecal-vibe-plus {
+    position: absolute;
+    top: 2px;
+    right: 3px;
+    width: 14px;
+    height: 14px;
+    line-height: 13px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #f0abfc;
+    background: rgba(168, 85, 247, 0.18);
+    border: 1px solid rgba(168, 85, 247, 0.40);
+    border-radius: 999px;
+    pointer-events: none;
+    transition: all .15s ease;
+  }
+  .scorecal-cell-clickable { cursor: pointer; }
+  .scorecal-cell-clickable:hover .scorecal-vibe-plus {
+    background: rgba(236, 72, 153, 0.45);
+    color: #fff;
+    transform: scale(1.15);
+  }
+  .scorecal-vibe-badge {
+    position: absolute;
+    top: 1px;
+    right: 2px;
+    font-size: 11px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+    pointer-events: none;
+    filter: drop-shadow(0 0 3px rgba(236,72,153,0.5));
+  }
+  .vibe-lucky-mark { font-size: 9px; }
+
+  /* Selected vibe option — soft pink glow */
+  .vibe-opt.is-selected {
+    border-color: rgba(244, 114, 182, 0.6) !important;
+    background: rgba(236, 72, 153, 0.10) !important;
+    color: #fff !important;
+    box-shadow:
+      0 0 0 3px rgba(244, 114, 182, 0.18),
+      0 0 22px 4px rgba(236, 72, 153, 0.35),
+      inset 0 0 12px rgba(244, 114, 182, 0.18);
+    transform: translateY(-1px);
+  }
   .scorecal-date-cell[data-tooltip] { cursor: pointer; }
   .scorecal-date-cell[data-tooltip]:hover::after {
     content: attr(data-tooltip);
@@ -1827,7 +1877,7 @@
             </div>
 
             <!-- Gamification Card -->
-            <div class="rounded-[32px] p-6 border border-brand-500/20 bg-gradient-to-b from-dark-900 to-dark-950 relative overflow-hidden shrink-0 shadow-[0_10px_30px_rgba(0,0,0,0.5)] fade-up" style="animation-delay: 0.3s;">
+            <div class="hidden lg:block rounded-[32px] p-6 border border-brand-500/20 bg-gradient-to-b from-dark-900 to-dark-950 relative overflow-hidden shrink-0 shadow-[0_10px_30px_rgba(0,0,0,0.5)] fade-up" style="animation-delay: 0.3s;">
               <div class="absolute -top-8 -right-8 w-28 h-28 rounded-full bg-brand-500/10 blur-3xl pointer-events-none"></div>
               <div class="relative z-10">
                 <div class="flex items-center justify-between mb-3">
@@ -2284,6 +2334,42 @@
             <button id="closetCategoryCancel" type="button" class="flex-1 py-3 rounded-xl bg-white/5 border border-white/10 text-gray-300 text-sm font-bold hover:bg-white/10 transition">Cancel</button>
             <button id="closetCategorySave" type="button" disabled class="flex-1 py-3 rounded-xl btn-primary text-sm font-bold disabled:opacity-40 disabled:cursor-not-allowed">Save to Closet</button>
           </div>
+        </div>
+      </div>
+
+      <!-- ===== VIBE CHECK MODAL ===== -->
+      <div id="vibeCheckModal" class="hidden fixed inset-0 z-[115] bg-black/85 backdrop-blur-md flex items-center justify-center p-4" style="z-index:120">
+        <div class="premium-glass rounded-3xl border border-purple-500/20 max-w-md w-full p-6 sm:p-7 relative">
+          <button id="vibeCheckClose" type="button" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition" aria-label="Close">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-purple-500/20 to-brand-500/20 border border-purple-500/30 flex items-center justify-center mb-4 mx-auto text-2xl">✨</div>
+          <h3 class="font-serif text-2xl font-semibold text-white text-center mb-1">How did it go?</h3>
+          <p id="vibeCheckSubtitle" class="text-sm text-gray-400 text-center mb-5 leading-relaxed">Quick vibe check — earn <strong class="text-amber-300">+100 XP</strong>.</p>
+
+          <div class="grid grid-cols-2 gap-3 mb-5">
+            <button type="button" data-vibe="chemistry" class="vibe-opt py-4 rounded-xl border border-white/10 bg-white/5 text-gray-200 text-sm font-bold transition flex flex-col items-center gap-1.5 hover:border-amber-400/50">
+              <span class="text-3xl leading-none">⚡️</span>Chemistry
+            </button>
+            <button type="button" data-vibe="pleasant" class="vibe-opt py-4 rounded-xl border border-white/10 bg-white/5 text-gray-200 text-sm font-bold transition flex flex-col items-center gap-1.5 hover:border-emerald-400/50">
+              <span class="text-3xl leading-none">😊</span>Pleasant
+            </button>
+            <button type="button" data-vibe="cold" class="vibe-opt py-4 rounded-xl border border-white/10 bg-white/5 text-gray-200 text-sm font-bold transition flex flex-col items-center gap-1.5 hover:border-blue-400/50">
+              <span class="text-3xl leading-none">❄️</span>Cold
+            </button>
+            <button type="button" data-vibe="bust" class="vibe-opt py-4 rounded-xl border border-white/10 bg-white/5 text-gray-200 text-sm font-bold transition flex flex-col items-center gap-1.5 hover:border-red-400/50">
+              <span class="text-3xl leading-none">❌</span>Bust
+            </button>
+          </div>
+
+          <label class="flex items-start gap-3 p-3 rounded-xl border border-amber-500/30 bg-amber-500/5 mb-5 cursor-pointer">
+            <input type="checkbox" id="vibeCheckSuccess" class="mt-0.5 w-4 h-4 shrink-0 accent-amber-400" />
+            <div class="text-xs text-gray-200 leading-relaxed">
+              <strong class="text-amber-300">Successful?</strong> (e.g. second date scheduled). The outfit you wore will earn the <strong class="text-amber-300">🍀 Lucky Outfit</strong> badge in your closet.
+            </div>
+          </label>
+
+          <button id="vibeCheckSave" type="button" disabled class="w-full py-3.5 rounded-xl btn-primary text-sm font-bold disabled:opacity-40 disabled:cursor-not-allowed">Save Vibe Check</button>
         </div>
       </div>
 
@@ -4069,6 +4155,7 @@ const closetDB = (function () {
     }
   };
 })();
+window.closetDB = closetDB;
 
 // Chat history IDB store — persists the conversation so it survives
 // page reloads / app restarts. Uses the same datescan-db so it's
@@ -4296,6 +4383,9 @@ window.renderCloset = function(filter = 'all') {
         const scoreBadge = outfit.score != null
           ? `<div class="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-xs font-bold ${outfit.score >= 80 ? 'text-emerald-400' : 'text-brand-400'} border border-white/10 z-10">${outfit.score}/100</div>`
           : '';
+        const luckyBadge = outfit.luckyOutfit
+          ? `<div class="absolute bottom-16 left-2 z-10 px-2 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-gradient-to-r from-amber-400 to-amber-600 text-black border border-amber-300 shadow-lg flex items-center gap-1" title="Got a second date in this outfit!">🍀 Lucky Outfit</div>`
+          : '';
         const occasion = (outfit.occasion || 'casual').replace('_', ' ');
         // Auto-tag pills for scanned outfits
         const scanTagPills = [];
@@ -4319,6 +4409,7 @@ window.renderCloset = function(filter = 'all') {
                 <img src="${outfit.image}" class="w-full h-full object-cover opacity-90 transition-opacity" alt="Saved Item" />
                 ${typeBadge}
                 ${scoreBadge}
+                ${luckyBadge}
                 <div class="absolute bottom-3 right-3 flex gap-2.5 z-20">
                      <button onclick="window.triggerDeleteOutfit('${outfit.id}')" class="w-12 h-12 rounded-full bg-black/70 hover:bg-red-500/90 active:scale-95 flex items-center justify-center backdrop-blur-md text-white transition-all border border-white/20 shadow-lg" title="Delete">
                          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
@@ -4549,11 +4640,6 @@ $("confirmDeleteBtn").addEventListener("click", async () => {
 
 window.saveCurrentOutfit = function() {
     triggerHaptic('tap');
-    
-    if (!isProUser() && userCloset.outfits.length >= 3) {
-        window.openPaywall();
-        return;
-    }
 
     const s = store.get();
     if (!s.lastCap) return;
@@ -4577,10 +4663,33 @@ window.saveCurrentOutfit = function() {
             await closetDB.put(newOutfit);
             userCloset.outfits.unshift(newOutfit);
 
+            // Mirror the scan-result history write so the Style Story
+            // calendar/timeline always reflects this saved outfit even if
+            // the live scanner debounce skipped logging this score.
+            try {
+              let hist = JSON.parse(localStorage.getItem('datescan.history') || '[]');
+              const lastH = hist[hist.length - 1];
+              if (!lastH || (Date.now() - (lastH.time || 0) > 5000)) {
+                hist.push({ score: newOutfit.score, time: Date.now() });
+                if (hist.length > 200) hist = hist.slice(hist.length - 200);
+                localStorage.setItem('datescan.history', JSON.stringify(hist));
+              }
+              // Bump XP + log a mission day for the streak counter
+              if (typeof MISSIONS_KEY !== 'undefined') {
+                const m = JSON.parse(localStorage.getItem(MISSIONS_KEY) || '{"count":0,"log":[],"xp":0}');
+                m.log = m.log || [];
+                const todayKey = new Date().toDateString();
+                if (!m.log.some(t => new Date(t).toDateString() === todayKey)) m.log.push(Date.now());
+                localStorage.setItem(MISSIONS_KEY, JSON.stringify(m));
+              }
+              if (typeof addXP === 'function') addXP(25);
+              if (typeof window.renderHistoryView === 'function') window.renderHistoryView();
+            } catch (histErr) { console.warn('[save outfit] history sync failed:', histErr); }
+
             btn.innerHTML = `<span>✓ Saved to Closet</span>`;
             btn.classList.remove("bg-white/5", "border-white/20", "text-white");
             btn.classList.add("bg-emerald-500/10", "border-emerald-500/40", "text-emerald-400");
-            
+
             if(store.get().activeView === 'closet') renderCloset();
         } catch(e) {
             console.error(e);
@@ -4638,14 +4747,9 @@ window.saveCurrentOutfit = function() {
     fileInput.value = '';
   }
 
-  // Pro gate + consent gate + file picker
+  // Consent gate + file picker
   btn.addEventListener('click', () => {
     if (typeof triggerHaptic === 'function') triggerHaptic('tap');
-    if (typeof isProUser === 'function' && !isProUser() &&
-        window.userCloset && window.userCloset.outfits && window.userCloset.outfits.length >= 3) {
-      if (typeof window.openPaywall === 'function') window.openPaywall();
-      return;
-    }
     const consented = localStorage.getItem(CONSENT_KEY) === 'true';
     if (!consented) {
       openConsent();
@@ -5294,17 +5398,13 @@ function inferMaterial(data, w, h) {
           continue;
         }
 
-        // Run auto-tagging and background removal in parallel
+        // Run auto-tagging only — background removal disabled per user request
         currentAutoTags = null;
         currentBgRemoved = null;
 
-        const [tags, bgRemoved] = await Promise.all([
-          window.autoTagItem(src),
-          window.removeBackground(src).catch(() => src)
-        ]);
+        const tags = await window.autoTagItem(src);
 
         currentAutoTags = tags;
-        currentBgRemoved = bgRemoved;
 
         // Show auto-detected tags on the preview
         if (autoTags && tags) {
@@ -5335,13 +5435,7 @@ function inferMaterial(data, w, h) {
           autoInfo.classList.remove('hidden');
         }
 
-        // Update the preview with the background-removed image
-        if (bgRemoved && bgRemoved !== src) {
-          suppressObserver = true;
-          catPreview.src = bgRemoved;
-          // Release after the mutation has been queued
-          setTimeout(() => { suppressObserver = false; }, 0);
-        }
+        // Background removal disabled — keep original preview as-is.
       }
     }
   });
@@ -11958,9 +12052,28 @@ function onGoogleMapsLoaded() {
       scoreHtml += `<div class="scorecal-bar-track"><div class="scorecal-bar-fill scorecal-bar-fill--${tier}" style="width:${score}%"></div></div>`;
     }
 
-    return `<div class="${cls}" data-tooltip="${tooltip}">
+    // Vibe Check — only on days with a saved scan in the current month.
+    // Render as a tiny corner badge to avoid overflowing the cell layout.
+    let vibeHtml = '';
+    let cellAttrs = `data-tooltip="${tooltip}"`;
+    if (score !== undefined && !isOtherMonth) {
+      const vibe = (typeof window.getVibeForDay === 'function') ? window.getVibeForDay(key) : null;
+      if (vibe) {
+        const VIBE_ICONS = { chemistry: '⚡️', pleasant: '😊', cold: '❄️', bust: '❌' };
+        const icon = VIBE_ICONS[vibe.vibe] || '✨';
+        const lucky = vibe.successful ? '<span class="vibe-lucky-mark">🍀</span>' : '';
+        vibeHtml = `<div class="scorecal-vibe-badge" title="Vibe: ${vibe.vibe}${vibe.successful ? ' • second date!' : ''}">${icon}${lucky}</div>`;
+      } else {
+        vibeHtml = `<div class="scorecal-vibe-plus" title="How did it go?">+</div>`;
+      }
+      cls += ' scorecal-cell-clickable';
+      cellAttrs += ` onclick="event.stopPropagation();window.openVibeCheck && window.openVibeCheck('${key}')"`;
+    }
+
+    return `<div class="${cls}" ${cellAttrs}>
               <span class="scorecal-date-number">${day}</span>
               ${scoreHtml}
+              ${vibeHtml}
             </div>`;
   }
 
@@ -12046,6 +12159,156 @@ function onGoogleMapsLoaded() {
     const hist = getHistory();
     scorecalRender(hist);
   };
+
+  // ============================================================
+  // VIBE CHECK — post-date feedback. Stores per-day vibe in
+  // localStorage, awards +100 XP, and tags the worn outfit as
+  // "Lucky Outfit" when the user marks the date successful.
+  // ============================================================
+  const VIBES_KEY = 'datescan.vibes';
+
+  function _loadVibes() {
+    try { return JSON.parse(localStorage.getItem(VIBES_KEY) || '{}'); }
+    catch { return {}; }
+  }
+  function _saveVibes(v) {
+    try { localStorage.setItem(VIBES_KEY, JSON.stringify(v)); } catch {}
+  }
+
+  window.getVibeForDay = function(dayKey) {
+    const v = _loadVibes();
+    return v[dayKey] || null;
+  };
+
+  // Find the most recent saved outfit on a given calendar day so we
+  // can tag it as "Lucky" when the date was successful.
+  async function _findOutfitForDay(dayKey) {
+    try {
+      if (!window.userCloset || !Array.isArray(window.userCloset.outfits)) return null;
+      const [y, m, d] = dayKey.split('-').map(Number);
+      const dayStart = new Date(y, m - 1, d, 0, 0, 0).getTime();
+      const dayEnd   = new Date(y, m - 1, d, 23, 59, 59, 999).getTime();
+      const candidates = window.userCloset.outfits
+        .filter(o => o.date >= dayStart && o.date <= dayEnd && o.source !== 'upload')
+        .sort((a, b) => b.date - a.date);
+      return candidates[0] || null;
+    } catch { return null; }
+  }
+
+  let _pendingVibeKey = null;
+  let _pendingVibeChoice = null;
+
+  window.openVibeCheck = function(dayKey) {
+    _pendingVibeKey = dayKey;
+    _pendingVibeChoice = null;
+    const modal = document.getElementById('vibeCheckModal');
+    const subtitle = document.getElementById('vibeCheckSubtitle');
+    const successCb = document.getElementById('vibeCheckSuccess');
+    const saveBtn = document.getElementById('vibeCheckSave');
+    if (!modal) return;
+
+    // Move to body so its z-index isn't trapped by a parent stacking context
+    if (modal.parentElement !== document.body) document.body.appendChild(modal);
+
+    // Reset UI
+    document.querySelectorAll('.vibe-opt').forEach(b => b.classList.remove('is-selected'));
+    if (successCb) successCb.checked = false;
+    if (saveBtn) saveBtn.disabled = true;
+    if (subtitle) {
+      const parts = dayKey.split('-').map(Number);
+      const dateStr = new Date(parts[0], parts[1]-1, parts[2]).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+      subtitle.innerHTML = `${dateStr} — earn <strong class="text-amber-300">+100 XP</strong>.`;
+    }
+    modal.classList.remove('hidden');
+    if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+  };
+
+  function _closeVibeCheck() {
+    const modal = document.getElementById('vibeCheckModal');
+    if (modal) modal.classList.add('hidden');
+    _pendingVibeKey = null;
+    _pendingVibeChoice = null;
+  }
+
+  // Wire up modal interactions once DOM is ready
+  (function _wireVibeCheck() {
+    const ready = () => {
+      const modal = document.getElementById('vibeCheckModal');
+      if (!modal) return;
+      const closeBtn = document.getElementById('vibeCheckClose');
+      const saveBtn = document.getElementById('vibeCheckSave');
+
+      document.querySelectorAll('.vibe-opt').forEach(opt => {
+        opt.addEventListener('click', () => {
+          if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+          _pendingVibeChoice = opt.dataset.vibe;
+          document.querySelectorAll('.vibe-opt').forEach(b => b.classList.remove('is-selected'));
+          opt.classList.add('is-selected');
+          if (saveBtn) saveBtn.disabled = false;
+        });
+      });
+
+      closeBtn?.addEventListener('click', _closeVibeCheck);
+      modal.addEventListener('click', (e) => { if (e.target === modal) _closeVibeCheck(); });
+
+      saveBtn?.addEventListener('click', async () => {
+        if (!_pendingVibeKey || !_pendingVibeChoice) return;
+        if (typeof triggerHaptic === 'function') triggerHaptic('success');
+        const successful = !!document.getElementById('vibeCheckSuccess')?.checked;
+
+        // Tag the outfit as Lucky if successful
+        let luckyOutfitId = null;
+        if (successful) {
+          const outfit = await _findOutfitForDay(_pendingVibeKey);
+          if (outfit) {
+            outfit.luckyOutfit = true;
+            try {
+              if (window.closetDB && typeof window.closetDB.put === 'function') {
+                await window.closetDB.put(outfit);
+              }
+            } catch (e) { console.warn('[vibe] could not persist lucky outfit:', e); }
+            luckyOutfitId = outfit.id;
+            if (typeof window.renderCloset === 'function') window.renderCloset();
+          }
+        }
+
+        // Persist the vibe entry
+        const all = _loadVibes();
+        all[_pendingVibeKey] = {
+          vibe: _pendingVibeChoice,
+          successful,
+          outfitId: luckyOutfitId,
+          ts: Date.now()
+        };
+        _saveVibes(all);
+
+        // Award XP
+        if (typeof addXP === 'function') addXP(100);
+
+        // Re-render calendar so the badge replaces the button
+        try {
+          const hist = getHistory();
+          scorecalRender(hist);
+        } catch {}
+
+        // Friendly toast
+        const msg = successful
+          ? '+100 XP · 🍀 Lucky Outfit unlocked!'
+          : '+100 XP · vibe saved.';
+        if (window.dsPrivacy?.showToast) window.dsPrivacy.showToast(msg);
+        else if (typeof showToast === 'function') showToast(msg);
+        else console.log(msg);
+
+        _closeVibeCheck();
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', ready);
+    } else {
+      ready();
+    }
+  })();
+
 
   function renderTimeline(el, hist) {
     if (!hist.length) {
