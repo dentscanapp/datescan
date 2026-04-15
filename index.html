@@ -1080,6 +1080,135 @@
   .scorecal-legend-dot--fair  { background: #fbbf24; }
   .scorecal-legend-dot--low   { background: #ef4444; }
   .scorecal-legend-dot--none  { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); }
+
+  /* ── Streak Hero Card ──────────────────────────────── */
+  .streak-flame-icon {
+    font-size: 2.5rem;
+    line-height: 1;
+    filter: drop-shadow(0 0 12px rgba(249,115,22,0.5));
+    transition: filter 0.3s, transform 0.3s;
+  }
+  .streak-flame-icon.inactive {
+    filter: grayscale(1) opacity(0.3);
+    transform: scale(0.85);
+  }
+  .streak-day-dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .streak-day-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    border: 1.5px solid rgba(255,255,255,0.12);
+    transition: all 0.3s;
+    position: relative;
+  }
+  .streak-day-dot.filled {
+    background: linear-gradient(135deg, #f97316, #ec4899);
+    border-color: #f97316;
+    box-shadow: 0 0 8px rgba(249,115,22,0.4);
+  }
+  .streak-day-dot.today {
+    width: 12px; height: 12px;
+    border-color: #f97316;
+    box-shadow: 0 0 0 2px rgba(249,115,22,0.3);
+  }
+  .streak-day-dot.today.filled {
+    background: linear-gradient(135deg, #f97316, #ec4899);
+    box-shadow: 0 0 12px rgba(249,115,22,0.6), 0 0 0 2px rgba(249,115,22,0.4);
+  }
+  .streak-bonus-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .streak-bonus-badge.active {
+    background: linear-gradient(135deg, rgba(249,115,22,0.2), rgba(236,72,153,0.2));
+    border: 1px solid rgba(249,115,22,0.4);
+    color: #fbbf24;
+  }
+  .streak-bonus-badge.inactive {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.25);
+  }
+
+  /* ── Level Tier Badges ─────────────────────────────── */
+  .level-tier-icon {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 800;
+    flex-shrink: 0;
+    transition: box-shadow 0.4s;
+  }
+  .level-tier-icon--bronze {
+    background: linear-gradient(135deg, #92702A, #CD7F32);
+    box-shadow: 0 0 20px rgba(205,127,50,0.3);
+  }
+  .level-tier-icon--silver {
+    background: linear-gradient(135deg, #8A8A8A, #C0C0C0);
+    box-shadow: 0 0 20px rgba(192,192,192,0.3);
+  }
+  .level-tier-icon--gold {
+    background: linear-gradient(135deg, #B8860B, #FFD700);
+    box-shadow: 0 0 24px rgba(255,215,0,0.4);
+  }
+  .level-tier-icon--diamond {
+    background: linear-gradient(135deg, #7B68EE, #B9F2FF);
+    box-shadow: 0 0 28px rgba(185,242,255,0.4);
+  }
+  .level-xp-bar-track {
+    width: 100%;
+    height: 10px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+    position: relative;
+  }
+  .level-xp-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+  .level-xp-bar-fill--bronze { background: linear-gradient(90deg, #92702A, #CD7F32); }
+  .level-xp-bar-fill--silver { background: linear-gradient(90deg, #8A8A8A, #C0C0C0); }
+  .level-xp-bar-fill--gold   { background: linear-gradient(90deg, #B8860B, #FFD700); }
+  .level-xp-bar-fill--diamond{ background: linear-gradient(90deg, #7B68EE, #B9F2FF); }
+
+  /* ── Trend Toggle Buttons ──────────────────────────── */
+  .trend-toggle-btn {
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.4);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .trend-toggle-btn:hover {
+    color: rgba(255,255,255,0.7);
+  }
+  .trend-toggle-btn.active {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+  }
+
   /* Glow orbs for the calendar panel */
   .glow-orb {
     position: absolute;
@@ -2185,7 +2314,7 @@
       <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
          <div>
             <h2 class="font-serif text-3xl md:text-4xl font-medium mb-2 leading-tight">Digital Closet</h2>
-            <p class="text-gray-400 text-sm font-medium">Your saved outfits and personal style archive.</p>
+            <p class="text-gray-400 text-sm font-medium">Your saved outfits and personal style archive. <span id="closetCountBadge" class="inline-flex items-center gap-1 ml-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-gray-300"></span></p>
          </div>
          <div class="flex gap-2 w-full md:w-auto flex-wrap">
             <button id="styleProfileBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-gradient-to-r from-purple-500/20 to-brand-500/20 border border-purple-500/30 text-purple-300 hover:from-purple-500/30 hover:to-brand-500/30 active:scale-[0.98] transition" title="Your personal style profile">
@@ -2217,6 +2346,9 @@
       <div id="closetGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
           <!-- Populated by JS -->
       </div>
+      <div id="closetGridMore" class="hidden text-center py-6">
+          <button id="closetGridMoreBtn" type="button" class="px-8 py-3 rounded-xl bg-white/5 border border-white/10 text-sm font-bold text-gray-300 hover:bg-white/10 active:scale-[0.98] transition-all">Load More</button>
+      </div>
 
       <!-- Uploaded Items section -->
       <div class="mt-14 mb-6 flex items-end justify-between gap-4">
@@ -2238,6 +2370,9 @@
 
       <div id="closetItemsGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
           <!-- Populated by JS -->
+      </div>
+      <div id="closetItemsGridMore" class="hidden text-center py-6">
+          <button id="closetItemsGridMoreBtn" type="button" class="px-8 py-3 rounded-xl bg-white/5 border border-white/10 text-sm font-bold text-gray-300 hover:bg-white/10 active:scale-[0.98] transition-all">Load More</button>
       </div>
 
       <!-- Hidden file input for manual closet uploads -->
@@ -2345,7 +2480,7 @@
           </button>
           <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-purple-500/20 to-brand-500/20 border border-purple-500/30 flex items-center justify-center mb-4 mx-auto text-2xl">✨</div>
           <h3 class="font-serif text-2xl font-semibold text-white text-center mb-1">How did it go?</h3>
-          <p id="vibeCheckSubtitle" class="text-sm text-gray-400 text-center mb-5 leading-relaxed">Quick vibe check — earn <strong class="text-amber-300">+100 XP</strong>.</p>
+          <p id="vibeCheckSubtitle" class="text-sm text-gray-400 text-center mb-5 leading-relaxed">Quick vibe check — earn <strong class="text-amber-300">+10 XP</strong>.</p>
 
           <div class="grid grid-cols-2 gap-3 mb-5">
             <button type="button" data-vibe="chemistry" class="vibe-opt py-4 rounded-xl border border-white/10 bg-white/5 text-gray-200 text-sm font-bold transition flex flex-col items-center gap-1.5 hover:border-amber-400/50">
@@ -2515,6 +2650,43 @@
       <!-- Stats Row -->
       <div id="historyStats" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
         <!-- Populated by JS -->
+      </div>
+
+      <!-- Streak & Level Hero Card -->
+      <div class="premium-glass rounded-[32px] p-6 sm:p-8 relative overflow-hidden mb-8">
+        <div class="absolute -top-16 -left-16 w-48 h-48 rounded-full bg-orange-500/15 mix-blend-screen filter blur-[50px] pointer-events-none"></div>
+        <div class="absolute -bottom-12 -right-12 w-36 h-36 rounded-full bg-brand-500/10 mix-blend-screen filter blur-[40px] pointer-events-none"></div>
+        <div class="relative z-10">
+          <!-- Streak Row -->
+          <div id="streakHero" class="flex items-center gap-5 mb-6">
+            <!-- Populated by JS -->
+          </div>
+          <!-- Level Row -->
+          <div id="levelHero" class="">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Weekly Score Trend -->
+      <div class="premium-glass rounded-[32px] p-6 sm:p-8 relative overflow-hidden mb-8">
+        <div class="absolute -top-12 -left-12 w-36 h-36 rounded-full bg-emerald-500/10 mix-blend-screen filter blur-[40px] pointer-events-none"></div>
+        <div class="absolute -bottom-12 -right-12 w-36 h-36 rounded-full bg-purple-500/10 mix-blend-screen filter blur-[40px] pointer-events-none"></div>
+        <div class="relative z-10">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-serif text-xl font-semibold text-white">Score Trend</h3>
+            <div id="trendToggles" class="flex gap-1 bg-white/5 rounded-full p-0.5">
+              <button data-trend-range="7" class="trend-toggle-btn active" onclick="switchTrendRange(7)">7d</button>
+              <button data-trend-range="14" class="trend-toggle-btn" onclick="switchTrendRange(14)">14d</button>
+              <button data-trend-range="30" class="trend-toggle-btn" onclick="switchTrendRange(30)">30d</button>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 mb-3">
+            <span id="trendDirection" class="text-sm font-bold"></span>
+            <span id="trendDelta" class="text-xs text-gray-400"></span>
+          </div>
+          <canvas id="trendCanvas" width="600" height="200" class="w-full" style="max-height:200px"></canvas>
+        </div>
       </div>
 
       <!-- Score Calendar (full month-grid) -->
@@ -3598,12 +3770,17 @@ store.subscribe((s) => {
 
 const MISSIONS_KEY = "datescan.missions";
 const LEVELS = [
-  { name: "Level 1: Style Rookie", xp: 0 },
-  { name: "Level 2: Style Aware", xp: 100 },
-  { name: "Level 3: Sharp Dresser", xp: 300 },
-  { name: "Level 4: Trendsetter", xp: 600 },
-  { name: "Level 5: Style Icon", xp: 1000 },
-  { name: "Level 6: Casanova", xp: 1500 }
+  { name: "Bronze",   tier: "bronze",   xp: 0,    icon: "🥉" },
+  { name: "Silver",   tier: "silver",   xp: 200,  icon: "🥈" },
+  { name: "Gold",     tier: "gold",     xp: 500,  icon: "🥇" },
+  { name: "Diamond",  tier: "diamond",  xp: 1000, icon: "💎" }
+];
+
+// Streak bonus thresholds: consecutive days → XP multiplier
+const STREAK_BONUSES = [
+  { days: 3,  multiplier: 1.5, label: "1.5x" },
+  { days: 5,  multiplier: 2,   label: "2x" },
+  { days: 7,  multiplier: 3,   label: "3x" }
 ];
 
 // ============================================================
@@ -3759,7 +3936,17 @@ function updatePointsBadge() {
 // Legacy alias — some older call sites still reference updateUsageBadge.
 // Route them through the new badge updater so we don't have to touch
 // every caller in this phase.
-function updateUsageBadge() { updatePointsBadge(); }
+function updateUsageBadge() {
+  updatePointsBadge();
+  // Update closet count badge (X/200)
+  const badge = document.getElementById('closetCountBadge');
+  if (badge) {
+    const count = (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits.length : 0;
+    badge.textContent = `${count}/200`;
+    badge.classList.toggle('text-amber-400', count >= 150);
+    badge.classList.toggle('text-red-400', count >= 190);
+  }
+}
 
 // Body scroll lock — `overflow: hidden` alone is unreliable on mobile
 // Chrome / iOS Safari, especially when the keyboard is open. We also
@@ -4312,13 +4499,18 @@ function generateThumbnail(dataUrl, callback) {
     img.src = dataUrl;
 }
 
-window.renderCloset = function(filter = 'all') {
+window._closetPage = 1;
+const CLOSET_PAGE_SIZE = 20;
+
+window.renderCloset = function(filter = 'all', append = false) {
     const grid = $("closetGrid");
+    const moreWrap = $("closetGridMore");
     // Only scanned outfits belong here — uploaded items render in closetItemsGrid
     const outfitsOnly = (userCloset.outfits || []).filter(o => o.source !== 'upload');
 
     if (!outfitsOnly.length) {
         grid.innerHTML = `<div class="col-span-full py-16 text-center text-gray-500"><div class="text-5xl mb-4 opacity-50">👻</div><h3 class="font-serif text-xl text-gray-300 mb-2">Your closet is empty.</h3><p class="text-sm">Scan and save your first outfit to start building your style archive.</p></div>`;
+        if (moreWrap) moreWrap.classList.add('hidden');
         return;
     }
 
@@ -4326,12 +4518,17 @@ window.renderCloset = function(filter = 'all') {
 
     if (filtered.length === 0) {
         grid.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500"><p>No saved outfits found for this category.</p></div>`;
+        if (moreWrap) moreWrap.classList.add('hidden');
         return;
     }
 
-    grid.innerHTML = filtered.map(outfit => {
+    if (!append) window._closetPage = 1;
+    const start = append ? grid.children.length : 0;
+    const end = Math.min(start + CLOSET_PAGE_SIZE, filtered.length);
+    const batch = filtered.slice(start, end);
+
+    const html = batch.map(outfit => {
         const TYPE_LABELS = { shirt:'👕 Shirt', pants:'👖 Pants', jacket:'🧥 Jacket', dress:'👗 Dress', shoes:'👟 Shoes', accessory:'👜 Accessory' };
-        const SEASON_EMOJI = { summer: '☀️', winter: '❄️', autumn: '🍂', spring: '🌸', 'all-season': '🔄' };
         const typeBadge = outfit.type && TYPE_LABELS[outfit.type]
           ? `<div class="absolute top-2 left-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-white border border-white/10 z-10">${TYPE_LABELS[outfit.type]}</div>`
           : '';
@@ -4345,12 +4542,6 @@ window.renderCloset = function(filter = 'all') {
         // Auto-tag pills for scanned outfits
         const scanTagPills = [];
         if (outfit.tags) {
-          if (outfit.tags.season && outfit.tags.season !== 'all-season') {
-            scanTagPills.push(`<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-purple-500/60 text-white">${SEASON_EMOJI[outfit.tags.season] || ''} ${outfit.tags.season}</span>`);
-          }
-          if (outfit.tags.material && outfit.tags.material !== 'unknown') {
-            scanTagPills.push(`<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-brand-500/60 text-white">${outfit.tags.material}</span>`);
-          }
           if (outfit.tags.colors && outfit.tags.colors.length) {
             outfit.tags.colors.forEach(c => {
               if (c !== 'Mixed') scanTagPills.push(`<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-black/60 text-white border border-white/10">${c}</span>`);
@@ -4361,7 +4552,7 @@ window.renderCloset = function(filter = 'all') {
         return `
         <div class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-default relative">
             <div class="aspect-[3/4] bg-black relative">
-                <img src="${outfit.image}" class="w-full h-full object-cover opacity-90 transition-opacity" alt="Saved Item" />
+                <img src="${outfit.image}" class="w-full h-full object-cover opacity-90 transition-opacity" alt="Saved Item" loading="lazy" />
                 ${typeBadge}
                 ${scoreBadge}
                 ${luckyBadge}
@@ -4387,16 +4578,36 @@ window.renderCloset = function(filter = 'all') {
             </div>
         </div>`;
     }).join('');
+
+    if (append) {
+        grid.insertAdjacentHTML('beforeend', html);
+    } else {
+        grid.innerHTML = html;
+    }
+
+    // Show / hide "Load More"
+    if (moreWrap) {
+        if (end < filtered.length) {
+            moreWrap.classList.remove('hidden');
+        } else {
+            moreWrap.classList.add('hidden');
+        }
+    }
 };
 
+window._closetItemsPage = 1;
+const CLOSET_ITEMS_PAGE_SIZE = 20;
+
 // Renders the uploaded Items grid (separate from scanned outfits).
-window.renderClosetItems = function(typeFilter = 'all') {
+window.renderClosetItems = function(typeFilter = 'all', append = false) {
     const grid = document.getElementById('closetItemsGrid');
+    const moreWrap = document.getElementById('closetItemsGridMore');
     if (!grid) return;
     const items = (userCloset.outfits || []).filter(o => o.source === 'upload');
 
     if (!items.length) {
         grid.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500"><svg class="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/><circle cx="9" cy="10" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.814.014L6 21"/><path d="M19 2v6"/><path d="M22 5h-6"/></svg><p class="text-sm">No items uploaded yet. Tap <strong class="text-gray-300">Add Item</strong> above to start.</p></div>`;
+        if (moreWrap) moreWrap.classList.add('hidden');
         return;
     }
 
@@ -4404,22 +4615,20 @@ window.renderClosetItems = function(typeFilter = 'all') {
 
     if (!filtered.length) {
         grid.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500"><p class="text-sm">No items in this category yet.</p></div>`;
+        if (moreWrap) moreWrap.classList.add('hidden');
         return;
     }
 
-    const TYPE_LABELS = { shirt:'👕 Shirt', pants:'👖 Pants', jacket:'🧥 Jacket', dress:'👗 Dress', shoes:'👟 Shoes', accessory:'👜 Accessory' };
-    const SEASON_EMOJI = { summer: '☀️', winter: '❄️', autumn: '🍂', spring: '🌸', 'all-season': '🔄' };
+    if (!append) window._closetItemsPage = 1;
+    const start = append ? grid.children.length : 0;
+    const end = Math.min(start + CLOSET_ITEMS_PAGE_SIZE, filtered.length);
+    const batch = filtered.slice(start, end);
 
-    grid.innerHTML = filtered.map(item => {
+    const TYPE_LABELS = { shirt:'👕 Shirt', pants:'👖 Pants', jacket:'🧥 Jacket', dress:'👗 Dress', shoes:'👟 Shoes', accessory:'👜 Accessory' };
+    const html = batch.map(item => {
         // Build auto-tag pills if tags exist
         const tagPills = [];
         if (item.tags) {
-          if (item.tags.season && item.tags.season !== 'all-season') {
-            tagPills.push(`<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-purple-500/60 text-white">${SEASON_EMOJI[item.tags.season] || ''} ${item.tags.season}</span>`);
-          }
-          if (item.tags.material && item.tags.material !== 'unknown') {
-            tagPills.push(`<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-brand-500/60 text-white">${item.tags.material}</span>`);
-          }
         }
         if (item.color && item.color !== 'Mixed') {
           tagPills.push(`<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-black/60 text-white border border-white/10">${item.color}</span>`);
@@ -4429,7 +4638,7 @@ window.renderClosetItems = function(typeFilter = 'all') {
         return `
         <div class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-default relative">
             <div class="aspect-[3/4] bg-black relative">
-                <img src="${item.image}" class="w-full h-full object-cover opacity-90 transition-opacity" alt="Saved Item" />
+                <img src="${item.image}" class="w-full h-full object-cover opacity-90 transition-opacity" alt="Saved Item" loading="lazy" />
                 <div class="absolute top-2 left-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-white border border-white/10 z-10">${TYPE_LABELS[item.type] || 'Item'}</div>
                 <div class="absolute bottom-3 right-3 flex gap-2.5 z-20">
                      <button onclick="window.triggerDeleteOutfit('${item.id}')" class="w-12 h-12 rounded-full bg-black/70 hover:bg-red-500/90 active:scale-95 flex items-center justify-center backdrop-blur-md text-white transition-all border border-white/20 shadow-lg" title="Delete">
@@ -4450,6 +4659,21 @@ window.renderClosetItems = function(typeFilter = 'all') {
             </div>
         </div>`;
     }).join('');
+
+    if (append) {
+        grid.insertAdjacentHTML('beforeend', html);
+    } else {
+        grid.innerHTML = html;
+    }
+
+    // Show / hide "Load More"
+    if (moreWrap) {
+        if (end < filtered.length) {
+            moreWrap.classList.remove('hidden');
+        } else {
+            moreWrap.classList.add('hidden');
+        }
+    }
 };
 
 // Type filter buttons for the Items section
@@ -4473,6 +4697,20 @@ document.querySelectorAll('.closet-type-btn').forEach(btn => {
         if (typeof triggerHaptic === 'function') triggerHaptic('tap');
         window.setClosetTypeFilter(e.currentTarget.dataset.typeFilter);
     });
+});
+
+// ── "Load More" buttons for lazy-loaded grids ──
+document.getElementById('closetGridMoreBtn')?.addEventListener('click', () => {
+    if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+    const activeFilterBtn = document.querySelector('.closet-filter-btn[aria-pressed="true"]');
+    const filter = activeFilterBtn ? activeFilterBtn.dataset.filter : 'all';
+    window.renderCloset(filter, true);
+});
+document.getElementById('closetItemsGridMoreBtn')?.addEventListener('click', () => {
+    if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+    const activeTypeBtn = document.querySelector('.closet-type-btn[aria-pressed="true"]');
+    const typeFilter = activeTypeBtn ? activeTypeBtn.dataset.typeFilter : 'all';
+    window.renderClosetItems(typeFilter, true);
 });
 
 // Apply a closet filter by name: updates the active button styles, re-renders
@@ -4598,6 +4836,14 @@ window.saveCurrentOutfit = function() {
 
     const s = store.get();
     if (!s.lastCap) return;
+
+    // ── 200-item closet limit ──
+    const totalItems = (userCloset.outfits || []).length;
+    if (totalItems >= 200) {
+      if (typeof showToast === 'function') showToast('Closet full! Delete some items first (max 200).');
+      else alert('Closet full! Delete some items first (max 200).');
+      return;
+    }
 
     const btn = $("saveOutfitBtn");
     btn.innerHTML = `<span class="animate-pulse">Saving...</span>`;
@@ -4776,6 +5022,15 @@ window.saveCurrentOutfit = function() {
   catSave.addEventListener('click', async () => {
     if (!pendingImage || !pendingType) return;
     if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+
+    // ── 200-item closet limit ──
+    const totalItems = (userCloset.outfits || []).length;
+    if (totalItems >= 200) {
+      if (typeof showToast === 'function') showToast('Closet full! Delete some items first (max 200).');
+      else alert('Closet full! Delete some items first (max 200).');
+      return;
+    }
+
     catSave.disabled = true;
     catSave.textContent = 'Saving…';
 
@@ -4798,9 +5053,7 @@ window.saveCurrentOutfit = function() {
       newItem.color = (autoTags.colors && autoTags.colors[0]) || 'Mixed';
       newItem.colorHex = (typeof getHexForColorName === 'function') ? getHexForColorName(newItem.color) : '#888';
       newItem.tags = {
-        colors: autoTags.colors || [],
-        season: autoTags.season || 'all-season',
-        material: autoTags.material || 'unknown'
+        colors: autoTags.colors || []
       };
     }
 
@@ -5164,9 +5417,8 @@ window.removeBackground = async function (imageDataURL) {
 };
 
 // ============================================================
-// AUTO-TAGGING — extracts dominant colors, infers material
-// and season from the image. All processing is on-device via
-// canvas pixel sampling.
+// AUTO-TAGGING — extracts dominant colors from the image.
+// All processing is on-device via canvas pixel sampling.
 // ============================================================
 window.autoTagItem = function (imageDataURL) {
   return new Promise((resolve) => {
@@ -5203,26 +5455,18 @@ window.autoTagItem = function (imageDataURL) {
             .slice(0, 3)
             .map(([name]) => name);
 
-          // Infer season from color palette
-          const season = inferSeason(sortedColors);
-
-          // Infer material from brightness/texture heuristics
-          const material = inferMaterial(data, canvas.width, canvas.height);
-
           resolve({
-            colors: sortedColors,
-            season: season,
-            material: material
+            colors: sortedColors
           });
         } catch (e) {
           console.warn('[auto-tag] analysis failed:', e);
-          resolve({ colors: ['Mixed'], season: 'all-season', material: 'unknown' });
+          resolve({ colors: ['Mixed'] });
         }
       };
-      img.onerror = () => resolve({ colors: ['Mixed'], season: 'all-season', material: 'unknown' });
+      img.onerror = () => resolve({ colors: ['Mixed'] });
       img.src = imageDataURL;
     } catch (e) {
-      resolve({ colors: ['Mixed'], season: 'all-season', material: 'unknown' });
+      resolve({ colors: ['Mixed'] });
     }
   });
 };
@@ -5278,48 +5522,7 @@ function classifyColor(r, g, b) {
   return 'Red';
 }
 
-// Infer the best season from dominant colors
-function inferSeason(colors) {
-  const WARM_COLORS = ['Camel', 'Rust', 'Olive', 'Burgundy', 'Cream', 'Beige'];
-  const COOL_COLORS = ['Navy', 'Charcoal', 'Slate', 'Forest', 'Teal', 'White'];
-  const SUMMER_COLORS = ['White', 'Cream', 'Beige', 'Teal'];
 
-  const warm = colors.filter(c => WARM_COLORS.includes(c)).length;
-  const cool = colors.filter(c => COOL_COLORS.includes(c)).length;
-  const summer = colors.filter(c => SUMMER_COLORS.includes(c)).length;
-
-  if (summer >= 2) return 'summer';
-  if (warm > cool) return 'autumn';
-  if (cool > warm) return 'winter';
-  if (warm === cool && warm > 0) return 'spring';
-  return 'all-season';
-}
-
-// Infer material from pixel statistics
-function inferMaterial(data, w, h) {
-  // Sample brightness variance as a rough texture proxy
-  let sum = 0, sumSq = 0, count = 0;
-  const STEP = 16;
-  for (let i = 0; i < data.length; i += 4 * STEP) {
-    const l = (data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114);
-    sum += l;
-    sumSq += l * l;
-    count++;
-  }
-  if (count === 0) return 'unknown';
-  const mean = sum / count;
-  const variance = (sumSq / count) - (mean * mean);
-
-  // High brightness → likely cotton/linen; low → denim/leather
-  // High variance → textured (knit, denim); low → smooth (silk, polyester)
-  if (mean > 180 && variance < 800) return 'cotton';
-  if (mean > 160 && variance < 500) return 'silk';
-  if (mean < 80 && variance > 1000) return 'denim';
-  if (mean < 100) return 'leather';
-  if (variance > 1200) return 'knit';
-  if (variance < 300) return 'polyester';
-  return 'cotton';
-}
 
 // ============================================================
 // ENHANCED UPLOAD FLOW — hooks auto-tagging + background
@@ -5364,11 +5567,8 @@ function inferMaterial(data, w, h) {
         // Show auto-detected tags on the preview
         if (autoTags && tags) {
           autoTags.innerHTML = '';
-          const SEASON_LABELS = { summer: 'Summer', winter: 'Winter', autumn: 'Autumn', spring: 'Spring', 'all-season': 'All Season' };
           const tagData = [
-            ...(tags.colors || []).map(c => ({ label: c, cls: 'bg-black/70 text-white' })),
-            { label: SEASON_LABELS[tags.season] || tags.season, cls: 'bg-purple-500/70 text-white' },
-            { label: tags.material, cls: 'bg-brand-500/70 text-white' }
+            ...(tags.colors || []).map(c => ({ label: c, cls: 'bg-black/70 text-white' }))
           ];
           tagData.forEach(t => {
             const span = document.createElement('span');
@@ -5381,12 +5581,9 @@ function inferMaterial(data, w, h) {
 
         // Show auto-info panel
         if (autoInfoContent && tags) {
-          const SEASON_LABELS = { summer: 'Summer', winter: 'Winter', autumn: 'Autumn', spring: 'Spring', 'all-season': 'All Season' };
           const colorStr = (tags.colors || []).join(', ');
           autoInfoContent.innerHTML =
-            `<strong>Colors:</strong> ${colorStr || 'Mixed'} &nbsp;·&nbsp; ` +
-            `<strong>Season:</strong> ${SEASON_LABELS[tags.season] || tags.season} &nbsp;·&nbsp; ` +
-            `<strong>Material:</strong> ${tags.material}`;
+            `<strong>Colors:</strong> ${colorStr || 'Mixed'}`;
           autoInfo.classList.remove('hidden');
         }
 
@@ -7500,11 +7697,51 @@ function analyzeOutfitColor(landmarks, W, H) {
 function addXP(amount) {
   try {
     const m = JSON.parse(localStorage.getItem(MISSIONS_KEY) || '{"count":0,"log":[],"xp":0}');
-    m.xp = (m.xp || 0) + amount;
+    // Apply streak multiplier
+    const streak = calculateStreakGlobal(m);
+    let multiplier = 1;
+    for (let i = STREAK_BONUSES.length - 1; i >= 0; i--) {
+      if (streak >= STREAK_BONUSES[i].days) { multiplier = STREAK_BONUSES[i].multiplier; break; }
+    }
+    const bonusAmount = Math.round(amount * multiplier);
+    m.xp = (m.xp || 0) + bonusAmount;
     localStorage.setItem(MISSIONS_KEY, JSON.stringify(m));
     updateMissionBadge();
+    // Show bonus toast if multiplier is active
+    if (multiplier > 1 && typeof showToast === 'function') {
+      showToast(`${multiplier}x streak bonus! +${bonusAmount} XP`);
+    } else if (typeof window.dsPrivacy?.showToast === 'function') {
+      window.dsPrivacy.showToast(`${multiplier}x streak bonus! +${bonusAmount} XP`);
+    }
   } catch {}
 }
+
+function calculateStreakGlobal(m) {
+  let streak = 0;
+  if (m.log && m.log.length > 0) {
+    const uniqueDays = [...new Set(m.log.map(t => {
+      const d = new Date(t);
+      return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+    }))].sort((a, b) => new Date(b) - new Date(a));
+    const todayDate = new Date();
+    const todayStr = `${todayDate.getFullYear()}-${todayDate.getMonth()+1}-${todayDate.getDate()}`;
+    const yesterdayDate = new Date(todayDate);
+    yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+    const yesterdayStr = `${yesterdayDate.getFullYear()}-${yesterdayDate.getMonth()+1}-${yesterdayDate.getDate()}`;
+    if (uniqueDays[0] === todayStr || uniqueDays[0] === yesterdayStr) {
+      streak = 1;
+      let checkDate = new Date(uniqueDays[0]);
+      for (let i = 1; i < uniqueDays.length; i++) {
+        checkDate.setDate(checkDate.getDate() - 1);
+        const checkStr = `${checkDate.getFullYear()}-${checkDate.getMonth()+1}-${checkDate.getDate()}`;
+        if (uniqueDays[i] === checkStr) streak++;
+        else break;
+      }
+    }
+  }
+  return streak;
+}
+window.calculateStreakGlobal = calculateStreakGlobal;
 // Module scope hides addXP/updateMissionBadge from classic <script> IIFEs
 // (e.g. the Vibe Check save handler). Expose on window so they can fire.
 window.addXP = addXP;
@@ -7523,52 +7760,27 @@ function logMission() {
 function updateMissionBadge() {
   try {
     const m = JSON.parse(localStorage.getItem(MISSIONS_KEY) || '{"count":0,"log":[],"xp":0}');
-    const xp = m.xp || 0;
-    $("missionCount").textContent = xp;
+    const rawXp = m.xp || 0;
 
     let currLevel = LEVELS[0], nextLevel = LEVELS[1];
     for (let i = 0; i < LEVELS.length; i++) {
-       if (xp >= LEVELS[i].xp) { 
-         currLevel = LEVELS[i]; 
-         nextLevel = LEVELS[i+1] || LEVELS[i]; 
+       if (rawXp >= LEVELS[i].xp) {
+         currLevel = LEVELS[i];
+         nextLevel = LEVELS[i+1] || LEVELS[i];
        }
     }
-    $("levelName").textContent = currLevel.name;
+    const isMaxBadge = nextLevel === currLevel;
+    const displayXp = isMaxBadge ? Math.min(rawXp, currLevel.xp) : rawXp;
+    $("missionCount").textContent = displayXp;
+    $("levelName").textContent = (currLevel.icon || '') + ' ' + currLevel.name;
 
     let progress = 100;
-    if (nextLevel !== currLevel) {
-       progress = ((xp - currLevel.xp) / (nextLevel.xp - currLevel.xp)) * 100;
+    if (!isMaxBadge) {
+       progress = ((displayXp - currLevel.xp) / (nextLevel.xp - currLevel.xp)) * 100;
     }
-    $("xpBar").style.width = progress + "%";
+    $("xpBar").style.width = Math.min(100, progress) + "%";
 
-    let streak = 0;
-    if (m.log && m.log.length > 0) {
-        const uniqueDays = [...new Set(m.log.map(t => {
-            const d = new Date(t);
-            return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
-        }))].sort((a, b) => new Date(b) - new Date(a));
-
-        const todayDate = new Date();
-        const todayStr = `${todayDate.getFullYear()}-${todayDate.getMonth()+1}-${todayDate.getDate()}`;
-        
-        const yesterdayDate = new Date(todayDate);
-        yesterdayDate.setDate(yesterdayDate.getDate() - 1);
-        const yesterdayStr = `${yesterdayDate.getFullYear()}-${yesterdayDate.getMonth()+1}-${yesterdayDate.getDate()}`;
-
-        if (uniqueDays[0] === todayStr || uniqueDays[0] === yesterdayStr) {
-            streak = 1;
-            let checkDate = new Date(uniqueDays[0]);
-            for (let i = 1; i < uniqueDays.length; i++) {
-                checkDate.setDate(checkDate.getDate() - 1);
-                const checkStr = `${checkDate.getFullYear()}-${checkDate.getMonth()+1}-${checkDate.getDate()}`;
-                if (uniqueDays[i] === checkStr) {
-                    streak++;
-                } else {
-                    break;
-                }
-            }
-        }
-    }
+    const streak = calculateStreakGlobal(m);
     $("missionStreak").textContent = `${streak} Day Streak`;
     $("streakFlame").style.opacity = streak > 0 ? 1 : 0.3;
     $("streakFlame").style.filter = streak > 0 ? "drop-shadow(0 0 8px rgba(249, 115, 22, 0.6))" : "none";
@@ -11901,12 +12113,15 @@ function onGoogleMapsLoaded() {
   const HISTORY_KEY = 'datescan.history';
   const MISSIONS_KEY = 'datescan.missions';
   const LEVELS = [
-    { name: "Level 1: Style Rookie", xp: 0 },
-    { name: "Level 2: Style Aware", xp: 100 },
-    { name: "Level 3: Sharp Dresser", xp: 300 },
-    { name: "Level 4: Trendsetter", xp: 600 },
-    { name: "Level 5: Style Icon", xp: 1000 },
-    { name: "Level 6: Casanova", xp: 1500 }
+    { name: "Bronze",   tier: "bronze",   xp: 0,    icon: "🥉" },
+    { name: "Silver",   tier: "silver",   xp: 200,  icon: "🥈" },
+    { name: "Gold",     tier: "gold",     xp: 500,  icon: "🥇" },
+    { name: "Diamond",  tier: "diamond",  xp: 1000, icon: "💎" }
+  ];
+  const STREAK_BONUSES = [
+    { days: 3,  multiplier: 1.5, label: "1.5x" },
+    { days: 5,  multiplier: 2,   label: "2x" },
+    { days: 7,  multiplier: 3,   label: "3x" }
   ];
 
   function getHistory() {
@@ -11944,6 +12159,29 @@ function onGoogleMapsLoaded() {
     const hist = getHistory();
     const m = JSON.parse(localStorage.getItem(MISSIONS_KEY) || '{"count":0,"log":[],"xp":0}');
     const xp = m.xp || 0;
+    const streak = calculateStreak(m);
+
+    // Determine current & next level
+    let currLevel = LEVELS[0], nextLevel = LEVELS[1];
+    for (let i = 0; i < LEVELS.length; i++) {
+      if (xp >= LEVELS[i].xp) { currLevel = LEVELS[i]; nextLevel = LEVELS[i+1] || LEVELS[i]; }
+    }
+    const tier = currLevel.tier || 'bronze';
+    const isMax = nextLevel === currLevel;
+    const displayXp = isMax ? Math.min(xp, currLevel.xp) : xp;
+    const progress = !isMax
+      ? ((displayXp - currLevel.xp) / (nextLevel.xp - currLevel.xp)) * 100
+      : 100;
+
+    // Current streak bonus
+    let activeBonus = null;
+    for (let i = STREAK_BONUSES.length - 1; i >= 0; i--) {
+      if (streak >= STREAK_BONUSES[i].days) { activeBonus = STREAK_BONUSES[i]; break; }
+    }
+    let nextBonus = null;
+    for (let i = 0; i < STREAK_BONUSES.length; i++) {
+      if (streak < STREAK_BONUSES[i].days) { nextBonus = STREAK_BONUSES[i]; break; }
+    }
 
     // --- Stats Row ---
     const statsEl = document.getElementById('historyStats');
@@ -11951,7 +12189,6 @@ function onGoogleMapsLoaded() {
       const scores = hist.map(h => h.score);
       const best = scores.length ? Math.max(...scores) : 0;
       const avg = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
-      const streak = calculateStreak(m);
 
       statsEl.innerHTML = `
         <div class="premium-glass rounded-2xl p-4 border border-white/5 text-center stat-glow">
@@ -11967,11 +12204,83 @@ function onGoogleMapsLoaded() {
           <div class="font-serif text-3xl font-bold text-white">${hist.length}</div>
         </div>
         <div class="premium-glass rounded-2xl p-4 border border-white/5 text-center stat-glow">
-          <div class="text-[11px] font-bold uppercase tracking-widest text-amber-400 mb-1">Streak</div>
-          <div class="font-serif text-3xl font-bold text-white">${streak}d</div>
+          <div class="text-[11px] font-bold uppercase tracking-widest text-amber-400 mb-1">Total XP</div>
+          <div class="font-serif text-3xl font-bold text-white">${displayXp}</div>
         </div>
       `;
     }
+
+    // --- Streak Hero Card ---
+    const streakEl = document.getElementById('streakHero');
+    if (streakEl) {
+      // Build 7-day dot trail
+      const today = new Date();
+      const todayStr = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
+      let dotHtml = '';
+      for (let d = 6; d >= 0; d--) {
+        const checkDate = new Date(today);
+        checkDate.setDate(checkDate.getDate() - d);
+        const key = `${checkDate.getFullYear()}-${checkDate.getMonth()+1}-${checkDate.getDate()}`;
+        const isToday = key === todayStr;
+        // Check if this day has activity
+        const dayActive = m.log && m.log.some(t => {
+          const ld = new Date(t);
+          return `${ld.getFullYear()}-${ld.getMonth()+1}-${ld.getDate()}` === key;
+        });
+        // Also check scan history
+        const scanDay = hist.some(h => {
+          const t = h.time ?? h.timestamp ?? h.date ?? h.ts;
+          const n = typeof t === 'number' ? t : Date.parse(t);
+          if (!Number.isFinite(n)) return false;
+          const sd = new Date(n);
+          return `${sd.getFullYear()}-${sd.getMonth()+1}-${sd.getDate()}` === key;
+        });
+        const filled = dayActive || scanDay;
+        const dayName = checkDate.toLocaleDateString('en-US', { weekday: 'short' }).charAt(0);
+        dotHtml += `<div class="flex flex-col items-center gap-1">
+          <div class="streak-day-dot ${filled ? 'filled' : ''} ${isToday ? 'today' : ''}" title="${checkDate.toLocaleDateString()}"></div>
+          <span class="text-[9px] text-gray-500 font-medium">${dayName}</span>
+        </div>`;
+      }
+
+      const streakActive = streak > 0;
+      streakEl.innerHTML = `
+        <div class="streak-flame-icon ${streakActive ? '' : 'inactive'}">🔥</div>
+        <div class="flex-1">
+          <div class="flex items-center gap-3 mb-1">
+            <span class="font-serif text-3xl font-bold text-white">${streak}</span>
+            <span class="text-sm text-gray-400 font-medium">day streak</span>
+            ${activeBonus ? `<span class="streak-bonus-badge active">⚡ ${activeBonus.label} bonus</span>` : ''}
+          </div>
+          <div class="streak-day-dots">${dotHtml}</div>
+          ${nextBonus ? `<div class="text-[11px] text-amber-400/70 mt-2 font-medium">${nextBonus.days - streak} more day${nextBonus.days - streak !== 1 ? 's' : ''} to ${nextBonus.label} bonus!</div>` : '<div class="text-[11px] text-amber-300/80 mt-2 font-medium">Max streak bonus active! 🎉</div>'}
+        </div>
+      `;
+    }
+
+    // --- Level Hero Card ---
+    const levelEl = document.getElementById('levelHero');
+    if (levelEl) {
+      levelEl.innerHTML = `
+        <div class="flex items-center gap-4 mb-4">
+          <div class="level-tier-icon level-tier-icon--${tier}">${currLevel.icon}</div>
+          <div class="flex-1">
+            <div class="font-serif text-2xl font-bold text-white">${currLevel.name}</div>
+            <div class="text-sm text-gray-400">${isMax ? `${displayXp} XP` : `${displayXp} / ${nextLevel.xp} XP`}</div>
+          </div>
+          ${!isMax ? `<div class="text-right">
+            <div class="level-tier-icon level-tier-icon--${nextLevel.tier}" style="width:36px;height:36px;font-size:1rem;opacity:0.4">${nextLevel.icon}</div>
+          </div>` : ''}
+        </div>
+        <div class="level-xp-bar-track">
+          <div class="level-xp-bar-fill level-xp-bar-fill--${tier}" style="width: ${Math.min(100, progress)}%"></div>
+        </div>
+        ${!isMax ? `<div class="text-[11px] text-gray-500 mt-2">${nextLevel.xp - displayXp} XP to ${nextLevel.icon} ${nextLevel.name}</div>` : '<div class="text-[11px] text-amber-300/60 mt-2 font-medium">Max level reached! ✨</div>'}
+      `;
+    }
+
+    // --- Trend Chart ---
+    renderTrendChart(hist, 7);
 
     // --- Calendar (new month-grid calendar) ---
     scorecalRender(hist);
@@ -11980,32 +12289,202 @@ function onGoogleMapsLoaded() {
     const tlEl = document.getElementById('historyTimeline');
     if (tlEl) renderTimeline(tlEl, hist);
 
-    // --- Level Progress ---
+    // --- Level Progress (keep legacy for backward compat) ---
     const lvlEl = document.getElementById('historyLevel');
     if (lvlEl) {
-      let currLevel = LEVELS[0], nextLevel = LEVELS[1];
-      for (let i = 0; i < LEVELS.length; i++) {
-        if (xp >= LEVELS[i].xp) {
-          currLevel = LEVELS[i];
-          nextLevel = LEVELS[i + 1] || LEVELS[i];
-        }
-      }
-      const progress = nextLevel !== currLevel
-        ? ((xp - currLevel.xp) / (nextLevel.xp - currLevel.xp)) * 100
-        : 100;
-      const icons = ['🌱', '🌿', '🌳', '⭐', '👑', '💎'];
-
       lvlEl.innerHTML = `
-        <div class="text-2xl mb-1">${icons[LEVELS.indexOf(currLevel)] || '✨'}</div>
+        <div class="text-2xl mb-1">${currLevel.icon}</div>
         <div class="font-serif text-2xl font-bold text-white mb-1">${currLevel.name}</div>
-        <div class="text-sm text-gray-400 mb-4">${xp} / ${nextLevel.xp} XP</div>
+        <div class="text-sm text-gray-400 mb-4">${isMax ? `${displayXp} XP` : `${displayXp} / ${nextLevel.xp} XP`}</div>
         <div class="w-full h-3 bg-white/5 rounded-full overflow-hidden border border-white/10">
-          <div class="h-full rounded-full bg-gradient-to-r from-brand-500 to-purple-500 xp-bar-fill" style="width: ${progress}%"></div>
+          <div class="h-full rounded-full level-xp-bar-fill level-xp-bar-fill--${tier}" style="width: ${Math.min(100, progress)}%"></div>
         </div>
-        <div class="text-[11px] text-gray-500 mt-2">${nextLevel !== currLevel ? (nextLevel.xp - xp) + ' XP to ' + nextLevel.name : 'Max level reached!'}</div>
+        <div class="text-[11px] text-gray-500 mt-2">${!isMax ? (nextLevel.xp - displayXp) + ' XP to ' + nextLevel.name : 'Max level reached! ✨'}</div>
       `;
     }
   }
+
+  // ============================================================
+  // SCORE TREND CHART — Canvas-based mini sparkline
+  // ============================================================
+  let _currentTrendRange = 7;
+
+  function renderTrendChart(hist, days) {
+    _currentTrendRange = days;
+    const canvas = document.getElementById('trendCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const W = rect.width;
+    const H = rect.height;
+
+    // Clear
+    ctx.clearRect(0, 0, W, H);
+
+    // Gather daily averages for the last N days
+    const now = new Date();
+    const dayAvgs = [];
+    for (let d = days - 1; d >= 0; d--) {
+      const checkDate = new Date(now);
+      checkDate.setDate(checkDate.getDate() - d);
+      const key = `${checkDate.getFullYear()}-${checkDate.getMonth()+1}-${checkDate.getDate()}`;
+      const dayScores = hist.filter(h => {
+        const t = h.time ?? h.timestamp ?? h.date ?? h.ts;
+        const n = typeof t === 'number' ? t : Date.parse(t);
+        if (!Number.isFinite(n)) return false;
+        const sd = new Date(n);
+        return `${sd.getFullYear()}-${sd.getMonth()+1}-${sd.getDate()}` === key;
+      }).map(h => h.score);
+      const avg = dayScores.length ? Math.round(dayScores.reduce((a, b) => a + b, 0) / dayScores.length) : null;
+      dayAvgs.push({ key, avg, label: checkDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) });
+    }
+
+    // Calculate trend direction
+    const validScores = dayAvgs.filter(d => d.avg !== null);
+    let trendDir = 0;
+    if (validScores.length >= 2) {
+      const firstHalf = validScores.slice(0, Math.floor(validScores.length / 2));
+      const secondHalf = validScores.slice(Math.floor(validScores.length / 2));
+      const firstAvg = firstHalf.reduce((a, b) => a + b.avg, 0) / firstHalf.length;
+      const secondAvg = secondHalf.reduce((a, b) => a + b.avg, 0) / secondHalf.length;
+      trendDir = secondAvg - firstAvg;
+    }
+    const trendDirEl = document.getElementById('trendDirection');
+    const trendDeltaEl = document.getElementById('trendDelta');
+    if (trendDirEl && trendDeltaEl) {
+      if (validScores.length < 2) {
+        trendDirEl.innerHTML = '<span class="text-gray-400">Not enough data</span>';
+        trendDeltaEl.textContent = '';
+      } else if (trendDir > 2) {
+        trendDirEl.innerHTML = '<span class="text-emerald-400">↗ Improving</span>';
+        trendDeltaEl.textContent = `+${Math.round(trendDir)} pts avg`;
+      } else if (trendDir < -2) {
+        trendDirEl.innerHTML = '<span class="text-red-400">↘ Declining</span>';
+        trendDeltaEl.textContent = `${Math.round(trendDir)} pts avg`;
+      } else {
+        trendDirEl.innerHTML = '<span class="text-gray-300">→ Steady</span>';
+        trendDeltaEl.textContent = 'Your style is consistent';
+      }
+    }
+
+    // If no data at all, show empty state
+    if (validScores.length === 0) {
+      ctx.fillStyle = 'rgba(255,255,255,0.15)';
+      ctx.font = '14px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Not enough data yet', W / 2, H / 2);
+      return;
+    }
+
+    const padding = { top: 20, right: 20, bottom: 30, left: 35 };
+    const chartW = W - padding.left - padding.right;
+    const chartH = H - padding.top - padding.bottom;
+
+    // Y axis range
+    const allAvgs = dayAvgs.filter(d => d.avg !== null).map(d => d.avg);
+    const minScore = Math.max(0, Math.min(...allAvgs) - 10);
+    const maxScore = Math.min(100, Math.max(...allAvgs) + 10);
+    const yRange = maxScore - minScore || 1;
+
+    // Grid lines
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= 4; i++) {
+      const y = padding.top + (chartH / 4) * i;
+      ctx.beginPath();
+      ctx.moveTo(padding.left, y);
+      ctx.lineTo(W - padding.right, y);
+      ctx.stroke();
+      // Y label
+      const val = Math.round(maxScore - (yRange / 4) * i);
+      ctx.fillStyle = 'rgba(255,255,255,0.25)';
+      ctx.font = '10px Inter, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText(val, padding.left - 6, y + 3);
+    }
+
+    // Map data to points
+    const points = dayAvgs.map((d, i) => {
+      const x = padding.left + (chartW / Math.max(1, days - 1)) * i;
+      const y = d.avg !== null
+        ? padding.top + chartH - ((d.avg - minScore) / yRange) * chartH
+        : null;
+      return { x, y, avg: d.avg, label: d.label };
+    });
+
+    // Gradient fill under line
+    const validPoints = points.filter(p => p.y !== null);
+    if (validPoints.length >= 2) {
+      const gradient = ctx.createLinearGradient(0, padding.top, 0, H - padding.bottom);
+      gradient.addColorStop(0, 'rgba(236,72,153,0.25)');
+      gradient.addColorStop(1, 'rgba(236,72,153,0.0)');
+      ctx.beginPath();
+      ctx.moveTo(validPoints[0].x, H - padding.bottom);
+      validPoints.forEach(p => ctx.lineTo(p.x, p.y));
+      ctx.lineTo(validPoints[validPoints.length - 1].x, H - padding.bottom);
+      ctx.closePath();
+      ctx.fillStyle = gradient;
+      ctx.fill();
+
+      // Line
+      ctx.beginPath();
+      ctx.moveTo(validPoints[0].x, validPoints[0].y);
+      for (let i = 1; i < validPoints.length; i++) {
+        // Smooth curve
+        const prev = validPoints[i - 1];
+        const curr = validPoints[i];
+        const cpx = (prev.x + curr.x) / 2;
+        ctx.bezierCurveTo(cpx, prev.y, cpx, curr.y, curr.x, curr.y);
+      }
+      ctx.strokeStyle = '#ec4899';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      // Data points
+      validPoints.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = '#ec4899';
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = '#fff';
+        ctx.fill();
+      });
+    } else if (validPoints.length === 1) {
+      // Single point
+      ctx.beginPath();
+      ctx.arc(validPoints[0].x, validPoints[0].y, 5, 0, Math.PI * 2);
+      ctx.fillStyle = '#ec4899';
+      ctx.fill();
+    }
+
+    // X axis labels (show every Nth label to avoid overlap)
+    const labelStep = days <= 7 ? 1 : days <= 14 ? 2 : 3;
+    points.forEach((p, i) => {
+      if (i % labelStep === 0 || i === points.length - 1) {
+        ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        ctx.font = '9px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(p.label, p.x, H - 6);
+      }
+    });
+  }
+
+  // Global toggle handler for trend range
+  window.switchTrendRange = function(days) {
+    _currentTrendRange = days;
+    // Update toggle button states
+    document.querySelectorAll('.trend-toggle-btn').forEach(btn => {
+      btn.classList.toggle('active', parseInt(btn.dataset.trendRange) === days);
+    });
+    const hist = getHistory();
+    renderTrendChart(hist, days);
+  };
 
   // ============================================================
   // New Score Calendar — month-grid with navigation
@@ -12223,7 +12702,7 @@ function onGoogleMapsLoaded() {
     if (subtitle) {
       const parts = dayKey.split('-').map(Number);
       const dateStr = new Date(parts[0], parts[1]-1, parts[2]).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
-      subtitle.innerHTML = `${dateStr} — earn <strong class="text-amber-300">+100 XP</strong>.`;
+      subtitle.innerHTML = `${dateStr} — earn <strong class="text-amber-300">+10 XP</strong>.`;
     }
     modal.classList.remove('hidden');
     if (typeof triggerHaptic === 'function') triggerHaptic('tap');
@@ -12293,7 +12772,7 @@ function onGoogleMapsLoaded() {
         // Award XP — addXP lives in a module script, so we must reach it
         // through window. typeof on a bare name would resolve to 'undefined'
         // here without the explicit window lookup.
-        if (!alreadyAwarded && typeof window.addXP === 'function') window.addXP(100);
+        if (!alreadyAwarded && typeof window.addXP === 'function') window.addXP(10);
 
         // Re-render calendar so the badge replaces the button
         try {
@@ -12309,7 +12788,7 @@ function onGoogleMapsLoaded() {
         });
 
         // Friendly toast
-        const xpPart = alreadyAwarded ? 'Vibe updated' : '+100 XP';
+        const xpPart = alreadyAwarded ? 'Vibe updated' : '+10 XP';
         const msg = successful
           ? `${xpPart} · 🍀 Lucky Outfit unlocked!`
           : `${xpPart} · vibe saved.`;
