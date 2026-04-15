@@ -7550,6 +7550,10 @@ function addXP(amount) {
     updateMissionBadge();
   } catch {}
 }
+// Module scope hides addXP/updateMissionBadge from classic <script> IIFEs
+// (e.g. the Vibe Check save handler). Expose on window so they can fire.
+window.addXP = addXP;
+window.updateMissionBadge = updateMissionBadge;
 
 function logMission() {
   try {
@@ -10137,9 +10141,15 @@ function onGoogleMapsLoaded() {
 
     if (typeof triggerHaptic === 'function') triggerHaptic('tap');
 
-    // Fill the chat input with the chip's predefined message
+    // Fill the chat input with the chip's predefined message and focus it
+    // so the user can edit, attach an image, then send manually.
     if (chatInput) {
       chatInput.value = message;
+      chatInput.focus();
+      try {
+        chatInput.setSelectionRange(message.length, message.length);
+        chatInput.dispatchEvent(new Event('input', { bubbles: true }));
+      } catch (e) {}
     }
 
     // Trigger the smooth fade-out animation on the entire container
@@ -10150,13 +10160,6 @@ function onGoogleMapsLoaded() {
       qrcContainer.removeEventListener('animationend', handler);
       qrcContainer.style.display = 'none';
     });
-
-    // Auto-submit the form to send the message through the existing pipeline
-    if (chatForm) {
-      setTimeout(function() {
-        chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
-      }, 10);
-    }
   });
 
   // Initial render
@@ -12272,8 +12275,10 @@ function onGoogleMapsLoaded() {
           }
         }
 
-        // Persist the vibe entry
+        // Persist the vibe entry — but remember if this day already had one,
+        // so we don't double-award XP for editing the same day's vibe.
         const all = _loadVibes();
+        const alreadyAwarded = !!all[_pendingVibeKey];
         all[_pendingVibeKey] = {
           vibe: _pendingVibeChoice,
           successful,
@@ -12282,8 +12287,10 @@ function onGoogleMapsLoaded() {
         };
         _saveVibes(all);
 
-        // Award XP
-        if (typeof addXP === 'function') addXP(100);
+        // Award XP — addXP lives in a module script, so we must reach it
+        // through window. typeof on a bare name would resolve to 'undefined'
+        // here without the explicit window lookup.
+        if (!alreadyAwarded && typeof window.addXP === 'function') window.addXP(100);
 
         // Re-render calendar so the badge replaces the button
         try {
@@ -12291,15 +12298,27 @@ function onGoogleMapsLoaded() {
           scorecalRender(hist);
         } catch {}
 
+        // Force the Level Progress bar to repaint after the calendar
+        // re-render and after the modal closes, in case anything above
+        // swallowed the in-line update.
+        requestAnimationFrame(() => {
+          if (typeof window.updateMissionBadge === 'function') window.updateMissionBadge();
+        });
+
         // Friendly toast
+        const xpPart = alreadyAwarded ? 'Vibe updated' : '+100 XP';
         const msg = successful
-          ? '+100 XP · 🍀 Lucky Outfit unlocked!'
-          : '+100 XP · vibe saved.';
+          ? `${xpPart} · 🍀 Lucky Outfit unlocked!`
+          : `${xpPart} · vibe saved.`;
         if (window.dsPrivacy?.showToast) window.dsPrivacy.showToast(msg);
         else if (typeof showToast === 'function') showToast(msg);
         else console.log(msg);
 
         _closeVibeCheck();
+        // Repaint once more after close, since some views re-mount on close.
+        requestAnimationFrame(() => {
+          if (typeof window.updateMissionBadge === 'function') window.updateMissionBadge();
+        });
       });
     };
     if (document.readyState === 'loading') {
