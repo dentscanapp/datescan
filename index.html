@@ -3,26 +3,6 @@
 <head>
 <meta charset="UTF-8" />
 <script>
-  // ============================================================
-  // DESKTOP REDIRECT
-  // ============================================================
-  // The DateScan app is built for mobile (Google Play distribution).
-  // Desktop visitors should land on /landing.html, which markets the
-  // Play Store download instead of trying to run the camera-based
-  // PWA on a device that won't have a good experience.
-  //
-  // Detection uses pointer + hover media queries (the most reliable
-  // signal for "this is a real desktop with a mouse"), combined with
-  // a viewport-width fallback. Mobile devices report `pointer: coarse`
-  // and `hover: none`; desktops report `pointer: fine` and `hover: hover`.
-  //
-  // Escape hatches:
-  //   • ?desktop=1 in the URL → bypass the redirect (for QA / debugging)
-  //   • localStorage.datescan.allowDesktop = '1' → permanent bypass
-  //   • Already on /landing or /landing.html → never redirect (would loop)
-  //
-  // This block runs synchronously BEFORE any other script, so it's a
-  // hard cutoff: no app code loads on desktop visits to the root URL.
   (function () {
     try {
       var path = location.pathname;
@@ -16028,6 +16008,7 @@ function onGoogleMapsLoaded() {
 })();
 </script>
 
+<script type="text/javascript" src="https://s.skimresources.com/js/301585X1789553.skimlinks.js"></script>
 
 </body>
 </html>
