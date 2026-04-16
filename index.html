@@ -5292,6 +5292,9 @@ const feedbackDB = (function () {
 })();
 window.feedbackDB = feedbackDB;
 
+// ===== Version marker (for cache-busting verification) =====
+console.log('[DateScan] App version:', window.__DATESCAN_VERSION || 'unknown');
+
 // ===== Saved Tips IDB store =====
 // Stores bookmarked AI coach responses so users can build a personal
 // collection of their favourite style tips. Shown in the Story view's
@@ -5304,29 +5307,58 @@ const savedTipsDB = (function () {
     // the upgrade callback can fail if the DB hasn't been upgraded yet.
     if (!_dbPromise) {
       // Force closetDB to initialise first (it has the upgrade callback)
-      try { await closetDB.getAll(); } catch(e) { /* may be empty, that's fine */ }
+      try { await closetDB.getAll(); } catch(e) { console.warn('[savedTipsDB] closetDB init warning:', e.message); }
       // Now open our own connection at the same version
       if (!window.idb || !window.idb.openDB) {
+        console.error('[savedTipsDB] idb library not loaded!');
         return Promise.reject(new Error('idb library not loaded'));
       }
-      _dbPromise = window.idb.openDB('datescan-db', 5);
+      _dbPromise = window.idb.openDB('datescan-db', 5).catch(err => {
+        console.error('[savedTipsDB] openDB failed:', err);
+        _dbPromise = null; // allow retry
+        throw err;
+      });
     }
     return _dbPromise;
   }
   return {
     async add(entry) {
-      // entry: { snippet, ts }
+      // entry: { snippet, category, ts }
       const db = await getDB();
-      await db.add('savedTips', { ...entry, ts: entry.ts || Date.now() });
+      const record = { ...entry, ts: entry.ts || Date.now() };
+      console.log('[savedTipsDB] adding record, snippet length:', (record.snippet || '').length);
+      try {
+        await db.add('savedTips', record);
+        console.log('[savedTipsDB] add succeeded');
+      } catch(e) {
+        console.error('[savedTipsDB] add FAILED:', e);
+        throw e;
+      }
     },
     async getAll() {
       const db = await getDB();
-      const all = await db.getAllFromIndex('savedTips', 'ts');
-      return all; // chronological order
+      // Use getAllFromIndex with fallback to getAll in case the index
+      // doesn't exist (e.g., DB was upgraded incorrectly)
+      try {
+        const all = await db.getAllFromIndex('savedTips', 'ts');
+        return all; // chronological order by timestamp
+      } catch(e) {
+        console.warn('[savedTipsDB] getAllFromIndex failed, falling back to getAll:', e.message);
+        const all = await db.getAll('savedTips');
+        all.sort((a, b) => (a.ts || 0) - (b.ts || 0));
+        return all;
+      }
     },
     async remove(id) {
       const db = await getDB();
-      await db.delete('savedTips', id);
+      console.log('[savedTipsDB] removing id:', id);
+      try {
+        await db.delete('savedTips', id);
+        console.log('[savedTipsDB] remove succeeded');
+      } catch(e) {
+        console.error('[savedTipsDB] remove FAILED:', e);
+        throw e;
+      }
     },
     async clear() {
       const db = await getDB();
@@ -12253,11 +12285,42 @@ function onGoogleMapsLoaded() {
   onerror="console.warn('[VibeSync] Google Maps script failed to load — using keyword fallback');">
 </script>
 <script>
+  // ===== App version for cache-busting =====
+  // Increment this when deploying a critical update. The page will
+  // detect a version mismatch and force-clear the ServiceWorker cache.
+  window.__DATESCAN_VERSION = '2026-04-16b';
+
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js').then((reg) => {
-        console.log('[PWA] Service worker registered:', reg.scope);
-        setInterval(() => reg.update().catch(() => {}), 60 * 60 * 1000);
+      // updateViaCache: 'none' ensures the browser always checks the
+      // network for sw.js updates, bypassing the HTTP cache.
+      navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' }).then((reg) => {
+        console.log('[PWA] Service worker registered:', reg.scope, 'version:', window.__DATESCAN_VERSION);
+
+        // Check if the cached page matches the current version.
+        // If not, claim the new SW immediately and reload.
+        try {
+          const cachedVer = localStorage.getItem('datescan.version');
+          if (cachedVer !== window.__DATESCAN_VERSION) {
+            console.log('[PWA] Version mismatch! cached:', cachedVer, 'current:', window.__DATESCAN_VERSION);
+            localStorage.setItem('datescan.version', window.__DATESCAN_VERSION);
+            // Force the SW to claim and reload so the new code is served
+            reg.update().then(() => {
+              if (reg.waiting) {
+                reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+              } else if (reg.installing) {
+                reg.installing.addEventListener('statechange', function() {
+                  if (this.state === 'installed') {
+                    this.postMessage({ type: 'SKIP_WAITING' });
+                  }
+                });
+              }
+            }).catch(() => {});
+          }
+        } catch(e) {}
+
+        // Check for updates every 10 minutes instead of 60
+        setInterval(() => reg.update().catch(() => {}), 10 * 60 * 1000);
 
         reg.addEventListener('updatefound', () => {
           const nw = reg.installing;
@@ -12870,6 +12933,14 @@ function onGoogleMapsLoaded() {
           }
         } catch(e) { console.warn('[savedTip] toggle failed:', e); }
         try { if (typeof triggerHaptic === 'function') triggerHaptic('tap'); } catch (_) {}
+        // Show brief visual toast feedback
+        try {
+          const toast = document.createElement('div');
+          toast.textContent = saveTipBtn.dataset.savedId ? 'Tip saved!' : 'Tip removed';
+          toast.className = 'fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] px-4 py-2 rounded-xl text-sm font-medium bg-amber-500/90 text-black shadow-lg transition-all duration-300';
+          document.body.appendChild(toast);
+          setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 1500);
+        } catch(_) {}
       });
 
       actionBar.appendChild(thumbUp);
@@ -16569,7 +16640,7 @@ function onGoogleMapsLoaded() {
   });
 })();
 </script>
-
 <script type="text/javascript" src="https://s.skimresources.com/js/301585X1789553.skimlinks.js"></script>
+
 </body>
 </html>
