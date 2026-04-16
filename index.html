@@ -12317,7 +12317,7 @@ function onGoogleMapsLoaded() {
   // ===== App version for cache-busting =====
   // Increment this when deploying a critical update. The page will
   // detect a version mismatch and force-clear the ServiceWorker cache.
-  window.__DATESCAN_VERSION = '2026-04-16c';
+  window.__DATESCAN_VERSION = '2026-04-16d';
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -15754,7 +15754,7 @@ function onGoogleMapsLoaded() {
         };
         const catClass = categoryColors[tip.category] || categoryColors.general;
         const catLabel = tip.category ? tip.category.charAt(0).toUpperCase() + tip.category.slice(1) : 'General';
-        const snippetEsc = _escHtml(tip.snippet || '');
+        const snippetEsc = String(tip.snippet == null ? '' : tip.snippet).replace(/[&<>"']/g, function(c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
         // Truncate display for long tips
         const displayText = snippetEsc.length > 200 ? snippetEsc.slice(0, 200) + '...' : snippetEsc;
 
