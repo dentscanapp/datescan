@@ -666,13 +666,81 @@
     border-color: rgba(236, 72, 153, 0.6);
   }
 
-  /* Chat textarea — auto-growing input field */
+  /* Chat input bar — matches premium-glass design */
+  .chat-input-bar {
+    background: rgba(9, 9, 11, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 28px;
+    padding: 6px 10px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+  .chat-input-bar:focus-within {
+    border-color: rgba(236, 72, 153, 0.4);
+    background: rgba(9, 9, 11, 0.75);
+    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.08), 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+  .chat-input-bar .chat-icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    background: transparent;
+    color: rgba(156, 163, 175, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    border: none;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .chat-input-bar .chat-icon-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(229, 231, 235, 1);
+  }
+  .chat-input-bar .chat-icon-btn:active {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .chat-input-bar .chat-send-btn {
+    background: linear-gradient(135deg, #ec4899 0%, #9333ea 100%);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);
+  }
+  .chat-input-bar .chat-send-btn:hover {
+    box-shadow: 0 4px 16px rgba(236, 72, 153, 0.45);
+  }
+  .chat-input-bar .chat-send-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  /* Missing Tailwind classes that aren't in the compiled bundle */
+  .bg-transparent { background-color: transparent !important; }
+  .border-none { border: none !important; }
+
   #coachChatInput {
     line-height: 1.5;
     -webkit-appearance: none;
+    appearance: none;
+    color: #fff !important;
+    background-color: transparent !important;
+    -webkit-text-fill-color: #fff;
+    caret-color: #f472b6;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  #coachChatInput::placeholder {
+    color: rgba(156, 163, 175, 0.6) !important;
+    -webkit-text-fill-color: rgba(156, 163, 175, 0.6);
   }
   #coachChatInput:focus {
-    box-shadow: 0 0 0 1px rgba(236, 72, 153, 0.3);
+    outline: none;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 
   /* Quick Reply Chips — occasion shortcuts above the chat input.
@@ -3144,7 +3212,7 @@
           </span>
         </p>
 
-        <div id="coachChatMessages" class="relative z-10 space-y-3 max-h-[55vh] overflow-y-auto pr-1 mb-4">
+        <div id="coachChatMessages" class="relative z-10 flex flex-col gap-3 max-h-[55vh] overflow-y-auto pr-1 mb-4">
           <div class="flex gap-2.5">
             <div class="shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-purple-500 flex items-center justify-center text-white">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.6 4.6L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.4z"/><path d="M19 14l.7 1.9 1.8.6-1.8.6L19 19l-.7-1.9-1.8-.6 1.8-.6z"/></svg>
@@ -3163,25 +3231,26 @@
           <!-- Chips are rendered by renderQuickReplyChips() in JS -->
         </div>
 
-        <form id="coachChatForm" class="relative z-10 flex flex-col gap-2">
+        <form id="coachChatForm" class="relative z-10">
           <input id="coachChatFile" type="file" accept="image/*" class="hidden" />
-          <div class="flex gap-2 items-end">
-            <textarea id="coachChatInput" autocomplete="off" placeholder="Ask me anything…" rows="1" class="flex-1 min-w-0 bg-white/5 border border-white/10 focus:border-brand-500/60 focus:bg-white/10 outline-none rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-500 transition resize-none max-h-[120px] overflow-y-auto" style="field-sizing: content;"></textarea>
-            <button id="coachChatVoiceBtn" type="button" title="Voice input" aria-label="Voice input" class="shrink-0 w-11 h-11 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 flex items-center justify-center transition">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          <div class="chat-input-bar flex items-center gap-1">
+            <!-- Left: attachment buttons -->
+            <button id="coachChatUploadBtn" type="button" title="Upload photo" aria-label="Upload photo" class="chat-icon-btn">
+              <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="m21 16-4-4-8 8"/></svg>
             </button>
-            <button id="coachChatSend" type="submit" aria-label="Send message" class="shrink-0 btn-primary w-11 h-11 rounded-xl flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>
+            <button id="coachChatClosetBtn" type="button" title="Pick from closet" aria-label="Pick from closet" class="chat-icon-btn">
+              <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
             </button>
-          </div>
-          <div class="flex items-center justify-center gap-3">
-            <button id="coachChatUploadBtn" type="button" title="Upload photo" aria-label="Upload photo" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-gray-400 hover:text-gray-300 text-xs transition">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="m21 16-4-4-8 8"/></svg>
-              <span>Photo</span>
+            <!-- Divider -->
+            <div class="w-px h-5 bg-white/10 shrink-0"></div>
+            <!-- Center: text input -->
+            <textarea id="coachChatInput" autocomplete="off" placeholder="Ask me anything…" rows="1" class="flex-1 min-w-0 bg-transparent border-none outline-none px-2 py-1.5 text-sm resize-none max-h-[120px] overflow-y-auto leading-snug" style="field-sizing: content; background-color: transparent !important; color: #fff !important; border: none !important; outline: none !important; box-shadow: none !important; -webkit-text-fill-color: #fff;"></textarea>
+            <!-- Right: action buttons -->
+            <button id="coachChatVoiceBtn" type="button" title="Voice input" aria-label="Voice input" class="chat-icon-btn">
+              <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
             </button>
-            <button id="coachChatClosetBtn" type="button" title="Pick from closet" aria-label="Pick from closet" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-gray-400 hover:text-gray-300 text-xs transition">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
-              <span>Closet</span>
+            <button id="coachChatSend" type="submit" aria-label="Send message" class="chat-icon-btn chat-send-btn">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>
             </button>
           </div>
         </form>
@@ -3391,6 +3460,34 @@
         <h3 class="font-serif text-xl font-semibold text-white mb-4 relative z-10">Timeline</h3>
         <div id="historyTimeline" class="relative z-10 space-y-3 max-h-[400px] overflow-y-auto pr-1">
           <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Mentett tippek (Saved Tips) -->
+      <div class="premium-glass rounded-[32px] p-6 sm:p-8 relative overflow-hidden mb-8">
+        <div class="absolute -top-12 -left-12 w-36 h-36 rounded-full bg-amber-500/10 mix-blend-screen filter blur-[40px] pointer-events-none"></div>
+        <div class="absolute -bottom-12 -right-12 w-28 h-28 rounded-full bg-brand-500/10 mix-blend-screen filter blur-[40px] pointer-events-none"></div>
+        <div class="relative z-10">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/20 flex items-center justify-center text-amber-400">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+              </div>
+              <div>
+                <h3 class="font-serif text-xl font-semibold text-white">Saved Tips</h3>
+                <p class="text-[11px] text-gray-400 mt-0.5">Your bookmarked style tips collection</p>
+              </div>
+            </div>
+            <span id="savedTipsCount" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/20">0</span>
+          </div>
+          <div id="savedTipsList" class="space-y-2 max-h-[360px] overflow-y-auto pr-1">
+            <!-- Populated by JS -->
+          </div>
+          <div id="savedTipsEmpty" class="hidden text-center py-8">
+            <div class="text-3xl mb-2 opacity-40">🔖</div>
+            <p class="text-sm text-gray-400">No saved tips yet</p>
+            <p class="text-[11px] text-gray-500 mt-1">Tap the bookmark button on chat responses to save tips</p>
+          </div>
         </div>
       </div>
 
@@ -3832,6 +3929,8 @@ document.addEventListener('DOMContentLoaded', function () {
         window.toggleView('history');
       }
       setTimeout(syncActive, 50);
+      // Refresh saved tips when navigating to Story
+      setTimeout(() => { if (typeof window.renderSavedTips === 'function') window.renderSavedTips(); }, 100);
     });
 
     if (paywall) {
@@ -4997,6 +5096,10 @@ try {
             } else if (typeof toggleView === 'function') {
                 toggleView(next);
             }
+            // Refresh saved tips when navigating to Story
+            if (next === 'history') {
+                setTimeout(() => { if (typeof window.renderSavedTips === 'function') window.renderSavedTips(); }, 100);
+            }
         });
     } else {
         console.warn('[nav] navStoryModeBtn not found at wire time');
@@ -5035,7 +5138,7 @@ const closetDB = (function () {
       if (!window.idb || !window.idb.openDB) {
         return Promise.reject(new Error('idb library not loaded'));
       }
-      dbPromise = window.idb.openDB('datescan-db', 4, {
+      dbPromise = window.idb.openDB('datescan-db', 5, {
         upgrade(db, oldVersion, newVersion, transaction) {
           if (!db.objectStoreNames.contains('outfits')) {
             const store = db.createObjectStore('outfits', { keyPath: 'id' });
@@ -5059,6 +5162,11 @@ const closetDB = (function () {
             if (!outfitStore.indexNames.contains('tags.season')) {
               outfitStore.createIndex('tags.season', 'tags.season');
             }
+          }
+          // v5: add saved tips store — bookmarked AI coach responses
+          if (!db.objectStoreNames.contains('savedTips')) {
+            const tipStore = db.createObjectStore('savedTips', { keyPath: 'id', autoIncrement: true });
+            tipStore.createIndex('ts', 'ts');
           }
         }
       });
@@ -5099,7 +5207,7 @@ const chatDB = (function () {
     if (!window.idb || !window.idb.openDB) {
       return Promise.reject(new Error('idb library not loaded'));
     }
-    return window.idb.openDB('datescan-db', 4);
+    return window.idb.openDB('datescan-db', 5);
   }
   return {
     async getAll() {
@@ -5129,7 +5237,7 @@ const feedbackDB = (function () {
     if (!window.idb || !window.idb.openDB) {
       return Promise.reject(new Error('idb library not loaded'));
     }
-    return window.idb.openDB('datescan-db', 4);
+    return window.idb.openDB('datescan-db', 5);
   }
   return {
     async add(entry) {
@@ -5166,6 +5274,50 @@ const feedbackDB = (function () {
   };
 })();
 window.feedbackDB = feedbackDB;
+
+// ===== Saved Tips IDB store =====
+// Stores bookmarked AI coach responses so users can build a personal
+// collection of their favourite style tips. Shown in the Story view's
+// "Saved Tips" card. Covered by the "Delete all my data" wipe.
+const savedTipsDB = (function () {
+  async function getDB() {
+    if (!window.idb || !window.idb.openDB) {
+      return Promise.reject(new Error('idb library not loaded'));
+    }
+    return window.idb.openDB('datescan-db', 5);
+  }
+  return {
+    async add(entry) {
+      // entry: { snippet, ts }
+      const db = await getDB();
+      await db.add('savedTips', { ...entry, ts: entry.ts || Date.now() });
+    },
+    async getAll() {
+      const db = await getDB();
+      const all = await db.getAllFromIndex('savedTips', 'ts');
+      return all; // chronological order
+    },
+    async remove(id) {
+      const db = await getDB();
+      await db.delete('savedTips', id);
+    },
+    async clear() {
+      const db = await getDB();
+      await db.clear('savedTips');
+    },
+    async count() {
+      const db = await getDB();
+      return (await db.getAll('savedTips')).length;
+    },
+    async findBySnippet(snippet) {
+      // Check if a tip with this exact snippet already exists
+      const db = await getDB();
+      const all = await db.getAll('savedTips');
+      return all.find(t => t.snippet === snippet) || null;
+    }
+  };
+})();
+window.savedTipsDB = savedTipsDB;
 
 // ===== On-device Lightweight Feedback Classifier =====
 // Analyzes accumulated feedback to produce rule-based adjustments
@@ -8145,9 +8297,10 @@ function applyOfflineState(isOffline) {
     }
   }
 
-  // Chat input
+  // Chat input bar — visual + functional offline state
   const chatInput = document.getElementById('coachChatInput');
   const chatSend = document.getElementById('coachChatSend');
+  const chatBar = chatInput?.closest('.chat-input-bar');
   if (chatInput) {
     if (_chatOriginalPlaceholder == null) {
       _chatOriginalPlaceholder = chatInput.placeholder || 'Ask me anything…';
@@ -8166,8 +8319,122 @@ function applyOfflineState(isOffline) {
     chatSend.disabled = isOffline;
     chatSend.title = isOffline ? OFFLINE_CHAT_PLACEHOLDER : 'Send message';
   }
+  // Dim the entire input bar when offline for clear visual feedback
+  if (chatBar) {
+    chatBar.style.opacity = isOffline ? '0.45' : '';
+    chatBar.style.pointerEvents = isOffline ? 'none' : '';
+  }
+
+  // --- In-chat offline banner & style tips ---
+  _renderOfflineChatState(isOffline);
 
   window.dispatchEvent(new CustomEvent('datescan-offline-change', { detail: { offline: isOffline } }));
+}
+
+// --- OFFLINE CHAT UX ---
+// When the user goes offline we inject a friendly banner at the top of
+// the chat messages area AND, if there's no prior conversation, show a
+// set of cached style tips so the chat panel isn't just a blank void.
+// Everything is removed when connectivity returns.
+
+const _OFFLINE_BANNER_ID = 'offlineChatBanner';
+const _OFFLINE_TIPS_ID = 'offlineStyleTips';
+
+// Curated style tips that are always available offline. These are short,
+// actionable, and rotate randomly so repeat visits feel fresh.
+const OFFLINE_STYLE_TIPS = [
+  { icon: '🎨', title: 'Color Harmony', tip: 'Stick to 2–3 colors max. Neutrals + one accent color creates a polished look without the guesswork.' },
+  { icon: '👔', title: 'Fit Over Brand', tip: 'A well-fitted basic piece always beats an ill-fitting designer item. Prioritize shoulder and waist fit.' },
+  { icon: '🧥', title: 'Layer Smart', tip: 'Start with a thin base layer, add a mid-layer for warmth, and finish with a statement outer piece.' },
+  { icon: '👟', title: 'Shoes Set the Tone', tip: 'Shoes are the first thing people notice. Clean sneakers = casual, leather loafers = smart, boots = edgy.' },
+  { icon: '⌚', title: 'Accessory Rule', tip: 'Wear one statement accessory — a watch, ring, or scarf. More than three accessories gets noisy.' },
+  { icon: '🌙', title: 'Evening Upgrade', tip: 'Swap your day sneakers for dark shoes, add a watch, and switch to a monochrome palette for instant evening vibes.' },
+  { icon: '👗', title: 'Date Night Tip', tip: 'Wear something you already feel confident in — comfort reads as confidence. Save the experiments for another night.' },
+  { icon: '🧣', title: 'Texture Mixing', tip: 'Combine different textures (denim + leather, knit + silk) for depth. Avoid matching textures head-to-toe.' },
+  { icon: '🔄', title: 'The 1/3 Rule', tip: 'Balance proportions: if your top is oversized, go slim on the bottom, and vice versa.' },
+  { icon: '🖤', title: 'All-Black Hack', tip: 'An all-black outfit works best with varying textures and slight shade differences — matte vs. gloss, charcoal vs. jet.' },
+  { icon: '👔', title: 'Collar Trick', tip: 'Popping one side of a collar or rolling sleeves to the forearm instantly makes an outfit look intentional.' },
+  { icon: '🌡️', title: 'Weather First', tip: 'No outfit looks good if you\'re shivering or sweating. Check the forecast and let comfort lead your choices.' },
+];
+
+function _renderOfflineChatState(isOffline) {
+  const messagesEl = document.getElementById('coachChatMessages');
+  if (!messagesEl) return;
+
+  // Always clean up any existing offline UI first
+  _removeOfflineUI();
+
+  if (!isOffline) return;
+
+  // 1. Insert offline banner at the top of the chat
+  const banner = document.createElement('div');
+  banner.id = _OFFLINE_BANNER_ID;
+  banner.className = 'flex items-center gap-2.5 px-4 py-3 rounded-2xl border border-amber-500/30 bg-gradient-to-r from-amber-500/10 to-amber-500/5 text-amber-300 text-xs flex-shrink-0';
+  banner.innerHTML = `
+    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18M5 12.55a11 11 0 015.17-2.39M10.71 5.05A16 16 0 0122.58 9M16.72 11.06A10 10 0 0119 12.55M8.53 16.11a6 6 0 016.95 0M12 20h.01"/></svg>
+    <div>
+      <span class="font-semibold">You're offline</span>
+      <span class="text-amber-300/70 ml-1">— chat requires internet. Browse your history and tips below.</span>
+    </div>
+  `;
+  messagesEl.insertBefore(banner, messagesEl.firstChild);
+
+  // 2. If there's no chat history (or very little), show style tips
+  //    so the panel isn't just a blank void.
+  //    We count actual chat bubble children (divs with flex layout from
+  //    addMessage()) — not the banner or tips we just inserted.
+  const chatChildren = messagesEl.children;
+  let bubbleCount = 0;
+  for (let i = 0; i < chatChildren.length; i++) {
+    const ch = chatChildren[i];
+    // Skip our own banner/tips elements
+    if (ch.id === _OFFLINE_BANNER_ID || ch.id === _OFFLINE_TIPS_ID) continue;
+    // Chat bubbles from addMessage() are flex divs with the avatar + bubble
+    if (ch.classList.contains('flex')) bubbleCount++;
+  }
+  if (bubbleCount < 2) {
+    _insertOfflineStyleTips(messagesEl);
+  }
+}
+
+function _insertOfflineStyleTips(messagesEl) {
+  // Pick 3 random tips (Fisher-Yates shuffle on a copy, then slice)
+  const shuffled = [...OFFLINE_STYLE_TIPS];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  const tips = shuffled.slice(0, 3);
+
+  const container = document.createElement('div');
+  container.id = _OFFLINE_TIPS_ID;
+  container.className = 'flex flex-col gap-2.5 flex-shrink-0';
+  container.innerHTML = `
+    <div class="flex items-center gap-2 mt-2">
+      <div class="h-px flex-1 bg-white/5"></div>
+      <span class="text-[10px] uppercase tracking-widest text-gray-500 font-medium">Style Tips · Offline</span>
+      <div class="h-px flex-1 bg-white/5"></div>
+    </div>
+    ${tips.map(t => `
+      <div class="flex gap-3 items-start rounded-2xl border border-white/5 bg-white/[0.03] px-4 py-3">
+        <span class="text-lg leading-none mt-0.5">${t.icon}</span>
+        <div class="min-w-0">
+          <div class="text-xs font-semibold text-white/90 mb-0.5">${t.title}</div>
+          <div class="text-[11px] text-gray-400 leading-relaxed">${t.tip}</div>
+        </div>
+      </div>
+    `).join('')}
+  `;
+  messagesEl.appendChild(container);
+  // Scroll to top so the user sees the offline banner
+  messagesEl.scrollTo?.({ top: 0, behavior: 'smooth' });
+}
+
+function _removeOfflineUI() {
+  const banner = document.getElementById(_OFFLINE_BANNER_ID);
+  if (banner) banner.remove();
+  const tips = document.getElementById(_OFFLINE_TIPS_ID);
+  if (tips) tips.remove();
 }
 
 window.dsIsOffline = () => !navigator.onLine;
@@ -12522,8 +12789,63 @@ function onGoogleMapsLoaded() {
         try { if (typeof triggerHaptic === 'function') triggerHaptic('tap'); } catch (_) {}
       });
 
+      // --- 💾 Save Tip ---
+      const saveTipBtn = document.createElement('button');
+      saveTipBtn.type = 'button';
+      saveTipBtn.className = 'feedback-btn save-tip text-[11px] text-gray-400 hover:text-amber-400 transition-all inline-flex items-center gap-0.5 px-1.5 py-1 rounded-md border border-white/5 hover:border-amber-500/30 hover:bg-amber-500/10';
+      saveTipBtn.setAttribute('aria-label', 'Save tip');
+      saveTipBtn.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>';
+      // Check if already saved and mark accordingly
+      (async function() {
+        try {
+          const snippet = (bubble.querySelector('.bubble-text')?.textContent || '').slice(0, 500);
+          if (snippet && window.savedTipsDB) {
+            const existing = await window.savedTipsDB.findBySnippet(snippet);
+            if (existing) {
+              saveTipBtn.dataset.savedId = existing.id;
+              saveTipBtn.classList.add('text-amber-400', 'border-amber-500/40', 'bg-amber-500/10');
+              saveTipBtn.classList.remove('text-gray-400');
+              saveTipBtn.innerHTML = '<svg class="w-3.5 h-3.5" fill="currentColor" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>';
+            }
+          }
+        } catch(e) { /* ignore */ }
+      })();
+      saveTipBtn.addEventListener('click', async function () {
+        const snippet = (bubble.querySelector('.bubble-text')?.textContent || '').slice(0, 500);
+        if (!snippet) return;
+        try {
+          if (saveTipBtn.dataset.savedId) {
+            // Un-save
+            console.log('[savedTip] removing id', saveTipBtn.dataset.savedId);
+            await window.savedTipsDB.remove(Number(saveTipBtn.dataset.savedId));
+            delete saveTipBtn.dataset.savedId;
+            saveTipBtn.classList.remove('text-amber-400', 'border-amber-500/40', 'bg-amber-500/10');
+            saveTipBtn.classList.add('text-gray-400');
+            saveTipBtn.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>';
+            // Refresh Story view if visible
+            if (typeof window.renderSavedTips === 'function') window.renderSavedTips();
+          } else {
+            // Save
+            const category = window.FeedbackClassifier?.classifyCategory?.(snippet) || 'general';
+            console.log('[savedTip] saving, category:', category, 'snippet:', snippet.slice(0, 60));
+            await window.savedTipsDB.add({ snippet, category });
+            // Find the newly added entry to store its id
+            const entry = await window.savedTipsDB.findBySnippet(snippet);
+            if (entry) saveTipBtn.dataset.savedId = entry.id;
+            console.log('[savedTip] saved with id:', entry?.id);
+            saveTipBtn.classList.add('text-amber-400', 'border-amber-500/40', 'bg-amber-500/10');
+            saveTipBtn.classList.remove('text-gray-400');
+            saveTipBtn.innerHTML = '<svg class="w-3.5 h-3.5" fill="currentColor" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>';
+            // Refresh Story view if visible
+            if (typeof window.renderSavedTips === 'function') window.renderSavedTips();
+          }
+        } catch(e) { console.warn('[savedTip] toggle failed:', e); }
+        try { if (typeof triggerHaptic === 'function') triggerHaptic('tap'); } catch (_) {}
+      });
+
       actionBar.appendChild(thumbUp);
       actionBar.appendChild(thumbDown);
+      actionBar.appendChild(saveTipBtn);
 
       // --- "Apply suggestion" button ---
       // Detects if the assistant response contains actionable advice
@@ -13028,7 +13350,7 @@ function onGoogleMapsLoaded() {
     // notice instead of letting fetch() throw a network error.
     if (window.dsIsOffline && window.dsIsOffline()) {
       const note = document.createElement('div');
-      note.className = 'mx-auto my-3 max-w-[85%] rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-center';
+      note.className = 'mx-auto max-w-[85%] rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-center flex-shrink-0';
       note.innerHTML = `
         <div class="flex items-center justify-center gap-2 text-amber-300 text-xs font-semibold mb-1">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18M5 12.55a11 11 0 015.17-2.39M10.71 5.05A16 16 0 0122.58 9M16.72 11.06A10 10 0 0119 12.55M8.53 16.11a6 6 0 016.95 0M12 20h.01"/></svg>
@@ -13078,7 +13400,7 @@ function onGoogleMapsLoaded() {
         if (!lock) {
           lock = document.createElement('div');
           lock.id = 'chatPaywallLock';
-          lock.className = 'mx-auto my-3 max-w-[85%] rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/10 to-purple-500/10 p-5 text-center flex-shrink-0';
+          lock.className = 'mx-auto max-w-[85%] rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/10 to-purple-500/10 p-5 text-center flex-shrink-0';
           lock.innerHTML = `
             <div class="w-12 h-12 mx-auto bg-gradient-to-tr from-brand-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg shadow-brand-500/20 mb-3">
               <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
@@ -15260,12 +15582,104 @@ function onGoogleMapsLoaded() {
 
   window.renderStyleDna = renderStyleDna;
 
+  // ===== Render Saved Tips in Story view =====
+  function renderSavedTips() {
+    const listEl = document.getElementById('savedTipsList');
+    const emptyEl = document.getElementById('savedTipsEmpty');
+    const countEl = document.getElementById('savedTipsCount');
+    if (!listEl || !emptyEl || !countEl) return;
+
+    if (!window.savedTipsDB) {
+      emptyEl.classList.remove('hidden');
+      listEl.innerHTML = '';
+      countEl.textContent = '0';
+      return;
+    }
+
+    window.savedTipsDB.getAll().then(tips => {
+      console.log('[savedTips] loaded', tips.length, 'tips');
+      countEl.textContent = tips.length;
+
+      if (tips.length === 0) {
+        emptyEl.classList.remove('hidden');
+        listEl.innerHTML = '';
+        return;
+      }
+
+      emptyEl.classList.add('hidden');
+
+      // Show newest first (reverse chronological)
+      const sorted = tips.slice().reverse();
+
+      listEl.innerHTML = sorted.map(tip => {
+        const date = new Date(tip.ts);
+        const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        const categoryColors = {
+          color: 'bg-pink-500/15 text-pink-400 border-pink-500/20',
+          fit: 'bg-blue-500/15 text-blue-400 border-blue-500/20',
+          grooming: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20',
+          accessory: 'bg-purple-500/15 text-purple-400 border-purple-500/20',
+          occasion: 'bg-orange-500/15 text-orange-400 border-orange-500/20',
+          confidence: 'bg-red-500/15 text-red-400 border-red-500/20',
+          general: 'bg-white/10 text-gray-300 border-white/10'
+        };
+        const catClass = categoryColors[tip.category] || categoryColors.general;
+        const catLabel = tip.category ? tip.category.charAt(0).toUpperCase() + tip.category.slice(1) : 'General';
+        const snippetEsc = _escHtml(tip.snippet || '');
+        // Truncate display for long tips
+        const displayText = snippetEsc.length > 200 ? snippetEsc.slice(0, 200) + '...' : snippetEsc;
+
+        return `
+          <div class="group flex gap-3 p-3 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-amber-500/20 transition-all">
+            <div class="flex-1 min-w-0">
+              <p class="text-sm text-gray-200 leading-relaxed break-words">${displayText}</p>
+              <div class="flex items-center gap-2 mt-2">
+                <span class="text-[10px] px-2 py-0.5 rounded-full border ${catClass}">${catLabel}</span>
+                <span class="text-[10px] text-gray-500">${dateStr}</span>
+              </div>
+            </div>
+            <button class="saved-tip-delete shrink-0 self-start w-7 h-7 rounded-lg bg-white/5 hover:bg-red-500/15 text-gray-500 hover:text-red-400 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100" data-tip-id="${tip.id}" aria-label="Delete" title="Remove">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      // Wire up delete buttons
+      listEl.querySelectorAll('.saved-tip-delete').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = Number(btn.dataset.tipId);
+          if (!id) return;
+          try {
+            await window.savedTipsDB.remove(id);
+            // Re-render
+            renderSavedTips();
+            // Also update any chat bubble save buttons that match
+            document.querySelectorAll('.save-tip[data-saved-id="' + id + '"]').forEach(sb => {
+              delete sb.dataset.savedId;
+              sb.classList.remove('text-amber-400', 'border-amber-500/40', 'bg-amber-500/10');
+              sb.classList.add('text-gray-400');
+              sb.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>';
+            });
+          } catch(e) { console.warn('[savedTip] delete failed:', e); }
+        });
+      });
+    }).catch(e => {
+      console.warn('[savedTips] render failed:', e);
+      emptyEl.classList.remove('hidden');
+      listEl.innerHTML = '';
+      countEl.textContent = '0';
+    });
+  }
+  window.renderSavedTips = renderSavedTips;
+
   // Wrap renderHistoryView so the Style Calendar refreshes too
   const _origRenderHistoryView = renderHistoryView;
   window.renderHistoryView = function() {
     _origRenderHistoryView();
     try { renderStyleCalendar(); } catch(e) { console.warn('[stylecal] render failed', e); }
     try { renderStyleDna(); }       catch(e) { console.warn('[styledna] render failed', e); }
+    try { renderSavedTips(); }      catch(e) { console.warn('[savedTips] render failed', e); }
   };
 
   // Auto-render when view becomes visible
@@ -16126,7 +16540,7 @@ function onGoogleMapsLoaded() {
   });
 })();
 </script>
-<script type="text/javascript" src="https://s.skimresources.com/js/301585X1789553.skimlinks.js"></script>
 
+<script type="text/javascript" src="https://s.skimresources.com/js/301585X1789553.skimlinks.js"></script>
 </body>
 </html>
