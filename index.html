@@ -5619,6 +5619,11 @@ window.renderCloset = function(filter = 'all', append = false) {
         return;
     }
 
+    // Apply custom drag-to-reorder ordering (sortOrder desc, fallback to date desc)
+    if (typeof window._sortByCustomOrder === 'function') {
+        filtered = window._sortByCustomOrder(filtered);
+    }
+
     if (!append) window._closetPage = 1;
     const start = append ? grid.children.length : 0;
     const end = Math.min(start + CLOSET_PAGE_SIZE, filtered.length);
@@ -5649,7 +5654,7 @@ window.renderCloset = function(filter = 'all', append = false) {
         }
         const scanTagRow = scanTagPills.length ? `<div class="flex flex-wrap gap-1 mt-1.5">${scanTagPills.join('')}</div>` : '';
         return `
-        <div class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-default relative">
+        <div data-closet-id="${outfit.id}" class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-default relative">
             <div class="aspect-[3/4] bg-black relative">
                 <img src="${outfit.image}" class="w-full h-full object-cover opacity-90 transition-opacity" alt="Saved Item" loading="lazy" />
                 ${typeBadge}
@@ -5727,6 +5732,11 @@ window.renderClosetItems = function(typeFilter = 'all', append = false) {
         return;
     }
 
+    // Apply custom drag-to-reorder ordering
+    if (typeof window._sortByCustomOrder === 'function') {
+        filtered = window._sortByCustomOrder(filtered);
+    }
+
     if (!append) window._closetItemsPage = 1;
     const start = append ? grid.children.length : 0;
     const end = Math.min(start + CLOSET_ITEMS_PAGE_SIZE, filtered.length);
@@ -5744,7 +5754,7 @@ window.renderClosetItems = function(typeFilter = 'all', append = false) {
         const tagRow = tagPills.length ? `<div class="flex flex-wrap gap-1 mt-1.5">${tagPills.join('')}</div>` : '';
 
         return `
-        <div class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-default relative">
+        <div data-closet-id="${item.id}" class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-default relative">
             <div class="aspect-[3/4] bg-black relative">
                 <img src="${item.image}" class="w-full h-full object-cover opacity-90 transition-opacity" alt="Saved Item" loading="lazy" />
                 <div class="absolute top-2 left-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-white border border-white/10 z-10">${TYPE_LABELS[item.type] || 'Item'}</div>
@@ -6030,6 +6040,215 @@ window.saveCurrentOutfit = function() {
         }
     });
 };
+
+// ============================================================
+// Closet — Drag-to-Reorder (long-press on card, works mouse + touch)
+// ============================================================
+
+// Helper used by renderCloset / renderClosetItems to apply custom order.
+// Sort by sortOrder desc (higher = earlier). Missing sortOrder falls back to date.
+window._sortByCustomOrder = function (arr) {
+  if (!Array.isArray(arr)) return arr;
+  return arr.slice().sort((a, b) => {
+    const ao = (a && typeof a.sortOrder === 'number') ? a.sortOrder : (a && a.date ? a.date : 0);
+    const bo = (b && typeof b.sortOrder === 'number') ? b.sortOrder : (b && b.date ? b.date : 0);
+    return bo - ao;
+  });
+};
+
+(function initClosetReorder() {
+  const LONG_PRESS_MS   = 320;
+  const MOVE_CANCEL_PX  = 10;
+
+  function onReady(fn) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fn, { once: true });
+    } else fn();
+  }
+
+  function findCard(el) {
+    while (el && el !== document.body) {
+      if (el.dataset && el.dataset.closetId) return el;
+      el = el.parentElement;
+    }
+    return null;
+  }
+
+  function cardUnderPoint(grid, x, y, exclude) {
+    // Temporarily hide the dragged card so elementFromPoint sees what's beneath.
+    const prevPE = exclude ? exclude.style.pointerEvents : null;
+    if (exclude) exclude.style.pointerEvents = 'none';
+    const hit = document.elementFromPoint(x, y);
+    if (exclude) exclude.style.pointerEvents = prevPE || '';
+    if (!hit) return null;
+    const c = findCard(hit);
+    if (!c || c === exclude) return null;
+    if (c.parentElement !== grid) return null;
+    return c;
+  }
+
+  async function persistOrder(grid) {
+    if (!window.closetDB || typeof window.closetDB.put !== 'function') return;
+    const cards = Array.from(grid.querySelectorAll('[data-closet-id]'));
+    if (!cards.length) return;
+
+    const base = Date.now();
+    const step = 1000;
+    const all = (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits : [];
+    const byId = new Map(all.map(o => [o && o.id, o]));
+
+    const updates = [];
+    cards.forEach((card, idx) => {
+      const id = card.dataset.closetId;
+      const item = byId.get(id);
+      if (!item) return;
+      item.sortOrder = base - (idx * step);
+      updates.push(item);
+    });
+
+    try {
+      for (const it of updates) {
+        await window.closetDB.put(it);
+      }
+      if (Array.isArray(window.userCloset && window.userCloset.outfits)) {
+        window.userCloset.outfits = window._sortByCustomOrder(window.userCloset.outfits);
+      }
+      if (window.dsPrivacy && typeof window.dsPrivacy.showToast === 'function') {
+        window.dsPrivacy.showToast('Order saved');
+      }
+    } catch (e) {
+      console.error('[closet-reorder] persist failed', e);
+    }
+  }
+
+  function enableDragOnGrid(gridId) {
+    const grid = document.getElementById(gridId);
+    if (!grid) return;
+
+    let pressTimer      = null;
+    let pressCard       = null;
+    let pressPoint      = null;
+    let dragging        = false;
+    let activePointerId = null;
+    let savedTouchAction = '';
+
+    function reset(persist) {
+      if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; }
+      if (dragging && pressCard) {
+        pressCard.classList.remove('closet-reorder-drag');
+      }
+      if (dragging) {
+        grid.style.touchAction = savedTouchAction;
+        if (persist) persistOrder(grid);
+      }
+      dragging        = false;
+      pressCard       = null;
+      pressPoint      = null;
+      activePointerId = null;
+    }
+
+    grid.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      // Ignore interactive controls inside the card
+      if (e.target.closest('button, a, input, select, textarea, [role="button"]')) return;
+      const card = findCard(e.target);
+      if (!card || card.parentElement !== grid) return;
+
+      // Block native image-drag / text selection
+      e.preventDefault();
+
+      pressCard       = card;
+      pressPoint      = { x: e.clientX, y: e.clientY };
+      activePointerId = e.pointerId;
+
+      // Mouse: start drag immediately. Touch/pen: require long-press so scroll still works.
+      if (e.pointerType === 'mouse') {
+        dragging = true;
+        savedTouchAction = grid.style.touchAction || '';
+        grid.style.touchAction = 'none';
+        try { pressCard.setPointerCapture(activePointerId); } catch (_) {}
+        pressCard.classList.add('closet-reorder-drag');
+        return;
+      }
+
+      pressTimer = setTimeout(() => {
+        if (!pressCard) return;
+        dragging = true;
+        savedTouchAction = grid.style.touchAction || '';
+        grid.style.touchAction = 'none';
+        try { pressCard.setPointerCapture(activePointerId); } catch (_) {}
+        pressCard.classList.add('closet-reorder-drag');
+        try { if (navigator.vibrate) navigator.vibrate(15); } catch (_) {}
+      }, LONG_PRESS_MS);
+    });
+
+    grid.addEventListener('pointermove', (e) => {
+      if (!pressCard || e.pointerId !== activePointerId) return;
+
+      if (!dragging) {
+        const dx = e.clientX - pressPoint.x;
+        const dy = e.clientY - pressPoint.y;
+        if (Math.hypot(dx, dy) > MOVE_CANCEL_PX) reset(false);
+        return;
+      }
+
+      e.preventDefault();
+      const target = cardUnderPoint(grid, e.clientX, e.clientY, pressCard);
+      if (target && target !== pressCard) {
+        const r = target.getBoundingClientRect();
+        const before = (e.clientY < r.top + r.height / 2);
+        if (before) grid.insertBefore(pressCard, target);
+        else        grid.insertBefore(pressCard, target.nextSibling);
+      }
+    });
+
+    const endHandler = (e) => {
+      if (!pressCard || e.pointerId !== activePointerId) return;
+      reset(true);
+    };
+    grid.addEventListener('pointerup',     endHandler);
+    grid.addEventListener('pointercancel', endHandler);
+  }
+
+  onReady(() => {
+    if (!document.getElementById('closet-reorder-styles')) {
+      const s = document.createElement('style');
+      s.id = 'closet-reorder-styles';
+      s.textContent = `
+        #closetGrid [data-closet-id],
+        #closetItemsGrid [data-closet-id] {
+          cursor: grab;
+          touch-action: pan-y;
+          user-select: none;
+          -webkit-user-select: none;
+          transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
+        }
+        #closetGrid [data-closet-id] img,
+        #closetItemsGrid [data-closet-id] img {
+          -webkit-user-drag: none;
+          user-drag: none;
+          pointer-events: none;
+        }
+        #closetGrid [data-closet-id]:active,
+        #closetItemsGrid [data-closet-id]:active {
+          cursor: grabbing;
+        }
+        .closet-reorder-drag {
+          transform: scale(1.04);
+          box-shadow: 0 20px 50px -10px rgba(0,0,0,.7), 0 0 0 2px rgba(99,102,241,.55);
+          opacity: .92;
+          z-index: 30;
+          position: relative;
+        }
+      `;
+      document.head.appendChild(s);
+    }
+    setTimeout(() => {
+      enableDragOnGrid('closetGrid');
+      enableDragOnGrid('closetItemsGrid');
+    }, 200);
+  });
+})();
 
 // ============================================================
 // Closet — Export / Import (Backup & Restore)
