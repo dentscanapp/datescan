@@ -136,6 +136,19 @@
   }
   .btn-ghost:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.22); }
 
+  /* Google Play badge */
+  .google-play-badge {
+    transition: transform .15s ease, filter .15s ease, opacity .15s ease;
+    opacity: 0.9;
+    border-radius: 10px;
+  }
+  .google-play-badge:hover {
+    transform: translateY(-1px);
+    opacity: 1;
+    filter: drop-shadow(0 4px 16px rgba(236,72,153,0.25));
+  }
+  .google-play-badge:active { transform: translateY(0); }
+
   @keyframes floatUp {
     from { opacity: 0; transform: translateY(16px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -266,7 +279,7 @@
       <a href="#privacy" class="hover:text-white transition">Privacy</a>
       <a href="#faq" class="hover:text-white transition">FAQ</a>
     </nav>
-    <a href="/index.html" class="btn-primary text-xs sm:text-sm font-bold px-4 sm:px-5 py-2.5 rounded-full">Open the app →</a>
+    <a href="https://play.google.com/store/apps/details?id=app.datescan.twa" target="_blank" rel="noopener noreferrer" class="btn-primary text-xs sm:text-sm font-bold px-4 sm:px-5 py-2.5 rounded-full">Open the app →</a>
   </div>
 </header>
 
@@ -287,7 +300,7 @@
         It scans your outfit, grooming, posture and lighting in five seconds — and tells you exactly
         what to fix. Everything runs on your phone. Nothing is uploaded.
       </p>
-      <div class="flex flex-wrap items-center gap-4 mb-8">
+      <div class="flex flex-wrap items-center gap-4 mb-5">
         <a href="/index.html?action=scan" class="btn-primary text-base font-bold px-7 py-4 rounded-2xl inline-flex items-center gap-3">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V6a2 2 0 0 1 2-2h2"/><path d="M16 4h2a2 2 0 0 1 2 2v2"/><path d="M20 16v2a2 2 0 0 1-2 2h-2"/><path d="M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="11" r="2.4"/><path d="M8 17c1-1.5 2.4-2.3 4-2.3s3 .8 4 2.3"/></svg>
           Scan me now
@@ -295,6 +308,12 @@
         <a href="#how" class="btn-ghost text-sm font-semibold px-6 py-4 rounded-2xl inline-flex items-center gap-2">
           See how it works
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+      <!-- Google Play badge -->
+      <div class="mb-8">
+        <a href="https://play.google.com/store/apps/details?id=app.datescan.twa" target="_blank" rel="noopener noreferrer" class="google-play-badge inline-block">
+          <img src="GetItOnGooglePlay_Badge_Web_color_English.svg" alt="Get it on Google Play" style="height: 52px; width: auto;">
         </a>
       </div>
       <div class="flex items-center gap-6 text-xs text-gray-500">
@@ -570,13 +589,18 @@
     <h2 class="font-serif text-4xl sm:text-6xl font-medium tracking-tight mb-6">
       Walk in like you <span class="italic grad-text">own the place</span>.
     </h2>
-    <p class="text-gray-400 text-base sm:text-lg max-w-xl mx-auto mb-10">
-      Five seconds. One camera. Zero excuses. Open DateScan in your browser and get your first action plan now.
+    <p class="text-gray-400 text-base sm:text-lg max-w-xl mx-auto mb-8">
+      Five seconds. One camera. Zero excuses. Download DateScan from Google Play and get your first action plan now.
     </p>
-    <a href="/index.html?action=scan" class="btn-primary inline-flex items-center gap-3 text-base font-bold px-8 py-4 rounded-2xl">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V6a2 2 0 0 1 2-2h2"/><path d="M16 4h2a2 2 0 0 1 2 2v2"/><path d="M20 16v2a2 2 0 0 1-2 2h-2"/><path d="M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="11" r="2.4"/><path d="M8 17c1-1.5 2.4-2.3 4-2.3s3 .8 4 2.3"/></svg>
-      Open the app
-    </a>
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4">
+      <a href="https://play.google.com/store/apps/details?id=app.datescan.twa" target="_blank" rel="noopener noreferrer" class="btn-primary inline-flex items-center gap-3 text-base font-bold px-8 py-4 rounded-2xl">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V6a2 2 0 0 1 2-2h2"/><path d="M16 4h2a2 2 0 0 1 2 2v2"/><path d="M20 16v2a2 2 0 0 1-2 2h-2"/><path d="M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="11" r="2.4"/><path d="M8 17c1-1.5 2.4-2.3 4-2.3s3 .8 4 2.3"/></svg>
+        Open the app
+      </a>
+      <a href="https://play.google.com/store/apps/details?id=app.datescan.twa" target="_blank" rel="noopener noreferrer" class="google-play-badge inline-block">
+        <img src="GetItOnGooglePlay_Badge_Web_color_English.svg" alt="Get it on Google Play" style="height: 52px; width: auto;">
+      </a>
+    </div>
   </div>
 </section>
 
@@ -618,6 +642,11 @@
         <div class="inline-flex items-center gap-2 text-[10px] text-gray-500 px-3 py-1.5 rounded-full border border-white/10 bg-white/5">
           <svg class="w-3 h-3 text-brand-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
           <span>Camera scans run on-device</span>
+        </div>
+        <div class="mt-4">
+          <a href="https://play.google.com/store/apps/details?id=app.datescan.twa" target="_blank" rel="noopener noreferrer" class="google-play-badge inline-block">
+            <img src="GetItOnGooglePlay_Badge_Web_color_English.svg" alt="Get it on Google Play" style="height: 44px; width: auto;">
+          </a>
         </div>
       </div>
 
