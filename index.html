@@ -227,6 +227,27 @@
     }
   }
 
+  /* Voice input button — recording state */
+  @keyframes voice-pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.55), 0 0 12px rgba(239, 68, 68, 0.45);
+      border-color: rgba(239, 68, 68, 0.85);
+    }
+    50% {
+      box-shadow: 0 0 0 6px rgba(239, 68, 68, 0), 0 0 20px rgba(239, 68, 68, 0.75);
+      border-color: rgba(239, 68, 68, 1);
+    }
+  }
+  #coachChatVoiceBtn.is-recording {
+    background-color: rgba(239, 68, 68, 0.18) !important;
+    color: #fecaca !important;
+    border-color: rgba(239, 68, 68, 0.85) !important;
+    animation: voice-pulse-glow 1.4s ease-in-out infinite;
+  }
+  #coachChatVoiceBtn.is-recording svg {
+    color: #fca5a5;
+  }
+
   /* Closet category picker — selected state (sticky) */
   .closet-cat-opt.is-selected {
     background-color: rgba(236, 72, 153, 0.28) !important;
@@ -1858,12 +1879,133 @@
   </div>
 </div>
 
+<!-- Voice Input Consent Modal (Google Play requirement — explain before permission) -->
+<div id="dsc-voice" class="ds-consent" role="dialog" aria-modal="true" aria-labelledby="dsc-voice-title" hidden>
+  <div class="dsc-card">
+    <div class="dsc-icon">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="9" y="2" width="6" height="12" rx="3"/>
+        <path d="M5 10v2a7 7 0 0 0 14 0v-2"/>
+        <line x1="12" y1="19" x2="12" y2="22"/>
+        <line x1="8" y1="22" x2="16" y2="22"/>
+      </svg>
+    </div>
+    <h2 id="dsc-voice-title">Enable voice input</h2>
+    <p class="dsc-lede">The app needs microphone access to convert your voice into text for the Style Coach chat.</p>
+    <ul class="dsc-list">
+      <li class="dsc-good">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><strong>Only while you hold the mic button.</strong> The microphone turns on when you tap the mic icon and stops as soon as recognition ends or you tap again.</span>
+      </li>
+      <li class="dsc-good">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><strong>Used only for speech-to-text.</strong> Your voice is transcribed into the chat input. We do not store or upload audio recordings.</span>
+      </li>
+      <li class="dsc-good">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><strong>You're in control.</strong> You can revoke microphone permission at any time in your browser settings.</span>
+      </li>
+      <li class="dsc-bad">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span><strong>Note:</strong> Speech recognition is processed by your browser's built-in Web Speech API, which may send audio to your browser vendor (e.g. Google, Apple) for transcription.</span>
+      </li>
+    </ul>
+    <div class="dsc-actions">
+      <button type="button" class="dsc-primary" id="dsc-voice-yes">Allow microphone</button>
+      <button type="button" class="dsc-secondary" id="dsc-voice-no">Not now</button>
+    </div>
+    <p class="dsc-fineprint">
+      See our <a href="/privacy.html">Privacy Policy</a> and <a href="/terms.html">Terms of Service</a> for full details.
+    </p>
+  </div>
+</div>
+
+<!-- Notification Consent Modal (Date Prep — Google Play requirement) -->
+<div id="dsc-notif" class="ds-consent" role="dialog" aria-modal="true" aria-labelledby="dsc-notif-title" hidden>
+  <div class="dsc-card">
+    <div class="dsc-icon">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <h2 id="dsc-notif-title">Enable date reminders</h2>
+    <p class="dsc-lede">The app needs notification permission to send you timely prep reminders before your date.</p>
+    <ul class="dsc-list">
+      <li class="dsc-good">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><strong>Only for your countdown.</strong> Notifications are sent for the date you set — outfit prep, grooming, leave-time reminders. Nothing else.</span>
+      </li>
+      <li class="dsc-good">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><strong>No marketing, no spam.</strong> We never use notifications for ads, promotions or engagement pings.</span>
+      </li>
+      <li class="dsc-good">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><strong>You're in control.</strong> Cancel the countdown any time, or revoke notification permission in your browser settings.</span>
+      </li>
+      <li class="dsc-bad">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span><strong>Optional:</strong> The countdown works without notifications — you just won't get push reminders when the app is closed.</span>
+      </li>
+    </ul>
+    <div class="dsc-actions">
+      <button type="button" class="dsc-primary" id="dsc-notif-yes">Allow notifications</button>
+      <button type="button" class="dsc-secondary" id="dsc-notif-no">Not now</button>
+    </div>
+    <p class="dsc-fineprint">
+      See our <a href="/privacy.html">Privacy Policy</a> and <a href="/terms.html">Terms of Service</a> for full details.
+    </p>
+  </div>
+</div>
+
+<!-- Location Consent Modal (Tonight's Forecast — Google Play requirement) -->
+<div id="dsc-loc" class="ds-consent" role="dialog" aria-modal="true" aria-labelledby="dsc-loc-title" hidden>
+  <div class="dsc-card">
+    <div class="dsc-icon">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+        <circle cx="12" cy="10" r="3"/>
+      </svg>
+    </div>
+    <h2 id="dsc-loc-title">Enable location for weather</h2>
+    <p class="dsc-lede">The app needs your location to fetch tonight's local forecast and tailor your outfit advice.</p>
+    <ul class="dsc-list">
+      <li class="dsc-good">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><strong>One-time lookup.</strong> Your coordinates are used once to fetch the forecast from Open-Meteo. Location is not tracked in the background.</span>
+      </li>
+      <li class="dsc-good">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><strong>Stored on your device only.</strong> The weather response is cached locally for up to 10 minutes so you don't drain battery on repeat lookups.</span>
+      </li>
+      <li class="dsc-good">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><strong>You're in control.</strong> Revoke location permission in your browser settings at any time. You can still use the rest of the app without it.</span>
+      </li>
+      <li class="dsc-bad">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span><strong>Note:</strong> Your coordinates are sent to Open-Meteo's public forecast API (no account, no tracking) to return the weather for your area.</span>
+      </li>
+    </ul>
+    <div class="dsc-actions">
+      <button type="button" class="dsc-primary" id="dsc-loc-yes">Allow location</button>
+      <button type="button" class="dsc-secondary" id="dsc-loc-no">Not now</button>
+    </div>
+    <p class="dsc-fineprint">
+      See our <a href="/privacy.html">Privacy Policy</a> and <a href="/terms.html">Terms of Service</a> for full details.
+    </p>
+  </div>
+</div>
+
 <script>
 (function () {
   // ----- Storage keys -----
   var AGE_KEY    = 'datescan_age_ack_v1';
   var CAM_KEY    = 'datescan_camera_ack_v1';
   var UP_KEY     = 'datescan_upload_ack_v1';
+  var NOTIF_KEY  = 'datescan_notif_ack_v1';
+  var LOC_KEY    = 'datescan_location_ack_v1';
   var UNDER18_REDIRECT = 'https://www.google.com/';
 
   function uuid() {
@@ -1892,7 +2034,9 @@
   function dscUnlock() {
     var c = document.getElementById('dsc-camera');
     var u = document.getElementById('dsc-upload');
-    if ((!c || c.hidden) && (!u || u.hidden)) {
+    var n = document.getElementById('dsc-notif');
+    var l = document.getElementById('dsc-loc');
+    if ((!c || c.hidden) && (!u || u.hidden) && (!n || n.hidden) && (!l || l.hidden)) {
       document.body.classList.remove('dsc-locked');
     }
   }
@@ -1992,15 +2136,69 @@
     });
   }
 
+  // ===== NOTIFICATION CONSENT (Date Prep — Google Play requirement) =====
+  function requireNotification() {
+    return new Promise(function (resolve) {
+      // Already confirmed on this device, or already granted/denied by browser → skip
+      if (alreadyAck(NOTIF_KEY)) { resolve(true); return; }
+      if (!('Notification' in window) || Notification.permission !== 'default') {
+        resolve(true); return;
+      }
+      var modal = document.getElementById('dsc-notif');
+      var yes   = document.getElementById('dsc-notif-yes');
+      var no    = document.getElementById('dsc-notif-no');
+      if (!modal || !yes || !no) { resolve(true); return; }
+      modal.hidden = false;
+      dscLock();
+      function cleanup() {
+        yes.removeEventListener('click', onYes);
+        no.removeEventListener('click', onNo);
+        modal.hidden = true;
+        dscUnlock();
+      }
+      function onYes() { storeAck(NOTIF_KEY); cleanup(); resolve(true); }
+      function onNo()  { cleanup(); resolve(false); }
+      yes.addEventListener('click', onYes);
+      no.addEventListener('click', onNo);
+    });
+  }
+
+  // ===== LOCATION CONSENT (Tonight's Forecast — Google Play requirement) =====
+  function requireLocation() {
+    return new Promise(function (resolve) {
+      if (alreadyAck(LOC_KEY)) { resolve(true); return; }
+      var modal = document.getElementById('dsc-loc');
+      var yes   = document.getElementById('dsc-loc-yes');
+      var no    = document.getElementById('dsc-loc-no');
+      if (!modal || !yes || !no) { resolve(true); return; }
+      modal.hidden = false;
+      dscLock();
+      function cleanup() {
+        yes.removeEventListener('click', onYes);
+        no.removeEventListener('click', onNo);
+        modal.hidden = true;
+        dscUnlock();
+      }
+      function onYes() { storeAck(LOC_KEY); cleanup(); resolve(true); }
+      function onNo()  { cleanup(); resolve(false); }
+      yes.addEventListener('click', onYes);
+      no.addEventListener('click', onNo);
+    });
+  }
+
   // ----- Public API -----
   window.DateScanConsent = {
     requireCamera: requireCamera,
     requireUpload: requireUpload,
+    requireNotification: requireNotification,
+    requireLocation: requireLocation,
     reset: function () {
       try {
         localStorage.removeItem(AGE_KEY);
         localStorage.removeItem(CAM_KEY);
         localStorage.removeItem(UP_KEY);
+        localStorage.removeItem(NOTIF_KEY);
+        localStorage.removeItem(LOC_KEY);
       } catch (e) {}
     },
     hasAgeAck:    function () { return alreadyAck(AGE_KEY); },
@@ -3174,6 +3372,9 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
           </button>
           <input id="coachChatInput" type="text" autocomplete="off" placeholder="Ask me anything…" class="flex-1 min-w-0 bg-white/5 border border-white/10 focus:border-brand-500/60 focus:bg-white/10 outline-none rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-500 transition" />
+          <button id="coachChatVoiceBtn" type="button" title="Voice input" aria-label="Voice input" class="shrink-0 w-11 h-11 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 flex items-center justify-center transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>
+          </button>
           <button id="coachChatSend" type="submit" aria-label="Send message" class="shrink-0 btn-primary w-11 h-11 rounded-xl flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>
           </button>
@@ -8439,16 +8640,25 @@ function updateDateTimerUI() {
   dateTimerInterval = setInterval(tick, 1000);
 }
 
-$('startDateTimerBtn').addEventListener('click', () => {
+$('startDateTimerBtn').addEventListener('click', async () => {
   const val = $('dateTimerInput').value;
   if (!val) return alert("Please select a date and time!");
   const targetDate = new Date(val);
   if (targetDate < new Date()) return alert("The date must be in the future!");
 
   localStorage.setItem('datescan.date_timer', targetDate.toISOString());
-  
+
+  // Google requirement: show in-app explanation before permission prompt.
+  // Only ask once per device; and only if permission is still in "default" state.
   if ("Notification" in window && Notification.permission === "default") {
-    Notification.requestPermission();
+    let ok = true;
+    if (window.DateScanConsent && typeof window.DateScanConsent.requireNotification === 'function') {
+      try { ok = await window.DateScanConsent.requireNotification(); }
+      catch (e) { ok = false; }
+    }
+    if (ok) {
+      try { Notification.requestPermission(); } catch (e) {}
+    }
   }
 
   triggerHaptic('success');
@@ -10748,8 +10958,16 @@ window.addEventListener('online', () => {
   }
 });
 
-document.addEventListener('click', (e) => {
+document.addEventListener('click', async (e) => {
   if (e.target && e.target.closest && e.target.closest('#weatherEnableBtn')) {
+    // Google requirement: show in-app explanation before geolocation prompt.
+    // Only the first time on this device — after that, start directly.
+    let ok = true;
+    if (window.DateScanConsent && typeof window.DateScanConsent.requireLocation === 'function') {
+      try { ok = await window.DateScanConsent.requireLocation(); }
+      catch (err) { ok = false; }
+    }
+    if (!ok) return;
     loadWeather(true);
   }
 });
@@ -16433,5 +16651,178 @@ function onGoogleMapsLoaded() {
 </script>
 
 
+<!-- Voice-to-Text (Web Speech API) for coach chat -->
+<script>
+(function () {
+  'use strict';
+
+  var VOICE_CONSENT_KEY = 'datescan_voice_ack_v1';
+
+  function hasVoiceConsent() {
+    try {
+      var raw = localStorage.getItem(VOICE_CONSENT_KEY);
+      if (!raw) return false;
+      var p = JSON.parse(raw);
+      return p && p.confirmed === true;
+    } catch (e) { return false; }
+  }
+  function storeVoiceConsent() {
+    try {
+      localStorage.setItem(VOICE_CONSENT_KEY, JSON.stringify({
+        confirmed: true,
+        ts: new Date().toISOString(),
+        v: 1
+      }));
+    } catch (e) {}
+  }
+
+  function showVoiceConsent() {
+    return new Promise(function (resolve) {
+      var modal = document.getElementById('dsc-voice');
+      var yes   = document.getElementById('dsc-voice-yes');
+      var no    = document.getElementById('dsc-voice-no');
+      if (!modal || !yes || !no) { resolve(false); return; }
+
+      modal.hidden = false;
+      document.body.classList.add('dsc-locked');
+
+      function cleanup(answer) {
+        modal.hidden = true;
+        // Only release scroll-lock if no other consent modals are open
+        var c = document.getElementById('dsc-camera');
+        var u = document.getElementById('dsc-upload');
+        if ((!c || c.hidden) && (!u || u.hidden)) {
+          document.body.classList.remove('dsc-locked');
+        }
+        yes.removeEventListener('click', onYes);
+        no.removeEventListener('click', onNo);
+        resolve(answer);
+      }
+      function onYes() { storeVoiceConsent(); cleanup(true); }
+      function onNo()  { cleanup(false); }
+
+      yes.addEventListener('click', onYes);
+      no.addEventListener('click', onNo);
+    });
+  }
+
+  function initVoiceInput() {
+    var btn = document.getElementById('coachChatVoiceBtn');
+    var input = document.getElementById('coachChatInput');
+    if (!btn || !input) return;
+
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    // Graceful fallback — API not supported
+    if (!SR) {
+      btn.disabled = true;
+      btn.title = 'Voice input not supported in this browser';
+      btn.setAttribute('aria-label', 'Voice input not supported');
+      btn.style.opacity = '0.4';
+      btn.style.cursor = 'not-allowed';
+      btn.addEventListener('click', function () {
+        alert('Voice input is not supported in this browser. Try Chrome, Edge, or Safari.');
+      });
+      return;
+    }
+
+    var recognition = new SR();
+    recognition.lang = 'en-US';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    var isRecording = false;
+
+    function setRecordingState(on) {
+      isRecording = on;
+      btn.classList.toggle('is-recording', on);
+      btn.title = on ? 'Stop recording' : 'Voice input';
+      btn.setAttribute('aria-label', on ? 'Stop recording' : 'Voice input');
+    }
+
+    function startRecognition() {
+      try {
+        recognition.start();
+      } catch (err) {
+        console.warn('SpeechRecognition start failed:', err);
+        setRecordingState(false);
+      }
+    }
+
+    btn.addEventListener('click', async function () {
+      if (isRecording) {
+        try { recognition.stop(); } catch (e) {}
+        return;
+      }
+
+      // Google requirement: show in-app explanation before permission prompt.
+      // Only show the consent modal the first time; after that, start directly.
+      if (!hasVoiceConsent()) {
+        var ok = await showVoiceConsent();
+        if (!ok) return; // user declined
+      }
+
+      startRecognition();
+    });
+
+    recognition.addEventListener('start', function () {
+      setRecordingState(true);
+    });
+
+    recognition.addEventListener('result', function (event) {
+      var transcript = '';
+      for (var i = event.resultIndex; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript;
+      }
+      transcript = transcript.trim();
+      if (!transcript) return;
+
+      var current = (input.value || '').trim();
+      input.value = current ? (current + ' ' + transcript) : transcript;
+
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.focus();
+    });
+
+    recognition.addEventListener('error', function (event) {
+      setRecordingState(false);
+      var msg;
+      switch (event.error) {
+        case 'not-allowed':
+        case 'service-not-allowed':
+          msg = 'Microphone permission denied. Please allow microphone access in your browser settings.';
+          break;
+        case 'no-speech':
+          msg = 'No speech detected. Please try again.';
+          break;
+        case 'audio-capture':
+          msg = 'No microphone found. Please connect a microphone and try again.';
+          break;
+        case 'network':
+          msg = 'Network error during speech recognition.';
+          break;
+        case 'aborted':
+          return;
+        default:
+          msg = 'Voice input error: ' + event.error;
+      }
+      console.warn('SpeechRecognition error:', event.error);
+      alert(msg);
+    });
+
+    recognition.addEventListener('end', function () {
+      setRecordingState(false);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initVoiceInput);
+  } else {
+    initVoiceInput();
+  }
+})();
+</script>
+<script type="text/javascript" src="https://s.skimresources.com/js/301585X1789553.skimlinks.js"></script>
 </body>
 </html>
