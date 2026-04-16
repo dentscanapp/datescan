@@ -2422,53 +2422,134 @@
                 <span class="italic bg-gradient-to-r from-brand-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">Instant perception.</span>
               </h2>
               <p class="text-xs sm:text-sm text-gray-400 leading-relaxed max-w-md mx-auto">
-                One image. Four stages. Lightning fast.<br>The AI reads your style —<br>no history needed.
+                One image. Four stages. Lightning fast.<br>The AI reads your style — no history needed.
               </p>
             </div>
 
             <!-- ============ STATE: IDLE (no camera yet) ============ -->
             <div id="vai-state-idle" class="relative z-10 text-center pt-2">
-              <div class="w-14 h-14 mx-auto bg-gradient-to-tr from-brand-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg shadow-brand-500/30 mb-4">
-                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.823-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.823 1.316z"/>
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/>
-                </svg>
+
+              <!-- Dormant "Magic Mirror" — ornate ring, reflective glass, drifting shine -->
+              <div class="relative mx-auto mb-6" style="width: min(200px, 55vw);">
+                <!-- Breathing outer halo -->
+                <div class="vai-ring-halo absolute -inset-5 rounded-full bg-gradient-to-tr from-brand-500/40 via-pink-500/30 to-purple-500/40 blur-2xl pointer-events-none"></div>
+
+                <!-- Outer gradient ring — the "frame" of the mirror -->
+                <div class="relative rounded-full bg-gradient-to-br from-brand-400 via-pink-500 to-purple-500 p-[2px] shadow-[0_0_40px_rgba(236,72,153,0.35)]" style="aspect-ratio: 1/1;">
+                  <!-- Inner dark bevel -->
+                  <div class="relative w-full h-full rounded-full bg-gradient-to-br from-zinc-900 via-zinc-950 to-black p-[3px]">
+                    <!-- The mirror glass itself -->
+                    <div class="relative w-full h-full rounded-full overflow-hidden bg-gradient-to-br from-zinc-900 via-black to-zinc-950 flex items-center justify-center">
+
+                      <!-- Rotating conic sheen (simulated reflection) -->
+                      <div class="absolute inset-0 vai-mirror-conic pointer-events-none rounded-full"></div>
+
+                      <!-- Static diagonal glass highlight -->
+                      <div class="absolute inset-0 vai-mirror-sheen pointer-events-none rounded-full"></div>
+
+                      <!-- Drifting specular spot -->
+                      <div class="absolute w-20 h-20 rounded-full bg-white/20 blur-2xl vai-spec-drift pointer-events-none"></div>
+
+                      <!-- Tinted color wash (brand gradient undertone) -->
+                      <div class="absolute inset-0 rounded-full pointer-events-none" style="background: radial-gradient(circle at 30% 30%, rgba(244,114,182,0.12), transparent 60%), radial-gradient(circle at 70% 70%, rgba(168,85,247,0.12), transparent 60%);"></div>
+
+                      <!-- Hand-mirror icon (centered, softly glowing) -->
+                      <svg class="w-10 h-10 text-white relative z-10 drop-shadow-[0_0_10px_rgba(236,72,153,0.5)]" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+                        <!-- Oval mirror frame -->
+                        <ellipse cx="12" cy="9" rx="7" ry="8"/>
+                        <!-- Inner reflection curl (hints at shine) -->
+                        <path d="M8.5 5.5a5 6 0 0 0 -2 4" opacity="0.55"/>
+                        <!-- Handle stem -->
+                        <path d="M12 17v4"/>
+                        <!-- Handle base -->
+                        <path d="M9.5 21h5"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
               </div>
-              <h3 class="font-serif text-xl font-semibold text-white mb-1">Open the Magic Mirror</h3>
-              <p class="text-xs text-gray-400 mb-5 max-w-xs mx-auto leading-relaxed">Your camera stays on your device. Nothing uploads, nothing leaves.</p>
-              <button id="vai-open-mirror-btn" type="button" class="btn-primary px-7 py-3 rounded-2xl text-sm font-bold shadow-xl shadow-brand-500/20 inline-flex items-center gap-2">
-                Open Mirror
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5-5 5M6 12h12"/></svg>
-              </button>
+
+              <!-- Small tracked label (mirrors the "FIRST VIBE INFERENCE ENGINE" header) -->
+              <div class="flex items-center justify-center gap-3 mb-3">
+                <span class="h-px w-5 bg-brand-500/50"></span>
+                <span class="text-[9px] uppercase tracking-[0.22em] text-brand-400/90 font-bold">Step 01 · Begin</span>
+                <span class="h-px w-5 bg-brand-500/50"></span>
+              </div>
+
+              <!-- Serif title, italic gradient accent echoing "Instant perception." -->
+              <h3 class="font-serif text-2xl font-medium text-white mb-2 tracking-tight leading-tight">
+                Gaze into the <span class="italic bg-gradient-to-r from-brand-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">Magic&nbsp;Mirror</span>
+              </h3>
+
+              <!-- Evocative one-liner in the page's serif italic voice -->
+              <p class="font-serif italic text-[13px] text-gray-400 mb-5 max-w-xs mx-auto leading-relaxed">
+                It reflects more than your face — it reads your vibe.
+              </p>
+
+              <!-- Privacy badge pill (matches "Origin Vibe" pill language) -->
+              <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/10 mb-6">
+                <span class="relative flex w-1.5 h-1.5">
+                  <span class="absolute inset-0 rounded-full bg-brand-400 animate-ping opacity-60"></span>
+                  <span class="relative w-1.5 h-1.5 rounded-full bg-brand-400 shadow-[0_0_6px_rgba(244,114,182,0.9)]"></span>
+                </span>
+                <span class="text-[10px] text-gray-300 font-medium tracking-wide">100% on-device · Nothing uploads</span>
+              </div>
+
+              <div>
+                <button id="vai-open-mirror-btn" type="button" class="btn-primary px-8 py-3.5 rounded-2xl text-sm font-bold shadow-xl shadow-brand-500/30 inline-flex items-center gap-2.5 group">
+                  <span class="w-1.5 h-1.5 rounded-full bg-white/90 animate-pulse"></span>
+                  Awaken the Mirror
+                  <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5-5 5M6 12h12"/></svg>
+                </button>
+              </div>
+
+              <!-- Footer micro-copy (matches "AI-GENERATED PERCEPTION · VISUAL ANALYSIS" pattern) -->
+              <p class="mt-5 text-[9px] uppercase tracking-[0.2em] text-gray-600 font-semibold">
+                Private · Instant · No account
+              </p>
             </div>
 
             <!-- ============ STATE: MIRROR (live camera) ============ -->
             <div id="vai-state-mirror" class="relative z-10 hidden">
-              <div class="relative rounded-2xl overflow-hidden bg-black border border-white/10 shadow-2xl shadow-black/50">
-                <video id="vai-webcam" autoplay playsinline muted class="w-full block" style="aspect-ratio: 1/1; object-fit: cover; transform: scaleX(-1);"></video>
+              <!-- Circular Magic Mirror viewport -->
+              <div class="relative mx-auto" style="width: min(320px, 85vw);">
+                <!-- Breathing enchanted halo -->
+                <div class="vai-ring-halo absolute -inset-6 rounded-full bg-gradient-to-tr from-brand-500/40 via-pink-500/30 to-purple-500/40 blur-3xl pointer-events-none"></div>
 
-                <!-- Frame guides (decorative corners) -->
-                <div class="absolute inset-3 pointer-events-none">
-                  <div class="absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-brand-400/80 rounded-tl-lg"></div>
-                  <div class="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-brand-400/80 rounded-tr-lg"></div>
-                  <div class="absolute bottom-0 left-0 w-6 h-6 border-b-2 border-l-2 border-brand-400/80 rounded-bl-lg"></div>
-                  <div class="absolute bottom-0 right-0 w-6 h-6 border-b-2 border-r-2 border-brand-400/80 rounded-br-lg"></div>
-                </div>
+                <!-- Outer gradient frame -->
+                <div class="relative rounded-full bg-gradient-to-br from-brand-400 via-pink-500 to-purple-500 p-[3px] shadow-[0_0_60px_rgba(236,72,153,0.4)]" style="aspect-ratio: 1/1;">
+                  <!-- Inner dark bevel -->
+                  <div class="relative w-full h-full rounded-full bg-black p-[2px]">
+                    <!-- Glass surface holding the live video -->
+                    <div class="relative w-full h-full rounded-full overflow-hidden bg-black">
+                      <video id="vai-webcam" autoplay playsinline muted class="w-full h-full block" style="aspect-ratio: 1/1; object-fit: cover; transform: scaleX(-1);"></video>
 
-                <!-- Status pill (top-left) -->
-                <div class="absolute top-3 left-3 flex items-center gap-2 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-brand-500/30">
-                  <div class="w-2 h-2 rounded-full bg-brand-400 animate-pulse"></div>
-                  <span class="text-[10px] uppercase tracking-wider font-bold text-white/90">AI Vision Active</span>
+                      <!-- Reflective glass sheen (diagonal highlight) -->
+                      <div class="absolute inset-0 vai-mirror-sheen pointer-events-none rounded-full"></div>
+
+                      <!-- Slow rotating conic shimmer -->
+                      <div class="absolute inset-0 vai-mirror-conic pointer-events-none rounded-full opacity-60"></div>
+
+                      <!-- Status pill centered on top edge -->
+                      <div class="absolute top-3 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-full border border-brand-500/40 z-10 whitespace-nowrap">
+                        <div class="w-2 h-2 rounded-full bg-brand-400 animate-pulse"></div>
+                        <span class="text-[10px] uppercase tracking-wider font-bold text-white/90">AI Vision Active</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <p class="text-center text-[12px] text-gray-300 mt-3 mb-4 font-medium">Center yourself in the frame.</p>
+              <p class="text-center font-serif italic text-[13px] text-gray-300 mt-6 mb-5 leading-relaxed">
+                Center yourself — the mirror is watching.
+              </p>
 
               <div class="flex gap-2 justify-center">
-                <button id="vai-cancel-mirror-btn" type="button" class="px-4 py-3 rounded-2xl text-xs font-bold border border-white/10 text-gray-300 hover:bg-white/5 transition">
+                <button id="vai-cancel-mirror-btn" type="button" class="px-5 py-3 rounded-2xl text-xs font-bold border border-white/10 text-gray-300 hover:bg-white/5 transition">
                   Cancel
                 </button>
-                <button id="vai-capture-btn" type="button" class="btn-primary px-7 py-3 rounded-2xl text-sm font-bold shadow-xl shadow-brand-500/20 inline-flex items-center gap-2">
+                <button id="vai-capture-btn" type="button" class="btn-primary px-7 py-3 rounded-2xl text-sm font-bold shadow-xl shadow-brand-500/30 inline-flex items-center gap-2">
                   Begin scan
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
                 </button>
@@ -2477,19 +2558,33 @@
               <!-- Camera / analysis error fallback -->
               <div id="vai-cam-error" class="hidden mt-4 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-center">
                 <div class="font-serif italic text-base text-red-200 mb-1">Too much noise.</div>
-                <div class="text-[11px] text-red-300/80">I can't see your vibe yet — <span id="vai-cam-error-text">try again</span>.</div>
+                <div class="text-[11px] text-red-300/80">The mirror can't see your vibe yet — <span id="vai-cam-error-text">try again</span>.</div>
               </div>
             </div>
 
             <!-- ============ STATE: LOADING (snapshot + scan line) ============ -->
             <div id="vai-state-loading" class="relative z-10 hidden text-center">
-              <!-- Snapshot with scanning line overlay -->
-              <div class="relative w-40 mx-auto rounded-2xl overflow-hidden border border-brand-500/30 shadow-xl shadow-brand-500/20 mb-5" style="aspect-ratio: 1/1;">
-                <img id="vai-snapshot-loading" alt="Captured frame" class="w-full h-full object-cover" />
-                <!-- Scanning line -->
-                <div class="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-brand-400 to-transparent shadow-[0_0_12px_rgba(236,72,153,0.8)]" id="vai-scan-line" style="top: 0; animation: vaiScanLine 1.6s ease-in-out infinite;"></div>
-                <!-- Tint overlay -->
-                <div class="absolute inset-0 bg-brand-500/5 mix-blend-overlay pointer-events-none"></div>
+              <!-- Circular snapshot with scanning line -->
+              <div class="relative mx-auto mb-6" style="width: min(220px, 60vw);">
+                <!-- Breathing halo -->
+                <div class="vai-ring-halo absolute -inset-5 rounded-full bg-gradient-to-tr from-brand-500/40 via-pink-500/30 to-purple-500/40 blur-2xl pointer-events-none"></div>
+
+                <!-- Gradient ring frame -->
+                <div class="relative rounded-full bg-gradient-to-br from-brand-400 via-pink-500 to-purple-500 p-[2px] shadow-[0_0_40px_rgba(236,72,153,0.45)]" style="aspect-ratio: 1/1;">
+                  <div class="relative w-full h-full rounded-full bg-black p-[2px]">
+                    <div class="relative w-full h-full rounded-full overflow-hidden bg-black">
+                      <img id="vai-snapshot-loading" alt="Captured frame" class="w-full h-full object-cover" />
+                      <!-- Horizontal scan line (works inside the circular clip) -->
+                      <div class="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-brand-400 to-transparent shadow-[0_0_12px_rgba(236,72,153,0.8)]" id="vai-scan-line" style="top: 0; animation: vaiScanLine 1.6s ease-in-out infinite;"></div>
+                      <!-- Mirror glass sheen -->
+                      <div class="absolute inset-0 vai-mirror-sheen pointer-events-none rounded-full"></div>
+                      <!-- Rotating conic shimmer -->
+                      <div class="absolute inset-0 vai-mirror-conic pointer-events-none rounded-full opacity-70"></div>
+                      <!-- Tint -->
+                      <div class="absolute inset-0 bg-brand-500/10 mix-blend-overlay pointer-events-none rounded-full"></div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div id="vai-loader-text" class="text-[12px] font-mono text-brand-400 mb-3 min-h-[18px] tracking-wide">Reading your palette...</div>
@@ -2508,8 +2603,17 @@
             <div id="vai-state-result" class="relative z-10 hidden">
               <!-- Snapshot + score side by side on desktop, stacked on mobile -->
               <div class="flex flex-col sm:flex-row sm:items-center gap-5 mb-5">
-                <div class="w-32 sm:w-36 mx-auto sm:mx-0 shrink-0 rounded-2xl overflow-hidden border border-brand-500/30 shadow-xl shadow-brand-500/20" style="aspect-ratio: 1/1;">
-                  <img id="vai-snapshot-result" alt="Analyzed frame" class="w-full h-full object-cover" />
+                <!-- Circular snapshot mirror -->
+                <div class="relative mx-auto sm:mx-0 shrink-0" style="width: 9rem;">
+                  <div class="absolute -inset-3 rounded-full bg-gradient-to-tr from-brand-500/30 via-pink-500/20 to-purple-500/30 blur-xl pointer-events-none"></div>
+                  <div class="relative rounded-full bg-gradient-to-br from-brand-400 via-pink-500 to-purple-500 p-[2px] shadow-[0_0_30px_rgba(236,72,153,0.4)]" style="aspect-ratio: 1/1;">
+                    <div class="relative w-full h-full rounded-full bg-black p-[1.5px]">
+                      <div class="relative w-full h-full rounded-full overflow-hidden bg-black">
+                        <img id="vai-snapshot-result" alt="Analyzed frame" class="w-full h-full object-cover" />
+                        <div class="absolute inset-0 vai-mirror-sheen pointer-events-none rounded-full"></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div class="flex-1 text-center sm:text-left">
                   <div class="flex items-center gap-2 justify-center sm:justify-start mb-1 flex-wrap">
@@ -2611,6 +2715,50 @@
               50%  { top: 100%; }
               100% { top: 0%;   opacity: 0; }
             }
+            /* Enchanted halo that breathes around the mirror ring */
+            @keyframes vaiRingBreath {
+              0%, 100% { opacity: 0.35; transform: scale(1); }
+              50%      { opacity: 0.65; transform: scale(1.06); }
+            }
+            .vai-ring-halo { animation: vaiRingBreath 4.5s ease-in-out infinite; }
+
+            /* Slow rotating conic-gradient sheen — simulates reflective glass surface */
+            @keyframes vaiSheenSpin { to { transform: rotate(360deg); } }
+            .vai-mirror-conic {
+              background: conic-gradient(
+                from 0deg,
+                transparent 0deg,
+                rgba(255,255,255,0.10) 40deg,
+                transparent 80deg,
+                transparent 180deg,
+                rgba(244,114,182,0.08) 220deg,
+                transparent 260deg,
+                transparent 360deg
+              );
+              animation: vaiSheenSpin 9s linear infinite;
+              mix-blend-mode: screen;
+            }
+
+            /* Static diagonal glass highlight — the classic "mirror shine" */
+            .vai-mirror-sheen {
+              background: linear-gradient(
+                135deg,
+                rgba(255,255,255,0.20) 0%,
+                rgba(255,255,255,0.05) 18%,
+                transparent 32%,
+                transparent 68%,
+                rgba(244,114,182,0.08) 85%,
+                rgba(168,85,247,0.12) 100%
+              );
+              mix-blend-mode: screen;
+            }
+
+            /* Subtle drifting specular highlight — makes the dormant mirror feel alive */
+            @keyframes vaiSpecDrift {
+              0%, 100% { transform: translate(-10%, -15%) rotate(-8deg); opacity: 0.5; }
+              50%      { transform: translate(12%, 8%) rotate(8deg);    opacity: 0.9; }
+            }
+            .vai-spec-drift { animation: vaiSpecDrift 7s ease-in-out infinite; }
           </style>
           <!-- ============ END VIBEAI MODULE ============ -->
 
