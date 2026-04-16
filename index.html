@@ -5300,26 +5300,55 @@ console.log('[DateScan] App version:', window.__DATESCAN_VERSION || 'unknown');
 // collection of their favourite style tips. Shown in the Story view's
 // "Saved Tips" card. Covered by the "Delete all my data" wipe.
 const savedTipsDB = (function () {
-  let _dbPromise = null;
+  // Share the SAME IDB connection as closetDB. It already opens
+  // 'datescan-db' v5 with the upgrade callback that creates the
+  // 'savedTips' object store + 'ts' index. Opening a second
+  // connection without the upgrade callback is fragile and was
+  // causing "render failed" errors in savedTipsDB.getAll().
   async function getDB() {
-    // Reuse the closetDB promise — it includes the v5 upgrade that
-    // creates the 'savedTips' object store. Calling openDB without
-    // the upgrade callback can fail if the DB hasn't been upgraded yet.
-    if (!_dbPromise) {
-      // Force closetDB to initialise first (it has the upgrade callback)
-      try { await closetDB.getAll(); } catch(e) { console.warn('[savedTipsDB] closetDB init warning:', e.message); }
-      // Now open our own connection at the same version
-      if (!window.idb || !window.idb.openDB) {
-        console.error('[savedTipsDB] idb library not loaded!');
-        return Promise.reject(new Error('idb library not loaded'));
-      }
-      _dbPromise = window.idb.openDB('datescan-db', 5).catch(err => {
-        console.error('[savedTipsDB] openDB failed:', err);
-        _dbPromise = null; // allow retry
-        throw err;
-      });
+    if (!window.closetDB) {
+      console.error('[savedTipsDB] closetDB not found!');
+      throw new Error('closetDB not initialized');
     }
-    return _dbPromise;
+    // closetDB.getAll() returns the DB connection promise internally.
+    // We need direct access to the IDB database object.
+    // The simplest approach: add a _rawGetDB() helper to closetDB
+    // that exposes the idb wrapper. For now, we open our own connection
+    // but WITH the same upgrade callback so the store always exists.
+    if (!window.idb || !window.idb.openDB) {
+      console.error('[savedTipsDB] idb library not loaded!');
+      throw new Error('idb library not loaded');
+    }
+    // Use the same upgrade callback as closetDB so the DB schema
+    // is always consistent, regardless of which connection opens first.
+    return window.idb.openDB('datescan-db', 5, {
+      upgrade(db, oldVersion, newVersion, transaction) {
+        if (!db.objectStoreNames.contains('outfits')) {
+          const store = db.createObjectStore('outfits', { keyPath: 'id' });
+          store.createIndex('date', 'date');
+        }
+        if (!db.objectStoreNames.contains('chats')) {
+          const chatStore = db.createObjectStore('chats', { keyPath: 'id', autoIncrement: true });
+          chatStore.createIndex('ts', 'ts');
+        }
+        if (!db.objectStoreNames.contains('feedback')) {
+          const fbStore = db.createObjectStore('feedback', { keyPath: 'id', autoIncrement: true });
+          fbStore.createIndex('ts', 'ts');
+          fbStore.createIndex('sentiment', 'sentiment');
+          fbStore.createIndex('category', 'category');
+        }
+        if (oldVersion < 4 && db.objectStoreNames.contains('outfits')) {
+          const outfitStore = transaction.objectStore('outfits');
+          if (!outfitStore.indexNames.contains('tags.season')) {
+            outfitStore.createIndex('tags.season', 'tags.season');
+          }
+        }
+        if (!db.objectStoreNames.contains('savedTips')) {
+          const tipStore = db.createObjectStore('savedTips', { keyPath: 'id', autoIncrement: true });
+          tipStore.createIndex('ts', 'ts');
+        }
+      }
+    });
   }
   return {
     async add(entry) {
@@ -12288,7 +12317,7 @@ function onGoogleMapsLoaded() {
   // ===== App version for cache-busting =====
   // Increment this when deploying a critical update. The page will
   // detect a version mismatch and force-clear the ServiceWorker cache.
-  window.__DATESCAN_VERSION = '2026-04-16b';
+  window.__DATESCAN_VERSION = '2026-04-16c';
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -16640,7 +16669,7 @@ function onGoogleMapsLoaded() {
   });
 })();
 </script>
-<script type="text/javascript" src="https://s.skimresources.com/js/301585X1789553.skimlinks.js"></script>
 
+<script type="text/javascript" src="https://s.skimresources.com/js/301585X1789553.skimlinks.js"></script>
 </body>
 </html>
