@@ -3,6 +3,26 @@
 <head>
 <meta charset="UTF-8" />
 <script>
+  // ============================================================
+  // DESKTOP REDIRECT
+  // ============================================================
+  // The DateScan app is built for mobile (Google Play distribution).
+  // Desktop visitors should land on /landing.html, which markets the
+  // Play Store download instead of trying to run the camera-based
+  // PWA on a device that won't have a good experience.
+  //
+  // Detection uses pointer + hover media queries (the most reliable
+  // signal for "this is a real desktop with a mouse"), combined with
+  // a viewport-width fallback. Mobile devices report `pointer: coarse`
+  // and `hover: none`; desktops report `pointer: fine` and `hover: hover`.
+  //
+  // Escape hatches:
+  //   • ?desktop=1 in the URL → bypass the redirect (for QA / debugging)
+  //   • localStorage.datescan.allowDesktop = '1' → permanent bypass
+  //   • Already on /landing or /landing.html → never redirect (would loop)
+  //
+  // This block runs synchronously BEFORE any other script, so it's a
+  // hard cutoff: no app code loads on desktop visits to the root URL.
   (function () {
     try {
       var path = location.pathname;
@@ -2780,6 +2800,17 @@
                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
                Build Outfit
             </button>
+
+            <button id="closetExportBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-[0.98] transition" title="Download a backup of your closet as JSON">
+               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+               Export
+            </button>
+
+            <button id="closetImportBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-[0.98] transition" title="Restore closet from a JSON backup">
+               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+               Import
+            </button>
+            <input type="file" id="closetImportInput" accept=".json,application/json" class="hidden" />
          </div>
       </div>
        
@@ -5999,6 +6030,180 @@ window.saveCurrentOutfit = function() {
         }
     });
 };
+
+// ============================================================
+// Closet — Export / Import (Backup & Restore)
+// ============================================================
+(function initClosetBackup() {
+  function onReady(fn) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fn, { once: true });
+    } else {
+      fn();
+    }
+  }
+
+  function toast(msg) {
+    try {
+      if (window.dsPrivacy && typeof window.dsPrivacy.showToast === 'function') {
+        window.dsPrivacy.showToast(msg);
+      } else {
+        console.log('[closet-backup]', msg);
+      }
+    } catch (_) {}
+  }
+
+  function todayStamp() {
+    const d = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  }
+
+  async function exportCloset() {
+    try {
+      if (!window.closetDB || typeof window.closetDB.getAll !== 'function') {
+        toast('Closet storage not ready');
+        return;
+      }
+      const items = await window.closetDB.getAll();
+      if (!Array.isArray(items) || items.length === 0) {
+        toast('Nothing to export. Closet is empty.');
+        return;
+      }
+      const payload = {
+        app: 'datescan',
+        kind: 'closet-backup',
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        count: items.length,
+        outfits: items
+      };
+      const json = JSON.stringify(payload, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = `datescan-closet-backup-${todayStamp()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      toast(`Exported ${items.length} item${items.length === 1 ? '' : 's'}.`);
+    } catch (err) {
+      console.error('[closet-backup] export failed', err);
+      toast('Export failed. See console.');
+    }
+  }
+
+  function readFileAsText(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload  = () => resolve(String(reader.result || ''));
+      reader.onerror = () => reject(reader.error || new Error('File read error'));
+      reader.readAsText(file);
+    });
+  }
+
+  function extractItems(parsed) {
+    if (Array.isArray(parsed)) return parsed;
+    if (parsed && Array.isArray(parsed.outfits)) return parsed.outfits;
+    if (parsed && Array.isArray(parsed.items))   return parsed.items;
+    return null;
+  }
+
+  async function importCloset(file) {
+    if (!file) return;
+    try {
+      if (!window.closetDB || typeof window.closetDB.put !== 'function') {
+        toast('Closet storage not ready');
+        return;
+      }
+      const text = await readFileAsText(file);
+      let parsed;
+      try {
+        parsed = JSON.parse(text);
+      } catch (e) {
+        toast('Invalid JSON file.');
+        return;
+      }
+      const items = extractItems(parsed);
+      if (!items) {
+        toast('Backup format not recognized.');
+        return;
+      }
+
+      // Build id set of existing outfits so we can report new vs merged.
+      const existing = await window.closetDB.getAll();
+      const existingIds = new Set(existing.map(o => o && o.id).filter(Boolean));
+
+      let saved = 0, skipped = 0, merged = 0;
+      for (const raw of items) {
+        if (!raw || typeof raw !== 'object') { skipped++; continue; }
+        const item = { ...raw };
+        if (!item.id) {
+          item.id = (crypto && crypto.randomUUID)
+            ? crypto.randomUUID()
+            : `imp_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+        }
+        try {
+          await window.closetDB.put(item); // put = upsert by keyPath 'id' → no duplicates
+          if (existingIds.has(item.id)) merged++; else saved++;
+        } catch (e) {
+          console.warn('[closet-backup] put failed for item', item && item.id, e);
+          skipped++;
+        }
+      }
+
+      // Refresh in-memory state from DB so UI matches storage.
+      const fresh = await window.closetDB.getAll();
+      if (window.userCloset && Array.isArray(window.userCloset.outfits)) {
+        window.userCloset.outfits.length = 0;
+        window.userCloset.outfits.push(...fresh);
+      } else {
+        window.userCloset = { outfits: fresh };
+      }
+
+      if (typeof window.renderCloset === 'function')      window.renderCloset();
+      if (typeof window.renderClosetItems === 'function') window.renderClosetItems();
+      if (typeof window.updateUsageBadge === 'function')  window.updateUsageBadge();
+
+      const parts = [];
+      if (saved)   parts.push(`${saved} new`);
+      if (merged)  parts.push(`${merged} updated`);
+      if (skipped) parts.push(`${skipped} skipped`);
+      toast(`Import done: ${parts.join(', ') || 'no changes'}.`);
+    } catch (err) {
+      console.error('[closet-backup] import failed', err);
+      toast('Import failed. See console.');
+    }
+  }
+
+  onReady(function () {
+    const exportBtn  = document.getElementById('closetExportBtn');
+    const importBtn  = document.getElementById('closetImportBtn');
+    const fileInput  = document.getElementById('closetImportInput');
+
+    if (exportBtn) {
+      exportBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        exportCloset();
+      });
+    }
+
+    if (importBtn && fileInput) {
+      importBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        fileInput.value = ''; // allow re-selecting same file
+        fileInput.click();
+      });
+      fileInput.addEventListener('change', async () => {
+        const file = fileInput.files && fileInput.files[0];
+        if (file) await importCloset(file);
+        fileInput.value = '';
+      });
+    }
+  });
+})();
 
 // ============================================================
 // Closet — manual upload flow (Add Item button)
@@ -16008,7 +16213,6 @@ function onGoogleMapsLoaded() {
 })();
 </script>
 
-<script type="text/javascript" src="https://s.skimresources.com/js/301585X1789553.skimlinks.js"></script>
 
 </body>
 </html>
