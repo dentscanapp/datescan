@@ -227,27 +227,6 @@
     }
   }
 
-  /* Voice input button — recording state */
-  @keyframes voice-pulse-glow {
-    0%, 100% {
-      box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.55), 0 0 12px rgba(239, 68, 68, 0.45);
-      border-color: rgba(239, 68, 68, 0.85);
-    }
-    50% {
-      box-shadow: 0 0 0 6px rgba(239, 68, 68, 0), 0 0 20px rgba(239, 68, 68, 0.75);
-      border-color: rgba(239, 68, 68, 1);
-    }
-  }
-  #coachChatVoiceBtn.is-recording {
-    background-color: rgba(239, 68, 68, 0.18) !important;
-    color: #fecaca !important;
-    border-color: rgba(239, 68, 68, 0.85) !important;
-    animation: voice-pulse-glow 1.4s ease-in-out infinite;
-  }
-  #coachChatVoiceBtn.is-recording svg {
-    color: #fca5a5;
-  }
-
   /* Closet category picker — selected state (sticky) */
   .closet-cat-opt.is-selected {
     background-color: rgba(236, 72, 153, 0.28) !important;
@@ -685,6 +664,15 @@
   .chip.trend:hover {
     background: rgba(236, 72, 153, 0.16);
     border-color: rgba(236, 72, 153, 0.6);
+  }
+
+  /* Chat textarea — auto-growing input field */
+  #coachChatInput {
+    line-height: 1.5;
+    -webkit-appearance: none;
+  }
+  #coachChatInput:focus {
+    box-shadow: 0 0 0 1px rgba(236, 72, 153, 0.3);
   }
 
   /* Quick Reply Chips — occasion shortcuts above the chat input.
@@ -1879,133 +1867,12 @@
   </div>
 </div>
 
-<!-- Voice Input Consent Modal (Google Play requirement — explain before permission) -->
-<div id="dsc-voice" class="ds-consent" role="dialog" aria-modal="true" aria-labelledby="dsc-voice-title" hidden>
-  <div class="dsc-card">
-    <div class="dsc-icon">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="9" y="2" width="6" height="12" rx="3"/>
-        <path d="M5 10v2a7 7 0 0 0 14 0v-2"/>
-        <line x1="12" y1="19" x2="12" y2="22"/>
-        <line x1="8" y1="22" x2="16" y2="22"/>
-      </svg>
-    </div>
-    <h2 id="dsc-voice-title">Enable voice input</h2>
-    <p class="dsc-lede">The app needs microphone access to convert your voice into text for the Style Coach chat.</p>
-    <ul class="dsc-list">
-      <li class="dsc-good">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-        <span><strong>Only while you hold the mic button.</strong> The microphone turns on when you tap the mic icon and stops as soon as recognition ends or you tap again.</span>
-      </li>
-      <li class="dsc-good">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-        <span><strong>Used only for speech-to-text.</strong> Your voice is transcribed into the chat input. We do not store or upload audio recordings.</span>
-      </li>
-      <li class="dsc-good">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-        <span><strong>You're in control.</strong> You can revoke microphone permission at any time in your browser settings.</span>
-      </li>
-      <li class="dsc-bad">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <span><strong>Note:</strong> Speech recognition is processed by your browser's built-in Web Speech API, which may send audio to your browser vendor (e.g. Google, Apple) for transcription.</span>
-      </li>
-    </ul>
-    <div class="dsc-actions">
-      <button type="button" class="dsc-primary" id="dsc-voice-yes">Allow microphone</button>
-      <button type="button" class="dsc-secondary" id="dsc-voice-no">Not now</button>
-    </div>
-    <p class="dsc-fineprint">
-      See our <a href="/privacy.html">Privacy Policy</a> and <a href="/terms.html">Terms of Service</a> for full details.
-    </p>
-  </div>
-</div>
-
-<!-- Notification Consent Modal (Date Prep — Google Play requirement) -->
-<div id="dsc-notif" class="ds-consent" role="dialog" aria-modal="true" aria-labelledby="dsc-notif-title" hidden>
-  <div class="dsc-card">
-    <div class="dsc-icon">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-      </svg>
-    </div>
-    <h2 id="dsc-notif-title">Enable date reminders</h2>
-    <p class="dsc-lede">The app needs notification permission to send you timely prep reminders before your date.</p>
-    <ul class="dsc-list">
-      <li class="dsc-good">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-        <span><strong>Only for your countdown.</strong> Notifications are sent for the date you set — outfit prep, grooming, leave-time reminders. Nothing else.</span>
-      </li>
-      <li class="dsc-good">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-        <span><strong>No marketing, no spam.</strong> We never use notifications for ads, promotions or engagement pings.</span>
-      </li>
-      <li class="dsc-good">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-        <span><strong>You're in control.</strong> Cancel the countdown any time, or revoke notification permission in your browser settings.</span>
-      </li>
-      <li class="dsc-bad">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <span><strong>Optional:</strong> The countdown works without notifications — you just won't get push reminders when the app is closed.</span>
-      </li>
-    </ul>
-    <div class="dsc-actions">
-      <button type="button" class="dsc-primary" id="dsc-notif-yes">Allow notifications</button>
-      <button type="button" class="dsc-secondary" id="dsc-notif-no">Not now</button>
-    </div>
-    <p class="dsc-fineprint">
-      See our <a href="/privacy.html">Privacy Policy</a> and <a href="/terms.html">Terms of Service</a> for full details.
-    </p>
-  </div>
-</div>
-
-<!-- Location Consent Modal (Tonight's Forecast — Google Play requirement) -->
-<div id="dsc-loc" class="ds-consent" role="dialog" aria-modal="true" aria-labelledby="dsc-loc-title" hidden>
-  <div class="dsc-card">
-    <div class="dsc-icon">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-        <circle cx="12" cy="10" r="3"/>
-      </svg>
-    </div>
-    <h2 id="dsc-loc-title">Enable location for weather</h2>
-    <p class="dsc-lede">The app needs your location to fetch tonight's local forecast and tailor your outfit advice.</p>
-    <ul class="dsc-list">
-      <li class="dsc-good">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-        <span><strong>One-time lookup.</strong> Your coordinates are used once to fetch the forecast from Open-Meteo. Location is not tracked in the background.</span>
-      </li>
-      <li class="dsc-good">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-        <span><strong>Stored on your device only.</strong> The weather response is cached locally for up to 10 minutes so you don't drain battery on repeat lookups.</span>
-      </li>
-      <li class="dsc-good">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-        <span><strong>You're in control.</strong> Revoke location permission in your browser settings at any time. You can still use the rest of the app without it.</span>
-      </li>
-      <li class="dsc-bad">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <span><strong>Note:</strong> Your coordinates are sent to Open-Meteo's public forecast API (no account, no tracking) to return the weather for your area.</span>
-      </li>
-    </ul>
-    <div class="dsc-actions">
-      <button type="button" class="dsc-primary" id="dsc-loc-yes">Allow location</button>
-      <button type="button" class="dsc-secondary" id="dsc-loc-no">Not now</button>
-    </div>
-    <p class="dsc-fineprint">
-      See our <a href="/privacy.html">Privacy Policy</a> and <a href="/terms.html">Terms of Service</a> for full details.
-    </p>
-  </div>
-</div>
-
 <script>
 (function () {
   // ----- Storage keys -----
   var AGE_KEY    = 'datescan_age_ack_v1';
   var CAM_KEY    = 'datescan_camera_ack_v1';
   var UP_KEY     = 'datescan_upload_ack_v1';
-  var NOTIF_KEY  = 'datescan_notif_ack_v1';
-  var LOC_KEY    = 'datescan_location_ack_v1';
   var UNDER18_REDIRECT = 'https://www.google.com/';
 
   function uuid() {
@@ -2034,9 +1901,7 @@
   function dscUnlock() {
     var c = document.getElementById('dsc-camera');
     var u = document.getElementById('dsc-upload');
-    var n = document.getElementById('dsc-notif');
-    var l = document.getElementById('dsc-loc');
-    if ((!c || c.hidden) && (!u || u.hidden) && (!n || n.hidden) && (!l || l.hidden)) {
+    if ((!c || c.hidden) && (!u || u.hidden)) {
       document.body.classList.remove('dsc-locked');
     }
   }
@@ -2136,69 +2001,15 @@
     });
   }
 
-  // ===== NOTIFICATION CONSENT (Date Prep — Google Play requirement) =====
-  function requireNotification() {
-    return new Promise(function (resolve) {
-      // Already confirmed on this device, or already granted/denied by browser → skip
-      if (alreadyAck(NOTIF_KEY)) { resolve(true); return; }
-      if (!('Notification' in window) || Notification.permission !== 'default') {
-        resolve(true); return;
-      }
-      var modal = document.getElementById('dsc-notif');
-      var yes   = document.getElementById('dsc-notif-yes');
-      var no    = document.getElementById('dsc-notif-no');
-      if (!modal || !yes || !no) { resolve(true); return; }
-      modal.hidden = false;
-      dscLock();
-      function cleanup() {
-        yes.removeEventListener('click', onYes);
-        no.removeEventListener('click', onNo);
-        modal.hidden = true;
-        dscUnlock();
-      }
-      function onYes() { storeAck(NOTIF_KEY); cleanup(); resolve(true); }
-      function onNo()  { cleanup(); resolve(false); }
-      yes.addEventListener('click', onYes);
-      no.addEventListener('click', onNo);
-    });
-  }
-
-  // ===== LOCATION CONSENT (Tonight's Forecast — Google Play requirement) =====
-  function requireLocation() {
-    return new Promise(function (resolve) {
-      if (alreadyAck(LOC_KEY)) { resolve(true); return; }
-      var modal = document.getElementById('dsc-loc');
-      var yes   = document.getElementById('dsc-loc-yes');
-      var no    = document.getElementById('dsc-loc-no');
-      if (!modal || !yes || !no) { resolve(true); return; }
-      modal.hidden = false;
-      dscLock();
-      function cleanup() {
-        yes.removeEventListener('click', onYes);
-        no.removeEventListener('click', onNo);
-        modal.hidden = true;
-        dscUnlock();
-      }
-      function onYes() { storeAck(LOC_KEY); cleanup(); resolve(true); }
-      function onNo()  { cleanup(); resolve(false); }
-      yes.addEventListener('click', onYes);
-      no.addEventListener('click', onNo);
-    });
-  }
-
   // ----- Public API -----
   window.DateScanConsent = {
     requireCamera: requireCamera,
     requireUpload: requireUpload,
-    requireNotification: requireNotification,
-    requireLocation: requireLocation,
     reset: function () {
       try {
         localStorage.removeItem(AGE_KEY);
         localStorage.removeItem(CAM_KEY);
         localStorage.removeItem(UP_KEY);
-        localStorage.removeItem(NOTIF_KEY);
-        localStorage.removeItem(LOC_KEY);
       } catch (e) {}
     },
     hasAgeAck:    function () { return alreadyAck(AGE_KEY); },
@@ -2998,17 +2809,6 @@
                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
                Build Outfit
             </button>
-
-            <button id="closetExportBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-[0.98] transition" title="Download a backup of your closet as JSON">
-               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-               Export
-            </button>
-
-            <button id="closetImportBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-[0.98] transition" title="Restore closet from a JSON backup">
-               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-               Import
-            </button>
-            <input type="file" id="closetImportInput" accept=".json,application/json" class="hidden" />
          </div>
       </div>
        
@@ -3344,7 +3144,7 @@
           </span>
         </p>
 
-        <div id="coachChatMessages" class="relative z-10 space-y-3 max-h-[420px] overflow-y-auto pr-1 mb-4">
+        <div id="coachChatMessages" class="relative z-10 space-y-3 max-h-[55vh] overflow-y-auto pr-1 mb-4">
           <div class="flex gap-2.5">
             <div class="shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-purple-500 flex items-center justify-center text-white">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.6 4.6L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.4z"/><path d="M19 14l.7 1.9 1.8.6-1.8.6L19 19l-.7-1.9-1.8-.6 1.8-.6z"/></svg>
@@ -3363,21 +3163,27 @@
           <!-- Chips are rendered by renderQuickReplyChips() in JS -->
         </div>
 
-        <form id="coachChatForm" class="relative z-10 flex gap-2 items-center">
+        <form id="coachChatForm" class="relative z-10 flex flex-col gap-2">
           <input id="coachChatFile" type="file" accept="image/*" class="hidden" />
-          <button id="coachChatUploadBtn" type="button" title="Upload photo" aria-label="Upload photo" class="shrink-0 w-11 h-11 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 flex items-center justify-center transition">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="m21 16-4-4-8 8"/></svg>
-          </button>
-          <button id="coachChatClosetBtn" type="button" title="Pick from closet" aria-label="Pick from closet" class="shrink-0 w-11 h-11 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 flex items-center justify-center transition">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
-          </button>
-          <input id="coachChatInput" type="text" autocomplete="off" placeholder="Ask me anything…" class="flex-1 min-w-0 bg-white/5 border border-white/10 focus:border-brand-500/60 focus:bg-white/10 outline-none rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-500 transition" />
-          <button id="coachChatVoiceBtn" type="button" title="Voice input" aria-label="Voice input" class="shrink-0 w-11 h-11 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 flex items-center justify-center transition">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>
-          </button>
-          <button id="coachChatSend" type="submit" aria-label="Send message" class="shrink-0 btn-primary w-11 h-11 rounded-xl flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>
-          </button>
+          <div class="flex gap-2 items-end">
+            <textarea id="coachChatInput" autocomplete="off" placeholder="Ask me anything…" rows="1" class="flex-1 min-w-0 bg-white/5 border border-white/10 focus:border-brand-500/60 focus:bg-white/10 outline-none rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-500 transition resize-none max-h-[120px] overflow-y-auto" style="field-sizing: content;"></textarea>
+            <button id="coachChatVoiceBtn" type="button" title="Voice input" aria-label="Voice input" class="shrink-0 w-11 h-11 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 flex items-center justify-center transition">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </button>
+            <button id="coachChatSend" type="submit" aria-label="Send message" class="shrink-0 btn-primary w-11 h-11 rounded-xl flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>
+            </button>
+          </div>
+          <div class="flex items-center justify-center gap-3">
+            <button id="coachChatUploadBtn" type="button" title="Upload photo" aria-label="Upload photo" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-gray-400 hover:text-gray-300 text-xs transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="m21 16-4-4-8 8"/></svg>
+              <span>Photo</span>
+            </button>
+            <button id="coachChatClosetBtn" type="button" title="Pick from closet" aria-label="Pick from closet" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-gray-400 hover:text-gray-300 text-xs transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
+              <span>Closet</span>
+            </button>
+          </div>
         </form>
 
         <!-- Suggestion chips removed per user request -->
@@ -4435,7 +4241,7 @@ document.addEventListener('DOMContentLoaded', function () {
 </div>
 
 <!-- Paywall Modal -->
-<div id="paywallModal" class="hidden fixed inset-0 z-[70] flex items-start justify-center px-4 pb-28 lg:items-center lg:p-4 overflow-y-auto overscroll-contain bg-black/80 backdrop-blur-lg" style="padding-top: max(1.5rem, env(safe-area-inset-top));">
+<div id="paywallModal" class="hidden fixed inset-0 z-[90] flex items-center justify-center px-4 py-6 overflow-y-auto overscroll-contain bg-black/80 backdrop-blur-lg" style="padding-top: max(1.5rem, env(safe-area-inset-top));">
   <div class="premium-glass border border-brand-500/20 rounded-[32px] p-8 max-w-sm w-full relative overflow-hidden fade-up">
     <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-500 rounded-full mix-blend-screen filter blur-[60px] opacity-30 pointer-events-none"></div>
     
@@ -5820,11 +5626,6 @@ window.renderCloset = function(filter = 'all', append = false) {
         return;
     }
 
-    // Apply custom drag-to-reorder ordering (sortOrder desc, fallback to date desc)
-    if (typeof window._sortByCustomOrder === 'function') {
-        filtered = window._sortByCustomOrder(filtered);
-    }
-
     if (!append) window._closetPage = 1;
     const start = append ? grid.children.length : 0;
     const end = Math.min(start + CLOSET_PAGE_SIZE, filtered.length);
@@ -5855,7 +5656,7 @@ window.renderCloset = function(filter = 'all', append = false) {
         }
         const scanTagRow = scanTagPills.length ? `<div class="flex flex-wrap gap-1 mt-1.5">${scanTagPills.join('')}</div>` : '';
         return `
-        <div data-closet-id="${outfit.id}" class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-default relative">
+        <div class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-default relative">
             <div class="aspect-[3/4] bg-black relative">
                 <img src="${outfit.image}" class="w-full h-full object-cover opacity-90 transition-opacity" alt="Saved Item" loading="lazy" />
                 ${typeBadge}
@@ -5933,11 +5734,6 @@ window.renderClosetItems = function(typeFilter = 'all', append = false) {
         return;
     }
 
-    // Apply custom drag-to-reorder ordering
-    if (typeof window._sortByCustomOrder === 'function') {
-        filtered = window._sortByCustomOrder(filtered);
-    }
-
     if (!append) window._closetItemsPage = 1;
     const start = append ? grid.children.length : 0;
     const end = Math.min(start + CLOSET_ITEMS_PAGE_SIZE, filtered.length);
@@ -5955,7 +5751,7 @@ window.renderClosetItems = function(typeFilter = 'all', append = false) {
         const tagRow = tagPills.length ? `<div class="flex flex-wrap gap-1 mt-1.5">${tagPills.join('')}</div>` : '';
 
         return `
-        <div data-closet-id="${item.id}" class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-default relative">
+        <div class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-default relative">
             <div class="aspect-[3/4] bg-black relative">
                 <img src="${item.image}" class="w-full h-full object-cover opacity-90 transition-opacity" alt="Saved Item" loading="lazy" />
                 <div class="absolute top-2 left-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-white border border-white/10 z-10">${TYPE_LABELS[item.type] || 'Item'}</div>
@@ -6241,389 +6037,6 @@ window.saveCurrentOutfit = function() {
         }
     });
 };
-
-// ============================================================
-// Closet — Drag-to-Reorder (long-press on card, works mouse + touch)
-// ============================================================
-
-// Helper used by renderCloset / renderClosetItems to apply custom order.
-// Sort by sortOrder desc (higher = earlier). Missing sortOrder falls back to date.
-window._sortByCustomOrder = function (arr) {
-  if (!Array.isArray(arr)) return arr;
-  return arr.slice().sort((a, b) => {
-    const ao = (a && typeof a.sortOrder === 'number') ? a.sortOrder : (a && a.date ? a.date : 0);
-    const bo = (b && typeof b.sortOrder === 'number') ? b.sortOrder : (b && b.date ? b.date : 0);
-    return bo - ao;
-  });
-};
-
-(function initClosetReorder() {
-  const LONG_PRESS_MS   = 320;
-  const MOVE_CANCEL_PX  = 10;
-
-  function onReady(fn) {
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', fn, { once: true });
-    } else fn();
-  }
-
-  function findCard(el) {
-    while (el && el !== document.body) {
-      if (el.dataset && el.dataset.closetId) return el;
-      el = el.parentElement;
-    }
-    return null;
-  }
-
-  function cardUnderPoint(grid, x, y, exclude) {
-    // Temporarily hide the dragged card so elementFromPoint sees what's beneath.
-    const prevPE = exclude ? exclude.style.pointerEvents : null;
-    if (exclude) exclude.style.pointerEvents = 'none';
-    const hit = document.elementFromPoint(x, y);
-    if (exclude) exclude.style.pointerEvents = prevPE || '';
-    if (!hit) return null;
-    const c = findCard(hit);
-    if (!c || c === exclude) return null;
-    if (c.parentElement !== grid) return null;
-    return c;
-  }
-
-  async function persistOrder(grid) {
-    if (!window.closetDB || typeof window.closetDB.put !== 'function') return;
-    const cards = Array.from(grid.querySelectorAll('[data-closet-id]'));
-    if (!cards.length) return;
-
-    const base = Date.now();
-    const step = 1000;
-    const all = (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits : [];
-    const byId = new Map(all.map(o => [o && o.id, o]));
-
-    const updates = [];
-    cards.forEach((card, idx) => {
-      const id = card.dataset.closetId;
-      const item = byId.get(id);
-      if (!item) return;
-      item.sortOrder = base - (idx * step);
-      updates.push(item);
-    });
-
-    try {
-      for (const it of updates) {
-        await window.closetDB.put(it);
-      }
-      if (Array.isArray(window.userCloset && window.userCloset.outfits)) {
-        window.userCloset.outfits = window._sortByCustomOrder(window.userCloset.outfits);
-      }
-      if (window.dsPrivacy && typeof window.dsPrivacy.showToast === 'function') {
-        window.dsPrivacy.showToast('Order saved');
-      }
-    } catch (e) {
-      console.error('[closet-reorder] persist failed', e);
-    }
-  }
-
-  function enableDragOnGrid(gridId) {
-    const grid = document.getElementById(gridId);
-    if (!grid) return;
-
-    let pressTimer      = null;
-    let pressCard       = null;
-    let pressPoint      = null;
-    let dragging        = false;
-    let activePointerId = null;
-    let savedTouchAction = '';
-
-    function reset(persist) {
-      if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; }
-      if (dragging && pressCard) {
-        pressCard.classList.remove('closet-reorder-drag');
-      }
-      if (dragging) {
-        grid.style.touchAction = savedTouchAction;
-        if (persist) persistOrder(grid);
-      }
-      dragging        = false;
-      pressCard       = null;
-      pressPoint      = null;
-      activePointerId = null;
-    }
-
-    grid.addEventListener('pointerdown', (e) => {
-      if (e.pointerType === 'mouse' && e.button !== 0) return;
-      // Ignore interactive controls inside the card
-      if (e.target.closest('button, a, input, select, textarea, [role="button"]')) return;
-      const card = findCard(e.target);
-      if (!card || card.parentElement !== grid) return;
-
-      // Block native image-drag / text selection
-      e.preventDefault();
-
-      pressCard       = card;
-      pressPoint      = { x: e.clientX, y: e.clientY };
-      activePointerId = e.pointerId;
-
-      // Mouse: start drag immediately. Touch/pen: require long-press so scroll still works.
-      if (e.pointerType === 'mouse') {
-        dragging = true;
-        savedTouchAction = grid.style.touchAction || '';
-        grid.style.touchAction = 'none';
-        try { pressCard.setPointerCapture(activePointerId); } catch (_) {}
-        pressCard.classList.add('closet-reorder-drag');
-        return;
-      }
-
-      pressTimer = setTimeout(() => {
-        if (!pressCard) return;
-        dragging = true;
-        savedTouchAction = grid.style.touchAction || '';
-        grid.style.touchAction = 'none';
-        try { pressCard.setPointerCapture(activePointerId); } catch (_) {}
-        pressCard.classList.add('closet-reorder-drag');
-        try { if (navigator.vibrate) navigator.vibrate(15); } catch (_) {}
-      }, LONG_PRESS_MS);
-    });
-
-    grid.addEventListener('pointermove', (e) => {
-      if (!pressCard || e.pointerId !== activePointerId) return;
-
-      if (!dragging) {
-        const dx = e.clientX - pressPoint.x;
-        const dy = e.clientY - pressPoint.y;
-        if (Math.hypot(dx, dy) > MOVE_CANCEL_PX) reset(false);
-        return;
-      }
-
-      e.preventDefault();
-      const target = cardUnderPoint(grid, e.clientX, e.clientY, pressCard);
-      if (target && target !== pressCard) {
-        const r = target.getBoundingClientRect();
-        const before = (e.clientY < r.top + r.height / 2);
-        if (before) grid.insertBefore(pressCard, target);
-        else        grid.insertBefore(pressCard, target.nextSibling);
-      }
-    });
-
-    const endHandler = (e) => {
-      if (!pressCard || e.pointerId !== activePointerId) return;
-      reset(true);
-    };
-    grid.addEventListener('pointerup',     endHandler);
-    grid.addEventListener('pointercancel', endHandler);
-  }
-
-  onReady(() => {
-    if (!document.getElementById('closet-reorder-styles')) {
-      const s = document.createElement('style');
-      s.id = 'closet-reorder-styles';
-      s.textContent = `
-        #closetGrid [data-closet-id],
-        #closetItemsGrid [data-closet-id] {
-          cursor: grab;
-          touch-action: pan-y;
-          user-select: none;
-          -webkit-user-select: none;
-          transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
-        }
-        #closetGrid [data-closet-id] img,
-        #closetItemsGrid [data-closet-id] img {
-          -webkit-user-drag: none;
-          user-drag: none;
-          pointer-events: none;
-        }
-        #closetGrid [data-closet-id]:active,
-        #closetItemsGrid [data-closet-id]:active {
-          cursor: grabbing;
-        }
-        .closet-reorder-drag {
-          transform: scale(1.04);
-          box-shadow: 0 20px 50px -10px rgba(0,0,0,.7), 0 0 0 2px rgba(99,102,241,.55);
-          opacity: .92;
-          z-index: 30;
-          position: relative;
-        }
-      `;
-      document.head.appendChild(s);
-    }
-    setTimeout(() => {
-      enableDragOnGrid('closetGrid');
-      enableDragOnGrid('closetItemsGrid');
-    }, 200);
-  });
-})();
-
-// ============================================================
-// Closet — Export / Import (Backup & Restore)
-// ============================================================
-(function initClosetBackup() {
-  function onReady(fn) {
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', fn, { once: true });
-    } else {
-      fn();
-    }
-  }
-
-  function toast(msg) {
-    try {
-      if (window.dsPrivacy && typeof window.dsPrivacy.showToast === 'function') {
-        window.dsPrivacy.showToast(msg);
-      } else {
-        console.log('[closet-backup]', msg);
-      }
-    } catch (_) {}
-  }
-
-  function todayStamp() {
-    const d = new Date();
-    const pad = (n) => String(n).padStart(2, '0');
-    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-  }
-
-  async function exportCloset() {
-    try {
-      if (!window.closetDB || typeof window.closetDB.getAll !== 'function') {
-        toast('Closet storage not ready');
-        return;
-      }
-      const items = await window.closetDB.getAll();
-      if (!Array.isArray(items) || items.length === 0) {
-        toast('Nothing to export. Closet is empty.');
-        return;
-      }
-      const payload = {
-        app: 'datescan',
-        kind: 'closet-backup',
-        version: 1,
-        exportedAt: new Date().toISOString(),
-        count: items.length,
-        outfits: items
-      };
-      const json = JSON.stringify(payload, null, 2);
-      const blob = new Blob([json], { type: 'application/json' });
-      const url  = URL.createObjectURL(blob);
-      const a    = document.createElement('a');
-      a.href     = url;
-      a.download = `datescan-closet-backup-${todayStamp()}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-      toast(`Exported ${items.length} item${items.length === 1 ? '' : 's'}.`);
-    } catch (err) {
-      console.error('[closet-backup] export failed', err);
-      toast('Export failed. See console.');
-    }
-  }
-
-  function readFileAsText(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload  = () => resolve(String(reader.result || ''));
-      reader.onerror = () => reject(reader.error || new Error('File read error'));
-      reader.readAsText(file);
-    });
-  }
-
-  function extractItems(parsed) {
-    if (Array.isArray(parsed)) return parsed;
-    if (parsed && Array.isArray(parsed.outfits)) return parsed.outfits;
-    if (parsed && Array.isArray(parsed.items))   return parsed.items;
-    return null;
-  }
-
-  async function importCloset(file) {
-    if (!file) return;
-    try {
-      if (!window.closetDB || typeof window.closetDB.put !== 'function') {
-        toast('Closet storage not ready');
-        return;
-      }
-      const text = await readFileAsText(file);
-      let parsed;
-      try {
-        parsed = JSON.parse(text);
-      } catch (e) {
-        toast('Invalid JSON file.');
-        return;
-      }
-      const items = extractItems(parsed);
-      if (!items) {
-        toast('Backup format not recognized.');
-        return;
-      }
-
-      // Build id set of existing outfits so we can report new vs merged.
-      const existing = await window.closetDB.getAll();
-      const existingIds = new Set(existing.map(o => o && o.id).filter(Boolean));
-
-      let saved = 0, skipped = 0, merged = 0;
-      for (const raw of items) {
-        if (!raw || typeof raw !== 'object') { skipped++; continue; }
-        const item = { ...raw };
-        if (!item.id) {
-          item.id = (crypto && crypto.randomUUID)
-            ? crypto.randomUUID()
-            : `imp_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
-        }
-        try {
-          await window.closetDB.put(item); // put = upsert by keyPath 'id' → no duplicates
-          if (existingIds.has(item.id)) merged++; else saved++;
-        } catch (e) {
-          console.warn('[closet-backup] put failed for item', item && item.id, e);
-          skipped++;
-        }
-      }
-
-      // Refresh in-memory state from DB so UI matches storage.
-      const fresh = await window.closetDB.getAll();
-      if (window.userCloset && Array.isArray(window.userCloset.outfits)) {
-        window.userCloset.outfits.length = 0;
-        window.userCloset.outfits.push(...fresh);
-      } else {
-        window.userCloset = { outfits: fresh };
-      }
-
-      if (typeof window.renderCloset === 'function')      window.renderCloset();
-      if (typeof window.renderClosetItems === 'function') window.renderClosetItems();
-      if (typeof window.updateUsageBadge === 'function')  window.updateUsageBadge();
-
-      const parts = [];
-      if (saved)   parts.push(`${saved} new`);
-      if (merged)  parts.push(`${merged} updated`);
-      if (skipped) parts.push(`${skipped} skipped`);
-      toast(`Import done: ${parts.join(', ') || 'no changes'}.`);
-    } catch (err) {
-      console.error('[closet-backup] import failed', err);
-      toast('Import failed. See console.');
-    }
-  }
-
-  onReady(function () {
-    const exportBtn  = document.getElementById('closetExportBtn');
-    const importBtn  = document.getElementById('closetImportBtn');
-    const fileInput  = document.getElementById('closetImportInput');
-
-    if (exportBtn) {
-      exportBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        exportCloset();
-      });
-    }
-
-    if (importBtn && fileInput) {
-      importBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        fileInput.value = ''; // allow re-selecting same file
-        fileInput.click();
-      });
-      fileInput.addEventListener('change', async () => {
-        const file = fileInput.files && fileInput.files[0];
-        if (file) await importCloset(file);
-        fileInput.value = '';
-      });
-    }
-  });
-})();
 
 // ============================================================
 // Closet — manual upload flow (Add Item button)
@@ -8640,25 +8053,16 @@ function updateDateTimerUI() {
   dateTimerInterval = setInterval(tick, 1000);
 }
 
-$('startDateTimerBtn').addEventListener('click', async () => {
+$('startDateTimerBtn').addEventListener('click', () => {
   const val = $('dateTimerInput').value;
   if (!val) return alert("Please select a date and time!");
   const targetDate = new Date(val);
   if (targetDate < new Date()) return alert("The date must be in the future!");
 
   localStorage.setItem('datescan.date_timer', targetDate.toISOString());
-
-  // Google requirement: show in-app explanation before permission prompt.
-  // Only ask once per device; and only if permission is still in "default" state.
+  
   if ("Notification" in window && Notification.permission === "default") {
-    let ok = true;
-    if (window.DateScanConsent && typeof window.DateScanConsent.requireNotification === 'function') {
-      try { ok = await window.DateScanConsent.requireNotification(); }
-      catch (e) { ok = false; }
-    }
-    if (ok) {
-      try { Notification.requestPermission(); } catch (e) {}
-    }
+    Notification.requestPermission();
   }
 
   triggerHaptic('success');
@@ -10958,16 +10362,8 @@ window.addEventListener('online', () => {
   }
 });
 
-document.addEventListener('click', async (e) => {
+document.addEventListener('click', (e) => {
   if (e.target && e.target.closest && e.target.closest('#weatherEnableBtn')) {
-    // Google requirement: show in-app explanation before geolocation prompt.
-    // Only the first time on this device — after that, start directly.
-    let ok = true;
-    if (window.DateScanConsent && typeof window.DateScanConsent.requireLocation === 'function') {
-      try { ok = await window.DateScanConsent.requireLocation(); }
-      catch (err) { ok = false; }
-    }
-    if (!ok) return;
     loadWeather(true);
   }
 });
@@ -12781,6 +12177,83 @@ function onGoogleMapsLoaded() {
   }
   if (!form || !input || !messagesEl) return;
 
+  // Auto-resize textarea to fit content (fallback for browsers without
+  // field-sizing: content support). Resets height before recalculating
+  // so deleting lines also shrinks the field. Capped at max-h-[120px].
+  function autoResizeInput() {
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+  }
+  input.addEventListener('input', autoResizeInput);
+
+  // Enter = send, Shift+Enter = new line. This mirrors every major
+  // chat UI (iMessage, WhatsApp Web, Discord) and lets users write
+  // multi-line messages when they actually want to.
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      form.dispatchEvent(new Event('submit', { cancelable: true }));
+    }
+  });
+
+  // Voice input — uses the Web Speech API (SpeechRecognition).
+  // On supported browsers (Chrome, Safari, Edge), tapping the mic
+  // button starts listening and fills the textarea with the result.
+  // On unsupported browsers the button is hidden gracefully.
+  const voiceBtn = document.getElementById('coachChatVoiceBtn');
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (voiceBtn && SpeechRecognition) {
+    let recognition = null;
+    let isListening = false;
+
+    voiceBtn.addEventListener('click', function() {
+      if (isListening) {
+        // Stop listening
+        recognition?.stop();
+        return;
+      }
+      recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = true;
+      recognition.continuous = false;
+
+      recognition.onstart = function() {
+        isListening = true;
+        voiceBtn.classList.add('ring-2', 'ring-brand-400');
+        voiceBtn.style.background = 'rgba(236, 72, 153, 0.15)';
+        voiceBtn.style.borderColor = 'rgba(244, 114, 182, 0.6)';
+      };
+
+      recognition.onresult = function(event) {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        input.value = transcript;
+        autoResizeInput();
+      };
+
+      recognition.onend = function() {
+        isListening = false;
+        voiceBtn.classList.remove('ring-2', 'ring-brand-400');
+        voiceBtn.style.background = '';
+        voiceBtn.style.borderColor = '';
+      };
+
+      recognition.onerror = function() {
+        isListening = false;
+        voiceBtn.classList.remove('ring-2', 'ring-brand-400');
+        voiceBtn.style.background = '';
+        voiceBtn.style.borderColor = '';
+      };
+
+      recognition.start();
+    });
+  } else if (voiceBtn) {
+    // No SpeechRecognition support — hide the mic button
+    voiceBtn.style.display = 'none';
+  }
+
   let pendingAttachments = [];
   // Chat history — persisted to IndexedDB (datescan-db → 'chats' store)
   // so the conversation survives page reloads and app restarts.
@@ -13598,18 +13071,21 @@ function onGoogleMapsLoaded() {
     if (!window.isProUser?.()) {
       const remaining = window.getPoints?.() ?? 0;
       if (remaining <= 0) {
-        const stream = document.getElementById('coachChatStream') || form.parentElement;
+        const stream = document.getElementById('coachChatMessages') || form.parentElement;
         // Idempotent: if a lock card is already in the DOM, just re-open
         // the paywall and bail out — never append a second one.
         let lock = document.getElementById('chatPaywallLock');
         if (!lock) {
           lock = document.createElement('div');
           lock.id = 'chatPaywallLock';
-          lock.className = 'mx-auto my-3 max-w-[85%] rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/10 to-purple-500/10 p-4 text-center';
+          lock.className = 'mx-auto my-3 max-w-[85%] rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/10 to-purple-500/10 p-5 text-center flex-shrink-0';
           lock.innerHTML = `
+            <div class="w-12 h-12 mx-auto bg-gradient-to-tr from-brand-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg shadow-brand-500/20 mb-3">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+            </div>
             <p class="text-sm text-white/90 leading-relaxed mb-1"><span class="font-semibold">You're out of points for today.</span></p>
-            <p class="text-sm text-gray-400 leading-relaxed mb-3">Upgrade to Pro for unlimited scans and chat — or wait for your daily refill.</p>
-            <button type="button" class="text-xs font-bold text-white bg-gradient-to-r from-brand-500 to-purple-500 px-5 py-2 rounded-xl shadow-lg shadow-brand-500/30">Unlock AI Coach</button>
+            <p class="text-[13px] text-gray-400 leading-relaxed mb-4">Upgrade to Pro for unlimited scans and chat — or wait for your daily refill.</p>
+            <button type="button" class="text-sm font-bold text-white bg-gradient-to-r from-brand-500 to-purple-500 px-6 py-2.5 rounded-xl shadow-lg shadow-brand-500/30 hover:shadow-brand-500/50 transition-shadow">Unlock AI Coach</button>
           `;
           lock.querySelector('button').addEventListener('click', () => window.openPaywall?.());
           stream?.appendChild(lock);
@@ -13626,6 +13102,7 @@ function onGoogleMapsLoaded() {
     pendingAttachments = [];
     renderAttachments();
     input.value = '';
+    input.style.height = 'auto';
     sendBtn.disabled = true;
     sendMessage(text, attachments).finally(() => {
       // Only re-enable if we're not offline; otherwise applyOfflineState
@@ -16651,178 +16128,5 @@ function onGoogleMapsLoaded() {
 </script>
 
 
-<!-- Voice-to-Text (Web Speech API) for coach chat -->
-<script>
-(function () {
-  'use strict';
-
-  var VOICE_CONSENT_KEY = 'datescan_voice_ack_v1';
-
-  function hasVoiceConsent() {
-    try {
-      var raw = localStorage.getItem(VOICE_CONSENT_KEY);
-      if (!raw) return false;
-      var p = JSON.parse(raw);
-      return p && p.confirmed === true;
-    } catch (e) { return false; }
-  }
-  function storeVoiceConsent() {
-    try {
-      localStorage.setItem(VOICE_CONSENT_KEY, JSON.stringify({
-        confirmed: true,
-        ts: new Date().toISOString(),
-        v: 1
-      }));
-    } catch (e) {}
-  }
-
-  function showVoiceConsent() {
-    return new Promise(function (resolve) {
-      var modal = document.getElementById('dsc-voice');
-      var yes   = document.getElementById('dsc-voice-yes');
-      var no    = document.getElementById('dsc-voice-no');
-      if (!modal || !yes || !no) { resolve(false); return; }
-
-      modal.hidden = false;
-      document.body.classList.add('dsc-locked');
-
-      function cleanup(answer) {
-        modal.hidden = true;
-        // Only release scroll-lock if no other consent modals are open
-        var c = document.getElementById('dsc-camera');
-        var u = document.getElementById('dsc-upload');
-        if ((!c || c.hidden) && (!u || u.hidden)) {
-          document.body.classList.remove('dsc-locked');
-        }
-        yes.removeEventListener('click', onYes);
-        no.removeEventListener('click', onNo);
-        resolve(answer);
-      }
-      function onYes() { storeVoiceConsent(); cleanup(true); }
-      function onNo()  { cleanup(false); }
-
-      yes.addEventListener('click', onYes);
-      no.addEventListener('click', onNo);
-    });
-  }
-
-  function initVoiceInput() {
-    var btn = document.getElementById('coachChatVoiceBtn');
-    var input = document.getElementById('coachChatInput');
-    if (!btn || !input) return;
-
-    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    // Graceful fallback — API not supported
-    if (!SR) {
-      btn.disabled = true;
-      btn.title = 'Voice input not supported in this browser';
-      btn.setAttribute('aria-label', 'Voice input not supported');
-      btn.style.opacity = '0.4';
-      btn.style.cursor = 'not-allowed';
-      btn.addEventListener('click', function () {
-        alert('Voice input is not supported in this browser. Try Chrome, Edge, or Safari.');
-      });
-      return;
-    }
-
-    var recognition = new SR();
-    recognition.lang = 'en-US';
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-
-    var isRecording = false;
-
-    function setRecordingState(on) {
-      isRecording = on;
-      btn.classList.toggle('is-recording', on);
-      btn.title = on ? 'Stop recording' : 'Voice input';
-      btn.setAttribute('aria-label', on ? 'Stop recording' : 'Voice input');
-    }
-
-    function startRecognition() {
-      try {
-        recognition.start();
-      } catch (err) {
-        console.warn('SpeechRecognition start failed:', err);
-        setRecordingState(false);
-      }
-    }
-
-    btn.addEventListener('click', async function () {
-      if (isRecording) {
-        try { recognition.stop(); } catch (e) {}
-        return;
-      }
-
-      // Google requirement: show in-app explanation before permission prompt.
-      // Only show the consent modal the first time; after that, start directly.
-      if (!hasVoiceConsent()) {
-        var ok = await showVoiceConsent();
-        if (!ok) return; // user declined
-      }
-
-      startRecognition();
-    });
-
-    recognition.addEventListener('start', function () {
-      setRecordingState(true);
-    });
-
-    recognition.addEventListener('result', function (event) {
-      var transcript = '';
-      for (var i = event.resultIndex; i < event.results.length; i++) {
-        transcript += event.results[i][0].transcript;
-      }
-      transcript = transcript.trim();
-      if (!transcript) return;
-
-      var current = (input.value || '').trim();
-      input.value = current ? (current + ' ' + transcript) : transcript;
-
-      input.dispatchEvent(new Event('input', { bubbles: true }));
-      input.focus();
-    });
-
-    recognition.addEventListener('error', function (event) {
-      setRecordingState(false);
-      var msg;
-      switch (event.error) {
-        case 'not-allowed':
-        case 'service-not-allowed':
-          msg = 'Microphone permission denied. Please allow microphone access in your browser settings.';
-          break;
-        case 'no-speech':
-          msg = 'No speech detected. Please try again.';
-          break;
-        case 'audio-capture':
-          msg = 'No microphone found. Please connect a microphone and try again.';
-          break;
-        case 'network':
-          msg = 'Network error during speech recognition.';
-          break;
-        case 'aborted':
-          return;
-        default:
-          msg = 'Voice input error: ' + event.error;
-      }
-      console.warn('SpeechRecognition error:', event.error);
-      alert(msg);
-    });
-
-    recognition.addEventListener('end', function () {
-      setRecordingState(false);
-    });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initVoiceInput);
-  } else {
-    initVoiceInput();
-  }
-})();
-</script>
-<script type="text/javascript" src="https://s.skimresources.com/js/301585X1789553.skimlinks.js"></script>
 </body>
 </html>
