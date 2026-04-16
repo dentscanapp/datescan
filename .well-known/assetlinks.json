@@ -1,6 +1,18 @@
 [
   {
     "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.android.dentscan",
+      "sha256_cert_fingerprints": [
+        "3F:DC:D9:C9:5A:5D:05:4A:F0:AB:85:30:CE:4C:42:56:12:67:E0:38:57:5C:AD:86:C6:4F:AB:D2:18:DA:69:5F"
+      ]
+    }
+  },
+  {
+    "relation": [
       "delegate_permission/common.handle_all_urls",
       "delegate_permission/common.get_login_creds"
     ],
