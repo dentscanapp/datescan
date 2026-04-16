@@ -1,11 +1,15 @@
 [
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
     "target": {
       "namespace": "android_app",
-      "package_name": "app.datescan.twa",
-      "sha256_cert_fingerprints":
-        ["C4:9C:96:96:D9:7A:C1:DC:31:A6:8A:4C:A2:58:98:6B:F4:DB:4B:96:64:F8:AE:F4:9C:F6:45:4D:50:9D:8B:7B"]
+      "package_name": "app.datescan",
+      "sha256_cert_fingerprints": [
+        "C4:9C:96:96:D9:7A:C1:DC:31:A6:8A:4C:A2:58:98:6B:F4:DB:4B:96:64:F8:AE:F4:9C:F6:45:4D:50:9D:8B:7B"
+      ]
     }
   }
 ]
