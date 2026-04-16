@@ -719,6 +719,12 @@
   /* Missing Tailwind classes that aren't in the compiled bundle */
   .bg-transparent { background-color: transparent !important; }
   .border-none { border: none !important; }
+  /* Saved Tips — dynamic classes for bookmark button */
+  .hover\:text-amber-400:hover { color: rgb(251 191 36) !important; }
+  .hover\:border-amber-500\/30:hover { border-color: rgba(245,158,11,.3) !important; }
+  .hover\:bg-amber-500\/10:hover { background-color: rgba(245,158,11,.1) !important; }
+  .hover\:bg-red-500\/15:hover { background-color: rgba(239,68,68,.15) !important; }
+  .group:hover .group-hover\:opacity-100 { opacity: 1 !important; }
 
   #coachChatInput {
     line-height: 1.5;
@@ -2098,6 +2104,8 @@
      ============================================================ -->
 
 <div class="ambient-glow"></div>
+<!-- Tailwind safelist: classes used dynamically in JS that must survive purging -->
+<div class="hidden hover:text-amber-400 hover:border-amber-500/30 hover:bg-amber-500/10 hover:bg-red-500/15 text-amber-400 border-amber-500/40 bg-amber-500/10 bg-white/[0.03] group-hover:opacity-100"></div>
 
 <!-- Onboarding Modal -->
 <div id="onboardingModal" class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-[#09090b]/95 backdrop-blur-xl transition-opacity duration-500">
@@ -5201,13 +5209,17 @@ window.closetDB = closetDB;
 // page reloads / app restarts. Uses the same datescan-db so it's
 // covered by the existing "Delete all my data" wipe.
 const chatDB = (function () {
+  let _dbPromise = null;
   async function getDB() {
-    // Reuse the same database promise from closetDB — it already
-    // ensures the 'chats' object store exists (v2 upgrade).
-    if (!window.idb || !window.idb.openDB) {
-      return Promise.reject(new Error('idb library not loaded'));
+    if (!_dbPromise) {
+      // Force closetDB to initialise first (it has the upgrade callback)
+      try { await closetDB.getAll(); } catch(e) {}
+      if (!window.idb || !window.idb.openDB) {
+        return Promise.reject(new Error('idb library not loaded'));
+      }
+      _dbPromise = window.idb.openDB('datescan-db', 5);
     }
-    return window.idb.openDB('datescan-db', 5);
+    return _dbPromise;
   }
   return {
     async getAll() {
@@ -5233,11 +5245,16 @@ window.chatDB = chatDB;
 // lightweight on-device classifier that adjusts future responses.
 // Covered by the existing "Delete all my data" wipe.
 const feedbackDB = (function () {
+  let _dbPromise = null;
   async function getDB() {
-    if (!window.idb || !window.idb.openDB) {
-      return Promise.reject(new Error('idb library not loaded'));
+    if (!_dbPromise) {
+      try { await closetDB.getAll(); } catch(e) {}
+      if (!window.idb || !window.idb.openDB) {
+        return Promise.reject(new Error('idb library not loaded'));
+      }
+      _dbPromise = window.idb.openDB('datescan-db', 5);
     }
-    return window.idb.openDB('datescan-db', 5);
+    return _dbPromise;
   }
   return {
     async add(entry) {
@@ -5280,11 +5297,21 @@ window.feedbackDB = feedbackDB;
 // collection of their favourite style tips. Shown in the Story view's
 // "Saved Tips" card. Covered by the "Delete all my data" wipe.
 const savedTipsDB = (function () {
+  let _dbPromise = null;
   async function getDB() {
-    if (!window.idb || !window.idb.openDB) {
-      return Promise.reject(new Error('idb library not loaded'));
+    // Reuse the closetDB promise — it includes the v5 upgrade that
+    // creates the 'savedTips' object store. Calling openDB without
+    // the upgrade callback can fail if the DB hasn't been upgraded yet.
+    if (!_dbPromise) {
+      // Force closetDB to initialise first (it has the upgrade callback)
+      try { await closetDB.getAll(); } catch(e) { /* may be empty, that's fine */ }
+      // Now open our own connection at the same version
+      if (!window.idb || !window.idb.openDB) {
+        return Promise.reject(new Error('idb library not loaded'));
+      }
+      _dbPromise = window.idb.openDB('datescan-db', 5);
     }
-    return window.idb.openDB('datescan-db', 5);
+    return _dbPromise;
   }
   return {
     async add(entry) {
@@ -12812,7 +12839,9 @@ function onGoogleMapsLoaded() {
       })();
       saveTipBtn.addEventListener('click', async function () {
         const snippet = (bubble.querySelector('.bubble-text')?.textContent || '').slice(0, 500);
-        if (!snippet) return;
+        console.log('[savedTip] clicked, snippet length:', snippet.length, 'savedTipsDB exists:', !!window.savedTipsDB);
+        if (!snippet) { console.warn('[savedTip] no snippet found'); return; }
+        if (!window.savedTipsDB) { console.error('[savedTip] savedTipsDB is not available!'); return; }
         try {
           if (saveTipBtn.dataset.savedId) {
             // Un-save
