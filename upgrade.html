@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#09090b">
+<title>DateScan Premium — Unlock Your Edge</title>
+<script src="https://gumroad.com/js/gumroad.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{overflow-x:clip;overscroll-behavior-x:none}
+body{
+  font-family:'Inter',sans-serif;
+  background:#09090b;
+  color:#fafafa;
+  min-height:100vh;
+  overflow-x:clip;
+  overscroll-behavior-x:none;
+  -webkit-font-smoothing:antialiased;
+}
+
+.ambient-glow{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(circle at 20% 10%,rgba(236,72,153,.10) 0%,transparent 45%),
+    radial-gradient(circle at 80% 85%,rgba(147,51,234,.08) 0%,transparent 45%);
+}
+
+.container{
+  position:relative;z-index:1;
+  max-width:480px;width:100%;margin:0 auto;
+  padding:32px 20px 60px;
+}
+
+/* ── Header ── */
+.header{text-align:center;margin-bottom:28px}
+
+.crown-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(236,72,153,.08);
+  border:1px solid rgba(236,72,153,.20);
+  padding:6px 16px;border-radius:9999px;
+  font-size:11px;font-weight:600;
+  letter-spacing:.15em;text-transform:uppercase;
+  color:#f472b6;margin-bottom:16px;
+}
+.crown-badge i{font-size:10px}
+
+h1{font-size:2rem;font-weight:800;line-height:1.15;letter-spacing:-.02em;margin-bottom:10px}
+h1 .gradient{
+  background:linear-gradient(135deg,#ec4899 0%,#9333ea 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.subtitle{color:#9ca3af;font-size:.92rem;line-height:1.55;max-width:360px;margin:0 auto}
+
+/* ── Feature box ── */
+.features-box{
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:1rem;
+  padding:18px 16px;margin-bottom:30px;
+}
+
+.feature-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:10px 0;
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+.feature-item:last-child{border-bottom:none}
+
+.feature-icon{
+  width:34px;height:34px;flex-shrink:0;
+  border-radius:10px;
+  background:rgba(236,72,153,.10);
+  border:1px solid rgba(236,72,153,.20);
+  display:flex;align-items:center;justify-content:center;
+  color:#f472b6;font-size:14px;
+}
+
+.feature-text{flex:1}
+.feature-title{font-weight:600;font-size:.92rem;margin-bottom:2px;color:#fafafa}
+.feature-desc{color:#6b7280;font-size:.8rem;line-height:1.4}
+
+/* ── Section label ── */
+.section-label{
+  text-align:center;font-size:11px;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:#6b7280;margin-bottom:16px;font-weight:600;
+}
+
+/* ── Plan buttons (horizontal split) ── */
+.plan-wrapper{position:relative;margin-bottom:16px}
+
+.plan-wrapper.popular .plan-btn{
+  border-color:rgba(236,72,153,.40);
+  background:linear-gradient(180deg,rgba(236,72,153,.06) 0%,rgba(236,72,153,.01) 100%);
+  box-shadow:0 0 30px rgba(236,72,153,.12);
+}
+.plan-wrapper.best-value .plan-btn{
+  border-color:rgba(147,51,234,.35);
+  background:linear-gradient(180deg,rgba(147,51,234,.05) 0%,rgba(147,51,234,.01) 100%);
+}
+
+.badge{
+  position:absolute;top:-10px;left:50%;transform:translateX(-50%);
+  padding:4px 14px;border-radius:9999px;
+  font-size:10px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  white-space:nowrap;color:#fff;z-index:2;
+}
+.badge-popular{
+  background:linear-gradient(135deg,#ec4899,#9333ea);
+  box-shadow:0 4px 14px rgba(236,72,153,.35);
+}
+.badge-value{
+  background:linear-gradient(135deg,#9333ea,#6d28d9);
+  box-shadow:0 4px 14px rgba(147,51,234,.35);
+}
+
+.plan-btn{
+  display:flex;align-items:stretch;
+  width:100%;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:1rem;
+  text-decoration:none;color:#fafafa;
+  overflow:hidden;
+  transition:border-color .2s ease,transform .1s ease,box-shadow .2s ease;
+  cursor:pointer;
+}
+.plan-btn:hover{
+  border-color:rgba(236,72,153,.25);
+  transform:translateY(-1px);
+  box-shadow:0 8px 24px rgba(0,0,0,.4);
+}
+.plan-btn:active{transform:translateY(0)}
+
+.plan-left{
+  flex:1;
+  display:flex;align-items:center;gap:14px;
+  padding:18px 20px;
+}
+
+.plan-icon{
+  width:40px;height:40px;flex-shrink:0;
+  border-radius:10px;
+  background:rgba(236,72,153,.10);
+  border:1px solid rgba(236,72,153,.20);
+  display:flex;align-items:center;justify-content:center;
+  color:#f472b6;font-size:15px;
+}
+.best-value .plan-icon{
+  background:rgba(147,51,234,.10);
+  border-color:rgba(147,51,234,.25);
+  color:#a78bfa;
+}
+
+.plan-details{display:flex;flex-direction:column;gap:2px}
+.plan-name{font-weight:700;font-size:1rem;line-height:1.2}
+.plan-meta{color:#6b7280;font-size:12px}
+.plan-savings{color:#34d399;font-size:12px;font-weight:600;margin-top:1px}
+
+.plan-right{
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:14px 20px;
+  border-left:1px solid rgba(255,255,255,.08);
+  min-width:90px;
+}
+.plan-price{font-size:1.25rem;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.plan-period{
+  font-size:10px;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:#6b7280;margin-top:3px;
+}
+
+/* ── Trust row ── */
+.trust-row{
+  display:flex;justify-content:center;gap:18px;
+  margin:22px 0;flex-wrap:wrap;
+}
+.trust-item{
+  display:flex;align-items:center;gap:6px;
+  color:#6b7280;font-size:12px;font-weight:500;
+}
+.trust-item i{color:#34d399;font-size:11px}
+
+/* ── Activation ── */
+.activation-area{
+  margin-top:32px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:1rem;padding:22px 18px;
+}
+.activation-title{text-align:center;font-size:.95rem;font-weight:600;margin-bottom:4px}
+.activation-sub{text-align:center;color:#6b7280;font-size:12px;margin-bottom:14px}
+
+input{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.10);
+  color:#fafafa;padding:13px 14px;
+  border-radius:.75rem;width:100%;
+  font-family:inherit;font-size:.92rem;
+  margin-bottom:10px;text-align:center;
+  letter-spacing:.05em;
+  transition:border-color .2s ease,box-shadow .2s ease;
+}
+input:focus{
+  outline:none;
+  border-color:rgba(236,72,153,.50);
+  box-shadow:0 0 0 3px rgba(236,72,153,.12);
+}
+input::placeholder{color:#4b5563}
+
+.activate-link-btn{
+  background:linear-gradient(135deg,#ec4899 0%,#9333ea 100%);
+  color:#fff;border:none;width:100%;
+  padding:13px;border-radius:.75rem;
+  font-weight:600;font-family:inherit;font-size:.92rem;
+  cursor:pointer;
+  transition:transform .15s ease,box-shadow .2s ease;
+  box-shadow:0 4px 14px rgba(236,72,153,.30);
+}
+.activate-link-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 6px 20px rgba(236,72,153,.40);
+}
+.activate-link-btn:active{transform:scale(.98)}
+.activate-link-btn:disabled{opacity:.5;cursor:not-allowed}
+
+#status-msg{margin-top:12px;font-size:13px;font-weight:500;min-height:20px;text-align:center}
+
+.footer-note{
+  text-align:center;color:#4b5563;
+  font-size:11px;margin-top:22px;line-height:1.5;
+}
+.footer-note a{color:#f472b6;text-decoration:none}
+
+/* ── Hidden utility ── */
+.hidden{display:none!important}
+
+@media(max-width:420px){
+  h1{font-size:1.75rem}
+  .container{padding:24px 16px 40px}
+  .plan-left{padding:14px 14px}
+  .plan-right{padding:12px 14px;min-width:80px}
+  .plan-price{font-size:1.1rem}
+}
+</style>
+</head>
+<body>
+<div class="ambient-glow"></div>
+<div class="container">
+
+  <!-- ── Header ── -->
+  <div class="header">
+    <div class="crown-badge"><i class="fas fa-crown"></i> DateScan Premium</div>
+    <h1>Unlock Your <span class="gradient">Unfair Advantage</span></h1>
+    <p class="subtitle">Stop guessing. Start matching. Turn every photo into a weapon that gets real results.</p>
+  </div>
+
+  <!-- ── Features ── -->
+  <div id="features-section" class="features-box">
+    <div class="feature-item">
+      <div class="feature-icon"><i class="fas fa-infinity"></i></div>
+      <div class="feature-text">
+        <div class="feature-title">Unlimited Profile Scans</div>
+        <div class="feature-desc">Test every photo, every angle, every outfit. No caps. No cooldowns.</div>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon"><i class="fas fa-brain"></i></div>
+      <div class="feature-text">
+        <div class="feature-title">Deep Attraction Analysis</div>
+        <div class="feature-desc">Brutal AI feedback on what actually gets swipe-rights.</div>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+      <div class="feature-text">
+        <div class="feature-title">Priority Processing</div>
+        <div class="feature-desc">Skip queues. Results in seconds, not minutes.</div>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+      <div class="feature-text">
+        <div class="feature-title">Style DNA Report</div>
+        <div class="feature-desc">Know your signature look. Double down on what works.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Plans (hidden for Android app users) ── -->
+  <div id="plans-section">
+    <div class="section-label">Choose Your Plan</div>
+
+    <!-- Weekly -->
+    <div class="plan-wrapper">
+      <a href="https://datascanapp.gumroad.com/l/week" class="gumroad-button plan-btn">
+        <div class="plan-left">
+          <div class="plan-icon"><i class="fas fa-bolt"></i></div>
+          <div class="plan-details">
+            <div class="plan-name">Weekly Pass</div>
+            <div class="plan-meta">7 days full access</div>
+          </div>
+        </div>
+        <div class="plan-right">
+          <div class="plan-price">$4.99</div>
+          <div class="plan-period">/week</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Monthly -->
+    <div class="plan-wrapper popular">
+      <div class="badge badge-popular"><i class="fas fa-fire"></i>&ensp;Most Popular</div>
+      <a href="https://datascanapp.gumroad.com/l/month" class="gumroad-button plan-btn">
+        <div class="plan-left">
+          <div class="plan-icon"><i class="fas fa-crown"></i></div>
+          <div class="plan-details">
+            <div class="plan-name">Monthly Pass</div>
+            <div class="plan-meta">30 days full access</div>
+            <div class="plan-savings">Save 50%</div>
+          </div>
+        </div>
+        <div class="plan-right">
+          <div class="plan-price">$9.99</div>
+          <div class="plan-period">/month</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Yearly -->
+    <div class="plan-wrapper best-value">
+      <div class="badge badge-value"><i class="fas fa-gem"></i>&ensp;Best Value</div>
+      <a href="https://datascanapp.gumroad.com/l/year" class="gumroad-button plan-btn">
+        <div class="plan-left">
+          <div class="plan-icon"><i class="fas fa-gem"></i></div>
+          <div class="plan-details">
+            <div class="plan-name">Yearly Access</div>
+            <div class="plan-meta">365 days full access</div>
+            <div class="plan-savings">Save 58%</div>
+          </div>
+        </div>
+        <div class="plan-right">
+          <div class="plan-price">$49.99</div>
+          <div class="plan-period">/year</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="trust-row">
+      <div class="trust-item"><i class="fas fa-lock"></i> Secure Checkout</div>
+      <div class="trust-item"><i class="fas fa-undo"></i> Cancel Anytime</div>
+      <div class="trust-item"><i class="fas fa-shield-alt"></i> Private &amp; Safe</div>
+    </div>
+  </div>
+
+  <!-- ── Activation (always visible) ── -->
+  <div class="activation-area">
+    <div class="activation-title">Already Purchased?</div>
+    <div class="activation-sub">Enter your Sale ID to activate Premium</div>
+    <input type="text" id="sale-id" placeholder="G12345-67890" autocomplete="off" spellcheck="false">
+    <button class="activate-link-btn" onclick="runActivation()">Activate Premium</button>
+    <div id="status-msg"></div>
+  </div>
+
+  <div id="footer-gumroad" class="footer-note">Payments processed by Gumroad. Check email for Sale ID after purchase.</div>
+
+</div>
+
+<script>
+/* ── Routing Logic ── */
+(function(){
+  const params = new URLSearchParams(window.location.search);
+  const isAndroidApp = params.get('platform') === 'android';
+  const isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+  // Scenario A: Desktop → redirect to landing
+  if (!isMobile) {
+    window.location.href = 'https://datescan.app/landing';
+    return;
+  }
+
+  // Scenario C: Android App → hide payment links, show activation only
+  if (isAndroidApp) {
+    document.getElementById('plans-section').classList.add('hidden');
+    document.getElementById('features-section').classList.add('hidden');
+    document.getElementById('footer-gumroad').classList.add('hidden');
+  }
+
+  // Scenario B: Mobile web without ?platform=android → stays on upgrade.html (default)
+})();
+
+/* ── Activation Logic ── */
+async function runActivation(){
+  const id = document.getElementById('sale-id').value.trim();
+  const msg = document.getElementById('status-msg');
+  const btn = document.querySelector('.activate-link-btn');
+
+  if (!id) {
+    msg.style.color = '#ef4444';
+    msg.innerText = 'Enter Sale ID first.';
+    return;
+  }
+
+  btn.disabled = true;
+  msg.style.color = '#9ca3af';
+  msg.innerText = 'Verifying license\u2026';
+
+  try {
+    const res = await fetch('https://license-verify.datescan.app', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ saleId: id })
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      const exp = new Date();
+      exp.setDate(exp.getDate() + data.days);
+      localStorage.setItem('premium_until', exp.getTime());
+      msg.style.color = '#22c55e';
+      msg.innerText = '\u2713 Premium Active! Redirecting\u2026';
+      setTimeout(function(){
+        window.location.href = 'index.html?platform=android';
+      }, 2000);
+    } else {
+      msg.style.color = '#ef4444';
+      msg.innerText = 'Invalid Sale ID. Check email.';
+      btn.disabled = false;
+    }
+  } catch (e) {
+    msg.style.color = '#ef4444';
+    msg.innerText = 'Connection error. Try again.';
+    btn.disabled = false;
+  }
+}
+
+document.getElementById('sale-id').addEventListener('keypress', function(e){
+  if (e.key === 'Enter') runActivation();
+});
+</script>
+</body>
+</html>
