@@ -366,13 +366,13 @@ input::placeholder{color:#4b5563}
   <!-- ── Activation (always visible) ── -->
   <div class="activation-area">
     <div class="activation-title">Already Purchased?</div>
-    <div class="activation-sub">Enter your Sale ID to activate Premium</div>
-    <input type="text" id="sale-id" placeholder="G12345-67890" autocomplete="off" spellcheck="false">
+    <div class="activation-sub">Enter your License Key from your email to activate Premium.</div>
+    <input type="text" id="sale-id" placeholder="XXXX-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false">
     <button class="activate-link-btn" onclick="runActivation()">Activate Premium</button>
     <div id="status-msg"></div>
   </div>
 
-  <div id="footer-gumroad" class="footer-note">Payments processed by Gumroad. Check email for Sale ID after purchase.</div>
+  <div id="footer-gumroad" class="footer-note">Payments processed by Gumroad. Check email for License Key after purchase.</div>
 
 </div>
 
@@ -401,45 +401,51 @@ input::placeholder{color:#4b5563}
 
 /* ── Activation Logic ── */
 async function runActivation(){
-  const id = document.getElementById('sale-id').value.trim();
+  const idInput = document.getElementById('sale-id');
   const msg = document.getElementById('status-msg');
   const btn = document.querySelector('.activate-link-btn');
+  
+  const id = idInput.value.trim();
 
   if (!id) {
     msg.style.color = '#ef4444';
-    msg.innerText = 'Enter Sale ID first.';
+    msg.innerText = 'Please enter your License Key.';
     return;
   }
 
   btn.disabled = true;
   msg.style.color = '#9ca3af';
-  msg.innerText = 'Verifying license\u2026';
+  msg.innerText = 'Verifying License Key...';
 
   try {
-    const res = await fetch('https://license-verify.datescan.app', {
+    const res = await fetch('https://core.datescan.app/api/verify-license', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ saleId: id })
+      body: JSON.stringify({ license_key: id })
     });
+    
     const data = await res.json();
 
-    if (data.success) {
+    if (data.valid) {
       const exp = new Date();
       exp.setDate(exp.getDate() + data.days);
       localStorage.setItem('premium_until', exp.getTime());
+      
       msg.style.color = '#22c55e';
-      msg.innerText = '\u2713 Premium Active! Redirecting\u2026';
+      msg.innerText = '\u2713 Success! ' + data.product + ' activated.';
+      
       setTimeout(function(){
         window.location.href = 'index.html?platform=android';
       }, 2000);
+      
     } else {
       msg.style.color = '#ef4444';
-      msg.innerText = 'Invalid Sale ID. Check email.';
+      msg.innerText = 'Invalid License Key. Please check your email and try again.';
       btn.disabled = false;
     }
-  } catch (e) {
+  } catch (err) {
     msg.style.color = '#ef4444';
-    msg.innerText = 'Connection error. Try again.';
+    msg.innerText = 'Connection error. Check your internet.';
     btn.disabled = false;
   }
 }
