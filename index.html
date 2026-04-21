@@ -20714,12 +20714,33 @@ async function handlePayment(plan) {
 
     } catch (e) {
       console.error("[DateScan] Google Play billing error:", e);
+      const errMsg = (e && (e.message || String(e))).toLowerCase();
+
+      // "Already owned" / ITEM_ALREADY_OWNED means the user has an
+      // active subscription but localStorage lost the Pro flag (app
+      // reinstall, cleared data, etc.).  Verify with the backend and
+      // restore Pro instead of bouncing them to the Play Store.
+      if (errMsg.includes('already') || errMsg.includes('owned') || errMsg.includes('item_already_owned')) {
+        console.log("[DateScan] already-owned detected — verifying with backend");
+        const restored = await verifyProStatus({ poll: true, visible: true });
+        if (restored) {
+          closePaywall();
+          return;
+        }
+        // Backend says not Pro either — tell user to manage sub
+        hideVerifyingOverlay();
+        setVerifyingMessage(
+          typeof window.t === 'function'
+            ? window.t('already_owned_manage')
+            : "Google Play says you already own this. Open Google Play → Subscriptions to manage or cancel, then try again.",
+          true, 'already_owned_manage'
+        );
+        showVerifyingOverlay();
+        return;
+      }
+
       hideVerifyingOverlay();
-      // No web checkout available — send them to the Play Store so
-      // they can install the app and try the purchase from inside the
-      // TWA. This branch is hit on cancelled prompts too, which is
-      // mildly suboptimal, but redirecting after a cancel is better
-      // than silently swallowing the error.
+      // Cancelled prompts or other errors → redirect to Play Store
       redirectToPlayStore(plan);
       return;
     }
