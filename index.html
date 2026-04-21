@@ -3120,6 +3120,30 @@ if (window.__DS_IS_ANDROID_APP) {
     #pwa-install-banner { padding: 0 24px 20px; }
   }
 </style>
+<style>
+  /* Closet swipe-to-reorder indicators */
+  [data-closet-card] {
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: pan-y;
+  }
+  [data-closet-card]:active {
+    cursor: grabbing;
+  }
+  /* Prevent native image drag on closet cards (desktop) */
+  [data-closet-card] img {
+    -webkit-user-drag: none;
+    user-select: none;
+    pointer-events: none;
+  }
+  .closet-drag-indicator {
+    transition: opacity 0.15s ease;
+  }
+  .closet-drag-indicator.closet-drag-left,
+  .closet-drag-indicator.closet-drag-right {
+    opacity: 0;
+  }
+</style>
 
 <!-- ===== AGE GATE (18+) ===== -->
 <div id="age-gate" role="dialog" aria-modal="true" aria-labelledby="ag-title" hidden>
@@ -13440,8 +13464,14 @@ const closetDB = (function () {
     async getAll() {
       const db = await getSharedDB();
       const all = await db.getAll('outfits');
-      // Newest first
-      all.sort((a, b) => (b.date || 0) - (a.date || 0));
+      // If any item has a sortIndex, sort by that (manual reorder).
+      // Otherwise fall back to newest-first by date.
+      const hasSortIndex = all.some(o => typeof o.sortIndex === 'number');
+      if (hasSortIndex) {
+        all.sort((a, b) => (a.sortIndex ?? 999999) - (b.sortIndex ?? 999999));
+      } else {
+        all.sort((a, b) => (b.date || 0) - (a.date || 0));
+      }
       return all;
     },
     async put(outfit) {
@@ -14166,7 +14196,13 @@ window.renderCloset = function(filter = 'all', append = false) {
         }
         const scanTagRow = scanTagPills.length ? `<div class="flex flex-wrap gap-1 mt-1.5">${scanTagPills.join('')}</div>` : '';
         return `
-        <div class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-default relative">
+        <div class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-grab relative" data-outfit-id="${_esc(outfit.id)}" data-closet-card>
+            <div class="absolute top-1/2 left-0 -translate-y-1/2 z-30 closet-drag-indicator closet-drag-left pointer-events-none opacity-0 transition-opacity">
+              <div class="w-6 h-10 flex items-center justify-center bg-black/70 rounded-r-lg border border-white/10"><svg class="w-3 h-3 text-brand-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg></div>
+            </div>
+            <div class="absolute top-1/2 right-0 -translate-y-1/2 z-30 closet-drag-indicator closet-drag-right pointer-events-none opacity-0 transition-opacity">
+              <div class="w-6 h-10 flex items-center justify-center bg-black/70 rounded-l-lg border border-white/10"><svg class="w-3 h-3 text-brand-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></div>
+            </div>
             <div class="aspect-[3/4] bg-black relative">
                 <img src="${_esc(outfit.image)}" class="w-full h-full object-cover opacity-90 transition-opacity" alt="" data-i18n-aria="alt_saved_item" loading="lazy" />
                 ${typeBadge}
@@ -14288,7 +14324,13 @@ window.renderClosetItems = function(typeFilter = 'all', append = false) {
         const tagRow = tagPills.length ? `<div class="flex flex-wrap gap-1 mt-1.5">${tagPills.join('')}</div>` : '';
 
         return `
-        <div class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-default relative">
+        <div class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-grab relative" data-outfit-id="${_esc(item.id)}" data-closet-card>
+            <div class="absolute top-1/2 left-0 -translate-y-1/2 z-30 closet-drag-indicator closet-drag-left pointer-events-none opacity-0 transition-opacity">
+              <div class="w-6 h-10 flex items-center justify-center bg-black/70 rounded-r-lg border border-white/10"><svg class="w-3 h-3 text-brand-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg></div>
+            </div>
+            <div class="absolute top-1/2 right-0 -translate-y-1/2 z-30 closet-drag-indicator closet-drag-right pointer-events-none opacity-0 transition-opacity">
+              <div class="w-6 h-10 flex items-center justify-center bg-black/70 rounded-l-lg border border-white/10"><svg class="w-3 h-3 text-brand-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></div>
+            </div>
             <div class="aspect-[3/4] bg-black relative">
                 <img src="${_esc(item.image)}" class="w-full h-full object-cover opacity-90 transition-opacity" alt="" data-i18n-aria="alt_saved_item" loading="lazy" />
                 <div class="absolute top-2 left-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-white border border-white/10 z-10">${TYPE_LABELS[item.type] || t('closet_item_label')}</div>
@@ -14339,6 +14381,292 @@ window.renderClosetItems = function(typeFilter = 'all', append = false) {
         }
     }
 };
+
+// ===== Swipe-to-Reorder for Closet Cards =====
+// Touch/mouse drag: swipe left → item moves left, swipe right → item moves right
+(function initClosetReorder() {
+  var DRAG_THRESHOLD = 35; // px needed to trigger reorder
+  var dragState = null;
+
+  // Assign sortIndex to all items that don't have one yet
+  function ensureSortIndexes() {
+    var items = (window.userCloset && window.userCloset.outfits) || [];
+    items.forEach(function(o, i) {
+      if (typeof o.sortIndex !== 'number') {
+        o.sortIndex = i;
+      }
+    });
+  }
+
+  // Persist the current order to IndexedDB
+  async function persistReorder() {
+    var items = (window.userCloset && window.userCloset.outfits) || [];
+    items.forEach(function(o, i) { o.sortIndex = i; });
+    var saves = items.map(function(o) {
+      return window.closetDB && typeof window.closetDB.put === 'function'
+        ? window.closetDB.put(o).catch(function() {})
+        : Promise.resolve();
+    });
+    await Promise.all(saves);
+  }
+
+  // Find the index of an outfit by ID in the master array
+  function findOutfitIndex(id) {
+    var outfits = (window.userCloset && window.userCloset.outfits) || [];
+    for (var i = 0; i < outfits.length; i++) {
+      if (outfits[i].id === id) return i;
+    }
+    return -1;
+  }
+
+  // Get the visible (filtered) items for a grid, in the same order as rendered
+  function getVisibleItems(gridId) {
+    var outfits = (window.userCloset && window.userCloset.outfits) || [];
+    if (gridId === 'closetGrid') {
+      var filter = 'all';
+      var activeBtn = document.querySelector('.closet-filter-btn[aria-pressed="true"]');
+      if (activeBtn) filter = activeBtn.dataset.filter || 'all';
+      var items = outfits.filter(function(o) { return o.source !== 'upload'; });
+      if (filter !== 'all') items = items.filter(function(o) { return o.occasion === filter; });
+      return items;
+    } else {
+      var typeFilter = 'all';
+      var activeBtn2 = document.querySelector('.closet-type-btn[aria-pressed="true"]');
+      if (activeBtn2) typeFilter = activeBtn2.dataset.typeFilter || 'all';
+      var items2 = outfits.filter(function(o) { return o.source === 'upload'; });
+      if (typeFilter !== 'all') items2 = items2.filter(function(o) { return o.type === typeFilter; });
+      return items2;
+    }
+  }
+
+  // Perform the reorder: swap the dragged item with its neighbour by ID
+  function doReorderById(movedId, gridId, direction) {
+    if (!movedId || !gridId) return;
+
+    // Get the list of visible items in render order
+    var visibleItems = getVisibleItems(gridId);
+
+    // Find the visual position of the dragged card
+    var visualIdx = -1;
+    for (var v = 0; v < visibleItems.length; v++) {
+      if (visibleItems[v].id === movedId) { visualIdx = v; break; }
+    }
+    if (visualIdx === -1) return;
+
+    // Determine the target visual position
+    var targetVisualIdx = direction === 'left' ? visualIdx - 1 : visualIdx + 1;
+    if (targetVisualIdx < 0 || targetVisualIdx >= visibleItems.length) return;
+
+    var targetItem = visibleItems[targetVisualIdx];
+    if (!targetItem) return;
+
+    // Find both items in the master array and swap them
+    var masterIdx1 = findOutfitIndex(movedId);
+    var masterIdx2 = findOutfitIndex(targetItem.id);
+    if (masterIdx1 === -1 || masterIdx2 === -1) return;
+
+    var outfits = window.userCloset.outfits;
+    var temp = outfits[masterIdx1];
+    outfits[masterIdx1] = outfits[masterIdx2];
+    outfits[masterIdx2] = temp;
+
+    // Re-assign sortIndex to match new array order
+    outfits.forEach(function(o, j) { o.sortIndex = j; });
+
+    // Re-render the grid with the new order
+    if (gridId === 'closetGrid') {
+      var filter = 'all';
+      var activeBtn = document.querySelector('.closet-filter-btn[aria-pressed="true"]');
+      if (activeBtn) filter = activeBtn.dataset.filter || 'all';
+      window.renderCloset(filter);
+    } else if (gridId === 'closetItemsGrid') {
+      var typeFilter = 'all';
+      var activeBtn2 = document.querySelector('.closet-type-btn[aria-pressed="true"]');
+      if (activeBtn2) typeFilter = activeBtn2.dataset.typeFilter || 'all';
+      window.renderClosetItems(typeFilter);
+    }
+
+    // Highlight the moved card briefly so the user sees where it landed
+    requestAnimationFrame(function() {
+      var grid = document.getElementById(gridId);
+      if (!grid) return;
+      var newCard = grid.querySelector('[data-outfit-id="' + movedId + '"]');
+      if (newCard) {
+        newCard.style.transition = 'box-shadow 0.3s ease, transform 0.3s ease';
+        newCard.style.boxShadow = '0 0 24px rgba(236,72,153,0.45)';
+        newCard.style.transform = 'scale(1.04)';
+        setTimeout(function() {
+          newCard.style.boxShadow = '';
+          newCard.style.transform = '';
+          setTimeout(function() { newCard.style.transition = ''; }, 350);
+        }, 350);
+      }
+    });
+
+    // Persist to IndexedDB (debounced)
+    clearTimeout(window._closetReorderTimer);
+    window._closetReorderTimer = setTimeout(function() {
+      persistReorder();
+    }, 400);
+
+    if (typeof triggerHaptic === 'function') triggerHaptic('success');
+  }
+
+  function onDragStart(e) {
+    // Only respond to primary button / first touch
+    if (e.type === 'mousedown' && e.button !== 0) return;
+    var card = e.target.closest('[data-closet-card]');
+    if (!card) return;
+    // Don't start drag from action buttons or any button
+    if (e.target.closest('button')) return;
+    // Don't start from links
+    if (e.target.closest('a')) return;
+
+    var point = e.touches ? e.touches[0] : e;
+    dragState = {
+      card: card,
+      startX: point.clientX,
+      startY: point.clientY,
+      currentX: point.clientX,
+      moved: false
+    };
+
+    // On desktop: prevent native image drag and text selection
+    if (e.type === 'mousedown') {
+      e.preventDefault();
+      // Capture mouse events on document level so we don't lose them
+      // when the cursor moves outside the card
+      document.addEventListener('mousemove', onDragMove);
+      document.addEventListener('mouseup', onDragEnd);
+    }
+  }
+
+  function onDragMove(e) {
+    if (!dragState) return;
+    var point = e.touches ? e.touches[0] : e;
+    dragState.currentX = point.clientX;
+    var dx = dragState.currentX - dragState.startX;
+    var dy = Math.abs(point.clientY - dragState.startY);
+
+    // If vertical scroll intent, cancel drag
+    if (!dragState.moved && dy > 15 && dy > Math.abs(dx)) {
+      cancelDrag();
+      return;
+    }
+
+    if (Math.abs(dx) > 8) {
+      dragState.moved = true;
+
+      // Visual feedback: translate the card
+      var card = dragState.card;
+      var clamp = Math.max(-70, Math.min(70, dx * 0.8));
+      card.style.transform = 'translateX(' + clamp + 'px) scale(1.03)';
+      card.style.transition = 'none';
+      card.style.zIndex = '25';
+      card.style.cursor = 'grabbing';
+      card.style.boxShadow = '0 8px 30px rgba(0,0,0,0.4)';
+
+      // Show directional indicator arrows
+      var leftInd = card.querySelector('.closet-drag-left');
+      var rightInd = card.querySelector('.closet-drag-right');
+      if (leftInd) leftInd.style.opacity = dx < -DRAG_THRESHOLD ? '1' : '0';
+      if (rightInd) rightInd.style.opacity = dx > DRAG_THRESHOLD ? '1' : '0';
+
+      // Prevent page scroll while dragging (touch)
+      if (e.cancelable) e.preventDefault();
+      // Prevent native drag on desktop
+      if (e.type === 'mousemove') e.preventDefault();
+    }
+  }
+
+  function onDragEnd(e) {
+    if (!dragState) return;
+    var card = dragState.card;
+    var dx = dragState.currentX - dragState.startX;
+
+    // Remove document-level mouse listeners (desktop)
+    document.removeEventListener('mousemove', onDragMove);
+    document.removeEventListener('mouseup', onDragEnd);
+
+    // Reset visual
+    card.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
+    card.style.transform = '';
+    card.style.zIndex = '';
+    card.style.cursor = '';
+    card.style.boxShadow = '';
+
+    // Hide indicators
+    var leftInd = card.querySelector('.closet-drag-left');
+    var rightInd = card.querySelector('.closet-drag-right');
+    if (leftInd) leftInd.style.opacity = '0';
+    if (rightInd) rightInd.style.opacity = '0';
+
+    setTimeout(function() { card.style.transition = ''; }, 250);
+
+    // Trigger reorder if threshold met
+    if (dragState.moved && Math.abs(dx) >= DRAG_THRESHOLD) {
+      var direction = dx < 0 ? 'left' : 'right';
+      var movedId = card.getAttribute('data-outfit-id');
+      var gridId = card.parentElement ? card.parentElement.id : '';
+      // Small delay so the card snap-back animation plays first
+      setTimeout(function() { doReorderById(movedId, gridId, direction); }, 180);
+    }
+
+    dragState = null;
+  }
+
+  function cancelDrag() {
+    if (!dragState) return;
+    var card = dragState.card;
+    // Remove document-level mouse listeners (desktop)
+    document.removeEventListener('mousemove', onDragMove);
+    document.removeEventListener('mouseup', onDragEnd);
+    card.style.transform = '';
+    card.style.transition = '';
+    card.style.zIndex = '';
+    card.style.cursor = '';
+    card.style.boxShadow = '';
+    var leftInd = card.querySelector('.closet-drag-left');
+    var rightInd = card.querySelector('.closet-drag-right');
+    if (leftInd) leftInd.style.opacity = '0';
+    if (rightInd) rightInd.style.opacity = '0';
+    dragState = null;
+  }
+
+  // Prevent native browser drag on closet card images (desktop)
+  function preventNativeDrag(e) {
+    if (e.target.closest('[data-closet-card]')) {
+      e.preventDefault();
+    }
+  }
+
+  // Attach listeners to both grids
+  var grids = [document.getElementById('closetGrid'), document.getElementById('closetItemsGrid')];
+  grids.forEach(function(grid) {
+    if (!grid) return;
+    // Touch events (mobile)
+    grid.addEventListener('touchstart', onDragStart, { passive: true });
+    grid.addEventListener('touchmove', onDragMove, { passive: false });
+    grid.addEventListener('touchend', onDragEnd, { passive: true });
+    // Mouse events (desktop) — mousedown on grid, move/up on document
+    grid.addEventListener('mousedown', onDragStart);
+    // Block native image drag on the grid
+    grid.addEventListener('dragstart', preventNativeDrag);
+  });
+
+  // On initial load, assign sortIndex to items that don't have it
+  ensureSortIndexes();
+
+  // Re-index sortIndex after new items are unshifted into the array
+  window._reindexClosetSortOrder = function() {
+    var items = (window.userCloset && window.userCloset.outfits) || [];
+    items.forEach(function(o, i) { o.sortIndex = i; });
+  };
+
+  // Expose for external use
+  window._closetEnsureSortIndexes = ensureSortIndexes;
+  window._closetPersistReorder = persistReorder;
+})();
 
 // Type filter buttons for the Items section
 window.setClosetTypeFilter = function(typeFilter) {
@@ -14659,6 +14987,7 @@ window.saveCurrentOutfit = function() {
         try {
             await closetDB.put(newOutfit);
             userCloset.outfits.unshift(newOutfit);
+            if (typeof window._reindexClosetSortOrder === 'function') window._reindexClosetSortOrder();
 
             // Mirror the scan-result history write so the Style Story
             // calendar/timeline always reflects this saved outfit even if
@@ -14897,6 +15226,7 @@ window.saveCurrentOutfit = function() {
       await closetDB.put(newItem);
       if (window.userCloset && Array.isArray(window.userCloset.outfits)) {
         window.userCloset.outfits.unshift(newItem);
+        if (typeof window._reindexClosetSortOrder === 'function') window._reindexClosetSortOrder();
       }
       // Refresh the weather-aware outfit recommendations now that the closet changed
       if (window._lastWeatherSummary && typeof window.renderWeatherOutfit === 'function') {
@@ -15955,6 +16285,7 @@ function classifyColor(r, g, b) {
         }
         if (window.userCloset && Array.isArray(window.userCloset.outfits)) {
           window.userCloset.outfits.unshift(newItem);
+          if (typeof window._reindexClosetSortOrder === 'function') window._reindexClosetSortOrder();
         }
         if (typeof window.renderCloset === 'function') window.renderCloset();
         if (typeof updateUsageBadge === 'function') updateUsageBadge();
@@ -25485,7 +25816,7 @@ applyOfflineState(!navigator.onLine);
           try {
             const all = await window.closetDB.getAll();
             outfit = all.find(x => x && x.id === id);
-            if (outfit && window.userCloset) window.userCloset.outfits.unshift(outfit);
+            if (outfit && window.userCloset) { window.userCloset.outfits.unshift(outfit); if (typeof window._reindexClosetSortOrder === 'function') window._reindexClosetSortOrder(); }
           } catch(e) {}
         }
         if (!outfit) { btn.textContent = t('error_label'); return; }
