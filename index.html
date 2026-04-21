@@ -8121,6 +8121,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       chat_applied: 'Applied',
       chat_report: 'Report',
       chat_fallback_reply: "Hmm, I didn't catch that. Try again?",
+      chat_safety_retry: '📸 The AI couldn't process this image. Try a different photo — well-lit, full outfit, no close-ups of faces.',
       typing_hint_reading: 'Reading your message…',
       typing_hint_photo: 'Looking at your photo…',
       typing_hint_color: 'Considering color harmony…',
@@ -8169,6 +8170,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       closet_saved: '✓ Saved',
       closet_update: 'Update',
       closet_empty_picker: 'Your closet is empty. Scan and save an outfit first!',
+      toast_closet_attach_error: '⚠️ Could not load this image. Try saving it again.',
       closet_edit: 'Edit Outfit',
       closet_item_label: 'Item',
       closet_builder: 'Outfit Builder',
@@ -9721,6 +9723,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       chat_applied: 'Alkalmazva',
       chat_report: 'Jelentés',
       chat_fallback_reply: 'Hm, ezt nem sikerült elkapnom. Próbáld újra?',
+      chat_safety_retry: '📸 Az AI nem tudta feldolgozni ezt a képet. Próbálj másik fotót — jól megvilágított, teljes öltözék, ne közeli arcfotó.',
       typing_hint_reading: 'Üzeneted olvasom…',
       typing_hint_photo: 'Fényképedet nézem…',
       typing_hint_color: 'Színharmoniát fontolgatok…',
@@ -9768,6 +9771,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       closet_saved: '✓ Mentve',
       closet_update: 'Frissítés',
       closet_empty_picker: 'A szekrényed üres. Szkennelj és ments el egy öltözéket!',
+      toast_closet_attach_error: '⚠️ Nem sikerült betölteni a képet. Próbáld újra elmenteni.',
       closet_edit: 'Öltözék szerkesztése',
       closet_item_label: 'Tárgy',
       closet_builder: 'Öltözék összeállító',
@@ -11307,6 +11311,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       chat_applied: 'Angewendet',
       chat_report: 'Melden',
       chat_fallback_reply: 'Entschuldigung, das habe ich nicht verstanden. Kannst du es anders formulieren?',
+      chat_safety_retry: '📸 Die KI konnte dieses Bild nicht verarbeiten. Versuche ein anderes Foto — gut beleuchtet, ganzes Outfit, keine Nahaufnahmen von Gesichtern.',
       typing_hint_reading: 'Lese deine Nachricht...',
       typing_hint_photo: 'Schaue mir dein Foto an...',
       typing_hint_color: 'Prüfe die Farbharmonie...',
@@ -11354,6 +11359,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       closet_saved: '✓ Gespeichert',
       closet_update: 'Aktualisieren',
       closet_empty_picker: 'Dein Kleiderschrank ist leer. Scanne und speichere ein Outfit!',
+      toast_closet_attach_error: '⚠️ Bild konnte nicht geladen werden. Versuche es erneut zu speichern.',
       closet_edit: 'Outfit bearbeiten',
       closet_item_label: 'Artikel',
       closet_builder: 'Outfit-Builder',
@@ -19652,7 +19658,7 @@ function renderWeatherOutfit(weather) {
 function _escapeHtml(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
-function _esc(s) { if (typeof s !== 'string') return String(s||''); return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function _esc(s) { if (typeof s !== 'string') return String(s != null ? s : ''); return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function _escAttr(s) { return _escapeHtml(s); }
 
 window.renderWeatherOutfit = renderWeatherOutfit;
@@ -23107,7 +23113,12 @@ applyOfflineState(!navigator.onLine);
             pendingAttachments.push({ url: compressed, source: 'closet', meta: o });
             renderAttachments();
             input.focus();
-          } catch(e) { console.error(e); }
+          } catch(e) {
+            console.error('[closet→chat] image compress failed:', e);
+            if (window.dsPrivacy && window.dsPrivacy.showToast) {
+              window.dsPrivacy.showToast(t('toast_closet_attach_error') || '⚠️ Could not load this image. Try saving it again.', 3500);
+            }
+          }
         });
         pickerGrid.appendChild(card);
       });
@@ -23119,10 +23130,20 @@ applyOfflineState(!navigator.onLine);
     // Compliance: first-time upload consent (self only, no minors, no third parties)
     try {
       if (window.DateScanConsent) await window.DateScanConsent.requireUpload();
-    } catch (e) { return; }
+    } catch (e) {
+      console.warn('[closet picker] consent declined or failed:', e);
+      return;
+    }
     // Private Mode still blocks uploads (feature, not consent)
     if (window.dsPrivacy?.isPrivateMode?.()) {
       window.dsPrivacy.showToast(t('toast_private_mode_chat'));
+      return;
+    }
+    // Ensure closet data has loaded
+    if (!window.userCloset || !Array.isArray(window.userCloset.outfits) || window.userCloset.outfits.length === 0) {
+      if (window.dsPrivacy && window.dsPrivacy.showToast) {
+        window.dsPrivacy.showToast(t('closet_empty_picker') || 'Your closet is empty. Save an outfit first!', 3000);
+      }
       return;
     }
     openClosetPicker();
@@ -23261,7 +23282,13 @@ applyOfflineState(!navigator.onLine);
       stopTypingIndicator(thinking);
       thinking.classList.remove('animate-pulse');
       const finalReply = (reply || '').trim() || t('chat_fallback_reply');
-      setBubbleText(thinking, finalReply);
+      // Detect backend safety-filter rejections (e.g. from GLM-4.5v)
+      // and replace with a user-friendly retry message.
+      const isSafetyBlock = /safety|not permitted|content.*(block|filter|reject|flag)|moderation/i.test(finalReply);
+      const displayReply = isSafetyBlock
+        ? (t('chat_safety_retry') || '📸 The AI couldn\'t process this image. Try a different photo — well-lit, full outfit, no close-ups of faces.')
+        : finalReply;
+      setBubbleText(thinking, displayReply);
       history.push({ role: 'assistant', content: finalReply });
       persistMessage('assistant', finalReply);
       if (reply && !finalReply.startsWith('⚠️')) {
