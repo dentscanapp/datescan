@@ -20726,25 +20726,17 @@ $("closePaywall").addEventListener("click", closePaywall);
 $("upgradeBtn").addEventListener("click", window.openPaywall);
 $("earnPointsBtn").addEventListener("click", () => {
   triggerHaptic('tap');
-  // Platform routing: Android app → Google Play in-app purchase
-  // Mobile web (no platform param) → upgrade.html (Gumroad)
+  // Platform routing: Android app → show paywall (Google Play billing
+  // triggers when user picks a plan via plan-btn → handlePayment).
+  // Mobile web (no platform param) → upgrade.html (Gumroad).
   if (window.__DS_IS_ANDROID_APP) {
-    if (typeof window.startGooglePlayPurchase === 'function') {
-      window.startGooglePlayPurchase();
-    } else {
-      // Fallback: redirect to Play Store
-      handlePayment('month');
-    }
+    window.openPaywall();
   } else {
     var _lang = (typeof window.getLang === 'function') ? window.getLang() : (localStorage.getItem('datescan.lang') || 'en');
     if (_lang && _lang.indexOf('auto:') === 0) _lang = _lang.substring(5);
     if (['en','hu','de'].indexOf(_lang) === -1) _lang = 'en';
     var _qs = location.search || '';
-    // Always pass lang — even for English. Without it, upgrade.html
-    // falls back to localStorage/navigator which may be stale (e.g. auto:de
-    // on a German phone even though user has switched to EN/HU in-app).
     if (_qs.indexOf('lang=') !== -1) {
-      // Replace existing lang param
       _qs = _qs.replace(/([?&])lang=[a-z]+/i, '$1lang=' + _lang);
     } else {
       _qs += (_qs ? '&' : '?') + 'lang=' + _lang;
