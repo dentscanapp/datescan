@@ -4712,32 +4712,6 @@ if (window.__DS_IS_ANDROID_APP) {
   </div>
 
   <!-- ===== STYLE PROFILE MODAL ===== -->
-
-  <!-- Closet Item Preview Modal — full-screen image viewer for closet items -->
-  <div id="closetItemPreview" class="hidden fixed inset-0 z-[120] bg-black/90 backdrop-blur-md flex items-center justify-center p-4" style="z-index:9998">
-    <button id="closetItemPreviewClose" type="button" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/70 border border-white/20 text-white flex items-center justify-center hover:bg-white/20 transition z-10" aria-label="Close">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-    </button>
-    <div class="max-w-lg w-full max-h-[85vh] flex flex-col">
-      <div class="aspect-[3/4] rounded-2xl overflow-hidden border border-white/10 bg-black relative flex-shrink-0">
-        <img id="closetItemPreviewImg" src="" alt="Preview" class="w-full h-full object-contain" />
-      </div>
-      <div id="closetItemPreviewInfo" class="mt-3 text-center">
-        <div id="closetItemPreviewScore" class="text-sm font-bold text-white"></div>
-        <div id="closetItemPreviewOccasion" class="text-xs text-gray-400 mt-1"></div>
-      </div>
-      <div class="flex gap-2 mt-3">
-        <button id="closetItemPreviewSendToChat" type="button" class="flex-1 py-2.5 rounded-xl bg-brand-500/20 border border-brand-500/40 text-brand-300 text-sm font-bold flex items-center justify-center gap-2 hover:bg-brand-500/30 active:scale-[0.98] transition">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-          <span data-i18n="closet_send_to_chat">Send to Chat</span>
-        </button>
-        <button id="closetItemPreviewDelete" type="button" class="px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-bold flex items-center justify-center gap-2 hover:bg-red-500/20 active:scale-[0.98] transition">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-        </button>
-      </div>
-    </div>
-  </div>
-
   <div id="styleProfileModal" class="hidden fixed inset-0 z-[115] bg-black/85 backdrop-blur-md flex items-center justify-center p-4" style="z-index:120">
     <div class="premium-glass rounded-3xl border border-purple-500/20 max-w-lg w-full p-6 sm:p-7 relative max-h-[90vh] overflow-y-auto">
       <button id="styleProfileClose" type="button" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition" aria-label="Close">
@@ -5985,6 +5959,21 @@ document.addEventListener('DOMContentLoaded', function () {
       <button id="chatConsentDecline" class="flex-1 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition" data-i18n="cancel">Cancel</button>
       <button id="chatConsentAccept" class="flex-1 py-3 rounded-xl btn-primary font-bold" data-i18n="chat_consent_send">Send</button>
     </div>
+  </div>
+</div>
+
+<!-- Photo Select Prompt — shown after upload consent so fileInput.click()
+     runs inside a fresh user-gesture (required by Android WebView / Chrome).
+     Without this, the async gap between the consent modal and the file
+     picker call breaks the gesture chain and the gallery won't open. -->
+<div id="photoSelectPrompt" class="hidden fixed inset-0 z-[97] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="premium-glass border border-brand-500/30 rounded-[24px] p-6 max-w-sm w-full fade-up text-center">
+    <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-brand-500/20 to-purple-500/20 border border-brand-500/30 flex items-center justify-center mb-4">
+      <svg class="w-8 h-8 text-brand-400" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.814.014L6 21"/><path d="M19 2v6"/><path d="M22 5h-6"/></svg>
+    </div>
+    <h3 class="font-serif text-xl font-semibold text-white mb-2" data-i18n="photo_select_title">Select a photo</h3>
+    <p class="text-sm text-gray-400 mb-5" data-i18n="photo_select_desc">Tap below to open your gallery or camera roll.</p>
+    <button id="photoSelectPromptBtn" class="w-full py-3 rounded-xl btn-primary font-bold" data-i18n="photo_select_btn">Open Gallery</button>
   </div>
 </div>
 
@@ -7659,15 +7648,13 @@ function updatePointsBadge() {
   const s = _readPointsState();
   const hasBonus = (s.bonus || 0) > 0;
   // Show e.g. "5 PTS" or "8 PTS" with bonus indicator, plus reset hint in title.
-  // When points are 0, show the number in red/amber so it's clearly visible.
-  const ptsColor = pts === 0 ? 'text-amber-400' : 'text-white';
-  badge.innerHTML = `<span class="font-bold ${ptsColor} tabular-nums">${_esc(pts)}</span><span class="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-1">${t('nav_pts')}</span>${hasBonus ? '<span class="text-[9px] font-bold text-green-400 ml-1.5">+' + _esc(s.bonus) + '</span>' : ''}`;
+  badge.innerHTML = `<span class="font-bold text-white tabular-nums">${_esc(pts)}</span><span class="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-1">${t('nav_pts')}</span>${hasBonus ? '<span class="text-[9px] font-bold text-green-400 ml-1.5">+' + _esc(s.bonus) + '</span>' : ''}`;
   badge.classList.remove('bg-brand-500/10', 'border-brand-500/30');
-  badge.classList.remove('text-gray-400');
+  badge.classList.add('bg-white/5', 'border-white/10');
   if (pts === 0) {
-    badge.classList.add('bg-amber-500/10', 'border-amber-500/30');
+    badge.classList.add('text-gray-400');
   } else {
-    badge.classList.add('bg-white/5', 'border-white/10');
+    badge.classList.remove('text-gray-400');
   }
   const resetHint = formatPointsResetShort();
   const bonusHint = hasBonus ? ` (+${s.bonus} bonus)` : '';
@@ -8148,7 +8135,6 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       chat_apply: 'Apply',
       chat_applied: 'Applied',
       chat_report: 'Report',
-      chat_image_safety: "I couldn't process that image. Try a clearer photo of your outfit, or describe what you're wearing and I'll help!",
       chat_fallback_reply: "Hmm, I didn't catch that. Try again?",
       typing_hint_reading: 'Reading your message…',
       typing_hint_photo: 'Looking at your photo…',
@@ -8541,7 +8527,6 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       closet_built_outfit_badge: 'Built Outfit',
       closet_delete: 'Delete',
       closet_share: 'Share',
-      closet_send_to_chat: 'Send to Chat',
       closet_no_items: 'No items uploaded yet. Tap Add Item above to start.',
       closet_onboard_step1: 'Upload your clothes',
       closet_onboard_step1_desc: 'Take a photo or pick from your gallery! Our system instantly identifies your clothing items.',
@@ -9574,6 +9559,10 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       ob_ask_ai: 'Ask AI',
       chat_consent_body: 'To analyze a photo in chat, we upload it to our API (api.datescan.app) which forwards it to a vision-language model. The image is processed for this request only and not stored on our server beyond the response.',
       chat_consent_dont_ask: "Don't ask me again on this device",
+      photo_select_title: 'Select a photo',
+      photo_select_desc: 'Tap below to open your gallery or camera roll.',
+      photo_select_btn: 'Open Gallery',
+      chat_image_preview_label: 'Image attached — type a message and send',
       copyright: '\u00a9 2026 DateScan',
       level_rookie: 'Rookie',
       level_explorer: 'Explorer',
@@ -9750,8 +9739,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       chat_apply: 'Alkalmaz',
       chat_applied: 'Alkalmazva',
       chat_report: 'Jelentés',
-      chat_image_safety: 'Nem sikerült feldolgoznom ezt a képet. Próbálj egy tisztább fotót az öltözékedről, vagy írd le, mit viselsz, és segítek!',
-      chat_fallback_reply: 'Hm, ezt nem sikerült elkapnem. Próbáld újra?',
+      chat_fallback_reply: 'Hm, ezt nem sikerült elkapnom. Próbáld újra?',
       typing_hint_reading: 'Üzeneted olvasom…',
       typing_hint_photo: 'Fényképedet nézem…',
       typing_hint_color: 'Színharmoniát fontolgatok…',
@@ -10130,7 +10118,6 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       closet_built_outfit_badge: 'Összeállított öltözék',
       closet_delete: 'Törlés',
       closet_share: 'Megosztás',
-      closet_send_to_chat: 'Küldés chatbe',
       closet_no_items: 'Még nincs feltöltött tárgy. Koppints a Hozzáadás gombra.',
       closet_onboard_step1: 'Töltsd fel a ruháid',
       closet_onboard_step1_desc: 'Fotózz vagy válassz a galériából! Rendszerünk azonnal azonosítja a ruhadarabjaidat.',
@@ -11162,6 +11149,10 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       ob_ask_ai: 'Kérdezz AI-t',
       chat_consent_body: 'A chatben történő képelemzéshez feltöltjük a képet az API-nkra (api.datescan.app), amely továbbítja egy látás-nyelvi modellnek. A kép csak ehhez a kéréshez van feldolgozva, és a válaszon túl nem tároljuk a szerverünkön.',
       chat_consent_dont_ask: 'Ne kérdezd újra ezen az eszközön',
+      photo_select_title: 'Válassz képet',
+      photo_select_desc: 'Koppints az alábbi gombra a galéria megnyitásához.',
+      photo_select_btn: 'Galéria megnyitása',
+      chat_image_preview_label: 'Kép csatolva — írj üzenetet és küldd el',
       copyright: '\u00a9 2026 DateScan',
       level_rookie: 'Kezdő',
       level_explorer: 'Felfedező',
@@ -11338,7 +11329,6 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       chat_apply: 'Anwenden',
       chat_applied: 'Angewendet',
       chat_report: 'Melden',
-      chat_image_safety: 'Ich konnte dieses Bild nicht verarbeiten. Versuche ein klareres Foto deines Outfits oder beschreibe, was du trägst!',
       chat_fallback_reply: 'Entschuldigung, das habe ich nicht verstanden. Kannst du es anders formulieren?',
       typing_hint_reading: 'Lese deine Nachricht...',
       typing_hint_photo: 'Schaue mir dein Foto an...',
@@ -11718,7 +11708,6 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       closet_built_outfit_badge: 'Zusammengestelltes Outfit',
       closet_delete: 'Löschen',
       closet_share: 'Teilen',
-      closet_send_to_chat: 'An Chat senden',
       closet_no_items: 'Noch keine Teile hochgeladen. Tippe auf Hinzufügen.',
       closet_onboard_step1: 'Lade deine Kleidung hoch',
       closet_onboard_step1_desc: 'Fotografiere oder wähle aus der Galerie! Unser System erkennt deine Kleidungsstücke sofort.',
@@ -12750,6 +12739,10 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       ob_ask_ai: 'KI fragen',
       chat_consent_body: 'Um ein Foto im Chat zu analysieren, laden wir es auf unsere API (api.datescan.app) hoch, die es an ein Vision-Language-Modell weiterleitet. Das Bild wird nur für diese Anfrage verarbeitet und über die Antwort hinaus nicht auf unserem Server gespeichert.',
       chat_consent_dont_ask: 'Auf diesem Gerät nicht mehr fragen',
+      photo_select_title: 'Foto auswählen',
+      photo_select_desc: 'Tippe unten, um deine Galerie zu öffnen.',
+      photo_select_btn: 'Galerie öffnen',
+      chat_image_preview_label: 'Bild angehängt — schreibe eine Nachricht und sende',
       copyright: '\u00a9 2026 DateScan',
       level_rookie: 'Anfänger',
       level_explorer: 'Entdecker',
@@ -14212,7 +14205,7 @@ window.renderCloset = function(filter = 'all', append = false) {
         }
         const scanTagRow = scanTagPills.length ? `<div class="flex flex-wrap gap-1 mt-1.5">${scanTagPills.join('')}</div>` : '';
         return `
-        <div class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-pointer relative" data-action="preview-outfit" data-outfit-id="${_esc(outfit.id)}">
+        <div class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-default relative">
             <div class="aspect-[3/4] bg-black relative">
                 <img src="${_esc(outfit.image)}" class="w-full h-full object-cover opacity-90 transition-opacity" alt="" data-i18n-aria="alt_saved_item" loading="lazy" />
                 ${typeBadge}
@@ -14251,24 +14244,14 @@ window.renderCloset = function(filter = 'all', append = false) {
     }
 
     // Delegate click handlers for data-action buttons (replaces inline onclick)
-    grid.querySelectorAll('[data-action="preview-outfit"]').forEach(function(card) {
-      card.addEventListener('click', function(e) {
-        // Don't open preview if a button inside the card was clicked
-        if (e.target.closest('[data-action="delete-outfit"], [data-action="share-outfit"], [data-action="edit-builder"], [data-action="share-item"], [data-action="delete-item"]')) return;
-        var allOutfits = (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits : [];
-        var o = allOutfits.find(function(x) { return x.id === card.dataset.outfitId; });
-        if (o) window.openClosetItemPreview(o);
-      });
-    });
     grid.querySelectorAll('[data-action="edit-builder"]').forEach(function(btn) {
-      btn.addEventListener('click', function(e) { e.stopPropagation(); window.editBuilderOutfit(btn.dataset.outfitId); });
+      btn.addEventListener('click', function() { window.editBuilderOutfit(btn.dataset.outfitId); });
     });
     grid.querySelectorAll('[data-action="delete-outfit"]').forEach(function(btn) {
-      btn.addEventListener('click', function(e) { e.stopPropagation(); window.triggerDeleteOutfit(btn.dataset.outfitId); });
+      btn.addEventListener('click', function() { window.triggerDeleteOutfit(btn.dataset.outfitId); });
     });
     grid.querySelectorAll('[data-action="share-outfit"]').forEach(function(btn) {
-      btn.addEventListener('click', function(e) {
-        e.stopPropagation();
+      btn.addEventListener('click', function() {
         var allOutfits = (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits : [];
         var o = allOutfits.find(function(x) { return x.id === btn.dataset.outfitId; });
         window.openShareModal(Number(btn.dataset.outfitScore) || 0, o ? o.image : '');
@@ -14344,7 +14327,7 @@ window.renderClosetItems = function(typeFilter = 'all', append = false) {
         const tagRow = tagPills.length ? `<div class="flex flex-wrap gap-1 mt-1.5">${tagPills.join('')}</div>` : '';
 
         return `
-        <div class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-pointer relative" data-action="preview-outfit" data-outfit-id="${_esc(item.id)}">
+        <div class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-default relative">
             <div class="aspect-[3/4] bg-black relative">
                 <img src="${_esc(item.image)}" class="w-full h-full object-cover opacity-90 transition-opacity" alt="" data-i18n-aria="alt_saved_item" loading="lazy" />
                 <div class="absolute top-2 left-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-white border border-white/10 z-10">${TYPE_LABELS[item.type] || t('closet_item_label')}</div>
@@ -14375,20 +14358,11 @@ window.renderClosetItems = function(typeFilter = 'all', append = false) {
     }
 
     // Delegate click handlers for data-action buttons (replaces inline onclick)
-    grid.querySelectorAll('[data-action="preview-outfit"]').forEach(function(card) {
-      card.addEventListener('click', function(e) {
-        if (e.target.closest('[data-action="delete-outfit"], [data-action="share-item"], [data-action="delete-item"]')) return;
-        var allOutfits = (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits : [];
-        var o = allOutfits.find(function(x) { return x.id === card.dataset.outfitId; });
-        if (o) window.openClosetItemPreview(o);
-      });
-    });
     grid.querySelectorAll('[data-action="delete-outfit"]').forEach(function(btn) {
-      btn.addEventListener('click', function(e) { e.stopPropagation(); window.triggerDeleteOutfit(btn.dataset.outfitId); });
+      btn.addEventListener('click', function() { window.triggerDeleteOutfit(btn.dataset.outfitId); });
     });
     grid.querySelectorAll('[data-action="share-item"]').forEach(function(btn) {
-      btn.addEventListener('click', function(e) {
-        e.stopPropagation();
+      btn.addEventListener('click', function() {
         var allOutfits = (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits : [];
         var o = allOutfits.find(function(x) { return x.id === btn.dataset.outfitId; });
         window.openShareModal(null, o ? o.image : '');
@@ -16314,74 +16288,6 @@ async function generateShareCard(overrideScore, overrideImage) {
     drawRest();
   }
 }
-
-// Closet Item Preview — opens a full-screen modal to view an outfit/item
-// and optionally sends it to the AI Style Coach chat.
-window.openClosetItemPreview = function(outfit) {
-  if (!outfit) return;
-  triggerHaptic('tap');
-  var modal = document.getElementById('closetItemPreview');
-  var img = document.getElementById('closetItemPreviewImg');
-  var scoreEl = document.getElementById('closetItemPreviewScore');
-  var occasionEl = document.getElementById('closetItemPreviewOccasion');
-  var sendBtn = document.getElementById('closetItemPreviewSendToChat');
-  var deleteBtn = document.getElementById('closetItemPreviewDelete');
-  if (!modal || !img) return;
-
-  img.src = outfit.image || '';
-  if (scoreEl) {
-    scoreEl.textContent = outfit.score != null ? (outfit.score + '/100') : '';
-  }
-  if (occasionEl) {
-    var occ = t('occasion_' + (outfit.occasion || 'casual'));
-    var typeLabel = '';
-    if (outfit.type) {
-      var TYPE_MAP = { shirt: t('type_shirt'), pants: t('type_pants'), jacket: t('type_jacket'), dress: t('type_dress'), shoes: t('type_shoes'), accessory: t('type_accessory') };
-      typeLabel = TYPE_MAP[outfit.type] || '';
-    }
-    occasionEl.textContent = (typeLabel ? typeLabel + ' · ' : '') + occ;
-  }
-
-  // Remove old listeners by cloning buttons
-  if (sendBtn) {
-    var newSendBtn = sendBtn.cloneNode(true);
-    sendBtn.parentNode.replaceChild(newSendBtn, sendBtn);
-    newSendBtn.addEventListener('click', function() {
-      modal.classList.add('hidden');
-      // Navigate to chat and attach the image
-      if (typeof window._sendClosetItemToChat === 'function') {
-        window._sendClosetItemToChat(outfit);
-      } else {
-        // Fallback: switch to chat view and add attachment
-        var chatInput = document.querySelector('#coachChatForm input, #coachChatForm textarea');
-        var pending = window._chatPendingAttachments;
-        if (pending) {
-          pending.push({ url: outfit.image, source: 'closet', meta: outfit });
-          if (typeof window._chatRenderAttachments === 'function') window._chatRenderAttachments();
-        }
-        if (typeof window.toggleView === 'function') window.toggleView('chat');
-      }
-    });
-  }
-  if (deleteBtn) {
-    var newDeleteBtn = deleteBtn.cloneNode(true);
-    deleteBtn.parentNode.replaceChild(newDeleteBtn, deleteBtn);
-    newDeleteBtn.addEventListener('click', function() {
-      modal.classList.add('hidden');
-      if (typeof window.triggerDeleteOutfit === 'function') window.triggerDeleteOutfit(outfit.id);
-    });
-  }
-
-  modal.classList.remove('hidden');
-};
-
-// Close preview modal
-document.getElementById('closetItemPreviewClose')?.addEventListener('click', function() {
-  document.getElementById('closetItemPreview')?.classList.add('hidden');
-});
-document.getElementById('closetItemPreview')?.addEventListener('click', function(e) {
-  if (e.target === this) this.classList.add('hidden');
-});
 
 window.openShareModal = async function(score, image) {
   triggerHaptic('tap');
@@ -19773,7 +19679,7 @@ function renderWeatherOutfit(weather) {
 function _escapeHtml(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
-function _esc(s) { if (typeof s !== 'string') return s === 0 ? '0' : String(s||''); return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function _esc(s) { if (typeof s !== 'string') return String(s||''); return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function _escAttr(s) { return _escapeHtml(s); }
 
 window.renderWeatherOutfit = renderWeatherOutfit;
@@ -22452,6 +22358,7 @@ applyOfflineState(!navigator.onLine);
     if (pendingAttachments.length === 0) {
       attachBox.classList.add('hidden');
       attachBox.innerHTML = '';
+      renderChatAttachmentPreview();
       return;
     }
     attachBox.classList.remove('hidden');
@@ -22468,6 +22375,55 @@ applyOfflineState(!navigator.onLine);
       });
       attachBox.appendChild(chip);
     });
+    // Also show a larger preview inside the chat messages area
+    renderChatAttachmentPreview();
+  }
+
+  // ── Chat attachment preview ──
+  // Shows a preview bubble at the bottom of the chat messages area
+  // so the user can see the attached image(s) in context before sending.
+  var _chatAttachPreviewEl = null;
+  function renderChatAttachmentPreview() {
+    // Remove existing preview
+    if (_chatAttachPreviewEl) {
+      _chatAttachPreviewEl.remove();
+      _chatAttachPreviewEl = null;
+    }
+    if (pendingAttachments.length === 0) return;
+
+    var wrap = document.createElement('div');
+    wrap.className = 'flex gap-2.5 flex-row-reverse opacity-70';
+
+    var avatar = document.createElement('div');
+    avatar.className = 'shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white bg-white/10 border border-white/10';
+    avatar.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>';
+
+    var bubble = document.createElement('div');
+    bubble.className = 'rounded-2xl px-3 py-2.5 text-sm max-w-[85%] bg-brand-500/15 border border-brand-500/25 border-dashed text-white rounded-tr-sm';
+
+    // Image thumbnails (larger than the chip preview above the input)
+    var imgRow = document.createElement('div');
+    imgRow.className = 'flex gap-1.5 flex-wrap';
+    pendingAttachments.forEach(function(att) {
+      var img = document.createElement('img');
+      img.src = att.url;
+      img.className = 'w-28 h-28 object-cover rounded-lg border border-brand-500/40';
+      imgRow.appendChild(img);
+    });
+    bubble.appendChild(imgRow);
+
+    // Preview label
+    var label = document.createElement('div');
+    label.className = 'text-[10px] text-brand-400/70 mt-1.5 font-medium';
+    label.textContent = t('chat_image_preview_label') || 'Image attached — type a message and send';
+    bubble.appendChild(label);
+
+    wrap.appendChild(avatar);
+    wrap.appendChild(bubble);
+
+    messagesEl.appendChild(wrap);
+    _chatAttachPreviewEl = wrap;
+    scrollDown();
   }
 
   // Bridge for Outfit Builder to send composite outfit image + prompt to chat
@@ -22481,30 +22437,6 @@ applyOfflineState(!navigator.onLine);
       form.dispatchEvent(new Event('submit', { cancelable: true }));
     }, 100);
   };
-
-  // Bridge for Closet preview modal to send an item image to chat
-  window._sendClosetItemToChat = function(outfit) {
-    if (!input || !form) return;
-    // Compress image before attaching (handles large base64 data URLs)
-    compressImage(outfit.image).then(function(compressed) {
-      pendingAttachments.push({ url: compressed, source: 'closet', meta: outfit });
-      renderAttachments();
-      input.focus();
-      // Switch to chat view if not already there
-      if (typeof window.toggleView === 'function') window.toggleView('chat');
-    }).catch(function(err) {
-      console.error('Failed to compress closet image for chat:', err);
-      // Fallback: attach uncompressed
-      pendingAttachments.push({ url: outfit.image, source: 'closet', meta: outfit });
-      renderAttachments();
-      input.focus();
-      if (typeof window.toggleView === 'function') window.toggleView('chat');
-    });
-  };
-
-  // Expose for external access (closet preview modal)
-  window._chatPendingAttachments = pendingAttachments;
-  window._chatRenderAttachments = renderAttachments;
 
   // Safely set the bubble's text content while preserving
   // the action bar (👍/👎 + Apply + Report) that lives at the
@@ -23260,33 +23192,64 @@ applyOfflineState(!navigator.onLine);
     picker.classList.remove('hidden');
   }
 
-  closetBtn?.addEventListener('click', async () => {
-    // Compliance: first-time upload consent (self only, no minors, no third parties)
-    try {
-      if (window.DateScanConsent) await window.DateScanConsent.requireUpload();
-    } catch (e) { return; }
-    // Private Mode still blocks uploads (feature, not consent)
+  closetBtn?.addEventListener('click', () => {
+    // Private Mode blocks uploads (feature, not consent)
     if (window.dsPrivacy?.isPrivateMode?.()) {
       window.dsPrivacy.showToast(t('toast_private_mode_chat'));
       return;
     }
-    openClosetPicker();
+    // If upload consent already given, open closet picker immediately
+    if (!window.DateScanConsent || window.DateScanConsent.hasUploadAck()) {
+      openClosetPicker();
+      return;
+    }
+    // First time: show consent modal, then open closet picker
+    window.DateScanConsent.requireUpload().then(() => {
+      openClosetPicker();
+    }).catch(() => {});
   });
   pickerClose?.addEventListener('click', () => picker.classList.add('hidden'));
   picker?.addEventListener('click', e => { if (e.target === picker) picker.classList.add('hidden'); });
 
-  uploadBtn?.addEventListener('click', async () => {
-    // Compliance: first-time upload consent (self only, no minors, no third parties)
-    try {
-      if (window.DateScanConsent) await window.DateScanConsent.requireUpload();
-    } catch (e) { return; }
-    // Private Mode still blocks uploads (feature, not consent)
+  uploadBtn?.addEventListener('click', () => {
+    // Private Mode blocks uploads (feature, not consent)
     if (window.dsPrivacy?.isPrivateMode?.()) {
       window.dsPrivacy.showToast(t('toast_private_mode_chat'));
       return;
     }
-    fileInput.click();
+    // If upload consent was already given, open file picker immediately
+    // within the current user-gesture (required by Chrome & Android WebView).
+    if (!window.DateScanConsent || window.DateScanConsent.hasUploadAck()) {
+      fileInput.click();
+      return;
+    }
+    // First time: show consent modal. After acceptance the async gap breaks
+    // the user-gesture chain, so we show a "Select photo" prompt that the
+    // user taps — that fresh tap re-establishes the gesture context and
+    // fileInput.click() works.
+    window.DateScanConsent.requireUpload().then(() => {
+      var _p = document.getElementById('photoSelectPrompt');
+      if (_p) _p.classList.remove('hidden');
+    }).catch(() => {});
   });
+  // Photo Select Prompt button — opens file picker within a fresh user-gesture
+  (function() {
+    var _psBtn = document.getElementById('photoSelectPromptBtn');
+    var _psOverlay = document.getElementById('photoSelectPrompt');
+    if (_psBtn && _psOverlay) {
+      _psBtn.addEventListener('click', () => {
+        _psOverlay.classList.add('hidden');
+        if (window.dsPrivacy?.isPrivateMode?.()) {
+          window.dsPrivacy.showToast(t('toast_private_mode_chat'));
+          return;
+        }
+        fileInput.click();
+      });
+      _psOverlay.addEventListener('click', (e) => {
+        if (e.target === _psOverlay) _psOverlay.classList.add('hidden');
+      });
+    }
+  })();
   fileInput?.addEventListener('change', async e => {
     const files = Array.from(e.target.files || []);
     // Defensive re-check in case Private Mode was toggled mid-flow
@@ -23400,14 +23363,9 @@ applyOfflineState(!navigator.onLine);
         throw Object.assign(new Error('HTTP ' + res.status + ' ' + errText), { status: res.status });
       }
       const data = await res.json();
-      let reply = data.reply || data.content || data.message ||
+      const reply = data.reply || data.content || data.message ||
                     (data.choices && data.choices[0] && (data.choices[0].message?.content || data.choices[0].text)) ||
                     '';
-      // Detect backend safety/content-moderation errors for images
-      // and replace with a user-friendly message instead of raw API text.
-      if (/safety\s*error|content\s*(is\s*)?not\s*permitted|content\s*violation|image\s*rejected|unsafe\s*content/i.test(reply)) {
-        reply = attachments.length > 0 ? t('chat_image_safety') : t('safety_sexual');
-      }
       stopTypingIndicator(thinking);
       thinking.classList.remove('animate-pulse');
       const finalReply = (reply || '').trim() || t('chat_fallback_reply');
