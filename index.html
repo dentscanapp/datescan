@@ -3143,6 +3143,117 @@ if (window.__DS_IS_ANDROID_APP) {
   .closet-drag-indicator.closet-drag-right {
     opacity: 0;
   }
+
+  /* ===== Smart Shopping List ===== */
+  .smart-shop-gap-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .smart-shop-gap-card:hover {
+    border-color: rgba(245,158,11,0.3);
+    background: rgba(245,158,11,0.05);
+  }
+  .smart-shop-gap-card.gap-missing {
+    border-color: rgba(239,68,68,0.25);
+    background: rgba(239,68,68,0.05);
+  }
+  .smart-shop-gap-card.gap-ok {
+    border-color: rgba(16,185,129,0.25);
+    background: rgba(16,185,129,0.05);
+  }
+  .smart-shop-gap-icon {
+    width: 40px; height: 40px;
+    border-radius: 0.75rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+  }
+  .smart-shop-gap-card.gap-missing .smart-shop-gap-icon {
+    background: rgba(239,68,68,0.12);
+    border: 1px solid rgba(239,68,68,0.25);
+  }
+  .smart-shop-gap-card.gap-ok .smart-shop-gap-icon {
+    background: rgba(16,185,129,0.12);
+    border: 1px solid rgba(16,185,129,0.25);
+  }
+  .smart-shop-outfit-multiplier {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 700;
+    background: linear-gradient(135deg, rgba(236,72,153,0.15), rgba(168,85,247,0.15));
+    border: 1px solid rgba(236,72,153,0.25);
+    color: #f472b6;
+  }
+  .smart-shop-occasion-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    transition: border-color 0.2s;
+  }
+  .smart-shop-occasion-card.occasion-ready {
+    border-color: rgba(16,185,129,0.25);
+  }
+  .smart-shop-occasion-card.occasion-missing {
+    border-color: rgba(239,68,68,0.25);
+  }
+  .smart-shop-occasion-bar {
+    height: 6px; border-radius: 3px;
+    background: rgba(255,255,255,0.08);
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  .smart-shop-occasion-bar-fill {
+    height: 100%; border-radius: 3px;
+    transition: width 0.5s ease;
+  }
+  .smart-shop-budget-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .smart-shop-budget-card:hover {
+    border-color: rgba(245,158,11,0.25);
+    background: rgba(245,158,11,0.05);
+  }
+  .smart-shop-budget-price {
+    font-size: 11px; font-weight: 700;
+    padding: 2px 8px; border-radius: 6px;
+  }
+  .smart-shop-brand-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    transition: border-color 0.2s;
+  }
+  .smart-shop-brand-card:hover {
+    border-color: rgba(168,85,247,0.25);
+    background: rgba(168,85,247,0.05);
+  }
+  .smart-shop-brand-tag {
+    display: inline-flex; align-items: center;
+    padding: 2px 8px; border-radius: 6px;
+    font-size: 10px; font-weight: 600;
+    background: rgba(168,85,247,0.12);
+    border: 1px solid rgba(168,85,247,0.25);
+    color: #c084fc;
+  }
+  @keyframes smartShopPulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+  }
+  .smart-shop-loading {
+    animation: smartShopPulse 1.5s ease-in-out infinite;
+  }
 </style>
 
 <!-- ===== AGE GATE (18+) ===== -->
@@ -4396,6 +4507,10 @@ if (window.__DS_IS_ANDROID_APP) {
                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                <span data-i18n="closet_style_profile">Style Profile</span>
             </button>
+            <button id="smartShopBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-amber-300 hover:from-amber-500/30 hover:to-orange-500/30 active:scale-[0.98] transition" title="Smart Shopping List — wardrobe gap analysis and suggestions">
+               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+               <span data-i18n="closet_smart_shop">Shopping List</span>
+            </button>
             <button id="closetUploadBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-[0.98] transition">
                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/><circle cx="9" cy="10" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.814.014L6 21"/><path d="M19 2v6"/><path d="M22 5h-6"/></svg>
                <span data-i18n="closet_add_item">Add Item</span>
@@ -4669,6 +4784,80 @@ if (window.__DS_IS_ANDROID_APP) {
       </label>
 
       <button id="vibeCheckSave" type="button" disabled class="w-full py-3.5 rounded-xl btn-primary text-sm font-bold disabled:opacity-40 disabled:cursor-not-allowed" data-i18n="vibe_check_save">Save Vibe Check</button>
+    </div>
+  </div>
+
+  <!-- ===== SMART SHOPPING LIST MODAL ===== -->
+  <div id="smartShopModal" class="hidden fixed inset-0 z-[115] bg-black/85 backdrop-blur-md flex items-center justify-center p-4" style="z-index:120">
+    <div class="premium-glass rounded-3xl border border-amber-500/20 max-w-lg w-full p-6 sm:p-7 relative max-h-[92vh] overflow-y-auto">
+      <button id="smartShopClose" type="button" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition" aria-label="Close">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500/20 to-orange-500/20 border border-amber-500/30 flex items-center justify-center mb-4 mx-auto">
+        <svg class="w-7 h-7 text-amber-300" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      </div>
+      <h3 class="font-serif text-2xl font-semibold text-white text-center mb-1" data-i18n="smart_shop_title">Smart Shopping List</h3>
+      <p data-i18n="smart_shop_subtitle" class="text-sm text-gray-400 text-center mb-5 leading-relaxed">Wardrobe gap analysis and smart purchase suggestions based on your closet.</p>
+
+      <!-- Tab navigation -->
+      <div class="flex gap-1 mb-5 bg-white/5 rounded-xl p-1" id="smartShopTabs">
+        <button data-shop-tab="gaps" class="smart-shop-tab flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-colors bg-amber-500/20 text-amber-300 border border-amber-500/30" data-i18n="smart_shop_tab_gaps">Gaps</button>
+        <button data-shop-tab="occasions" class="smart-shop-tab flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-colors bg-white/5 text-gray-400 border border-transparent hover:bg-white/10" data-i18n="smart_shop_tab_occasions">Occasions</button>
+        <button data-shop-tab="budget" class="smart-shop-tab flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-colors bg-white/5 text-gray-400 border border-transparent hover:bg-white/10" data-i18n="smart_shop_tab_budget">Budget</button>
+        <button data-shop-tab="brands" class="smart-shop-tab flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-colors bg-white/5 text-gray-400 border border-transparent hover:bg-white/10" data-i18n="smart_shop_tab_brands">Brands</button>
+      </div>
+
+      <!-- Gaps Tab -->
+      <div id="smartShopGaps" class="smart-shop-panel">
+        <div class="text-[10px] uppercase tracking-widest text-amber-400 font-bold mb-3" data-i18n="smart_shop_gaps_header">Wardrobe Gaps</div>
+        <div id="smartShopGapsGrid" class="space-y-2.5">
+          <!-- Dynamically populated -->
+        </div>
+        <div id="smartShopGapsEmpty" class="hidden text-center py-8">
+          <div class="text-4xl mb-2">🎉</div>
+          <p class="text-sm text-gray-400" data-i18n="smart_shop_gaps_complete">Your wardrobe covers all essential categories!</p>
+        </div>
+      </div>
+
+      <!-- Occasions Tab -->
+      <div id="smartShopOccasions" class="smart-shop-panel hidden">
+        <div class="text-[10px] uppercase tracking-widest text-amber-400 font-bold mb-3" data-i18n="smart_shop_occasions_header">Occasion Readiness</div>
+        <div id="smartShopOccasionsGrid" class="space-y-3">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Budget Tab -->
+      <div id="smartShopBudget" class="smart-shop-panel hidden">
+        <div class="text-[10px] uppercase tracking-widest text-amber-400 font-bold mb-3" data-i18n="smart_shop_budget_header">Budget-Friendly Suggestions</div>
+        <!-- Budget selector -->
+        <div class="flex gap-2 mb-4" id="smartShopBudgetPicker">
+          <button data-budget="low" class="smart-budget-btn flex-1 py-2 rounded-lg text-xs font-bold border border-emerald-500/30 bg-emerald-500/15 text-emerald-300 transition" data-i18n="smart_shop_budget_low">Budget</button>
+          <button data-budget="mid" class="smart-budget-btn flex-1 py-2 rounded-lg text-xs font-bold border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 transition" data-i18n="smart_shop_budget_mid">Mid-Range</button>
+          <button data-budget="high" class="smart-budget-btn flex-1 py-2 rounded-lg text-xs font-bold border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 transition" data-i18n="smart_shop_budget_high">Premium</button>
+        </div>
+        <div id="smartShopBudgetGrid" class="space-y-2.5">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Brands Tab (PRO) -->
+      <div id="smartShopBrands" class="smart-shop-panel hidden">
+        <div class="text-[10px] uppercase tracking-widest text-amber-400 font-bold mb-3 flex items-center gap-2">
+          <span data-i18n="smart_shop_brands_header">Brand Recommendations</span>
+          <span class="px-1.5 py-0.5 rounded text-[8px] font-bold bg-gradient-to-r from-brand-500 to-purple-500 text-white uppercase tracking-wider">PRO</span>
+        </div>
+        <div id="smartShopBrandsPro" class="space-y-3">
+          <!-- Dynamically populated for PRO users -->
+        </div>
+        <div id="smartShopBrandsLocked" class="text-center py-8">
+          <div class="w-12 h-12 rounded-xl bg-brand-500/15 border border-brand-500/30 flex items-center justify-center mx-auto mb-3">
+            <svg class="w-6 h-6 text-brand-400" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <p class="text-sm text-gray-400 mb-3" data-i18n="smart_shop_brands_lock_desc">Unlock brand recommendations tailored to your style profile with PRO.</p>
+          <button id="smartShopGoPro" class="px-6 py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-brand-500 to-purple-500 text-white hover:opacity-90 transition" data-i18n="smart_shop_go_pro">Go PRO</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -9654,6 +9843,82 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       ctx_feedback_critical: 'Overall, the user has been critical. Be more measured and offer alternatives.',
       ctx_feedback_header: 'Feedback-based adjustments',
       storage_warning: 'Storage is full — some data was cleared to keep the app running.',
+
+      // Smart Shopping List
+      closet_smart_shop: 'Shopping List',
+      smart_shop_title: 'Smart Shopping List',
+      smart_shop_subtitle: 'Wardrobe gap analysis and smart purchase suggestions based on your closet.',
+      smart_shop_tab_gaps: 'Gaps',
+      smart_shop_tab_occasions: 'Occasions',
+      smart_shop_tab_budget: 'Budget',
+      smart_shop_tab_brands: 'Brands',
+      smart_shop_gaps_header: 'Wardrobe Gaps',
+      smart_shop_gaps_complete: 'Your wardrobe covers all essential categories!',
+      smart_shop_missing_hint: 'Consider adding',
+      smart_shop_outfits: 'outfits',
+      smart_shop_covered: 'Covered',
+      smart_shop_occasions_header: 'Occasion Readiness',
+      smart_shop_occasion_ready: 'Ready for this occasion!',
+      smart_shop_no_outfit_for_occasion: 'No outfits saved for this occasion yet',
+      smart_shop_budget_header: 'Budget-Friendly Suggestions',
+      smart_shop_budget_low: 'Budget',
+      smart_shop_budget_mid: 'Mid-Range',
+      smart_shop_budget_high: 'Premium',
+      smart_shop_needed: 'Needed',
+      smart_shop_brands_header: 'Brand Recommendations',
+      smart_shop_brands_lock_desc: 'Unlock brand recommendations tailored to your style profile with PRO.',
+      smart_shop_go_pro: 'Go PRO',
+      smart_shop_item_basic_tee: 'Basic T-Shirt',
+      smart_shop_item_chinos: 'Chino Pants',
+      smart_shop_item_white_sneakers: 'White Sneakers',
+      smart_shop_item_denim_jacket: 'Denim Jacket',
+      smart_shop_item_basic_belt: 'Basic Belt',
+      smart_shop_item_oxford_shirt: 'Oxford Shirt',
+      smart_shop_item_dark_jeans: 'Dark Jeans',
+      smart_shop_item_premium_polo: 'Premium Polo',
+      smart_shop_item_tailored_trousers: 'Tailored Trousers',
+      smart_shop_item_leather_loafers: 'Leather Loafers',
+      smart_shop_item_bomber_jacket: 'Bomber Jacket',
+      smart_shop_item_leather_watch: 'Leather Watch',
+      smart_shop_item_linen_shirt: 'Linen Shirt',
+      smart_shop_item_midi_dress: 'Midi Dress',
+      smart_shop_item_designer_shirt: 'Designer Button-Down',
+      smart_shop_item_designer_trousers: 'Designer Trousers',
+      smart_shop_item_designer_sneakers: 'Designer Sneakers',
+      smart_shop_item_leather_jacket: 'Leather Jacket',
+      smart_shop_item_designer_watch: 'Designer Watch',
+      smart_shop_item_cocktail_dress: 'Cocktail Dress',
+      smart_shop_item_blazer: 'Blazer',
+      smart_shop_brand_cos: 'Clean lines, modern silhouettes',
+      smart_shop_brand_uniqlo: 'Affordable basics and essentials',
+      smart_shop_brand_aritzia: 'Elevated everyday pieces',
+      smart_shop_brand_stussy: 'Iconic streetwear graphics',
+      smart_shop_brand_carhartt: 'Durable workwear-meets-street',
+      smart_shop_brand_nike: 'Sport-lifestyle crossover',
+      smart_shop_brand_ralph: 'Timeless American elegance',
+      smart_shop_brand_brooks: 'Classic Ivy League style',
+      smart_shop_brand_tommy: 'Preppy with modern edge',
+      smart_shop_brand_jcrew: 'Polished casual essentials',
+      smart_shop_brand_lacoste: 'Sporty French sophistication',
+      smart_shop_brand_vineyard: 'Coastal prep aesthetic',
+      smart_shop_brand_freepeople: 'Free-spirited boho layers',
+      smart_shop_brand_anthro: 'Artisanal romantic pieces',
+      smart_shop_brand_spell: 'Luxury bohemian designs',
+      smart_shop_brand_lululemon: 'Premium athletic lifestyle',
+      smart_shop_brand_gymshark: 'Performance workout wear',
+      smart_shop_brand_ov: 'Recreational activity wear',
+      smart_shop_brand_allsaints: 'Edgy leather and dark tones',
+      smart_shop_brand_drmartens: 'Rebellious footwear icon',
+      smart_shop_brand_diesel: 'Denim-forward rock style',
+      smart_shop_brand_acne: 'Scandi minimal luxury',
+      smart_shop_brand_stories: 'Feminine Scandi designs',
+      smart_shop_brand_arket: 'Modern Nordic essentials',
+      smart_shop_brand_reform: 'Sustainable vintage-inspired',
+      smart_shop_brand_urban: 'Trendy vintage-look pieces',
+      smart_shop_brand_nastygal: 'Bold retro fashion',
+      smart_shop_brand_arcteryx: 'Technical outdoor performance',
+      smart_shop_brand_stone: 'Innovative fabric research',
+      smart_shop_brand_salomon: 'Trail-to-street footwear'
     },
     hu: {
       nav_closet: 'Szekrény',
@@ -11245,6 +11510,82 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       ctx_feedback_critical: 'Összességében a felhasználó kritikus. Légy mérlegelettebb és ajánlj alternatívákat.',
       ctx_feedback_header: 'Visszajelzés-alapú módosítások',
       storage_warning: 'A tárhely megtelt — néhány adat törölve lett az alkalmazás működéséhez.',
+
+      // Smart Shopping List
+      closet_smart_shop: 'Bevásárlólista',
+      smart_shop_title: 'Okos Bevásárlólista',
+      smart_shop_subtitle: 'Szekrény-elemzés és okos vásárlási javaslatok a ruhatárad alapján.',
+      smart_shop_tab_gaps: 'Hiányok',
+      smart_shop_tab_occasions: 'Alkalmak',
+      smart_shop_tab_budget: 'Költség',
+      smart_shop_tab_brands: 'Márkák',
+      smart_shop_gaps_header: 'Ruhatár-hiányok',
+      smart_shop_gaps_complete: 'A ruhatárad lefedi az összes lényeges kategóriát!',
+      smart_shop_missing_hint: 'Érdemes beszerezni',
+      smart_shop_outfits: 'outfit',
+      smart_shop_covered: 'Rendben',
+      smart_shop_occasions_header: 'Alkalmassági készenlét',
+      smart_shop_occasion_ready: 'Kész erre az alkalomra!',
+      smart_shop_no_outfit_for_occasion: 'Még nincs mentett outfit ehhez az alkalomhoz',
+      smart_shop_budget_header: 'Költséghatékony javaslatok',
+      smart_shop_budget_low: 'Költséghatékony',
+      smart_shop_budget_mid: 'Középkategória',
+      smart_shop_budget_high: 'Prémium',
+      smart_shop_needed: 'Hiányzik',
+      smart_shop_brands_header: 'Márka javaslatok',
+      smart_shop_brands_lock_desc: 'Nyisd fel a PRO-t, és szerezd meg a stílusprofilodra szabott márka javaslatokat.',
+      smart_shop_go_pro: 'PRO vásárlása',
+      smart_shop_item_basic_tee: 'Alap póló',
+      smart_shop_item_chinos: 'Chino nadrág',
+      smart_shop_item_white_sneakers: 'Fehér edzőcipő',
+      smart_shop_item_denim_jacket: 'Farmer dzseki',
+      smart_shop_item_basic_belt: 'Alap öv',
+      smart_shop_item_oxford_shirt: 'Oxford ing',
+      smart_shop_item_dark_jeans: 'Sötét farmer',
+      smart_shop_item_premium_polo: 'Prémium póló',
+      smart_shop_item_tailored_trousers: 'Szabott nadrág',
+      smart_shop_item_leather_loafers: 'Bársony mokaszin',
+      smart_shop_item_bomber_jacket: 'Bomber dzseki',
+      smart_shop_item_leather_watch: 'Bőr karóra',
+      smart_shop_item_linen_shirt: 'Vászon ing',
+      smart_shop_item_midi_dress: 'Midi ruha',
+      smart_shop_item_designer_shirt: 'Design ing',
+      smart_shop_item_designer_trousers: 'Design nadrág',
+      smart_shop_item_designer_sneakers: 'Design edzőcipő',
+      smart_shop_item_leather_jacket: 'Bőr dzseki',
+      smart_shop_item_designer_watch: 'Design karóra',
+      smart_shop_item_cocktail_dress: 'Koktél ruha',
+      smart_shop_item_blazer: 'Zakó',
+      smart_shop_brand_cos: 'Letisztult vonalak, modern sziluettek',
+      smart_shop_brand_uniqlo: 'Megfizethető alapok és kellékek',
+      smart_shop_brand_aritzia: 'Kifinomult mindennapi darabok',
+      smart_shop_brand_stussy: 'Ikonikus streetwear grafikák',
+      smart_shop_brand_carhartt: 'Robusztus munkaruha-utcai stílus',
+      smart_shop_brand_nike: 'Sport-lifestyle crossover',
+      smart_shop_brand_ralph: 'Időtlen amerikai elegancia',
+      smart_shop_brand_brooks: 'Klasszikus Ivy League stílus',
+      smart_shop_brand_tommy: 'Preppy modern éllel',
+      smart_shop_brand_jcrew: 'Tökéletesített casual alapok',
+      smart_shop_brand_lacoste: 'Sportos francia szofisztikáltság',
+      smart_shop_brand_vineyard: 'Parti preppy esztétika',
+      smart_shop_brand_freepeople: 'Szabad szellemű boho rétegek',
+      smart_shop_brand_anthro: 'Kézműves romantikus darabok',
+      smart_shop_brand_spell: 'Luxus bohemian dizájnok',
+      smart_shop_brand_lululemon: 'Prémium sportos életmód',
+      smart_shop_brand_gymshark: 'Teljesítmény edzőruházat',
+      smart_shop_brand_ov: 'Szabadidős aktivitásruha',
+      smart_shop_brand_allsaints: 'Kiemelkedő bőr és sötét tónusok',
+      smart_shop_brand_drmartens: 'Lázadó lábbeli ikon',
+      smart_shop_brand_diesel: 'Denim-központú rock stílus',
+      smart_shop_brand_acne: 'Skandináv minimál luxus',
+      smart_shop_brand_stories: 'Nőies skandináv dizájnok',
+      smart_shop_brand_arket: 'Modern nordik alapok',
+      smart_shop_brand_reform: 'Fenntartható vintage inspiráció',
+      smart_shop_brand_urban: 'Trendi vintage-look darabok',
+      smart_shop_brand_nastygal: 'Merész retro divat',
+      smart_shop_brand_arcteryx: 'Technikai outdoor teljesítmény',
+      smart_shop_brand_stone: 'Innovatív anyagkutatás',
+      smart_shop_brand_salomon: 'Terep-utcai lábbeli'
     },
     de: {
       nav_closet: 'Schrank',
@@ -12836,6 +13177,82 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       ctx_feedback_critical: 'Insgesamt ist der Benutzer kritisch. Sei abgewogener und biete Alternativen an.',
       ctx_feedback_header: 'Feedback-basierte Anpassungen',
       storage_warning: 'Speicher ist voll — einige Daten wurden gelöscht, damit die App weiterläuft.',
+
+      // Smart Shopping List
+      closet_smart_shop: 'Einkaufsliste',
+      smart_shop_title: 'Smarte Einkaufsliste',
+      smart_shop_subtitle: 'Garderoben-Lückenanalyse und intelligente Kau fvorschläge basierend auf deinem Schrank.',
+      smart_shop_tab_gaps: 'Lücken',
+      smart_shop_tab_occasions: 'Anlässe',
+      smart_shop_tab_budget: 'Budget',
+      smart_shop_tab_brands: 'Marken',
+      smart_shop_gaps_header: 'Garderoben-Lücken',
+      smart_shop_gaps_complete: 'Deine Garderobe deckt alle wesentlichen Kategorien ab!',
+      smart_shop_missing_hint: 'Erwäge zu kaufen',
+      smart_shop_outfits: 'Outfits',
+      smart_shop_covered: 'Abgedeckt',
+      smart_shop_occasions_header: 'Anlass-Bereitschaft',
+      smart_shop_occasion_ready: 'Bereit für diesen Anlass!',
+      smart_shop_no_outfit_for_occasion: 'Noch keine Outfits für diesen Anlass gespeichert',
+      smart_shop_budget_header: 'Budgetfreundliche Vorschläge',
+      smart_shop_budget_low: 'Budget',
+      smart_shop_budget_mid: 'Mittelpreis',
+      smart_shop_budget_high: 'Premium',
+      smart_shop_needed: 'Benötigt',
+      smart_shop_brands_header: 'Markenempfehlungen',
+      smart_shop_brands_lock_desc: 'Schalte Markenempfehlungen freigeschaltet auf dein Stilprofil mit PRO.',
+      smart_shop_go_pro: 'PRO werden',
+      smart_shop_item_basic_tee: 'Basis-T-Shirt',
+      smart_shop_item_chinos: 'Chino-Hose',
+      smart_shop_item_white_sneakers: 'Weiße Sneaker',
+      smart_shop_item_denim_jacket: 'Jeansjacke',
+      smart_shop_item_basic_belt: 'Basis-Gürtel',
+      smart_shop_item_oxford_shirt: 'Oxford-Hemd',
+      smart_shop_item_dark_jeans: 'Dunkle Jeans',
+      smart_shop_item_premium_polo: 'Premium-Polo',
+      smart_shop_item_tailored_trousers: 'Maßgeschneiderte Hose',
+      smart_shop_item_leather_loafers: 'Lederslipper',
+      smart_shop_item_bomber_jacket: 'Bomberjacke',
+      smart_shop_item_leather_watch: 'Lederuhr',
+      smart_shop_item_linen_shirt: 'Leinenhemd',
+      smart_shop_item_midi_dress: 'Midi-Kleid',
+      smart_shop_item_designer_shirt: 'Designer-Hemd',
+      smart_shop_item_designer_trousers: 'Designer-Hose',
+      smart_shop_item_designer_sneakers: 'Designer-Sneaker',
+      smart_shop_item_leather_jacket: 'Lederjacke',
+      smart_shop_item_designer_watch: 'Designer-Uhr',
+      smart_shop_item_cocktail_dress: 'Cocktailkleid',
+      smart_shop_item_blazer: 'Blazer',
+      smart_shop_brand_cos: 'Klare Linien, moderne Silhouetten',
+      smart_shop_brand_uniqlo: 'Bezahlbare Basics und Essentials',
+      smart_shop_brand_aritzia: 'Gehobene Alltagsteile',
+      smart_shop_brand_stussy: 'Ikonische Streetwear-Grafiken',
+      smart_shop_brand_carhartt: 'Robuste Workwear trifft Streetstyle',
+      smart_shop_brand_nike: 'Sport-Lifestyle-Crossover',
+      smart_shop_brand_ralph: 'Zeitlose amerikanische Eleganz',
+      smart_shop_brand_brooks: 'Klassischer Ivy-League-Stil',
+      smart_shop_brand_tommy: 'Preppy mit modernem Edge',
+      smart_shop_brand_jcrew: 'Gepflegte Casual-Essentials',
+      smart_shop_brand_lacoste: 'Sportliche französische Raffinesse',
+      smart_shop_brand_vineyard: 'Coastal-Prep-Ästhetik',
+      smart_shop_brand_freepeople: 'Freigeistige Boho-Lagen',
+      smart_shop_brand_anthro: 'Handwerkliche romantische Stücke',
+      smart_shop_brand_spell: 'Luxus-Bohemian-Designs',
+      smart_shop_brand_lululemon: 'Premium-Sportlifestyle',
+      smart_shop_brand_gymshark: 'Performance-Trainingskleidung',
+      smart_shop_brand_ov: 'Freizeitaktivitätskleidung',
+      smart_shop_brand_allsaints: 'Edles Leder und dunkle Töne',
+      smart_shop_brand_drmartens: 'Rebellisches Schuhwerk-Ikon',
+      smart_shop_brand_diesel: 'Denim-zentrierter Rock-Stil',
+      smart_shop_brand_acne: 'Skandi-Minimal-Luxus',
+      smart_shop_brand_stories: 'Feminine Skandi-Designs',
+      smart_shop_brand_arket: 'Moderne nordische Essentials',
+      smart_shop_brand_reform: 'Nachhaltige Vintage-Inspiration',
+      smart_shop_brand_urban: 'Trendige Vintage-Look-Stücke',
+      smart_shop_brand_nastygal: 'Mutige Retro-Mode',
+      smart_shop_brand_arcteryx: 'Technische Outdoor-Performance',
+      smart_shop_brand_stone: 'Innovative Stoffforschung',
+      smart_shop_brand_salomon: 'Trail-to-Street-Schuhwerk'
     },
   };
 
@@ -15562,6 +15979,582 @@ window.saveCurrentOutfit = function() {
     saveProfile(profile);
     modal.classList.add('hidden');
   });
+})();
+
+// ============================================================
+// SMART SHOPPING LIST — wardrobe gap analysis, occasion-based
+// suggestions, budget recommendations, and outfit multiplier
+// calculations. Uses only local closet data + style profile.
+// ============================================================
+(function () {
+  var t = function(k, v) { return typeof window.t === 'function' ? window.t(k, v) : k; };
+
+  // --- Essential wardrobe baseline per type ---
+  // Defines minimum items expected for a "complete" wardrobe
+  var WARDROBE_BASELINE = {
+    shirt:    { emoji: '👕', min: 3, labelKey: 'type_shirt' },
+    pants:    { emoji: '👖', min: 2, labelKey: 'type_pants' },
+    jacket:   { emoji: '🧥', min: 1, labelKey: 'type_jacket' },
+    dress:    { emoji: '👗', min: 1, labelKey: 'type_dress' },
+    shoes:    { emoji: '👟', min: 2, labelKey: 'type_shoes' },
+    accessory:{ emoji: '👜', min: 1, labelKey: 'type_accessory' }
+  };
+
+  // --- Occasion requirements ---
+  // What each occasion needs in terms of items
+  var OCCASION_NEEDS = {
+    casual: {
+      labelKey: 'occasion_casual',
+      emoji: '☕',
+      requirements: {
+        shirt: 2, pants: 1, shoes: 1
+      },
+      colorAdvice: 'smart_shop_casual_advice'
+    },
+    first_date: {
+      labelKey: 'occasion_first_date',
+      emoji: '❤️',
+      requirements: {
+        shirt: 1, pants: 1, jacket: 1, shoes: 1
+      },
+      colorAdvice: 'smart_shop_date_advice'
+    },
+    fancy: {
+      labelKey: 'occasion_fancy_dinner',
+      emoji: '🍽️',
+      requirements: {
+        shirt: 1, pants: 1, jacket: 1, shoes: 1, accessory: 1
+      },
+      colorAdvice: 'smart_shop_fancy_advice'
+    },
+    night_out: {
+      labelKey: 'occasion_night_out',
+      emoji: '🌙',
+      requirements: {
+        shirt: 1, pants: 1, shoes: 1
+      },
+      colorAdvice: 'smart_shop_night_advice'
+    }
+  };
+
+  // --- Budget tier suggestions ---
+  var BUDGET_SUGGESTIONS = {
+    low: [
+      { type: 'shirt', nameKey: 'smart_shop_item_basic_tee', price: '$15-25', multiplier: 6 },
+      { type: 'pants', nameKey: 'smart_shop_item_chinos', price: '$25-40', multiplier: 5 },
+      { type: 'shoes', nameKey: 'smart_shop_item_white_sneakers', price: '$30-50', multiplier: 8 },
+      { type: 'jacket', nameKey: 'smart_shop_item_denim_jacket', price: '$35-55', multiplier: 4 },
+      { type: 'accessory', nameKey: 'smart_shop_item_basic_belt', price: '$10-20', multiplier: 3 },
+      { type: 'shirt', nameKey: 'smart_shop_item_oxford_shirt', price: '$20-35', multiplier: 5 },
+      { type: 'pants', nameKey: 'smart_shop_item_dark_jeans', price: '$25-45', multiplier: 6 }
+    ],
+    mid: [
+      { type: 'shirt', nameKey: 'smart_shop_item_premium_polo', price: '$50-80', multiplier: 6 },
+      { type: 'pants', nameKey: 'smart_shop_item_tailored_trousers', price: '$60-100', multiplier: 7 },
+      { type: 'shoes', nameKey: 'smart_shop_item_leather_loafers', price: '$80-130', multiplier: 8 },
+      { type: 'jacket', nameKey: 'smart_shop_item_bomber_jacket', price: '$70-120', multiplier: 5 },
+      { type: 'accessory', nameKey: 'smart_shop_item_leather_watch', price: '$60-100', multiplier: 4 },
+      { type: 'shirt', nameKey: 'smart_shop_item_linen_shirt', price: '$45-75', multiplier: 5 },
+      { type: 'dress', nameKey: 'smart_shop_item_midi_dress', price: '$70-110', multiplier: 6 }
+    ],
+    high: [
+      { type: 'shirt', nameKey: 'smart_shop_item_designer_shirt', price: '$120-200', multiplier: 7 },
+      { type: 'pants', nameKey: 'smart_shop_item_designer_trousers', price: '$150-250', multiplier: 7 },
+      { type: 'shoes', nameKey: 'smart_shop_item_designer_sneakers', price: '$180-300', multiplier: 9 },
+      { type: 'jacket', nameKey: 'smart_shop_item_leather_jacket', price: '$250-450', multiplier: 6 },
+      { type: 'accessory', nameKey: 'smart_shop_item_designer_watch', price: '$200-400', multiplier: 5 },
+      { type: 'dress', nameKey: 'smart_shop_item_cocktail_dress', price: '$200-350', multiplier: 7 },
+      { type: 'jacket', nameKey: 'smart_shop_item_blazer', price: '$150-280', multiplier: 8 }
+    ]
+  };
+
+  // --- Brand recommendations per style vibe (PRO) ---
+  var BRAND_BY_VIBE = {
+    sp_vibe_minimalist: [
+      { name: 'COS', desc: 'smart_shop_brand_cos', priceRange: 'mid' },
+      { name: 'Uniqlo', desc: 'smart_shop_brand_uniqlo', priceRange: 'low' },
+      { name: 'Aritzia', desc: 'smart_shop_brand_aritzia', priceRange: 'mid' }
+    ],
+    sp_vibe_streetwear: [
+      { name: 'Stussy', desc: 'smart_shop_brand_stussy', priceRange: 'mid' },
+      { name: 'Carhartt WIP', desc: 'smart_shop_brand_carhartt', priceRange: 'mid' },
+      { name: 'Nike', desc: 'smart_shop_brand_nike', priceRange: 'low' }
+    ],
+    sp_vibe_classic: [
+      { name: 'Ralph Lauren', desc: 'smart_shop_brand_ralph', priceRange: 'high' },
+      { name: 'Brooks Brothers', desc: 'smart_shop_brand_brooks', priceRange: 'high' },
+      { name: 'Tommy Hilfiger', desc: 'smart_shop_brand_tommy', priceRange: 'mid' }
+    ],
+    sp_vibe_preppy: [
+      { name: 'J.Crew', desc: 'smart_shop_brand_jcrew', priceRange: 'mid' },
+      { name: 'Lacoste', desc: 'smart_shop_brand_lacoste', priceRange: 'mid' },
+      { name: 'Vineyard Vines', desc: 'smart_shop_brand_vineyard', priceRange: 'mid' }
+    ],
+    sp_vibe_bohemian: [
+      { name: 'Free People', desc: 'smart_shop_brand_freepeople', priceRange: 'mid' },
+      { name: 'Anthropologie', desc: 'smart_shop_brand_anthro', priceRange: 'mid' },
+      { name: 'Spell', desc: 'smart_shop_brand_spell', priceRange: 'high' }
+    ],
+    sp_vibe_athleisure: [
+      { name: 'Lululemon', desc: 'smart_shop_brand_lululemon', priceRange: 'mid' },
+      { name: 'Gymshark', desc: 'smart_shop_brand_gymshark', priceRange: 'low' },
+      { name: 'Outdoor Voices', desc: 'smart_shop_brand_ov', priceRange: 'mid' }
+    ],
+    sp_vibe_rock: [
+      { name: 'AllSaints', desc: 'smart_shop_brand_allsaints', priceRange: 'high' },
+      { name: 'Dr. Martens', desc: 'smart_shop_brand_drmartens', priceRange: 'mid' },
+      { name: 'Diesel', desc: 'smart_shop_brand_diesel', priceRange: 'mid' }
+    ],
+    sp_vibe_scandinavian: [
+      { name: 'Acne Studios', desc: 'smart_shop_brand_acne', priceRange: 'high' },
+      { name: '& Other Stories', desc: 'smart_shop_brand_stories', priceRange: 'mid' },
+      { name: 'Arket', desc: 'smart_shop_brand_arket', priceRange: 'mid' }
+    ],
+    sp_vibe_vintage: [
+      { name: 'Reformation', desc: 'smart_shop_brand_reform', priceRange: 'mid' },
+      { name: 'Urban Outfitters', desc: 'smart_shop_brand_urban', priceRange: 'low' },
+      { name: 'Nasty Gal', desc: 'smart_shop_brand_nastygal', priceRange: 'low' }
+    ],
+    sp_vibe_techwear: [
+      { name: 'Arc\'teryx', desc: 'smart_shop_brand_arcteryx', priceRange: 'high' },
+      { name: 'Stone Island', desc: 'smart_shop_brand_stone', priceRange: 'high' },
+      { name: 'Salomon', desc: 'smart_shop_brand_salomon', priceRange: 'mid' }
+    ]
+  };
+
+  var PRICE_COLORS = {
+    low:  { bg: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.25)', text: '#34d399' },
+    mid:  { bg: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.25)', text: '#fbbf24' },
+    high: { bg: 'rgba(168,85,247,0.12)', border: 'rgba(168,85,247,0.25)', text: '#c084fc' }
+  };
+
+  // --- DOM references ---
+  var modal = document.getElementById('smartShopModal');
+  var openBtn = document.getElementById('smartShopBtn');
+  var closeBtn = document.getElementById('smartShopClose');
+
+  if (!modal || !openBtn) return;
+
+  // Move modal to <body> to avoid stacking context traps
+  if (modal.parentElement !== document.body) {
+    document.body.appendChild(modal);
+  }
+
+  // --- Helpers ---
+  function getClosetItems() {
+    var outfits = (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits : [];
+    // Separate uploaded items (source === 'upload') from scanned outfits
+    var uploadedItems = outfits.filter(function(o) { return o.source === 'upload'; });
+    var scannedOutfits = outfits.filter(function(o) { return o.source !== 'upload'; });
+    return { uploadedItems: uploadedItems, scannedOutfits: scannedOutfits, all: outfits };
+  }
+
+  function countByType(items) {
+    var counts = {};
+    items.forEach(function(item) {
+      var type = item.type || 'shirt';
+      counts[type] = (counts[type] || 0) + 1;
+    });
+    return counts;
+  }
+
+  function countByOccasion(items) {
+    var counts = {};
+    items.forEach(function(item) {
+      var occ = item.occasion || 'casual';
+      counts[occ] = (counts[occ] || 0) + 1;
+    });
+    return counts;
+  }
+
+  // Count how many existing items a new item of `type` can pair with
+  // to create new outfit combinations
+  function calculateOutfitMultiplier(type, closetItems) {
+    var items = closetItems.uploadedItems;
+    var typeCounts = countByType(items);
+
+    // A top pairs with: pants + shoes + (optional jacket + accessory)
+    // A bottom pairs with: shirts + shoes
+    // Shoes pair with: shirts * pants
+    // A jacket pairs with: shirts * pants
+    // An accessory pairs with: shirts * pants
+    var combos = 0;
+    switch (type) {
+      case 'shirt':
+        combos = (typeCounts.pants || 0) * (typeCounts.shoes || 0);
+        break;
+      case 'pants':
+        combos = (typeCounts.shirt || 0) * (typeCounts.shoes || 0);
+        break;
+      case 'shoes':
+        combos = (typeCounts.shirt || 0) * (typeCounts.pants || 0);
+        break;
+      case 'jacket':
+        combos = (typeCounts.shirt || 0) * (typeCounts.pants || 0) * Math.max(1, typeCounts.shoes || 0);
+        break;
+      case 'dress':
+        combos = (typeCounts.shoes || 0) * Math.max(1, typeCounts.accessory || 0);
+        break;
+      case 'accessory':
+        combos = (typeCounts.shirt || 0) * (typeCounts.pants || 0) * Math.max(1, typeCounts.shoes || 0);
+        break;
+    }
+
+    // Add scanned outfits as potential matches (each scan = 1 more combo)
+    combos += closetItems.scannedOutfits.length;
+    return Math.max(combos, 1);
+  }
+
+  // --- Tab switching ---
+  var currentTab = 'gaps';
+  var tabContainer = document.getElementById('smartShopTabs');
+  var panels = {
+    gaps: document.getElementById('smartShopGaps'),
+    occasions: document.getElementById('smartShopOccasions'),
+    budget: document.getElementById('smartShopBudget'),
+    brands: document.getElementById('smartShopBrands')
+  };
+
+  function switchTab(tab) {
+    currentTab = tab;
+    // Update tab buttons
+    tabContainer.querySelectorAll('.smart-shop-tab').forEach(function(btn) {
+      if (btn.dataset.shopTab === tab) {
+        btn.className = 'smart-shop-tab flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-colors bg-amber-500/20 text-amber-300 border border-amber-500/30';
+      } else {
+        btn.className = 'smart-shop-tab flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-colors bg-white/5 text-gray-400 border border-transparent hover:bg-white/10';
+      }
+    });
+    // Show/hide panels
+    Object.keys(panels).forEach(function(key) {
+      if (panels[key]) {
+        if (key === tab) panels[key].classList.remove('hidden');
+        else panels[key].classList.add('hidden');
+      }
+    });
+  }
+
+  tabContainer.addEventListener('click', function(e) {
+    var btn = e.target.closest('.smart-shop-tab');
+    if (btn && btn.dataset.shopTab) switchTab(btn.dataset.shopTab);
+  });
+
+  // --- Budget picker ---
+  var currentBudget = 'low';
+  var budgetPicker = document.getElementById('smartShopBudgetPicker');
+
+  budgetPicker.addEventListener('click', function(e) {
+    var btn = e.target.closest('.smart-budget-btn');
+    if (!btn || !btn.dataset.budget) return;
+    currentBudget = btn.dataset.budget;
+    // Update active state
+    budgetPicker.querySelectorAll('.smart-budget-btn').forEach(function(b) {
+      if (b.dataset.budget === currentBudget) {
+        var colors = PRICE_COLORS[currentBudget];
+        b.className = 'smart-budget-btn flex-1 py-2 rounded-lg text-xs font-bold border transition';
+        b.style.borderColor = colors.border;
+        b.style.backgroundColor = colors.bg;
+        b.style.color = colors.text;
+      } else {
+        b.className = 'smart-budget-btn flex-1 py-2 rounded-lg text-xs font-bold border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 transition';
+        b.style.borderColor = '';
+        b.style.backgroundColor = '';
+        b.style.color = '';
+      }
+    });
+    renderBudgetTab();
+  });
+
+  // --- Render Gaps Tab ---
+  function renderGapsTab() {
+    var grid = document.getElementById('smartShopGapsGrid');
+    var emptyEl = document.getElementById('smartShopGapsEmpty');
+    if (!grid) return;
+
+    var closetItems = getClosetItems();
+    var typeCounts = countByType(closetItems.uploadedItems);
+    // Also consider scanned outfits (they represent complete outfits)
+    // Add virtual count for scanned items based on their color/occasion data
+    var scannedByType = {};
+    closetItems.scannedOutfits.forEach(function(o) {
+      // Scanned outfits represent a full outfit, so they count as having
+      // at least 1 of each essential type
+      ['shirt', 'pants', 'shoes'].forEach(function(type) {
+        scannedByType[type] = (scannedByType[type] || 0) + 1;
+      });
+    });
+
+    var html = '';
+    var hasGaps = false;
+
+    Object.keys(WARDROBE_BASELINE).forEach(function(type) {
+      var info = WARDROBE_BASELINE[type];
+      var have = (typeCounts[type] || 0) + (scannedByType[type] || 0);
+      var need = info.min;
+      var isMissing = have < need;
+      if (isMissing) hasGaps = true;
+
+      var multiplier = isMissing ? calculateOutfitMultiplier(type, closetItems) : 0;
+      var statusClass = isMissing ? 'gap-missing' : 'gap-ok';
+      var statusIcon = isMissing ? '⚠️' : '✓';
+
+      html += '<div class="smart-shop-gap-card ' + statusClass + '">';
+      html += '<div class="smart-shop-gap-icon">' + info.emoji + '</div>';
+      html += '<div class="flex-1 min-w-0">';
+      html += '<div class="flex items-center justify-between gap-2">';
+      html += '<span class="text-sm font-bold text-white">' + t(info.labelKey) + '</span>';
+      html += '<span class="text-[11px] font-bold ' + (isMissing ? 'text-red-400' : 'text-emerald-400') + '">' + statusIcon + ' ' + have + '/' + need + '</span>';
+      html += '</div>';
+      if (isMissing) {
+        html += '<div class="flex items-center gap-2 mt-1">';
+        html += '<span class="text-[11px] text-gray-400">' + t('smart_shop_missing_hint') + '</span>';
+        html += '<span class="smart-shop-outfit-multiplier">+' + multiplier + ' ' + t('smart_shop_outfits') + '</span>';
+        html += '</div>';
+      } else {
+        html += '<div class="text-[11px] text-emerald-400/60 mt-1">' + t('smart_shop_covered') + '</div>';
+      }
+      html += '</div>';
+      html += '</div>';
+    });
+
+    grid.innerHTML = html;
+    if (emptyEl) {
+      if (hasGaps) emptyEl.classList.add('hidden');
+      else emptyEl.classList.remove('hidden');
+    }
+  }
+
+  // --- Render Occasions Tab ---
+  function renderOccasionsTab() {
+    var grid = document.getElementById('smartShopOccasionsGrid');
+    if (!grid) return;
+
+    var closetItems = getClosetItems();
+    var typeCounts = countByType(closetItems.uploadedItems);
+
+    // Also factor in scanned outfits
+    var scannedByType = {};
+    closetItems.scannedOutfits.forEach(function() {
+      ['shirt', 'pants', 'shoes'].forEach(function(type) {
+        scannedByType[type] = (scannedByType[type] || 0) + 1;
+      });
+    });
+
+    // Count outfits per occasion
+    var occCounts = {};
+    closetItems.all.forEach(function(o) {
+      var occ = o.occasion || 'casual';
+      occCounts[occ] = (occCounts[occ] || 0) + 1;
+    });
+
+    var html = '';
+
+    Object.keys(OCCASION_NEEDS).forEach(function(occKey) {
+      var info = OCCASION_NEEDS[occKey];
+      var reqs = info.requirements;
+      var missing = [];
+      var metCount = 0;
+      var totalReq = 0;
+
+      Object.keys(reqs).forEach(function(type) {
+        var need = reqs[type];
+        var have = (typeCounts[type] || 0) + (scannedByType[type] || 0);
+        totalReq += need;
+        if (have >= need) {
+          metCount += need;
+        } else {
+          metCount += have;
+          missing.push({ type: type, need: need, have: have, info: WARDROBE_BASELINE[type] });
+        }
+      });
+
+      var readiness = totalReq > 0 ? Math.round((metCount / totalReq) * 100) : 0;
+      var isReady = readiness >= 80;
+      var statusClass = isReady ? 'occasion-ready' : 'occasion-missing';
+      var barColor = isReady ? '#34d399' : readiness >= 50 ? '#fbbf24' : '#f87171';
+
+      html += '<div class="smart-shop-occasion-card ' + statusClass + '">';
+      html += '<div class="flex items-center justify-between mb-2">';
+      html += '<div class="flex items-center gap-2">';
+      html += '<span class="text-lg">' + info.emoji + '</span>';
+      html += '<span class="text-sm font-bold text-white">' + t(info.labelKey) + '</span>';
+      html += '</div>';
+      html += '<span class="text-[11px] font-bold ' + (isReady ? 'text-emerald-400' : 'text-red-400') + '">' + readiness + '%</span>';
+      html += '</div>';
+
+      // Missing items
+      if (missing.length > 0) {
+        html += '<div class="space-y-1.5 mb-2">';
+        missing.forEach(function(m) {
+          var mult = calculateOutfitMultiplier(m.type, closetItems);
+          html += '<div class="flex items-center gap-2">';
+          html += '<span class="text-sm">' + m.info.emoji + '</span>';
+          html += '<span class="text-xs text-gray-400">' + t(m.info.labelKey) + ' (' + m.have + '/' + m.need + ')</span>';
+          html += '<span class="smart-shop-outfit-multiplier">+' + mult + ' ' + t('smart_shop_outfits') + '</span>';
+          html += '</div>';
+        });
+        html += '</div>';
+      } else {
+        html += '<div class="text-[11px] text-emerald-400/60">' + t('smart_shop_occasion_ready') + '</div>';
+      }
+
+      // Occasion-specific advice
+      var outfitCount = occCounts[occKey] || 0;
+      if (outfitCount === 0) {
+        html += '<div class="text-[11px] text-amber-400/70 mt-2">' + t('smart_shop_no_outfit_for_occasion') + '</div>';
+      }
+
+      // Progress bar
+      html += '<div class="smart-shop-occasion-bar">';
+      html += '<div class="smart-shop-occasion-bar-fill" style="width:' + readiness + '%;background:' + barColor + '"></div>';
+      html += '</div>';
+      html += '</div>';
+    });
+
+    grid.innerHTML = html;
+  }
+
+  // --- Render Budget Tab ---
+  function renderBudgetTab() {
+    var grid = document.getElementById('smartShopBudgetGrid');
+    if (!grid) return;
+
+    var closetItems = getClosetItems();
+    var suggestions = BUDGET_SUGGESTIONS[currentBudget] || BUDGET_SUGGESTIONS.low;
+    var typeCounts = countByType(closetItems.uploadedItems);
+    var colors = PRICE_COLORS[currentBudget];
+
+    var html = '';
+
+    suggestions.forEach(function(item) {
+      var info = WARDROBE_BASELINE[item.type];
+      var have = typeCounts[item.type] || 0;
+      var need = info ? info.min : 1;
+      var isNeeded = have < need;
+      var mult = calculateOutfitMultiplier(item.type, closetItems);
+
+      html += '<div class="smart-shop-budget-card" style="' + (isNeeded ? 'border-color:' + colors.border + ';background:' + colors.bg : '') + '">';
+      html += '<div class="smart-shop-gap-icon" style="background:' + colors.bg + ';border:1px solid ' + colors.border + '">' + (info ? info.emoji : '🛍️') + '</div>';
+      html += '<div class="flex-1 min-w-0">';
+      html += '<div class="flex items-center justify-between gap-2">';
+      html += '<span class="text-sm font-bold text-white">' + t(item.nameKey) + '</span>';
+      if (isNeeded) {
+        html += '<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-red-500/15 border border-red-500/25 text-red-400 uppercase">' + t('smart_shop_needed') + '</span>';
+      }
+      html += '</div>';
+      html += '<div class="flex items-center gap-2 mt-1">';
+      html += '<span class="smart-shop-budget-price" style="background:' + colors.bg + ';border:1px solid ' + colors.border + ';color:' + colors.text + '">' + item.price + '</span>';
+      html += '<span class="smart-shop-outfit-multiplier">+' + mult + ' ' + t('smart_shop_outfits') + '</span>';
+      html += '</div>';
+      html += '</div>';
+      html += '</div>';
+    });
+
+    grid.innerHTML = html;
+  }
+
+  // --- Render Brands Tab (PRO) ---
+  function renderBrandsTab() {
+    var proEl = document.getElementById('smartShopBrandsPro');
+    var lockedEl = document.getElementById('smartShopBrandsLocked');
+    if (!proEl || !lockedEl) return;
+
+    var isPro = (typeof window.__DS_IS_PRO !== 'undefined' && window.__DS_IS_PRO) ||
+                (typeof isProUser === 'function' && isProUser());
+
+    if (!isPro) {
+      proEl.classList.add('hidden');
+      lockedEl.classList.remove('hidden');
+      return;
+    }
+
+    lockedEl.classList.add('hidden');
+    proEl.classList.remove('hidden');
+
+    // Get the user's style profile vibes
+    var profile = (typeof window.getStyleProfile === 'function') ? window.getStyleProfile() : null;
+    var vibes = (profile && profile.styleVibes) ? profile.styleVibes : [];
+
+    // If no vibes set, show all
+    if (vibes.length === 0) {
+      vibes = Object.keys(BRAND_BY_VIBE);
+    }
+
+    var html = '';
+
+    vibes.forEach(function(vibeKey) {
+      var brands = BRAND_BY_VIBE[vibeKey];
+      if (!brands) return;
+
+      html += '<div class="smart-shop-brand-card">';
+      html += '<div class="text-xs font-bold text-white mb-2.5">' + t(vibeKey) + '</div>';
+      html += '<div class="space-y-2">';
+
+      brands.forEach(function(brand) {
+        var priceColors = PRICE_COLORS[brand.priceRange] || PRICE_COLORS.mid;
+        html += '<div class="flex items-center justify-between gap-2">';
+        html += '<div class="flex-1 min-w-0">';
+        html += '<span class="text-sm font-semibold text-white">' + brand.name + '</span>';
+        html += '<div class="text-[11px] text-gray-400 mt-0.5">' + t(brand.desc) + '</div>';
+        html += '</div>';
+        html += '<span class="smart-shop-brand-tag" style="background:' + priceColors.bg + ';border-color:' + priceColors.border + ';color:' + priceColors.text + '">' + t('smart_shop_budget_' + brand.priceRange) + '</span>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+      html += '</div>';
+    });
+
+    proEl.innerHTML = html;
+  }
+
+  // --- Open/Close modal ---
+  openBtn.addEventListener('click', function() {
+    if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+    // Reset to gaps tab
+    switchTab('gaps');
+    currentBudget = 'low';
+    // Re-render budget picker active state
+    budgetPicker.querySelectorAll('.smart-budget-btn').forEach(function(b) {
+      if (b.dataset.budget === 'low') {
+        var colors = PRICE_COLORS.low;
+        b.style.borderColor = colors.border;
+        b.style.backgroundColor = colors.bg;
+        b.style.color = colors.text;
+      } else {
+        b.style.borderColor = '';
+        b.style.backgroundColor = '';
+        b.style.color = '';
+      }
+    });
+    // Render all tabs
+    renderGapsTab();
+    renderOccasionsTab();
+    renderBudgetTab();
+    renderBrandsTab();
+    modal.classList.remove('hidden');
+  });
+
+  closeBtn.addEventListener('click', function() { modal.classList.add('hidden'); });
+  modal.addEventListener('click', function(e) { if (e.target === modal) modal.classList.add('hidden'); });
+
+  // Go PRO button in brands tab
+  var goProBtn = document.getElementById('smartShopGoPro');
+  if (goProBtn) {
+    goProBtn.addEventListener('click', function() {
+      modal.classList.add('hidden');
+      var paywall = document.getElementById('paywallModal');
+      if (paywall) paywall.classList.remove('hidden');
+    });
+  }
+
+  // Expose for external refresh (e.g. after closet changes)
+  window.refreshSmartShop = function() {
+    renderGapsTab();
+    renderOccasionsTab();
+    renderBudgetTab();
+    renderBrandsTab();
+  };
 })();
 
 // ============================================================
