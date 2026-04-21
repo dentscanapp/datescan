@@ -10,6 +10,23 @@
 <link rel="canonical" href="https://datescan.app/delete-account.html" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='40' y2='40' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%23ec4899'/%3E%3Cstop offset='1' stop-color='%239333ea'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M10 5 H5 V10' stroke='url(%23bg)' stroke-width='2' fill='none'/%3E%3Cpath d='M30 5 H35 V10' stroke='url(%23bg)' stroke-width='2' fill='none'/%3E%3Cpath d='M10 35 H5 V30' stroke='url(%23bg)' stroke-width='2' fill='none'/%3E%3Cpath d='M30 35 H35 V30' stroke='url(%23bg)' stroke-width='2' fill='none'/%3E%3Cpath d='M20 13.5C20 13.5 16 9 11.5 9C7.5 9 5 12.5 5 16.5C5 22 13 28 20 32C27 28 35 22 35 16.5C35 12.5 32.5 9 28.5 9C24 9 20 13.5 20 13.5Z' fill='url(%23bg)' fill-opacity='0.15' stroke='url(%23bg)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='4' y1='20' x2='36' y2='20' stroke='%23f472b6' stroke-width='1.5' stroke-dasharray='2 2' opacity='0.8'/%3E%3C/svg%3E">
+<script>
+// ── EARLY lang detection (runs BEFORE any external script) ──
+(function(){
+  var supported=['en','hu','de'];var lang=null;var _h='';
+  try{_h=decodeURIComponent(window.location.href||'');}catch(e){_h=window.location.href||'';}
+  try{var p=new URLSearchParams(window.location.search);var v=p.get('lang');if(v&&supported.indexOf(v)!==-1)lang=v;}catch(e){}
+  if(!lang){try{var m=_h.match(/[?&]lang=([a-z]{2})(?:&|#|$)/i);if(m&&supported.indexOf(m[1])!==-1)lang=m[1];}catch(e){}}
+  if(!lang){try{var h=window.location.hash||'';if(!h&&_h.indexOf('#')!==-1)h=_h.substring(_h.indexOf('#'));var hm=h.match(/[#&]lang=([a-z]{2})/i);if(hm&&supported.indexOf(hm[1])!==-1)lang=hm[1];}catch(e){}}
+  if(!lang){try{var cm=document.cookie.match(/(?:^|;\s*)datescan_lang=([a-z]{2})/i);if(cm&&supported.indexOf(cm[1])!==-1)lang=cm[1];}catch(e){}}
+  if(!lang){try{var nl=localStorage.getItem('datescan.nav_lang');if(nl&&supported.indexOf(nl)!==-1)lang=nl;}catch(e){}}
+  if(!lang){try{var sl=localStorage.getItem('datescan.lang');if(sl&&sl.indexOf('auto:')===0)sl=sl.substring(5);if(sl&&supported.indexOf(sl)!==-1)lang=sl;}catch(e){}}
+  if(!lang){try{var nls=navigator.languages&&navigator.languages.length?Array.prototype.slice.call(navigator.languages):[navigator.language||navigator.userLanguage||''];for(var i=0;i<nls.length;i++){var pp=(nls[i]||'').split('-')[0].toLowerCase();if(pp==='hu'){lang='hu';break;}if(pp==='de'){lang='de';break;}}}catch(e){}}
+  if(lang)window._earlyLang=lang;if(!lang)lang='en';
+  var titles={en:'Delete Account — DateScan',hu:'Fiók törlése — DateScan',de:'Account löschen — DateScan'};
+  document.title=titles[lang]||titles.en;document.documentElement.lang=lang;
+})();
+</script>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
 <script>
@@ -72,10 +89,628 @@
   .btn-danger:active:not(:disabled) { transform: translateY(1px); }
   .btn-danger:disabled { opacity: 0.5; cursor: not-allowed; }
 </style>
+<script>
+// ── i18n for delete-account.html ──
+(function(){
+  var translations = {
+    en: {
+      page_title: 'Delete Your Account & Data — DateScan',
+      meta_desc: 'Request deletion of your DateScan account and all associated data. No login required.',
+      back_aria: 'Back to app',
+      subtitle_tag: 'Personal Style Coach',
+      badge: 'Account & data deletion',
+      main_title: 'Delete your account',
+      main_subtitle: 'Immediate. No login required. Data is removed from our servers as soon as you submit.',
+      intro: 'This page lets you permanently delete all DateScan data linked to your anonymous account ID. You do <strong>not</strong> need to log in. This is the official account deletion URL we submit to the Google Play Store.',
+      what_deleted: 'What gets deleted',
+      what_deleted_desc: 'When you submit the form below, we immediately erase from our servers:',
+      deleted_1: 'Your <strong>AI Style Coach chat history</strong>, including any photos you attached',
+      deleted_2: 'Any <strong>content moderation reports</strong> you submitted',
+      deleted_3: 'Your <strong>subscription and entitlement records</strong> linked to your account ID',
+      deleted_4: 'Server-side <strong>usage logs</strong> keyed to your account',
+      cant_delete: "What we can't delete from here",
+      cant_1: '<strong>On-device data</strong> (closet, scan history, local settings) — this lives only on your phone or browser. Open the DateScan app → Privacy → "Delete My Account & Data" to wipe it (that button does both server and local deletion in one go), or simply uninstall the app.',
+      cant_2: '<strong>Google Play payment records</strong> — handled by Google under their own retention rules. You can cancel your subscription on the <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">Google Play subscriptions page</a>. Google keeps billing records as long as required by tax law.',
+      cant_3: '<strong>Backup snapshots</strong> — we keep encrypted backups for 35 days for disaster recovery. Your data will be purged from backups on the normal rotation schedule and will not be restored to any live system.',
+      cancel_sub: 'Cancel your subscription first',
+      cancel_warning: '<strong>Deleting your account does not cancel an active subscription.</strong> You will keep being charged. Please cancel first:',
+      cancel_gp: '<strong>Google Play subscription:</strong> <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">play.google.com/store/account/subscriptions</a>',
+      form_title: 'Delete my data',
+      form_desc: "Paste your DateScan account ID below. We'll permanently delete all server-side data linked to that ID immediately. Action is irreversible.",
+      find_id_title: 'Where do I find my account ID?',
+      find_id_1: 'Open the DateScan app on your phone.',
+      find_id_2: 'Go to <strong class="text-gray-200">Privacy</strong>.',
+      find_id_3: 'Find the <strong class="text-gray-200">"Your account ID"</strong> box and tap <strong class="text-gray-200">Copy</strong>.',
+      find_id_4: 'Paste it into the field below.',
+      find_id_hint: 'It looks like <code class="text-[11px] bg-white/10 px-1.5 py-0.5 rounded">ds_7f3a8b2c…</code>',
+      label_account_id: 'Account ID',
+      placeholder_account_id: 'ds_...',
+      help_account_id: "The anonymous identifier we use to match your data. We don't ask for an email — DateScan accounts are not linked to one.",
+      confirm_permanent: '<strong class="text-white">I understand this is permanent and irreversible.</strong>',
+      confirm_cancel: '<strong class="text-white">I have canceled any active Pro subscription.</strong> (Deleting data does not cancel Google Play billing.)',
+      honeypot_label: 'Leave this field blank',
+      btn_delete: 'Delete my data',
+      btn_deleting: 'Deleting…',
+      agree_terms: 'By submitting, you agree to our <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy Policy</a>.',
+      success_title: 'Data deleted',
+      success_desc: 'All server-side data for account ID <strong id="successUserId" class="text-white font-mono break-all"></strong> has been permanently deleted. To also wipe data stored on your phone, open the DateScan app → Settings → Privacy, or simply uninstall the app.',
+      error_title: 'Something went wrong',
+      error_default: 'Please try again or contact <a href="mailto:info@datescan.app" class="text-brand-400 underline">support</a>.',
+      error_invalid_id: 'Please paste a valid account ID. It usually starts with "ds_" and is copied from the DateScan app under Settings → Privacy.',
+      error_check_boxes: 'Please check both confirmation boxes to continue.',
+      error_request_failed: "We couldn't process your request right now. Please try again in a few minutes, or contact support if the problem persists.",
+      need_help: 'Need help? <a href="mailto:info@datescan.app" class="text-brand-400 hover:text-brand-500 underline">Contact support</a>',
+      footer_desc: 'Your AI-powered wingman. Scan your outfit, get instant style and grooming feedback, and walk into your date with confidence.',
+      footer_ondevice: 'Camera scans run on-device',
+      footer_legal: 'Legal',
+      footer_privacy: 'Privacy Policy',
+      footer_terms: 'Terms of Service',
+      footer_refund: 'Refund Policy',
+      footer_delete: 'Delete Account',
+      footer_support: 'Support',
+      footer_contact: 'Contact Support',
+      footer_follow: 'Follow',
+      footer_disclaimer: 'Disclaimer: DateScan is an AI-powered tool designed for entertainment and confidence-boosting purposes only. We do not guarantee dating success or specific social outcomes.'
+    },
+    hu: {
+      page_title: 'Fiók és adatok törlése — DateScan',
+      meta_desc: 'DateScan fiókod és minden hozzá tartozó adat törlésének kérése. Nem kell bejelentkezni.',
+      back_aria: 'Vissza az alkalmazáshoz',
+      subtitle_tag: 'Személyes Stílusedző',
+      badge: 'Fiók és adattörlés',
+      main_title: 'Fiók törlése',
+      main_subtitle: 'Azonnali. Nem kell bejelentkezni. Az adatok a beküldés pillanatában törlődnek a szervereinkről.',
+      intro: 'Ezen az oldalon véglegesen törölheted a DateScan-fiókodhoz kapcsolt összes adatot. <strong>Bejelentkezés nem szükséges.</strong> Ez a hivatalos fióktörlési URL, amelyet a Google Play Áruházban megadunk.',
+      what_deleted: 'Mi törlődik',
+      what_deleted_desc: 'Amikor beküldöd az alábbi űrlapot, azonnal töröljük a szervereinkről:',
+      deleted_1: 'Az <strong>AI Stílusedző csevegési előzményeid</strong>, beleértve a csatolt fotókat is',
+      deleted_2: 'Minden általad beküldött <strong>tartalommoderációs jelentés</strong>',
+      deleted_3: 'A fiókazonosítódhoz kapcsolt <strong>előfizetési és jogosultsági adatok</strong>',
+      deleted_4: 'A fiókodhoz tartozó szerveroldali <strong>használati naplók</strong>',
+      cant_delete: 'Mit nem tudunk innen törölni',
+      cant_1: '<strong>Eszközön tárolt adatok</strong> (ruhatár, szkennelési előzmények, helyi beállítások) — ezek csak a telefonodon vagy böngésződben léteznek. Nyisd meg a DateScan alkalmazást → Adatvédelem → „Fiókom és adataim törlése" gomb a törlésükhöz (ez a gomb egyben a szerveroldali és helyi adatokat is törli), vagy egyszerűen távolítsd el az alkalmazást.',
+      cant_2: '<strong>Google Play fizetési nyilvántartások</strong> — ezeket a Google a saját adatmegőrzési szabályai szerint kezeli. Lemondhatod az előfizetésedet a <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">Google Play előfizetési oldalon</a>. A Google a számlázási adatokat az adójogszabályok által megkövetelt ideig megőrzi.',
+      cant_3: '<strong>Biztonsági másolatok</strong> — vészhelyzeti helyreállítás céljából 35 napig titkosított biztonsági másolatokat tárolunk. Az adataid a normál rotációs ütemezés szerint törlődnek a biztonsági másolatokból, és nem lesznek visszaállítva egyetlen éles rendszerbe sem.',
+      cancel_sub: 'Mondd le az előfizetésed először',
+      cancel_warning: '<strong>A fiók törlése nem mond le az aktív előfizetést.</strong> A számlázás folytatódni fog. Kérjük, először mondd le:',
+      cancel_gp: '<strong>Google Play előfizetés:</strong> <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">play.google.com/store/account/subscriptions</a>',
+      form_title: 'Adataim törlése',
+      form_desc: 'Illeszd be a DateScan fiókazonosítód alább. Véglegesen töröljük az azonosítóhoz kapcsolt összes szerveroldali adatot azonnal. A művelet nem visszavonható.',
+      find_id_title: 'Hol találom a fiókazonosítómat?',
+      find_id_1: 'Nyisd meg a DateScan alkalmazást a telefonodon.',
+      find_id_2: 'Menj az <strong class="text-gray-200">Adatvédelem</strong> menüponthoz.',
+      find_id_3: 'Keresd meg az <strong class="text-gray-200">„Fiókazonosítód"</strong> dobozt, és koppints a <strong class="text-gray-200">Másolás</strong> gombra.',
+      find_id_4: 'Illeszd be az alábbi mezőbe.',
+      find_id_hint: 'Így néz ki: <code class="text-[11px] bg-white/10 px-1.5 py-0.5 rounded">ds_7f3a8b2c…</code>',
+      label_account_id: 'Fiókazonosító',
+      placeholder_account_id: 'ds_...',
+      help_account_id: 'Az anonim azonosító, amelyet az adataidhoz használunk. Nem kérünk e-mailt — a DateScan-fiókok nincsenek e-mailhez kötve.',
+      confirm_permanent: '<strong class="text-white">Megértettem, hogy ez végleges és nem visszavonható.</strong>',
+      confirm_cancel: '<strong class="text-white">Lemondtam az aktív Pro előfizetést.</strong> (Az adattörlés nem mondja le a Google Play számlázást.)',
+      honeypot_label: 'Hagyd üresen ezt a mezőt',
+      btn_delete: 'Adataim törlése',
+      btn_deleting: 'Törlés…',
+      agree_terms: 'A beküldéssel elfogadod a <a href="terms.html">Felhasználási feltételeket</a> és az <a href="privacy.html">Adatvédelmi tájékoztatót</a>.',
+      success_title: 'Adatok törölve',
+      success_desc: 'A <strong id="successUserId" class="text-white font-mono break-all"></strong> fiókazonosítóhoz tartozó összes szerveroldali adat véglegesen törölve. A telefonodon tárolt adatok törléséhez nyisd meg a DateScan alkalmazást → Beállítások → Adatvédelem, vagy egyszerűen távolítsd el az alkalmazást.',
+      error_title: 'Valami hiba történt',
+      error_default: 'Kérjük, próbáld újra, vagy vedd fel a kapcsolatot az <a href="mailto:info@datescan.app" class="text-brand-400 underline">ügyfélszolgálattal</a>.',
+      error_invalid_id: 'Kérjük, illessz be egy érvényes fiókazonosítót. Általában „ds_"-sel kezdődik, és a DateScan alkalmazás Beállítások → Adatvédelem menüpontjában másolható.',
+      error_check_boxes: 'Kérjük, jelöld be mindkét megerősítő jelölőnégyzetet a folytatáshoz.',
+      error_request_failed: 'Jelenleg nem tudtuk feldolgozni a kérésedet. Kérjük, próbáld újra néhány perc múlva, vagy vedd fel a kapcsolatot az ügyfélszolgálattal, ha a probléma fennáll.',
+      need_help: 'Segítségre van szükséged? <a href="mailto:info@datescan.app" class="text-brand-400 hover:text-brand-500 underline">Kapcsolatfelvétel az ügyfélszolgálattal</a>',
+      footer_desc: 'Az AI-alapú szárnysegéded. Szkenneld az öltözéked, kapj azonnali stílus- és ápoltsági visszajelzést, és magabiztosan indulj a randira.',
+      footer_ondevice: 'A kameraszkennelés az eszközödön fut',
+      footer_legal: 'Jogi',
+      footer_privacy: 'Adatvédelmi tájékoztató',
+      footer_terms: 'Felhasználási feltételek',
+      footer_refund: 'Visszatérítési szabályzat',
+      footer_delete: 'Fiók törlése',
+      footer_support: 'Támogatás',
+      footer_contact: 'Kapcsolatfelvétel',
+      footer_follow: 'Kövess',
+      footer_disclaimer: 'Nyilatkozat: A DateScan egy AI-alapú eszköz, kizárólag szórakoztatási és önbizalom-növelési céllal. Nem garantálunk randisikert vagy konkrét társasági eredményeket.'
+    },
+    de: {
+      page_title: 'Account & Daten löschen — DateScan',
+      meta_desc: 'Beantrage die Löschung deines DateScan-Accounts und aller zugehörigen Daten. Kein Login erforderlich.',
+      back_aria: 'Zurück zur App',
+      subtitle_tag: 'Persönlicher Style-Coach',
+      badge: 'Account- & Datenlöschung',
+      main_title: 'Account löschen',
+      main_subtitle: 'Sofort. Kein Login erforderlich. Daten werden nach dem Absenden von unseren Servern entfernt.',
+      intro: 'Auf dieser Seite kannst du alle DateScan-Daten, die mit deiner anonymen Account-ID verknüpft sind, dauerhaft löschen. Du musst dich <strong>nicht</strong> einloggen. Dies ist die offizielle Account-Lösch-URL, die wir im Google Play Store angeben.',
+      what_deleted: 'Was gelöscht wird',
+      what_deleted_desc: 'Wenn du das untenstehende Formular absendest, löschen wir sofort von unseren Servern:',
+      deleted_1: 'Deinen <strong>KI-Style-Coach-Chatverlauf</strong>, einschließlich aller angehängten Fotos',
+      deleted_2: 'Alle von dir eingereichten <strong>Inhaltsmoderationsberichte</strong>',
+      deleted_3: 'Deine mit der Account-ID verknüpften <strong>Abo- und Berechtigungsdaten</strong>',
+      deleted_4: 'Serverseitige <strong>Nutzungsprotokolle</strong>, die deinem Account zugeordnet sind',
+      cant_delete: 'Was wir von hier aus nicht löschen können',
+      cant_1: '<strong>Lokal gespeicherte Daten</strong> (Garderobe, Scan-Verlauf, lokale Einstellungen) — diese befinden sich ausschließlich auf deinem Gerät. Öffne die DateScan-App → Datenschutz → „Account & Daten löschen", um sie zu entfernen (diese Schaltfläche löscht sowohl Server- als auch lokale Daten in einem Schritt), oder deinstalliere einfach die App.',
+      cant_2: '<strong>Google Play-Zahlungsdaten</strong> — werden von Google nach eigenen Aufbewahrungsregeln verwaltet. Du kannst dein Abo auf der <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">Google Play Abo-Seite</a> kündigen. Google bewahrt Abrechnungsdaten so lange auf, wie es das Steuerrecht erfordert.',
+      cant_3: '<strong>Backup-Snapshots</strong> — wir speichern verschlüsselte Backups für 35 Tage zur Notfallwiederherstellung. Deine Daten werden nach dem normalen Rotationsplan aus den Backups gelöscht und nicht in ein Livesystem zurückgespielt.',
+      cancel_sub: 'Kündige zuerst dein Abo',
+      cancel_warning: '<strong>Das Löschen deines Accounts kündigt kein aktives Abo.</strong> Du wirst weiterhin belastet. Bitte kündige zuerst:',
+      cancel_gp: '<strong>Google Play Abo:</strong> <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">play.google.com/store/account/subscriptions</a>',
+      form_title: 'Meine Daten löschen',
+      form_desc: 'Füge deine DateScan-Account-ID unten ein. Wir löschen alle mit dieser ID verknüpften serverseitigen Daten sofort und dauerhaft. Diese Aktion ist unwiderruflich.',
+      find_id_title: 'Wo finde ich meine Account-ID?',
+      find_id_1: 'Öffne die DateScan-App auf deinem Handy.',
+      find_id_2: 'Gehe zu <strong class="text-gray-200">Datenschutz</strong>.',
+      find_id_3: 'Finde das Feld <strong class="text-gray-200">„Deine Account-ID"</strong> und tippe auf <strong class="text-gray-200">Kopieren</strong>.',
+      find_id_4: 'Füge sie in das Feld unten ein.',
+      find_id_hint: 'Sie sieht so aus: <code class="text-[11px] bg-white/10 px-1.5 py-0.5 rounded">ds_7f3a8b2c…</code>',
+      label_account_id: 'Account-ID',
+      placeholder_account_id: 'ds_...',
+      help_account_id: 'Die anonyme Kennung, die wir verwenden, um deine Daten zuzuordnen. Wir fragen keine E-Mail ab — DateScan-Accounts sind nicht mit einer E-Mail verknüpft.',
+      confirm_permanent: '<strong class="text-white">Ich verstehe, dass dies dauerhaft und unwiderruflich ist.</strong>',
+      confirm_cancel: '<strong class="text-white">Ich habe mein aktives Pro-Abo gekündigt.</strong> (Datenlöschen kündigt nicht die Google Play-Abrechnung.)',
+      honeypot_label: 'Dieses Feld leer lassen',
+      btn_delete: 'Meine Daten löschen',
+      btn_deleting: 'Lösche…',
+      agree_terms: 'Mit dem Absenden stimmst du unseren <a href="terms.html">Nutzungsbedingungen</a> und der <a href="privacy.html">Datenschutzerklärung</a> zu.',
+      success_title: 'Daten gelöscht',
+      success_desc: 'Alle serverseitigen Daten für Account-ID <strong id="successUserId" class="text-white font-mono break-all"></strong> wurden dauerhaft gelöscht. Um auch die auf deinem Handy gespeicherten Daten zu löschen, öffne die DateScan-App → Einstellungen → Datenschutz, oder deinstalliere einfach die App.',
+      error_title: 'Etwas ist schiefgelaufen',
+      error_default: 'Bitte versuche es erneut oder kontaktiere den <a href="mailto:info@datescan.app" class="text-brand-400 underline">Support</a>.',
+      error_invalid_id: 'Bitte füge eine gültige Account-ID ein. Sie beginnt normalerweise mit „ds_" und kann in der DateScan-App unter Einstellungen → Datenschutz kopiert werden.',
+      error_check_boxes: 'Bitte setze beide Bestätigungshäkchen, um fortzufahren.',
+      error_request_failed: 'Wir konnten deine Anfrage derzeit nicht verarbeiten. Bitte versuche es in ein paar Minuten erneut oder kontaktiere den Support, falls das Problem besteht.',
+      need_help: 'Brauchst du Hilfe? <a href="mailto:info@datescan.app" class="text-brand-400 hover:text-brand-500 underline">Support kontaktieren</a>',
+      footer_desc: 'Dein KI-gestützter Wingman. Scanne dein Outfit, erhalte sofortiges Stil- und Pflege-Feedback und geh selbstbewusst zum Date.',
+      footer_ondevice: 'Kamera-Scans laufen auf dem Gerät',
+      footer_legal: 'Rechtliches',
+      footer_privacy: 'Datenschutzerklärung',
+      footer_terms: 'Nutzungsbedingungen',
+      footer_refund: 'Erstattungsrichtlinie',
+      footer_delete: 'Account löschen',
+      footer_support: 'Support',
+      footer_contact: 'Support kontaktieren',
+      footer_follow: 'Folgen',
+      footer_disclaimer: 'Haftungsausschluss: DateScan ist ein KI-gestütztes Tool, das ausschließlich der Unterhaltung und Steigerung des Selbstbewusstseins dient. Wir garantieren keinen Dating-Erfolg oder bestimmte soziale Ergebnisse.'
+    }
+  };
+
+  // Detect language: _earlyLang > URL param > href regex > hash > cookie > nav_lang > localStorage > navigator > fallback
+  var supported = ['en','hu','de'];
+  var lang = null;
+  var _h = '';
+  try { _h = decodeURIComponent(window.location.href || ''); } catch(e) { _h = window.location.href || ''; }
+  // 0. Check window._earlyLang (set by early script in <head>) — highest priority
+  if (!lang) {
+    try {
+      if (window._earlyLang && supported.indexOf(window._earlyLang) !== -1) lang = window._earlyLang;
+    } catch(e) {}
+  }
+  // 1. Check URL parameter first (?lang=en / ?lang=de / ?lang=hu)
+  if (!lang) {
+    try {
+      var urlParams = new URLSearchParams(window.location.search);
+      var urlLang = urlParams.get('lang');
+      if (urlLang && supported.indexOf(urlLang) !== -1) {
+        lang = urlLang;
+      }
+    } catch(e) {}
+  }
+  // 1b. Always try href regex — critical for file:// and some TWA/WebView environments
+  if (!lang) {
+    try {
+      var hrefMatch = _h.match(/[?&]lang=([a-z]{2})(?:&|#|$)/i);
+      if (hrefMatch && supported.indexOf(hrefMatch[1]) !== -1) {
+        lang = hrefMatch[1];
+      }
+    } catch(e) {}
+  }
+  // 1c. Check hash fragment (#lang=hu or &lang=hu after #)
+  if (!lang) {
+    try {
+      var hash = window.location.hash || '';
+      if (!hash && _h.indexOf('#') !== -1) hash = _h.substring(_h.indexOf('#'));
+      var hashMatch = hash.match(/[#&]lang=([a-z]{2})/i);
+      if (hashMatch && supported.indexOf(hashMatch[1]) !== -1) {
+        lang = hashMatch[1];
+      }
+    } catch(e) {}
+  }
+  // 1d. Check cookie
+  if (!lang) {
+    try {
+      var cookieMatch = document.cookie.match(/(?:^|;\s*)datescan_lang=([a-z]{2})/i);
+      if (cookieMatch && supported.indexOf(cookieMatch[1]) !== -1) {
+        lang = cookieMatch[1];
+      }
+    } catch(e) {}
+  }
+  // 1e. Check nav_lang localStorage
+  if (!lang) {
+    try {
+      var navLang = localStorage.getItem('datescan.nav_lang');
+      if (navLang && supported.indexOf(navLang) !== -1) {
+        lang = navLang;
+      }
+    } catch(e) {}
+  }
+  // 2. Check localStorage
+  if (!lang) {
+    try {
+      var stored = localStorage.getItem('datescan.lang');
+      if (stored && stored.indexOf('auto:') === 0) {
+        // Extract language code from auto:XX format
+        var autoLang = stored.substring(5);
+        if (supported.indexOf(autoLang) !== -1) {
+          lang = autoLang;
+        }
+      } else if (stored && supported.indexOf(stored) !== -1) {
+        lang = stored;
+      }
+    } catch(e) {}
+  }
+  // 3. Detect from browser/navigator
+  if (!lang) {
+    try {
+      var navLangs = navigator.languages && navigator.languages.length
+        ? Array.prototype.slice.call(navigator.languages)
+        : [navigator.language || navigator.userLanguage || ''];
+      for (var i = 0; i < navLangs.length; i++) {
+        var p = (navLangs[i] || '').split('-')[0].toLowerCase();
+        if (p === 'hu') { lang = 'hu'; break; }
+        if (p === 'de') { lang = 'de'; break; }
+      }
+    } catch(e) {}
+  }
+  // 4. Final fallback
+  if (!lang) lang = 'en';
+
+  var strings = translations[lang] || translations.en;
+  document.documentElement.lang = lang;
+  document.title = strings.page_title;
+  var metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc) metaDesc.setAttribute('content', strings.meta_desc);
+
+  // Helper to set text by data-i18n key
+  function applyI18n() {
+    document.querySelectorAll('[data-i18n]').forEach(function(el) {
+      var key = el.getAttribute('data-i18n');
+      if (strings[key] !== undefined) el.textContent = strings[key];
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+      var key = el.getAttribute('data-i18n-html');
+      if (strings[key] !== undefined) el.innerHTML = strings[key];
+    });
+  }
+
+  // Update all subpage links in this page to include ?lang=XX
+  function updateSubpageLinks() {
+    var subpages = ['privacy.html','contact.html','terms.html','refund.html','delete-account.html'];
+    document.querySelectorAll('a[href]').forEach(function(a) {
+      var href = a.getAttribute('href') || '';
+      for (var i = 0; i < subpages.length; i++) {
+        if (href.indexOf(subpages[i]) !== -1) {
+          var base = href;
+          var hash = '';
+          var hashIdx = href.indexOf('#');
+          if (hashIdx !== -1) { hash = href.substring(hashIdx); base = href.substring(0, hashIdx); }
+          var qIdx = base.indexOf('?');
+          if (qIdx !== -1) {
+            var params = base.substring(qIdx + 1).split('&').filter(function(p) { return p.indexOf('lang=') !== 0; });
+            base = base.substring(0, qIdx) + (params.length ? '?' + params.join('&') : '');
+          }
+          var sep = base.indexOf('?') !== -1 ? '&' : '?';
+          a.setAttribute('href', base + sep + 'lang=' + lang + hash);
+          break;
+        }
+      }
+    });
+    // Also update "Back to app" links to preserve language
+    document.querySelectorAll('a[href*="index.html"]').forEach(function(a) {
+      var href = a.getAttribute('href') || '';
+      if (href.indexOf('lang=') === -1) {
+        var sep = href.indexOf('?') !== -1 ? '&' : '?';
+        a.setAttribute('href', href + sep + 'lang=' + lang);
+      }
+    });
+  }
+
+  // Expose for later use (form JS)
+  window._deleteAccountLang = lang;
+  window._deleteAccountStrings = strings;
+  window._deleteAccountApplyI18n = applyI18n;
+
+  // Apply on DOMContentLoaded with aggressive retries
+  var _initDone = false;
+  function init() {
+    if (_initDone) return;
+    _initDone = true;
+    applyI18n();
+    updateSubpageLinks();
+  }
+  if (document.readyState !== 'loading') { init(); }
+  document.addEventListener('DOMContentLoaded', init);
+  window.addEventListener('load', function() {
+    if (!_initDone) init();
+    applyI18n(); updateSubpageLinks();
+  });
+  setTimeout(function() { applyI18n(); updateSubpageLinks(); }, 50);
+  setTimeout(function() { applyI18n(); updateSubpageLinks(); }, 200);
+  setTimeout(function() { applyI18n(); updateSubpageLinks(); }, 500);
+  setTimeout(function() { applyI18n(); updateSubpageLinks(); }, 1500);
+})();
+</script>
+
+<!-- ============================================================
+     DateScan — LOVE-AT-FIRST-SIGHT visual layer
+     Pure cosmetic overrides. Zero layout / markup changes.
+     Loads last in <head> so cascade wins over Tailwind CDN + local
+     styles. Remove this single <style id="ds-love-layer"> block to revert.
+     ============================================================ -->
+<style id="ds-love-layer">
+  /* ---------- design tokens ---------- */
+  :root{
+    --love-coral:#ff7eb3; --love-rose:#ff5a87; --love-pink:#ec4899;
+    --love-magenta:#d946ef; --love-violet:#a855f7; --love-deep-violet:#7c3aed;
+    --love-ink:#0a0712; --love-ink-2:#140a22;
+    --love-radius-sm:14px; --love-radius-md:20px;
+    --love-radius-lg:28px; --love-radius-xl:36px;
+    --love-shadow-2:0 1px 0 rgba(255,255,255,0.07) inset, 0 10px 30px -10px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.35);
+    --love-shadow-3:0 1px 0 rgba(255,255,255,0.08) inset, 0 24px 60px -20px rgba(124,58,237,0.35), 0 12px 30px -12px rgba(236,72,153,0.25);
+    --love-shadow-cta:0 8px 24px -6px rgba(236,72,153,0.55), 0 4px 12px -4px rgba(168,85,247,0.45), 0 1px 0 rgba(255,255,255,0.18) inset;
+  }
+
+  /* ---------- typography ---------- */
+  html, body{
+    font-family:'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    font-feature-settings:'ss01' on, 'cv11' on, 'calt' on;
+    letter-spacing:-0.005em;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  h1, h2, h3, .font-serif{ letter-spacing:-0.022em; }
+  .font-serif{ font-feature-settings:'lnum' on, 'ss02' on; }
+
+  /* ---------- sunset canvas ---------- */
+  body{
+    background-color:var(--love-ink) !important;
+    background-image:
+      radial-gradient(ellipse 90% 60% at 18% -8%, rgba(255,126,179,0.22) 0%, rgba(255,126,179,0) 55%),
+      radial-gradient(ellipse 80% 55% at 110% 8%, rgba(168,85,247,0.22) 0%, rgba(168,85,247,0) 55%),
+      radial-gradient(ellipse 100% 70% at 50% 120%, rgba(124,58,237,0.28) 0%, rgba(124,58,237,0) 60%),
+      linear-gradient(180deg,#0c0714 0%,#0a0712 55%,#080510 100%) !important;
+    background-attachment:fixed;
+    position:relative;
+  }
+  /* film grain */
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    opacity:0.05; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  /* ambient aurora — injected for pages without one */
+  body::after{
+    content:""; position:fixed; top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    width:140vw; height:140vh; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(circle at 15% 25%, rgba(255,90,135,0.16) 0%, transparent 42%),
+      radial-gradient(circle at 85% 30%, rgba(168,85,247,0.16) 0%, transparent 42%),
+      radial-gradient(circle at 50% 90%, rgba(236,72,153,0.14) 0%, transparent 45%),
+      radial-gradient(circle at 75% 75%, rgba(124,58,237,0.12) 0%, transparent 45%);
+    filter:blur(40px) saturate(1.1);
+    animation:love-aurora 22s ease-in-out infinite alternate;
+  }
+  @keyframes love-aurora{
+    0%{ transform:translate(-50%,-50%) scale(1) rotate(0); }
+    50%{ transform:translate(-48%,-52%) scale(1.05) rotate(2deg); }
+    100%{ transform:translate(-52%,-48%) scale(0.98) rotate(-2deg); }
+  }
+  /* lift actual content above the aurora */
+  body > *:not(style):not(script){ position:relative; z-index:1; }
+
+  /* ---------- glass surfaces ---------- */
+  .bg-white\/5, .bg-white\/\[0\.03\]{
+    background:linear-gradient(180deg,rgba(255,255,255,0.06) 0%,rgba(255,255,255,0.025) 100%) !important;
+    -webkit-backdrop-filter:blur(14px) saturate(140%); backdrop-filter:blur(14px) saturate(140%);
+  }
+  .bg-white\/10{
+    background:linear-gradient(180deg,rgba(255,255,255,0.10) 0%,rgba(255,255,255,0.05) 100%) !important;
+    -webkit-backdrop-filter:blur(18px) saturate(150%); backdrop-filter:blur(18px) saturate(150%);
+  }
+  .bg-white\/20{
+    background:linear-gradient(180deg,rgba(255,255,255,0.18) 0%,rgba(255,255,255,0.10) 100%) !important;
+    -webkit-backdrop-filter:blur(22px) saturate(160%); backdrop-filter:blur(22px) saturate(160%);
+  }
+  .bg-dark-950\/80, .bg-dark-950\/95,
+  .bg-\[\#09090b\], .bg-\[\#09090b\]\/95, .bg-\[\#0f0f14\]\/95,
+  .bg-black\/60, .bg-black\/70, .bg-black\/80, .bg-black\/85, .bg-black\/90{
+    background:linear-gradient(180deg,rgba(20,10,34,0.82) 0%,rgba(10,7,18,0.92) 100%) !important;
+    -webkit-backdrop-filter:blur(24px) saturate(160%); backdrop-filter:blur(24px) saturate(160%);
+  }
+  .bg-black\/30, .bg-black\/40, .bg-black\/50{
+    background:linear-gradient(180deg,rgba(20,10,34,0.55) 0%,rgba(10,7,18,0.70) 100%) !important;
+    -webkit-backdrop-filter:blur(16px) saturate(140%); backdrop-filter:blur(16px) saturate(140%);
+  }
+
+  /* ---------- radii ---------- */
+  .rounded-xl{ border-radius:var(--love-radius-sm) !important; }
+  .rounded-2xl{ border-radius:var(--love-radius-md) !important; }
+  .rounded-3xl, .rounded-\[24px\], .rounded-\[28px\]{ border-radius:var(--love-radius-lg) !important; }
+  .rounded-\[32px\]{ border-radius:var(--love-radius-xl) !important; }
+
+  .rounded-2xl.border, .rounded-3xl.border,
+  .rounded-\[24px\].border, .rounded-\[28px\].border{ box-shadow:var(--love-shadow-2); }
+  .rounded-2xl.shadow-2xl, .rounded-3xl.shadow-2xl,
+  .shadow-2xl.border{ box-shadow:var(--love-shadow-3) !important; }
+
+  /* ---------- borders ---------- */
+  .border-white\/5{ border-color:rgba(255,255,255,0.07) !important; }
+  .border-white\/10{ border-color:rgba(255,255,255,0.12) !important; }
+  .border-white\/15{ border-color:rgba(255,255,255,0.16) !important; }
+  .border-white\/20{ border-color:rgba(255,255,255,0.22) !important; }
+
+  /* ---------- brand gradient → sunset ---------- */
+  .from-brand-500.to-purple-500,
+  .from-brand-400.via-pink-400.to-purple-400,
+  .from-brand-500.via-\[\#db2777\].to-purple-500,
+  .from-\[\#ec4899\].to-\[\#9333ea\],
+  .from-pink-500.to-purple-500,
+  .from-pink-500.to-purple-600{
+    background-image:linear-gradient(135deg,#ff7eb3 0%,#ff5a87 30%,#ec4899 55%,#a855f7 85%,#7c3aed 100%) !important;
+  }
+
+  /* ---------- CTA buttons ---------- */
+  button.bg-gradient-to-tr.from-brand-500.to-purple-500,
+  button.bg-gradient-to-r.from-brand-500.to-purple-500,
+  a.bg-gradient-to-tr.from-brand-500.to-purple-500,
+  a.bg-gradient-to-r.from-brand-500.to-purple-500,
+  a.bg-gradient-to-tr.from-pink-500.to-purple-500,
+  a.bg-gradient-to-r.from-pink-500.to-purple-500,
+  button.bg-brand-500, a.bg-brand-500,
+  .bg-gradient-to-tr.from-brand-500.to-purple-500.shadow-lg,
+  .bg-gradient-to-r.from-brand-500.to-purple-500.shadow-lg{
+    position:relative;
+    box-shadow:var(--love-shadow-cta) !important;
+    transition:transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s ease, filter .25s ease !important;
+    letter-spacing:0.005em;
+  }
+  button.bg-gradient-to-tr.from-brand-500.to-purple-500:hover,
+  button.bg-gradient-to-r.from-brand-500.to-purple-500:hover,
+  a.bg-gradient-to-tr.from-brand-500.to-purple-500:hover,
+  a.bg-gradient-to-r.from-brand-500.to-purple-500:hover,
+  a.bg-gradient-to-tr.from-pink-500.to-purple-500:hover,
+  a.bg-gradient-to-r.from-pink-500.to-purple-500:hover,
+  button.bg-brand-500:hover, a.bg-brand-500:hover{
+    filter:brightness(1.06) saturate(1.05);
+    box-shadow:
+      0 14px 34px -8px rgba(236,72,153,0.65),
+      0 6px 18px -4px rgba(168,85,247,0.55),
+      0 1px 0 rgba(255,255,255,0.22) inset !important;
+  }
+  button.bg-gradient-to-tr.from-brand-500.to-purple-500:active,
+  button.bg-gradient-to-r.from-brand-500.to-purple-500:active,
+  a.bg-gradient-to-tr.from-brand-500.to-purple-500:active,
+  a.bg-gradient-to-r.from-brand-500.to-purple-500:active{
+    transform:translateY(1px) scale(0.985);
+  }
+  @keyframes love-pulse-glow{
+    0%,100%{ box-shadow:var(--love-shadow-cta); }
+    50%{ box-shadow:
+      0 10px 30px -6px rgba(236,72,153,0.70),
+      0 4px 14px -4px rgba(168,85,247,0.55),
+      0 0 0 6px rgba(236,72,153,0.08),
+      0 1px 0 rgba(255,255,255,0.20) inset; }
+  }
+
+  /* ---------- chips / pills ---------- */
+  .bg-brand-500\/10, .bg-brand-500\/15{
+    background:linear-gradient(135deg,rgba(255,126,179,0.14),rgba(168,85,247,0.10)) !important;
+    border-color:rgba(244,114,182,0.24);
+  }
+  .bg-brand-500\/20{ background:linear-gradient(135deg,rgba(255,126,179,0.22),rgba(168,85,247,0.16)) !important; }
+  .bg-brand-500\/30{ background:linear-gradient(135deg,rgba(255,126,179,0.30),rgba(168,85,247,0.22)) !important; }
+  .bg-purple-500\/10{ background:linear-gradient(135deg,rgba(168,85,247,0.14),rgba(124,58,237,0.10)) !important; }
+  .bg-purple-500\/20{ background:linear-gradient(135deg,rgba(168,85,247,0.22),rgba(124,58,237,0.16)) !important; }
+  .bg-emerald-500\/10{ background:linear-gradient(135deg,rgba(52,211,153,0.14),rgba(16,185,129,0.08)) !important; }
+  .bg-emerald-500\/20{ background:linear-gradient(135deg,rgba(52,211,153,0.26),rgba(16,185,129,0.16)) !important; }
+  .bg-amber-500\/10{ background:linear-gradient(135deg,rgba(251,191,36,0.14),rgba(249,115,22,0.08)) !important; }
+  .bg-red-500\/10{ background:linear-gradient(135deg,rgba(251,113,133,0.14),rgba(239,68,68,0.08)) !important; }
+  .bg-red-500\/15{ background:linear-gradient(135deg,rgba(251,113,133,0.20),rgba(239,68,68,0.12)) !important; }
+
+  /* ---------- text gradients ---------- */
+  .bg-clip-text.bg-gradient-to-r.from-brand-500.to-purple-500,
+  .bg-clip-text.bg-gradient-to-tr.from-brand-500.to-purple-500,
+  .bg-clip-text.bg-gradient-to-br.from-brand-500.to-purple-500,
+  .bg-clip-text.from-pink-500.to-purple-500,
+  .bg-clip-text.from-pink-400.to-purple-400{
+    background-image:linear-gradient(135deg,#ff9ec7 0%,#ff6a88 30%,#ec4899 55%,#c084fc 85%,#a855f7 100%) !important;
+  }
+
+  /* ---------- inputs ---------- */
+  input, textarea, select{
+    transition:border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+  }
+  input:focus, textarea:focus, select:focus{
+    box-shadow:
+      0 0 0 4px rgba(236,72,153,0.14),
+      0 0 0 1px rgba(236,72,153,0.55) inset;
+    outline:none !important;
+  }
+
+  /* ---------- focus visible ---------- */
+  :focus-visible{
+    outline:none;
+    box-shadow:
+      0 0 0 2px rgba(10,7,18,1),
+      0 0 0 4px rgba(236,72,153,0.55) !important;
+    border-radius:inherit;
+  }
+  button:focus-visible, a:focus-visible{ outline:none; }
+
+  /* ---------- nav blur ---------- */
+  nav[class*="fixed"], nav[class*="sticky"],
+  [role="navigation"][class*="fixed"], [role="navigation"][class*="sticky"],
+  .fixed.bottom-0[class*="bg-"]{
+    -webkit-backdrop-filter:blur(28px) saturate(170%);
+    backdrop-filter:blur(28px) saturate(170%);
+    border-top-color:rgba(255,255,255,0.08) !important;
+  }
+
+  /* ---------- micro-interactions: card lift ---------- */
+  a.rounded-2xl, a.rounded-3xl,
+  button.rounded-2xl, button.rounded-3xl,
+  [role="button"].rounded-2xl, [role="button"].rounded-3xl{
+    transition:transform .28s cubic-bezier(.2,.8,.2,1),
+               box-shadow .28s ease, border-color .28s ease, background-color .28s ease;
+  }
+  a.rounded-2xl:hover, a.rounded-3xl:hover,
+  button.rounded-2xl:hover, button.rounded-3xl:hover{ transform:translateY(-2px); }
+  a.rounded-2xl:active, a.rounded-3xl:active,
+  button.rounded-2xl:active, button.rounded-3xl:active{ transform:translateY(0) scale(0.99); }
+
+  /* ---------- shimmer on brand gradient cards ---------- */
+  .from-brand-500.to-purple-500.rounded-2xl,
+  .from-brand-500.to-purple-500.rounded-3xl{ position:relative; overflow:hidden; }
+  .from-brand-500.to-purple-500.rounded-2xl::after,
+  .from-brand-500.to-purple-500.rounded-3xl::after{
+    content:""; position:absolute; top:0; left:-60%;
+    width:60%; height:100%;
+    background:linear-gradient(100deg,transparent 0%,rgba(255,255,255,0.16) 50%,transparent 100%);
+    transform:skewX(-18deg); pointer-events:none;
+    animation:love-shimmer 5.5s ease-in-out 1s infinite;
+  }
+  @keyframes love-shimmer{
+    0%{ left:-60%; } 55%{ left:120%; } 100%{ left:120%; }
+  }
+
+  /* ---------- text color warm-up for dark surfaces ---------- */
+  .text-gray-400{ color:#b8a8c4 !important; }
+  .text-gray-500{ color:#94839f !important; }
+
+  /* ---------- selection + scrollbar ---------- */
+  ::selection{ background:rgba(236,72,153,0.32); color:#fff; }
+  @media (min-width:1024px){
+    *::-webkit-scrollbar-thumb{
+      background-image:linear-gradient(180deg,rgba(236,72,153,0.55),rgba(168,85,247,0.55)) !important;
+    }
+  }
+
+  /* ---------- safety: keep media pristine ---------- */
+  video, canvas, img{
+    backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
+  }
+
+  /* ---------- reduced motion ---------- */
+  @media (prefers-reduced-motion:reduce){
+    body::after{ animation:none !important; }
+    .from-brand-500.to-purple-500.rounded-2xl::after,
+    .from-brand-500.to-purple-500.rounded-3xl::after{ animation:none !important; display:none; }
+    a.rounded-2xl:hover, a.rounded-3xl:hover,
+    button.rounded-2xl:hover, button.rounded-3xl:hover{ transform:none; }
+  }
+</style>
 </head>
 <body class="antialiased">
 <div class="ambient-glow"></div>
-<a href="/index.html" aria-label="Back to app" class="lg:hidden fixed top-10 right-6 z-30 w-11 h-11 flex items-center justify-center rounded-full border border-white/10 bg-[#0f0f14]/80 backdrop-blur-md text-gray-300 hover:text-white hover:border-brand-500/50 hover:bg-brand-500/10 hover:shadow-[0_0_16px_rgba(236,72,153,0.25)] active:scale-95 transition-all" style="top: calc(env(safe-area-inset-top, 0px) + 2.5rem);">
+<a href="index.html?desktop=1" data-i18n-attr="aria-label:back_aria" aria-label="Back to app" class="fixed top-10 right-6 z-30 w-11 h-11 flex items-center justify-center rounded-full border border-white/10 bg-[#0f0f14]/80 backdrop-blur-md text-gray-300 hover:text-white hover:border-brand-500/50 hover:bg-brand-500/10 hover:shadow-[0_0_16px_rgba(236,72,153,0.25)] active:scale-95 transition-all" style="top: calc(env(safe-area-inset-top, 0px) + 2.5rem);">
   <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
     <path d="M15 18l-6-6 6-6"/>
   </svg>
@@ -83,7 +718,7 @@
 
 
 <header class="relative z-10 max-w-3xl mx-auto px-6 pt-10 pb-8">
-  <a href="/" class="inline-flex items-center gap-3 group">
+  <a href="index.html?desktop=1" class="inline-flex items-center gap-3 group">
     <div class="w-12 h-12 flex items-center justify-center shrink-0">
       <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-[0_0_8px_rgba(236,72,153,0.4)]">
         <defs>
@@ -102,89 +737,89 @@
     </div>
     <div class="flex flex-col">
       <h1 class="font-bold text-xl md:text-2xl tracking-tight leading-none text-white group-hover:text-brand-400 transition-colors">DateScan<span class="text-brand-500">.</span></h1>
-      <span class="text-[10px] text-gray-400 font-medium uppercase tracking-widest mt-1">Personal Style Coach</span>
+      <span class="text-[10px] text-gray-400 font-medium uppercase tracking-widest mt-1" data-i18n="subtitle_tag">Personal Style Coach</span>
     </div>
   </a>
 </header>
 
 <main class="relative z-10 max-w-2xl mx-auto px-6 pb-20">
   <div class="mb-8 pb-8 border-b border-white/10">
-    <div class="text-[10px] uppercase tracking-widest text-red-400 font-bold mb-3">Account &amp; data deletion</div>
-    <h1 class="font-serif text-4xl sm:text-5xl font-medium text-white mb-3">Delete your account</h1>
-    <p class="text-sm text-gray-500">Immediate. No login required. Data is removed from our servers as soon as you submit.</p>
+    <div class="text-[10px] uppercase tracking-widest text-red-400 font-bold mb-3" data-i18n="badge">Account &amp; data deletion</div>
+    <h1 class="font-serif text-4xl sm:text-5xl font-medium text-white mb-3" data-i18n="main_title">Delete your account</h1>
+    <p class="text-sm text-gray-500" data-i18n="main_subtitle">Immediate. No login required. Data is removed from our servers as soon as you submit.</p>
   </div>
 
   <article class="prose-custom">
-    <p>This page lets you permanently delete all DateScan data linked to your anonymous account ID. You do <strong>not</strong> need to log in. This is the official account deletion URL we submit to the Google Play Store.</p>
+    <p data-i18n-html="intro">This page lets you permanently delete all DateScan data linked to your anonymous account ID. You do <strong>not</strong> need to log in. This is the official account deletion URL we submit to the Google Play Store.</p>
 
-    <h2>What gets deleted</h2>
-    <p>When you submit the form below, we immediately erase from our servers:</p>
+    <h2 data-i18n="what_deleted">What gets deleted</h2>
+    <p data-i18n="what_deleted_desc">When you submit the form below, we immediately erase from our servers:</p>
     <ul>
-      <li>Your <strong>AI Style Coach chat history</strong>, including any photos you attached</li>
-      <li>Any <strong>content moderation reports</strong> you submitted</li>
-      <li>Your <strong>subscription and entitlement records</strong> linked to your account ID</li>
-      <li>Server-side <strong>usage logs</strong> keyed to your account</li>
+      <li data-i18n-html="deleted_1">Your <strong>AI Style Coach chat history</strong>, including any photos you attached</li>
+      <li data-i18n-html="deleted_2">Any <strong>content moderation reports</strong> you submitted</li>
+      <li data-i18n-html="deleted_3">Your <strong>subscription and entitlement records</strong> linked to your account ID</li>
+      <li data-i18n-html="deleted_4">Server-side <strong>usage logs</strong> keyed to your account</li>
     </ul>
 
-    <h2>What we can't delete from here</h2>
+    <h2 data-i18n="cant_delete">What we can't delete from here</h2>
     <ul>
-      <li><strong>On-device data</strong> (closet, scan history, local settings) — this lives only on your phone or browser. Open the DateScan app → Privacy → "Delete My Account &amp; Data" to wipe it (that button does both server and local deletion in one go), or simply uninstall the app.</li>
-      <li><strong>Google Play payment records</strong> — handled by Google under their own retention rules. You can cancel your subscription on the <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">Google Play subscriptions page</a>. Google keeps billing records as long as required by tax law.</li>
-      <li><strong>Backup snapshots</strong> — we keep encrypted backups for 35 days for disaster recovery. Your data will be purged from backups on the normal rotation schedule and will not be restored to any live system.</li>
+      <li data-i18n-html="cant_1"><strong>On-device data</strong> (closet, scan history, local settings) — this lives only on your phone or browser. Open the DateScan app → Privacy → "Delete My Account & Data" to wipe it (that button does both server and local deletion in one go), or simply uninstall the app.</li>
+      <li data-i18n-html="cant_2"><strong>Google Play payment records</strong> — handled by Google under their own retention rules. You can cancel your subscription on the <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">Google Play subscriptions page</a>. Google keeps billing records as long as required by tax law.</li>
+      <li data-i18n-html="cant_3"><strong>Backup snapshots</strong> — we keep encrypted backups for 35 days for disaster recovery. Your data will be purged from backups on the normal rotation schedule and will not be restored to any live system.</li>
     </ul>
 
-    <h2>Cancel your subscription first</h2>
-    <p class="text-amber-300"><strong>Deleting your account does not cancel an active subscription.</strong> You will keep being charged. Please cancel first:</p>
+    <h2 data-i18n="cancel_sub">Cancel your subscription first</h2>
+    <p class="text-amber-300" data-i18n-html="cancel_warning"><strong>Deleting your account does not cancel an active subscription.</strong> You will keep being charged. Please cancel first:</p>
     <ul>
-      <li><strong>Google Play subscription:</strong> <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">play.google.com/store/account/subscriptions</a></li>
+      <li data-i18n-html="cancel_gp"><strong>Google Play subscription:</strong> <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">play.google.com/store/account/subscriptions</a></li>
     </ul>
   </article>
 
   <!-- Deletion Request Form -->
   <section class="mt-10 p-6 sm:p-7 rounded-2xl border border-red-500/20 bg-red-500/5">
-    <h2 class="font-serif text-2xl font-semibold text-white mb-2">Delete my data</h2>
-    <p class="text-sm text-gray-400 mb-6">Paste your DateScan account ID below. We'll permanently delete all server-side data linked to that ID immediately. Action is irreversible.</p>
+    <h2 class="font-serif text-2xl font-semibold text-white mb-2" data-i18n="form_title">Delete my data</h2>
+    <p class="text-sm text-gray-400 mb-6" data-i18n="form_desc">Paste your DateScan account ID below. We'll permanently delete all server-side data linked to that ID immediately. Action is irreversible.</p>
 
     <div class="mb-6 p-4 rounded-xl border border-white/10 bg-white/5">
-      <h3 class="text-sm font-semibold text-white mb-2">Where do I find my account ID?</h3>
+      <h3 class="text-sm font-semibold text-white mb-2" data-i18n="find_id_title">Where do I find my account ID?</h3>
       <ol class="text-xs text-gray-400 space-y-1.5 list-decimal pl-4 leading-relaxed">
-        <li>Open the DateScan app on your phone.</li>
-        <li>Go to <strong class="text-gray-200">Privacy</strong>.</li>
-        <li>Find the <strong class="text-gray-200">"Your account ID"</strong> box and tap <strong class="text-gray-200">Copy</strong>.</li>
-        <li>Paste it into the field below.</li>
+        <li data-i18n="find_id_1">Open the DateScan app on your phone.</li>
+        <li data-i18n-html="find_id_2">Go to <strong class="text-gray-200">Privacy</strong>.</li>
+        <li data-i18n-html="find_id_3">Find the <strong class="text-gray-200">"Your account ID"</strong> box and tap <strong class="text-gray-200">Copy</strong>.</li>
+        <li data-i18n="find_id_4">Paste it into the field below.</li>
       </ol>
-      <p class="text-[11px] text-gray-500 mt-3">It looks like <code class="text-[11px] bg-white/10 px-1.5 py-0.5 rounded">ds_7f3a8b2c…</code></p>
+      <p class="text-[11px] text-gray-500 mt-3" data-i18n-html="find_id_hint">It looks like <code class="text-[11px] bg-white/10 px-1.5 py-0.5 rounded">ds_7f3a8b2c…</code></p>
     </div>
 
     <form id="deleteForm" class="space-y-5" novalidate>
       <div>
-        <label class="form-label" for="userId">Account ID <span class="text-red-400">*</span></label>
-        <input type="text" id="userId" name="userId" required class="form-input font-mono" placeholder="ds_..." autocomplete="off" spellcheck="false" />
-        <p class="text-[11px] text-gray-500 mt-1.5">The anonymous identifier we use to match your data. We don't ask for an email — DateScan accounts are not linked to one.</p>
+        <label class="form-label" for="userId"><span data-i18n="label_account_id">Account ID</span> <span class="text-red-400">*</span></label>
+        <input type="text" id="userId" name="userId" required class="form-input font-mono" data-i18n-placeholder="placeholder_account_id" placeholder="ds_..." autocomplete="off" spellcheck="false" />
+        <p class="text-[11px] text-gray-500 mt-1.5" data-i18n="help_account_id">The anonymous identifier we use to match your data. We don't ask for an email — DateScan accounts are not linked to one.</p>
       </div>
 
       <div class="space-y-2 pt-2">
         <label class="checkbox-row">
           <input type="checkbox" id="confirmDelete" required>
-          <span class="text-sm text-gray-200"><strong class="text-white">I understand this is permanent and irreversible.</strong></span>
+          <span class="text-sm text-gray-200" data-i18n-html="confirm_permanent"><strong class="text-white">I understand this is permanent and irreversible.</strong></span>
         </label>
         <label class="checkbox-row">
           <input type="checkbox" id="confirmCancel" required>
-          <span class="text-sm text-gray-200"><strong class="text-white">I have cancelled any active Pro subscription.</strong> (Deleting data does not cancel Google Play billing.)</span>
+          <span class="text-sm text-gray-200" data-i18n-html="confirm_cancel"><strong class="text-white">I have canceled any active Pro subscription.</strong> (Deleting data does not cancel Google Play billing.)</span>
         </label>
       </div>
 
       <!-- Honeypot field — hidden from humans, bots fill it in -->
       <div style="position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;" aria-hidden="true">
-        <label for="website">Leave this field blank</label>
+        <label for="website" data-i18n="honeypot_label">Leave this field blank</label>
         <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
       </div>
 
-      <button type="submit" id="submitBtn" class="btn-danger">
+      <button type="submit" id="submitBtn" class="btn-danger" data-i18n="btn_delete">
         Delete my data
       </button>
 
-      <p class="text-[11px] text-gray-500 text-center">By submitting, you agree to our <a href="/terms.html">Terms</a> and <a href="/privacy.html">Privacy Policy</a>.</p>
+      <p class="text-[11px] text-gray-500 text-center" data-i18n-html="agree_terms">By submitting, you agree to our <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy Policy</a>.</p>
     </form>
 
     <!-- Success state -->
@@ -192,8 +827,8 @@
       <div class="flex items-start gap-3">
         <svg class="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         <div>
-          <h3 class="text-white font-semibold mb-1">Data deleted</h3>
-          <p class="text-sm text-gray-300 leading-relaxed">All server-side data for account ID <strong id="successUserId" class="text-white font-mono break-all"></strong> has been permanently deleted. To also wipe data stored on your phone, open the DateScan app → Settings → Privacy, or simply uninstall the app.</p>
+          <h3 class="text-white font-semibold mb-1" data-i18n="success_title">Data deleted</h3>
+          <p class="text-sm text-gray-300 leading-relaxed" data-i18n-html="success_desc">All server-side data for account ID <strong id="successUserId" class="text-white font-mono break-all"></strong> has been permanently deleted. To also wipe data stored on your phone, open the DateScan app → Settings → Privacy, or simply uninstall the app.</p>
         </div>
       </div>
     </div>
@@ -202,26 +837,39 @@
       <div class="flex items-start gap-3">
         <svg class="w-6 h-6 text-red-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         <div>
-          <h3 class="text-white font-semibold mb-1">Something went wrong</h3>
-          <p id="errorMessage" class="text-sm text-gray-300 leading-relaxed">Please try again or contact <a href="/contact.html" class="text-brand-400 underline">support</a>.</p>
+          <h3 class="text-white font-semibold mb-1" data-i18n="error_title">Something went wrong</h3>
+          <p id="errorMessage" class="text-sm text-gray-300 leading-relaxed" data-i18n-html="error_default">Please try again or contact <a href="mailto:info@datescan.app" class="text-brand-400 underline">support</a>.</p>
         </div>
       </div>
     </div>
   </section>
 
   <div class="mt-10 text-center">
-    <p class="text-xs text-gray-500">Need help? <a href="/contact.html" class="text-brand-400 hover:text-brand-500 underline">Contact support</a></p>
+    <p class="text-xs text-gray-500" data-i18n-html="need_help">Need help? <a href="mailto:info@datescan.app" class="text-brand-400 hover:text-brand-500 underline">Contact support</a></p>
   </div>
 </main>
 
 <script>
 (function () {
+  var strings = window._deleteAccountStrings || {};
   var form = document.getElementById('deleteForm');
   var submitBtn = document.getElementById('submitBtn');
   var successState = document.getElementById('successState');
   var errorState = document.getElementById('errorState');
   var successUserId = document.getElementById('successUserId');
   var errorMessage = document.getElementById('errorMessage');
+
+  // Update placeholder for account ID input
+  var userIdInput = document.getElementById('userId');
+  if (userIdInput && strings.placeholder_account_id) {
+    userIdInput.setAttribute('placeholder', strings.placeholder_account_id);
+  }
+
+  // Update back button aria-label
+  var backBtn = document.querySelector('a[href="index.html"][aria-label]');
+  if (backBtn && strings.back_aria) {
+    backBtn.setAttribute('aria-label', strings.back_aria);
+  }
 
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
@@ -238,17 +886,17 @@
 
     var userId = document.getElementById('userId').value.trim();
     if (!userId || userId.length < 6) {
-      showError("Please paste a valid account ID. It usually starts with \"ds_\" and is copied from the DateScan app under Settings → Privacy.");
+      showErrorHtml(strings.error_invalid_id || 'Please paste a valid account ID.');
       return;
     }
     if (!document.getElementById('confirmDelete').checked ||
         !document.getElementById('confirmCancel').checked) {
-      showError("Please check both confirmation boxes to continue.");
+      showErrorHtml(strings.error_check_boxes || 'Please check both confirmation boxes to continue.');
       return;
     }
 
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Deleting…';
+    submitBtn.textContent = strings.btn_deleting || 'Deleting…';
 
     try {
       var res = await fetch('https://core.datescan.app/api/delete-account', {
@@ -264,13 +912,13 @@
     } catch (err) {
       console.error('[DateScan] delete request failed:', err);
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Delete my data';
-      showError("We couldn't process your request right now. Please try again in a few minutes, or contact support if the problem persists.");
+      submitBtn.textContent = strings.btn_delete || 'Delete my data';
+      showErrorHtml(strings.error_request_failed || 'We couldn\'t process your request right now.');
     }
   });
 
-  function showError(msg) {
-    errorMessage.textContent = msg;
+  function showErrorHtml(html) {
+    errorMessage.innerHTML = html;
     errorState.classList.remove('hidden');
     errorState.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
@@ -286,7 +934,7 @@
 
       <!-- Brand column -->
       <div class="col-span-2 lg:col-span-5">
-        <a href="/" class="inline-flex items-center gap-3 group mb-4">
+        <a href="index.html?desktop=1" class="inline-flex items-center gap-3 group mb-4">
           <div class="w-11 h-11 flex items-center justify-center shrink-0">
             <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-[0_0_8px_rgba(236,72,153,0.4)]">
               <defs>
@@ -305,40 +953,40 @@
           </div>
           <div class="flex flex-col">
             <span class="font-bold text-xl tracking-tight leading-none text-white group-hover:text-brand-400 transition-colors">DateScan<span class="text-brand-500">.</span></span>
-            <span class="text-[10px] text-gray-500 font-medium uppercase tracking-widest mt-1.5">Personal Style Coach</span>
+            <span class="text-[10px] text-gray-500 font-medium uppercase tracking-widest mt-1.5" data-i18n="subtitle_tag">Personal Style Coach</span>
           </div>
         </a>
-        <p class="text-sm text-gray-400 leading-relaxed max-w-sm mb-5">
+        <p class="text-sm text-gray-400 leading-relaxed max-w-sm mb-5" data-i18n="footer_desc">
           Your AI-powered wingman. Scan your outfit, get instant style and grooming feedback, and walk into your date with confidence.
         </p>
         <div class="inline-flex items-center gap-2 text-[10px] text-gray-500 px-3 py-1.5 rounded-full border border-white/10 bg-white/5">
           <svg class="w-3 h-3 text-brand-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-          <span>Camera scans run on-device</span>
+          <span data-i18n="footer_ondevice">Camera scans run on-device</span>
         </div>
       </div>
 
       <!-- Legal -->
       <div class="lg:col-span-2 lg:col-start-7">
-        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4">Legal</h3>
+        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4" data-i18n="footer_legal">Legal</h3>
         <ul class="space-y-2.5 text-sm">
-          <li><a href="/privacy.html" class="text-gray-400 hover:text-brand-400 transition-colors">Privacy Policy</a></li>
-          <li><a href="/terms.html" class="text-gray-400 hover:text-brand-400 transition-colors">Terms of Service</a></li>
-          <li><a href="/refund.html" class="text-gray-400 hover:text-brand-400 transition-colors">Refund Policy</a></li>
-          <li><a href="/delete-account.html" class="text-gray-400 hover:text-brand-400 transition-colors">Delete Account</a></li>
+          <li><a href="privacy.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_privacy">Privacy Policy</a></li>
+          <li><a href="terms.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_terms">Terms of Service</a></li>
+          <li><a href="refund.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_refund">Refund Policy</a></li>
+          <li><a href="delete-account.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_delete">Delete Account</a></li>
         </ul>
       </div>
 
       <!-- Support -->
       <div class="lg:col-span-2">
-        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4">Support</h3>
+        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4" data-i18n="footer_support">Support</h3>
         <ul class="space-y-2.5 text-sm">
-          <li><a href="/contact.html" class="text-gray-400 hover:text-brand-400 transition-colors">Contact Support</a></li>
+          <li><a href="contact.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_contact">Contact Support</a></li>
         </ul>
       </div>
 
       <!-- Social -->
       <div class="lg:col-span-3">
-        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4">Follow</h3>
+        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4" data-i18n="footer_follow">Follow</h3>
         <div class="flex items-center gap-2.5">
           <a href="https://www.tiktok.com/@datescan" target="_blank" rel="noopener noreferrer" aria-label="DateScan on TikTok" class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/10 bg-white/5 text-gray-400 hover:text-white hover:border-brand-500/50 hover:bg-brand-500/10 hover:shadow-[0_0_16px_rgba(236,72,153,0.25)] transition-all">
             <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.321 5.562a5.124 5.124 0 0 1-.443-.258 6.228 6.228 0 0 1-1.137-.966c-.849-.971-1.166-1.956-1.282-2.645h.004C16.369 1.104 16.41.5 16.41.5h-3.31v12.789c0 .171 0 .341-.007.508l-.001.064-.003.085v.007a3.535 3.535 0 0 1-1.78 2.801 3.474 3.474 0 0 1-1.724.454c-1.933 0-3.502-1.579-3.502-3.524s1.569-3.524 3.502-3.524c.366 0 .718.057 1.049.162l.004-3.37a6.844 6.844 0 0 0-5.283 1.524A6.842 6.842 0 0 0 3 13.304c0 1.599.503 3.123 1.456 4.4a6.838 6.838 0 0 0 5.475 2.78c3.78 0 6.844-3.064 6.844-6.844V8.168a9.533 9.533 0 0 0 5.565 1.781V6.642c-1.175 0-2.218-.391-3.019-1.08Z"/></svg>
@@ -358,7 +1006,7 @@
 
     <!-- Bottom strip -->
     <div class="border-t border-white/5 pt-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-      <p class="text-[11px] text-gray-600 italic leading-relaxed max-w-2xl">
+      <p class="text-[11px] text-gray-600 italic leading-relaxed max-w-2xl" data-i18n="footer_disclaimer">
         Disclaimer: DateScan is an AI-powered tool designed for entertainment and confidence-boosting purposes only. We do not guarantee dating success or specific social outcomes.
       </p>
       <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 shrink-0">
@@ -367,6 +1015,40 @@
     </div>
   </div>
 </footer>
+
+<!-- ── Haptic Feedback: vibration on interactive element press ── -->
+<script>
+(function(){
+  // Vibration API — works on Android/mobile, silently ignored on desktop/iOS
+  if (!navigator.vibrate && !navigator.webkitVibrate) return;
+  var vibrate = navigator.vibrate || navigator.webkitVibrate;
+
+  // Respect reduced-motion preference
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  function hapticTap(ms) {
+    try { vibrate.call(navigator, ms); } catch(e) {}
+  }
+
+  document.addEventListener('pointerdown', function(e) {
+    var el = e.target.closest(
+      'button, a, [role="button"], input[type="submit"], input[type="button"], input[type="checkbox"], label.checkbox-row, .btn-danger, [data-haptic]'
+    );
+    if (!el) return;
+    // Skip disabled elements
+    if (el.disabled || el.getAttribute('aria-disabled') === 'true') return;
+
+    // Intensity tiers
+    if (el.closest('.btn-danger') || el.matches('[data-haptic="heavy"]')) {
+      hapticTap(25);          // destructive / important actions
+    } else if (el.matches('a[href]') && !el.matches('[role="button"]')) {
+      hapticTap(5);           // light tap for plain links
+    } else {
+      hapticTap(10);          // standard tap for buttons / controls
+    }
+  }, { passive: true });
+})();
+</script>
 
 </body>
 </html>

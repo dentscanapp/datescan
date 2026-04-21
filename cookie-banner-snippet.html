@@ -16,8 +16,86 @@
       • On "Accept" → saves 'accepted' + timestamp and hides banner.
       • Banner never re-appears on the same device unless localStorage
         is cleared.
+
+    i18n:
+      • Auto-detects language from localStorage('datescan.lang') or
+        navigator.language, falling back to English.
+      • Uses data-i18n / data-i18n-html attributes to translate text.
   ============================================================
 -->
+<script>
+// ── i18n for cookie-banner-snippet ──
+(function(){
+  var translations = {
+    en: {
+      title: 'We respect your privacy.',
+      desc: 'DateScan runs 100% in your browser — your photos never leave your device. We use strictly necessary cookies for security and payment processing. By continuing, you accept our <a href="/privacy.html" class="text-brand-400 hover:text-brand-500 underline underline-offset-2">Privacy Policy</a>.',
+      learn_more: 'Learn more',
+      accept: 'Accept',
+      only_necessary: 'Only necessary'
+    },
+    hu: {
+      title: 'Tiszteletben tartjuk a magánszférádat.',
+      desc: 'A DateScan 100%-ban a böngésződben fut — a fotóid sosem hagyják el az eszközt. Szigorúan szükséges cookie-kat használunk a biztonság és a fizetésfeldolgozás érdekében. A folytatással elfogadod az <a href="/privacy.html" class="text-brand-400 hover:text-brand-500 underline underline-offset-2">Adatvédelmi tájékoztatót</a>.',
+      learn_more: 'Tudj meg többet',
+      accept: 'Elfogadom',
+      only_necessary: 'Csak szükséges'
+    },
+    de: {
+      title: 'Wir respektieren deine Privatsphäre.',
+      desc: 'DateScan läuft zu 100% in deinem Browser — deine Fotos verlassen niemals dein Gerät. Wir verwenden unbedingt erforderliche Cookies für Sicherheit und Zahlungsabwicklung. Mit Fortfahren akzeptierst du unsere <a href="/privacy.html" class="text-brand-400 hover:text-brand-500 underline underline-offset-2">Datenschutzerklärung</a>.',
+      learn_more: 'Mehr erfahren',
+      accept: 'Akzeptieren',
+      only_necessary: 'Nur notwendige'
+    }
+  };
+
+  // Detect language: localStorage > navigator > fallback
+  var supported = ['en','hu','de'];
+  var lang = 'en';
+  try {
+    var stored = localStorage.getItem('datescan.lang');
+    if (stored && stored.indexOf('auto:') === 0) {
+      // re-detect from device
+    } else if (stored && supported.indexOf(stored) !== -1) {
+      lang = stored;
+    }
+  } catch(e) {}
+  if (lang === 'en') {
+    try {
+      var navLangs = navigator.languages && navigator.languages.length
+        ? Array.prototype.slice.call(navigator.languages)
+        : [navigator.language || navigator.userLanguage || ''];
+      for (var i = 0; i < navLangs.length; i++) {
+        var p = (navLangs[i] || '').split('-')[0].toLowerCase();
+        if (p === 'hu') { lang = 'hu'; break; }
+        if (p === 'de') { lang = 'de'; break; }
+      }
+    } catch(e) {}
+  }
+
+  var strings = translations[lang] || translations.en;
+
+  // Helper to set text by data-i18n key
+  function applyI18n() {
+    document.querySelectorAll('[data-i18n]').forEach(function(el) {
+      var key = el.getAttribute('data-i18n');
+      if (strings[key] !== undefined) el.textContent = strings[key];
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+      var key = el.getAttribute('data-i18n-html');
+      if (strings[key] !== undefined) el.innerHTML = strings[key];
+    });
+  }
+
+  // Apply on DOMContentLoaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyI18n);
+  } else {
+    applyI18n();
+  }
+})();
+</script>
 <div id="cookieBanner" class="hidden fixed inset-x-0 bottom-0 z-[100] px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pointer-events-none">
   <div class="max-w-3xl mx-auto pointer-events-auto">
     <div class="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0f0f14]/95 backdrop-blur-xl shadow-2xl shadow-black/50">
@@ -34,8 +112,8 @@
 
         <!-- text -->
         <div class="flex-1 min-w-0">
-          <p class="text-sm text-white font-medium mb-1">We respect your privacy.</p>
-          <p class="text-xs text-gray-400 leading-relaxed">
+          <p class="text-sm text-white font-medium mb-1" data-i18n="title">We respect your privacy.</p>
+          <p class="text-xs text-gray-400 leading-relaxed" data-i18n-html="desc">
             DateScan runs 100% in your browser — your photos never leave your device. We use strictly necessary cookies for security and payment processing. By continuing, you accept our
             <a href="/privacy.html" class="text-brand-400 hover:text-brand-500 underline underline-offset-2">Privacy Policy</a>.
           </p>
@@ -43,9 +121,13 @@
 
         <!-- actions -->
         <div class="flex items-center gap-2 shrink-0">
-          <a href="/privacy.html" class="hidden sm:inline-block text-xs text-gray-400 hover:text-white px-3 py-2 transition-colors">Learn more</a>
+          <a href="/privacy.html" class="hidden sm:inline-block text-xs text-gray-400 hover:text-white px-3 py-2 transition-colors" data-i18n="learn_more">Learn more</a>
+          <button id="cookieNecessaryBtn" type="button"
+            class="px-4 py-2.5 rounded-xl bg-white/10 border border-white/15 text-gray-300 text-sm font-semibold hover:bg-white/15 hover:text-white active:scale-[0.98] transition-all" data-i18n="only_necessary">
+            Only necessary
+          </button>
           <button id="cookieAcceptBtn" type="button"
-            class="px-5 py-2.5 rounded-xl bg-gradient-to-tr from-brand-500 to-purple-500 text-white text-sm font-semibold shadow-lg shadow-brand-500/30 hover:shadow-brand-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all">
+            class="px-5 py-2.5 rounded-xl bg-gradient-to-tr from-brand-500 to-purple-500 text-white text-sm font-semibold shadow-lg shadow-brand-500/30 hover:shadow-brand-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all" data-i18n="accept">
             Accept
           </button>
         </div>
@@ -78,6 +160,18 @@
       banner.style.animation = 'ds-cookie-slide-down .3s ease-in forwards';
       setTimeout(function () { banner.classList.add('hidden'); }, 300);
     });
+
+    var necessaryBtn = document.getElementById('cookieNecessaryBtn');
+    if (necessaryBtn) {
+      necessaryBtn.addEventListener('click', function () {
+        try {
+          localStorage.setItem('cookieConsent', 'necessary_only');
+          localStorage.setItem('cookieConsentTs', String(Date.now()));
+        } catch (e) { /* localStorage blocked — fail silently */ }
+        banner.style.animation = 'ds-cookie-slide-down .3s ease-in forwards';
+        setTimeout(function () { banner.classList.add('hidden'); }, 300);
+      });
+    }
   } catch (e) {
     console.warn('[DateScan] cookie banner init failed:', e);
   }

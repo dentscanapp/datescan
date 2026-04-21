@@ -9,6 +9,88 @@
 <link rel="canonical" href="https://datescan.app/terms.html" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='40' y2='40' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%23ec4899'/%3E%3Cstop offset='1' stop-color='%239333ea'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M10 5 H5 V10' stroke='url(%23bg)' stroke-width='2' fill='none'/%3E%3Cpath d='M30 5 H35 V10' stroke='url(%23bg)' stroke-width='2' fill='none'/%3E%3Cpath d='M10 35 H5 V30' stroke='url(%23bg)' stroke-width='2' fill='none'/%3E%3Cpath d='M30 35 H35 V30' stroke='url(%23bg)' stroke-width='2' fill='none'/%3E%3Cpath d='M20 13.5C20 13.5 16 9 11.5 9C7.5 9 5 12.5 5 16.5C5 22 13 28 20 32C27 28 35 22 35 16.5C35 12.5 32.5 9 28.5 9C24 9 20 13.5 20 13.5Z' fill='url(%23bg)' fill-opacity='0.15' stroke='url(%23bg)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='4' y1='20' x2='36' y2='20' stroke='%23f472b6' stroke-width='1.5' stroke-dasharray='2 2' opacity='0.8'/%3E%3C/svg%3E">
+<script>
+// ── EARLY lang detection (runs BEFORE any external script) ──
+// Detects language from URL, hash, cookie, localStorage, or navigator.
+// Sets window._earlyLang so the main i18n block can use it as the highest-priority source.
+(function(){
+  var supported = ['en','hu','de'];
+  var lang = null;
+  var _fullHref = '';
+  try { _fullHref = decodeURIComponent(window.location.href || ''); } catch(e) { _fullHref = window.location.href || ''; }
+
+  // 1. URLSearchParams from location.search
+  try {
+    var p = new URLSearchParams(window.location.search);
+    var v = p.get('lang');
+    if (v && supported.indexOf(v) !== -1) lang = v;
+  } catch(e) {}
+
+  // 2. Full href regex (critical for file:// protocol where location.search is empty)
+  if (!lang) {
+    try {
+      var m = _fullHref.match(/[?&]lang=([a-z]{2})(?:&|#|$)/i);
+      if (m && supported.indexOf(m[1]) !== -1) lang = m[1];
+    } catch(e) {}
+  }
+
+  // 3. Hash (#lang=de)
+  if (!lang) {
+    try {
+      var h = window.location.hash || '';
+      if (!h && _fullHref.indexOf('#') !== -1) h = _fullHref.substring(_fullHref.indexOf('#'));
+      var hm = h.match(/[#&]lang=([a-z]{2})/i);
+      if (hm && supported.indexOf(hm[1]) !== -1) lang = hm[1];
+    } catch(e) {}
+  }
+
+  // 4. Cookie
+  if (!lang) {
+    try {
+      var cm = document.cookie.match(/(?:^|;\s*)datescan_lang=([a-z]{2})/i);
+      if (cm && supported.indexOf(cm[1]) !== -1) lang = cm[1];
+    } catch(e) {}
+  }
+
+  // 5. localStorage nav_lang
+  if (!lang) {
+    try {
+      var nl = localStorage.getItem('datescan.nav_lang');
+      if (nl && supported.indexOf(nl) !== -1) lang = nl;
+    } catch(e) {}
+  }
+
+  // 6. localStorage datescan.lang
+  if (!lang) {
+    try {
+      var sl = localStorage.getItem('datescan.lang');
+      if (sl && sl.indexOf('auto:') === 0) sl = sl.substring(5);
+      if (sl && supported.indexOf(sl) !== -1) lang = sl;
+    } catch(e) {}
+  }
+
+  // 7. Navigator
+  if (!lang) {
+    try {
+      var nls = navigator.languages && navigator.languages.length
+        ? Array.prototype.slice.call(navigator.languages)
+        : [navigator.language || navigator.userLanguage || ''];
+      for (var i = 0; i < nls.length; i++) {
+        var pp = (nls[i] || '').split('-')[0].toLowerCase();
+        if (pp === 'hu') { lang = 'hu'; break; }
+        if (pp === 'de') { lang = 'de'; break; }
+      }
+    } catch(e) {}
+  }
+
+  if (lang) window._earlyLang = lang;   // Only propagate if ACTUALLY detected (not default)
+  if (!lang) lang = 'en';               // Default for title/lang attribute only
+  // Set document title immediately for correct browser tab text
+  var titles = { en: 'Terms of Service — DateScan', hu: 'Felhasználási feltételek — DateScan', de: 'Nutzungsbedingungen — DateScan' };
+  document.title = titles[lang] || titles.en;
+  document.documentElement.lang = lang;
+})();
+</script>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
 <script>
@@ -32,10 +114,856 @@
     radial-gradient(circle at 85% 90%, rgba(139,92,246,0.08) 0%, transparent 40%);
     pointer-events: none; z-index: 0; }
 </style>
+<script>
+// ── i18n for terms.html ──
+(function(){
+  var translations = {
+    en: {
+      page_title: 'Terms of Service — DateScan',
+      meta_desc: 'DateScan Terms of Service. The rules and disclaimers for using our AI style coach.',
+      subtitle_tag: 'Personal Style Coach',
+      back_to_app: 'Back to app',
+      legal_badge: 'Legal',
+      main_title: 'Terms of Service',
+      last_updated: 'Last updated: April 18, 2026',
+      intro_para: "Welcome to DateScan. By accessing or using our service at <a href=\"https://datescan.app/\">https://datescan.app/</a>, you agree to be bound by these Terms of Service (\"Terms\"). If you don't agree, please don't use the service.",
+      only_18_badge: '18+ Only',
+      only_18_para: '<strong>DateScan is intended exclusively for adults aged 18 or older.</strong> By using the service you represent and warrant that you meet this age requirement. We do not knowingly allow minors to use DateScan.',
+      important_badge: 'Important — Please Read',
+      disclaimer_para1: '<strong>Disclaimer: DateScan is an AI-powered tool designed for entertainment and confidence-boosting purposes only. We do not guarantee dating success or specific social outcomes.</strong>',
+      disclaimer_para2: '<strong>We do not accept any liability for advice, suggestions, scores, or any other output produced by the artificial intelligence — including outputs that may turn out to be inaccurate, misleading, biased, offensive, or otherwise inappropriate.</strong> AI models can and do make mistakes. The AI Style Coach is not a substitute for professional advice (fashion, medical, psychological, legal, dating, or otherwise) and any reliance you place on its output is strictly at your own risk.',
+      disclaimer_para3: 'Use of DateScan signifies your acknowledgement and acceptance of this disclaimer. The full terms governing warranties and liability are set out in <a href="#section-10" class="text-amber-300 underline">§10</a> and <a href="#section-11" class="text-amber-300 underline">§11</a> below.',
+      s1_heading: '1. The Service',
+      s1_para: 'DateScan is an AI-powered style coach available (a) as a Progressive Web App at <a href="https://datescan.app/">https://datescan.app/</a> and (b) as an Android app distributed via the Google Play Store. It offers two main features:',
+      s1_li1: '<strong>On-device camera scan</strong> — uses browser-based AI (MediaPipe) to analyze your outfit, grooming, posture, and lighting from a live camera feed. All scan processing happens locally on your device; no images are uploaded.',
+      s1_li2: '<strong>AI Style Coach chat</strong> — a text/image chat that sends your messages over HTTPS to our Cloudflare Workers backend, which forwards them to a third-party vision-language model provider (currently <strong>OpenAI</strong> and/or <strong>Anthropic</strong>, subject to change) to generate replies. See our <a href="privacy.html">Privacy Policy</a> for the data flow.',
+      s2_heading: '2. Suggestions, Not Professional Advice',
+      s2_para: "DateScan's feedback is generated by an AI model and is provided <strong>for entertainment and self-improvement purposes only</strong>. The output consists of <strong>style suggestions</strong>, not:",
+      s2_li1: 'Professional fashion, styling, or image consulting',
+      s2_li2: 'Medical, dermatological, or health advice',
+      s2_li3: 'Psychological, counselling, or mental-health guidance',
+      s2_li4: 'Dating, relationship, or social coaching',
+      s2_para2: "The AI can and does make mistakes — including generating inaccurate, biased, or occasionally inappropriate responses. You should never rely on DateScan's output as a substitute for a qualified professional. If you have concerns about your physical or mental health — including skin conditions, posture-related issues, body-image concerns, or eating disorders — please consult a licensed professional. If you are in crisis, please contact your local emergency services or a crisis hotline (in the US: 988; UK: 116 123; EU: 112).",
+      s3_heading: '3. Age Requirement — 18+ Only',
+      s3_para: 'You must be at least <strong>18 years old</strong> to use DateScan. By creating an account, downloading the app, or otherwise using the Service, you represent and warrant that you are 18 years of age or older. The Service is not designed for, marketed to, or suitable for minors.',
+      s3_1_heading: '3.1 Age gate and self-declaration',
+      s3_1_para: 'Before you can access the camera scanner or AI Style Coach, you must confirm your age via the on-screen <strong>"I am 18 or older"</strong> gate. We record the date, time, and a coarse technical identifier of that confirmation as evidence of your declaration. Submitting a false age declaration is a <strong>material breach of these Terms</strong> and, in many jurisdictions, also constitutes fraud or misrepresentation. We reserve the right to rely entirely on your declaration for the purposes of granting access.',
+      s3_2_heading: '3.2 Parental and guardian responsibility',
+      s3_2_para: "If you are a parent or legal guardian and you discover that a person under 18 in your care has used DateScan, please contact us immediately at the address in Section 16 so that we can terminate the account and delete any associated data. Parents and guardians are responsible for supervising minors' use of internet-connected devices in their household; DateScan cannot substitute for that supervision.",
+      s3_3_heading: '3.3 No knowing collection from minors',
+      s3_3_para: 'We do not knowingly collect personal information from anyone under 18. If we become aware — whether through a user report, a parent/guardian notice, payment metadata, or our own moderation — that a user is under 18, we will <strong>terminate their access immediately</strong>, revoke any active Pro access, and delete associated data in accordance with our <a href="privacy.html">Privacy Policy</a>. This applies regardless of any earlier age declaration.',
+      s3_4_heading: '3.4 Reporting an underage user',
+      s3_4_para: 'If you believe a DateScan user is under 18, please email us at the address in Section 16 with the subject line <strong>"Underage user report"</strong>. We aim to act on verified reports within 72 hours.',
+      s4_heading: '4. Your Account and Access',
+      s4_para: "DateScan's free tier does not require an account. It includes <strong>5 points per day</strong>, where each scan or AI Style Coach chat message consumes <strong>1 point</strong>, with the pool resetting 24 hours after your first spend. You can spend your points however you like — all on scans, all on chat, or any mix. Paid plans are tied to your device via a browser identifier; if you clear your browser data, your Pro status on that device may be lost — see our <a href=\"refund.html\">Refund Policy</a> for recovery instructions.",
+      s5_heading: '5. Acceptable Use &amp; AI Content Policy',
+      s5_para: 'When using DateScan, you agree <strong>not</strong> to submit, upload, or share any of the following to the camera scanner or the AI Style Coach chat:',
+      s5_li1: 'Images or descriptions of <strong>anyone under 18 years of age</strong>, under any circumstances. This is a zero-tolerance rule.',
+      s5_li2: 'Sexually explicit, nude, or suggestive content.',
+      s5_li3: 'Images of other people without their explicit, informed consent.',
+      s5_li4: 'Content intended to harass, bully, defame, threaten, or harm another person.',
+      s5_li5: 'Content that promotes, glorifies, or provides instructions for self-harm, suicide, eating disorders, or other dangerous behaviours.',
+      s5_li6: 'Hate speech, content promoting discrimination, or content promoting violence against any individual or group.',
+      s5_li7: 'Illegal content, or content that would violate any applicable law in your jurisdiction.',
+      s5_li8: "Content intended to manipulate, jailbreak, or otherwise circumvent the AI's safety guardrails.",
+      s5_li9: 'Malware, phishing links, or any other malicious payload.',
+      s5_para2: 'You also agree <strong>not</strong> to:',
+      s5_li10: 'Reverse engineer, decompile, or attempt to extract model weights or source code beyond what is visible in the browser.',
+      s5_li11: 'Attempt to bypass usage limits, paywalls, or security measures.',
+      s5_li12: 'Scrape, spider, or automate the service with bots.',
+      s5_li13: 'Use the service for any commercial analysis of third parties (e.g. as part of a dating service, HR screening, or advertising product).',
+      s5_li14: 'Resell, sublicense, or redistribute DateScan or any part of it.',
+      s5_para3: 'We operate automated and human content moderation on the AI Style Coach chat. Violations may result in immediate termination of your access, forfeiture of any unused Pro access, and where appropriate, reporting to law enforcement.',
+      s5_1_heading: '5.1 Likeness warranty — only your own face',
+      s5_1_para: 'DateScan is designed for <strong>self-analysis</strong>. By using the camera scanner you represent and warrant that:',
+      s5_1_li1: 'The person in front of the camera is <strong>you</strong>, the account holder, and no one else;',
+      s5_1_li2: 'You are not scanning a photograph, screen, printout, video, or any other reproduction of another person;',
+      s5_1_li3: 'You are not scanning, analysing, or generating feedback about any <strong>third party</strong> — including but not limited to friends, family members, ex-partners, colleagues, public figures, celebrities, politicians, or any identifiable individual — without their <strong>explicit, informed, written</strong> consent;',
+      s5_1_li4: 'You will not use DateScan to mock, harass, defame, sexualise, or damage the reputation of any identifiable person.',
+      s5_1_para2: 'To enforce this, the scanner uses <strong>live camera capture only</strong> and applies basic liveness checks. Attempting to defeat these checks (e.g. by pointing the camera at a screen, photograph, mask, or pre-recorded video) is a material breach of these Terms.',
+      s5_2_heading: '5.2 Public figures and celebrities',
+      s5_2_para: 'Submitting images of public figures, celebrities, politicians, or any other identifiable third party — even where their likeness is widely available online — is <strong>strictly prohibited</strong>. The fact that an image is publicly accessible does not give you the right to process it through DateScan, generate AI feedback about it, or share that feedback. Many jurisdictions (including Austria, Germany, and the wider EU) recognise strong personality, image, and dignity rights that survive publication.',
+      s5_3_heading: '5.3 Indemnification for likeness misuse',
+      s5_3_para: 'If you breach Sections 5, 5.1, or 5.2 — for example by scanning another person without consent and that person, or any authority acting on their behalf, brings a claim against DateScan — you agree to <strong>defend, indemnify, and hold harmless</strong> DateScan, its operators, contractors, and affiliates from and against any and all claims, damages, losses, liabilities, judgments, fines, costs, and expenses (including reasonable legal fees) arising out of or related to that breach. This obligation survives termination of your account.',
+      s6_heading: '6. Reporting AI Content',
+      s6_para: 'If you encounter an AI response that is offensive, harmful, inaccurate, or otherwise inappropriate, please tap the <strong>"Report"</strong> button below the message in the chat. All reports are reviewed by our moderation team. This is the fastest and most reliable way to flag content — the report includes the exact message, your context, and metadata automatically.',
+      s7_heading: '7. Intellectual Property',
+      s7_para: 'All content on DateScan — the name "DateScan", the logo, the interface design, the code, copywriting, and branding — is owned by us and protected by intellectual property laws. You may not copy, modify, or create derivative works without written permission. Third-party libraries used by DateScan (MediaPipe, Tailwind, fonts, etc.) are governed by their own licenses.',
+      s8_heading: '8. Your Content',
+      s8_para: 'You retain ownership of any images or text you create or submit while using DateScan.',
+      s8_li1: '<strong>Camera scans</strong> are processed locally and never reach our servers, so we have nothing to claim rights to.',
+      s8_li2: '<strong>AI Style Coach chat inputs</strong> (text and optional attached images) are sent to our server for processing. By submitting content to the chat, you grant us a limited, worldwide, non-exclusive, royalty-free license to process, store (for the retention period set out in our Privacy Policy), transmit to our third-party AI providers, and analyze your content <strong>solely</strong> for the purpose of operating the service, enforcing these Terms, and complying with law. This license ends when your content is deleted from our systems. We do <strong>not</strong> use your chat content to train AI models.',
+      s9_heading: '9. Payments &amp; One-Time Purchases',
+      s9_1_heading: '9.1 Google Play Billing',
+      s9_1_para: "DateScan is distributed exclusively through the <strong>Google Play Store</strong>, and all paid purchases are processed exclusively through <strong>Google Play Billing</strong>. By purchasing you also agree to the <a href=\"https://play.google.com/about/play-terms/\" target=\"_blank\" rel=\"noopener\">Google Play Terms of Service</a>. All payment, billing, tax, and refund requests are handled by Google in accordance with Google Play's policies. Paid access is sold as <strong>one-time, non-recurring in-app purchases</strong> — there is no auto-renewal and nothing to cancel. When your paid period ends, your access simply reverts to the Free plan, and you may purchase again at any time.",
+      s9_2_heading: '9.2 Plans and pricing',
+      s9_2_para: 'We currently offer the following options on Google Play. Local prices may vary slightly due to taxes, fees, and currency conversion:',
+      s9_2_li1: '<strong>Free</strong> — 5 points / day (1 point per scan or AI Coach message)',
+      s9_2_li2: '<strong>Week</strong> — $4.99, one-time purchase, 7 days of access',
+      s9_2_li3: '<strong>Month</strong> — $9.99, one-time purchase, 30 days of access',
+      s9_2_li4: '<strong>Year</strong> — $49.99, one-time purchase, 365 days of access (best value)',
+      s9_2_para2: "All paid options are <strong>one-time purchases</strong>. They do not auto-renew, you will not be charged again automatically, and there is nothing to cancel. Refunds are governed by our <a href=\"refund.html\">Refund Policy</a> and by Google Play's own refund process.",
+      s9_3_heading: '9.3 EU right of withdrawal (14-day cooling-off)',
+      s9_3_para: "Under the EU Consumer Rights Directive (2011/83/EU), you have a 14-day right of withdrawal from any distance purchase. However, because DateScan delivers <strong>digital content that begins immediately upon purchase</strong>, by completing your purchase you (a) expressly consent to the immediate provision of the digital content, and (b) acknowledge that you thereby waive your 14-day right of withdrawal. If applicable local law provides otherwise, please refer to Google Play's refund process or contact us.",
+      s10_heading: '10. Disclaimer of Warranties',
+      s10_para: 'DateScan is provided <strong>"AS IS" and "AS AVAILABLE"</strong>, without warranties of any kind, express or implied. <strong>You expressly acknowledge that DateScan is an entertainment and confidence-boosting product, that the AI Style Coach can produce inaccurate, biased, or occasionally offensive output, and that we accept no responsibility for any reliance you place on such output.</strong> We do not warrant that:',
+      s10_li1: 'The service will be uninterrupted, error-free, or secure.',
+      s10_li2: 'The analysis or feedback will be accurate, complete, or suitable for your purpose.',
+      s10_li3: 'The service will achieve any specific dating, social, romantic, or personal outcome.',
+      s10_li4: 'The service will be compatible with your device or browser.',
+      s10_li5: 'AI-generated content will be free of inaccuracies, biases, or occasional inappropriate output.',
+      s11_heading: '11. Limitation of Liability',
+      s11_para: 'To the maximum extent permitted by law, DateScan and its operators shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or related to your use of the service. Our total aggregate liability for any claim shall not exceed the amount you paid us in the twelve months preceding the claim, or <strong>€50</strong>, whichever is greater. Some jurisdictions do not allow the exclusion of certain warranties or limitations on liability, so some of the above may not apply to you. Nothing in these Terms limits liability that cannot be limited under applicable mandatory law (including liability for death or personal injury caused by negligence, or for fraud).',
+      s12_heading: '12. Termination',
+      s12_para: 'We reserve the right to suspend or terminate your access to DateScan at any time, with or without notice, if we reasonably believe you have violated these Terms — in particular the Acceptable Use and AI Content Policy section. Upon termination your right to use the service ceases immediately. You may terminate your use at any time by deleting your data (see the <a href="privacy.html">Privacy Policy</a>). Since all purchases are one-time and non-recurring, there is no subscription to cancel.',
+      s13_heading: '13. Changes to the Service or Terms',
+      s13_para: 'We may modify, suspend, or discontinue any part of DateScan at any time. We may also revise these Terms from time to time. The "Last updated" date at the top reflects the most recent version. For material changes we will give you reasonable advance notice inside the app and via the homepage. Continued use of DateScan after changes means you accept the revised Terms.',
+      s14_heading: '14. Governing Law &amp; Dispute Resolution',
+      s14_para: "These Terms are governed by the laws of <strong>Hungary</strong> and the European Union, without regard to conflict-of-law principles. Any dispute shall be resolved in the competent courts of that jurisdiction. Nothing in this clause deprives consumers in the EU, UK, or other jurisdictions with mandatory consumer protection laws of the protection afforded to them by the mandatory laws of their country of residence. EU consumers may also access the European Commission's Online Dispute Resolution platform at <a href=\"https://ec.europa.eu/consumers/odr\" target=\"_blank\" rel=\"noopener\">ec.europa.eu/consumers/odr</a>.",
+      s15_heading: '15. Severability',
+      s15_para: 'If any provision of these Terms is found to be unenforceable, the remaining provisions shall remain in full force and effect.',
+      s16_heading: '16. Referral Programme',
+      s16_intro: 'DateScan offers a referral programme that rewards both the referrer and the new user with bonus points. By using the referral feature you agree to the following rules:',
+      s16_li1: 'When you share your invite link, your anonymous user ID is embedded in the URL. This ID is shared with anyone who receives or opens the link.',
+      s16_li2: 'The referred user receives <strong>+5 bonus points</strong> upon first opening the link. You receive <strong>+5 bonus points</strong> once our backend confirms the referral. Bonus points are added on top of your daily point pool and persist across daily resets.',
+      s16_li3: 'Each user can only be referred once. You may not refer yourself, create multiple accounts to simulate referrals, or use bots, scripts, or other automated means to generate referral bonuses.',
+      s16_li4: 'We reserve the right to reverse bonus points that were obtained through fraud, abuse, or violation of these rules, and to terminate the accounts of users who abuse the referral programme.',
+      s16_li5: 'The referral programme may be modified or discontinued at any time without prior notice. Bonus points already earned will not be retroactively removed unless obtained through fraud.',
+      s17_heading: '17. Contact',
+      s17_para: 'Questions about these Terms? Email us at <a href="mailto:info@datescan.app">info@datescan.app</a> or reach out on our social channels.',
+      footer_desc: 'Your AI-powered wingman. Scan your outfit, get instant style and grooming feedback, and walk into your date with confidence.',
+      footer_ondevice: 'Camera scans run on-device',
+      footer_legal: 'Legal',
+      footer_privacy: 'Privacy Policy',
+      footer_terms: 'Terms of Service',
+      footer_refund: 'Refund Policy',
+      footer_delete: 'Delete Account',
+      footer_support: 'Support',
+      footer_contact: 'Contact Support',
+      footer_follow: 'Follow',
+      footer_disclaimer: 'Disclaimer: DateScan is an AI-powered tool designed for entertainment and confidence-boosting purposes only. We do not guarantee dating success or specific social outcomes.',
+      footer_copy: '© 2026 DateScan'
+    },
+    hu: {
+      page_title: 'Felhasználási feltételek — DateScan',
+      meta_desc: 'DateScan felhasználási feltételek. Az AI stílusedző használatának szabályai és felelősségkizárásai.',
+      subtitle_tag: 'Személyes Stílusedző',
+      back_to_app: 'Vissza az alkalmazáshoz',
+      legal_badge: 'Jogi',
+      main_title: 'Felhasználási feltételek',
+      last_updated: 'Utoljára frissítve: 2026. április 18.',
+      intro_para: 'Üdvözlünk a DateScanen. A <a href="https://datescan.app/">https://datescan.app/</a> címen elérhető szolgáltatásunk elérésével vagy használatával elfogadod, hogy ezek a Felhasználási feltételek („Feltételek") rád nézve kötelezőek. Ha nem értesz egyet, kérjük, ne használd a szolgáltatást.',
+      only_18_badge: 'Csak 18+',
+      only_18_para: '<strong>A DateScan kizárólag 18 éves vagy idősebb felnőttek számára készült.</strong> A szolgáltatás használatával képviseled és garantálod, hogy megfelelsz ezen korhatár-követelményeknek. Nem engedélyezzük tudatosan, hogy kiskorúak használják a DateScant.',
+      important_badge: 'Fontos — Kérjük, olvasd el',
+      disclaimer_para1: '<strong>Felelősségkizárás: A DateScan egy AI-alapú eszköz, amely kizárólag szórakoztatási és önbizalom-növelési célra készült. Nem garantálunk randi-sikert vagy konkrét társadalmi eredményeket.</strong>',
+      disclaimer_para2: '<strong>Nem vállalunk semmilyen felelősséget a mesterséges intelligencia által létrehozott tanácsokért, javaslatokért, pontszámokért vagy bármely egyéb kimenetért — beleértve azokat a kimeneteket is, amelyek pontatlanok, megtévesztők, elfogultak, sértőek vagy más módon nem megfelelőek lehetnek.</strong> Az AI modellek hibázhatnak és hibáznak is. Az AI Stílusedző nem helyettesíti a szakmai tanácsadást (divat, orvosi, pszichológiai, jogi, randi vagy egyéb), és a kimenetére való hagyatkozás kizárólag a saját felelősségedre történik.',
+      disclaimer_para3: 'A DateScan használata a jelen felelősségkizárás tudomásulvételét és elfogadását jelenti. A jótállást és a felelősséget szabályozó teljes feltételek az alábbi <a href="#section-10" class="text-amber-300 underline">§10</a> és <a href="#section-11" class="text-amber-300 underline">§11</a> szakaszban találhatók.',
+      s1_heading: '1. A szolgáltatás',
+      s1_para: 'A DateScan egy AI-alapú stílusedző, amely (a) Progressive Web Appként a <a href="https://datescan.app/">https://datescan.app/</a> címen és (b) Android alkalmazásként a Google Play Áruházon keresztül érhető el. Két fő funkciót kínál:',
+      s1_li1: '<strong>Helyi kamerás szkennelés</strong> — böngészőalapú AI-t (MediaPipe) használ az öltözéked, ápoltságod, testtartásod és fényviszonyaid elemzésére élő kamerafelvételből. Minden feldolgozás helyben, az eszközödön történik; nem kerül feltöltésre képanyag.',
+      s1_li2: '<strong>AI Stílusedző chat</strong> — szöveg/kép chat, amely üzeneteidet HTTPS-en keresztül elküldi a Cloudflare Workers háttérrendszerünknek, amely továbbítja azokat harmadik fél látás-nyelvi modell szolgáltatójának (jelenleg <strong>OpenAI</strong> és/vagy <strong>Anthropic</strong>, változhat) a válaszok előállításához. Az adatfolyamról lásd az <a href="privacy.html">Adatvédelmi tájékoztatónkat</a>.',
+      s2_heading: '2. Javaslatok, nem szakmai tanácsadás',
+      s2_para: 'A DateScan visszajelzéseit AI modell generálja, és <strong>kizárólag szórakoztatási és fejlődési célra</strong> szolgál. A kimenet <strong>stílusjavaslatokból</strong> áll, nem:',
+      s2_li1: 'Szakmai divat-, stílus- vagy imázstanácsadás',
+      s2_li2: 'Orvosi, bőrgyógyászati vagy egészségügyi tanács',
+      s2_li3: 'Pszichológiai, tanácsadási vagy mentálhigiéniai iránymutatás',
+      s2_li4: 'Randi-, kapcsolati vagy szociális coaching',
+      s2_para2: 'Az AI hibázhat és hibázik is — beleértve a pontatlan, elfogult vagy esetenként nem megfelelő válaszok generálását. Soha ne hagyatkozz a DateScan kimenetére szakképzett szakember helyett. Ha aggódsz a fizikai vagy mentális egészséged miatt — beleértve bőrproblémákat, testtartási nehézségeket, testképzavart vagy étkezési zavarokat — kérjük, fordulj szakemberhez. Válsághelyzetben hídd a helyi segélyszolgálatot vagy válságvonalat (US: 988; UK: 116 123; EU: 112).',
+      s3_heading: '3. Korhatár-követelmény — Csak 18+',
+      s3_para: 'Legalább <strong>18 évesnek</strong> kell lenned a DateScan használatához. Fiók létrehozásával, az alkalmazás letöltésével vagy a Szolgáltatás használatával képviseled és garantálod, hogy 18 éves vagy idősebb vagy. A Szolgáltatás nem kiskorúakra tervezett, nem nekik szól, és nem számukra megfelelő.',
+      s3_1_heading: '3.1 Kor-ellenőrző kapu és önkinyilvánítás',
+      s3_1_para: 'Mielőtt hozzáférhetnél a kamera-szkennerhez vagy az AI Stílusedzőhöz, meg kell erősítened a korodat a képernyőn megjelenő <strong>„18 éves vagy idősebb vagyok"</strong> kapunál. A megerősítés dátumát, idejét és egy durva technikai azonosítót rögzítünk a nyilatkozatod bizonyítékaként. Hamis kor-megadása a <strong>Feltételek lényegi megszegése</strong>, és számos joghatóságban csalást vagy hamis nyilatkozatot is jelent. Fenntartjuk a jogot, hogy a hozzáférés megadásához kizárólag a nyilatkozatodra támaszkodjunk.',
+      s3_2_heading: '3.2 Szülői és gyámi felelősség',
+      s3_2_para: 'Ha szülő vagy törvényes gyám vagy, és azt tapasztalod, hogy a gondozásodban álló 18 év alatti személy használta a DateScant, kérjük, azonnal lépj kapcsolatba velünk a 16. szakaszban megadott címen, hogy megszüntethessük a fiókot és törölhessük a kapcsolódó adatokat. A szülők és gyámok felelősek a kiskorúak internethasználatának felügyeletéért a háztartásukban; a DateScan nem helyettesíti ezt a felügyeletet.',
+      s3_3_heading: '3.3 Nincs tudatos adatgyűjtés kiskorúaktól',
+      s3_3_para: 'Nem gyűjtünk tudatosan személyes adatot 18 év alattiaktól. Ha tudomásunkra jut — akár felhasználói bejelentés, szülői/gyámi értesítés, fizetési metaadat vagy saját moderáció útján —, hogy egy felhasználó 18 év alatti, <strong>azonnal megszüntetjük a hozzáférését</strong>, visszavonjuk az aktív Pro hozzáférést, és töröljük a kapcsolódó adatokat az <a href="privacy.html">Adatvédelmi tájékoztatónknak</a> megfelelően. Ez minden korábbi kor-megnyilatkozattól függetlenül érvényes.',
+      s3_4_heading: '3.4 Kiskorú felhasználó bejelentése',
+      s3_4_para: 'Ha úgy gondolod, hogy egy DateScan felhasználó 18 év alatti, kérjük, írj nekünk a 16. szakaszban megadott címre, a tárgymezőben <strong>„Kiskorú felhasználó bejelentése"</strong> megjelöléssel. Az ellenőrzött bejelentéseket 72 órán belül igyekszünk intézkedni.',
+      s4_heading: '4. Fiókod és hozzáférésed',
+      s4_para: 'A DateScan ingyenes szintje nem igényel fiókot. <strong>Napi 5 pontot</strong> tartalmaz, ahol minden szkennelés vagy AI Stílusedző üzenet <strong>1 pontot</strong> fogyaszt, és a pontkészlet az első költés után 24 órával újratöltődik. A pontjaidat tetszésed szerint költheted — mind szkennelésre, mind chatre, vagy bármilyen arányban. A fizetős csomagok böngésző-azonosítón keresztül az eszközödhöz kötődnek; ha törlöd a böngészőadatokat, a Pro státuszod az adott eszközön elveszhet — lásd a <a href="refund.html">Visszatérítési szabályzatunkat</a> a visszaállítási utasításokért.',
+      s5_heading: '5. Elfogadható használat és AI tartalmi szabályzat',
+      s5_para: 'A DateScan használatakor elfogadod, hogy <strong>nem</strong> nyújtasz be, nem töltesz fel vagy osztasz meg semmilyen az alábbiakat a kamera-szkennerben vagy az AI Stílusedző chatben:',
+      s5_li1: '<strong>18 év alatti személy</strong> képeit vagy leírását, bármilyen körülmények között. Ez nulla toleranciás szabály.',
+      s5_li2: 'Szexuálisan explicit, meztelen vagy kétértelmű tartalom.',
+      s5_li3: 'Más személyek képei az ő kifejezett, tájékozott hozzájárulásuk nélkül.',
+      s5_li4: 'Zaklatást, bántalmazást, rágalmazást, fenyegetést vagy más személy sérelmére irányuló tartalom.',
+      s5_li5: 'Önkárosítást, öngyilkosságot, étkezési zavarokat vagy más veszélyes viselkedést népszerűsítő, dicsőítő vagy arra utasítást adó tartalom.',
+      s5_li6: 'Gyűlöletkeltő beszéd, diszkriminációt vagy erőszakra buzdító tartalom bármely személy vagy csoport ellen.',
+      s5_li7: 'Illegális tartalom, vagy olyan tartalom, amely megsértené a joghatóságodban alkalmazandó jogszabályokat.',
+      s5_li8: 'Olyan tartalom, amely az AI biztonsági korlátainak manipulálására, megkerülésére vagy feloldására irányul.',
+      s5_li9: 'Kártevő szoftver, adathalishing hivatkozások vagy bármilyen más rosszindulatú tartalom.',
+      s5_para2: 'Továbbá elfogadod, hogy <strong>nem</strong>:',
+      s5_li10: 'Visszafejted, dekompilálod vagy megkíséreled kinyerni a modellsúlyokat vagy forráskódot a böngészőben láthatón túl.',
+      s5_li11: 'Megkíséreled megkerülni a használati korlátokat, fizetőfalakat vagy biztonsági intézkedéseket.',
+      s5_li12: 'Scrape-elod, spider-eled vagy automatizálod a szolgáltatást botokkal.',
+      s5_li13: 'A szolgáltatást harmadik felek kereskedelmi elemzésére használod (pl. partnerkereső szolgáltatás, HR szűrés vagy hirdetési termék részeként).',
+      s5_li14: 'Továbbértékesíted, allicencbe adod vagy újra terjeszted a DateScant vagy bármely részét.',
+      s5_para3: 'Automatizált és emberi tartalom-moderációt működtetünk az AI Stílusedző chaten. A szabálysértések a hozzáférésed azonnali megszüntetéséhez, a fel nem használt Pro hozzáférés elvesztéséhez, illetve adott esetben hatósági bejelentéshez vezethetnek.',
+      s5_1_heading: '5.1 Hasonmás-garancia — csak a saját arcod',
+      s5_1_para: 'A DateScan <strong>önnelemzésre</strong> tervezett. A kamera-szkenner használatával képviseled és garantálod, hogy:',
+      s5_1_li1: 'A kamera előtti személy <strong>te</strong> vagy, a fióktulajdonos, és senki más;',
+      s5_1_li2: 'Nem más személy fényképét, képernyőjét, kinyomatát, videóját vagy más reprodukcióját szkennelsz;',
+      s5_1_li3: 'Nem szkennelsz, nem elemezol és nem generálsz visszajelzést <strong>harmadik félről</strong> — beleértve de nem kizárólag barátokat, családtagokat, expartnereket, kollégákat, közszereplőket, hírességeket, politikusokat vagy bármely azonosítható személyt — az ő <strong>kifejezett, tájékozott, írásbeli</strong> hozzájárulásuk nélkül;',
+      s5_1_li4: 'Nem használod a DateScant bármely azonosítható személy kigúnyolására, zaklatására, rágalmazására, szexualizálására vagy jó hírnevének csorbítására.',
+      s5_1_para2: 'Ennek érvényesítésére a szkenner <strong>kizárólag élő kamerafelvételt</strong> használ és alapvető élőség-ellenőrzést alkalmaz. Ezen ellenőrzések megkerülése (pl. a kamera képernyőre, fényképre, maszkra vagy előre felvett videóra irányításával) a Feltételek lényegi megszegése.',
+      s5_2_heading: '5.2 Közszereplők és hírességek',
+      s5_2_para: 'Közszereplők, hírességek, politikusok vagy bármely más azonosítható harmadik fél képeinek beküldése — még ha hasonmásuk széles körben elérhető is az interneten — <strong>szigorúan tilos</strong>. Az a tény, hogy egy kép nyilvánosan hozzáférhető, nem jogosít fel arra, hogy a DateScanen keresztül feldolgozd, AI visszajelzést generálj róla, vagy megoszd azt. Számos joghatóság (beleértve Ausztriát, Németországot és a tágabb EU-t) erős személyiségi, képi és méltósági jogokat ismer el, amelyek a publikálás után is fennállnak.',
+      s5_3_heading: '5.3 Kártérítés hasonmás-visszaélés esetén',
+      s5_3_para: 'Ha megszeged az 5., 5.1. vagy 5.2. szakaszt — például más személy szkennelésével hozzájárulása nélkül, és az a személy vagy az ő nevében eljáró hatóság keresetet nyújt be a DateScan ellen — elfogadod, hogy <strong>megvéded, kártalanítod és kimented</strong> a DateScant, üzemeltetőit, vállalkozóit és kapcsolt vállalatait minden olyan követelés, kár, veszteség, felelősség, ítélet, bírság, költség és kiadás (beleértve az ésszerű ügyvédi díjakat) ellen, amely a megszegésből származik vagy azzal kapcsolatos. Ez a kötelezettség a fiókod megszüntetése után is fennáll.',
+      s6_heading: '6. AI tartalom bejelentése',
+      s6_para: 'Ha olyan AI választ kapsz, amely sértő, káros, pontatlan vagy más módon nem megfelelő, kérjük, koppints az üzenet alatti <strong>„Bejelentés"</strong> gombra a chatben. Minden bejelentést moderációs csapatunk vizsgál. Ez a leggyorsabb és legmegbízhatóbb módja a tartalom jelzésnek — a bejelentés automatikusan tartalmazza a pontos üzenetet, a kontextusodat és a metaadatokat.',
+      s7_heading: '7. Szellemi tulajdon',
+      s7_para: 'A DateScan összes tartalma — a „DateScan" név, a logó, a felület design, a kód, a szöveg és a márka — a mi tulajdonunk, és szellemi tulajdonjogok védelme alatt áll. Írásbeli engedély nélkül nem másolhatod, módosíthatod vagy származékos műveket hozhatsz létre. A DateScan által használt harmadik féltől származó könyvtárak (MediaPipe, Tailwind, betűtípusok stb.) saját licenceik szerint kerülnek felhasználásra.',
+      s8_heading: '8. A te tartalmad',
+      s8_para: 'Megőrized a DateScan használata során létrehozott vagy beküldött képek és szövegek tulajdonjogát.',
+      s8_li1: '<strong>Kamera-szkennelések</strong> helyben kerülnek feldolgozásra és soha nem érik el a szervereinket, így nincs mit jogtulajdonként érvényesítenünk.',
+      s8_li2: '<strong>AI Stílusedző chat bemenetek</strong> (szöveg és opcionálisan csatolt képek) feldolgozás céljából a szerverünkre kerülnek. A chatbe tartalmat beküldve korlátozott, világméretű, nem kizárólagos, jogdíjmentes licencet adsz nekünk a tartalmad feldolgozására, tárolására (az Adatvédelmi tájékoztatónkban meghatározott megőrzési időre), harmadik fél AI szolgáltatóinknak való továbbítására és elemzésére <strong>kizárólag</strong> a szolgáltatás üzemeltetése, a Feltételek érvényesítése és a jogszabályoknak való megfelelés céljából. Ez a licenc a tartalmad rendszerünkből történő törlésével lejár. <strong>Nem</strong> használjuk a chat-tartalmadat AI modellek tanítására.',
+      s9_heading: '9. Fizetés és egyszeri vásárlások',
+      s9_1_heading: '9.1 Google Play számlázás',
+      s9_1_para: 'A DateScan kizárólag a <strong>Google Play Áruházon</strong> keresztül terjesztett, és minden fizetős vásárlás kizárólag a <strong>Google Play számlázáson</strong> keresztül történik. Vásárlással egyetértesz a <a href="https://play.google.com/about/play-terms/" target="_blank" rel="noopener">Google Play Felhasználási feltételekkel</a> is. Minden fizetési, számlázási, adózási és visszatérítési kérelmet a Google kezeli a Google Play szabályzata szerint. A fizetős hozzáférés <strong>egyszeri, nem ismétlődő alkalmazáson belüli vásárlásként</strong> kerül értékesítésre — nincs automatikus megújítás és nincs mit lemondani. Amikor a fizetős időszakod lejár, a hozzáférésed egyszerűen visszavált az Ingyenes csomagra, és bármikor újra vásárolhatsz.',
+      s9_2_heading: '9.2 Csomagok és árak',
+      s9_2_para: 'Jelenleg az alábbi lehetőségeket kínáljuk a Google Playen. A helyi árak az adók, díjak és árfolyam-konverzió miatt kissé eltérhetnek:',
+      s9_2_li1: '<strong>Ingyenes</strong> — 5 pont / nap (1 pont szkennelésenként vagy AI edzői üzenetenként)',
+      s9_2_li2: '<strong>Hét</strong> — $4,99, egyszeri vásárlás, 7 nap hozzáférés',
+      s9_2_li3: '<strong>Hónap</strong> — $9,99, egyszeri vásárlás, 30 nap hozzáférés',
+      s9_2_li4: '<strong>Év</strong> — $49,99, egyszeri vásárlás, 365 nap hozzáférés (legjobb ár)',
+      s9_2_para2: 'Minden fizetős opció <strong>egyszeri vásárlás</strong>. Nem újulnak meg automatikusan, nem terhelünk újra, és nincs mit lemondani. A visszatérítéseket a <a href="refund.html">Visszatérítési szabályzatunk</a> és a Google Play saját visszatérítési folyamata szabályozza.',
+      s9_3_heading: '9.3 EU elállási jog (14 napos elállás)',
+      s9_3_para: 'Az EU Fogyasztói Jogok Irányelve (2011/83/EU) és a 45/2014. (II.26.) Korm. rendelet alapján 14 napos elállási jog illeti meg a fogyasztót távollévők között kötött szerződés esetén. Mivel a DateScan <strong>azonnal a vásárlás után hozzáférhetővé váló digitális tartalmat</strong> nyújt, a vásárlás befejezésével (a) kifejezetten hozzájárulsz a digitális tartalom azonnali teljesítéséhez, és (b) tudomásul veszed, hogy ezzel a 14 napos elállási jogodat elveszíted. Ha a helyi jog ettől eltérően rendelkezik, kérjük, használd a Google Play visszatérítési folyamatát vagy lépj kapcsolatba velünk.',
+      s10_heading: '10. Jótállás kizárása',
+      s10_para: 'A DateScan <strong>„AHOGY VAN" és „AHOGY ELÉRHETŐ"</strong> formában kerül biztosításra, mindenféle kifejezett vagy hallgatólagos jótállás nélkül. <strong>Kifejezetten elismered, hogy a DateScan szórakoztatási és önbizalom-növelési termék, hogy az AI Stílusedző pontatlan, elfogult vagy esetenként sértő kimenetet produkálhat, és hogy nem vállalunk felelősséget az ilyen kimenetre való hagyatkozásért.</strong> Nem garantáljuk, hogy:',
+      s10_li1: 'A szolgáltatás megszakításmentes, hibamentes vagy biztonságos lesz.',
+      s10_li2: 'Az elemzés vagy visszajelzés pontos, teljes vagy a célodnak megfelelő lesz.',
+      s10_li3: 'A szolgáltatás bármilyen konkrét randi-, szociális, romantikus vagy személyes eredményt elér.',
+      s10_li4: 'A szolgáltatás kompatibilis lesz az eszközöddel vagy böngésződdel.',
+      s10_li5: 'Az AI által generált tartalom mentes lesz a pontatlanságoktól, elfogultságtól vagy esetenként nem megfelelő kimenettől.',
+      s11_heading: '11. Felelősségkorlátozás',
+      s11_para: 'A törvény által megengedett legteljesebb mértékben a DateScan és üzemeltetői nem felelnek semmilyen közvetett, véletlenszerű, különleges, következményes vagy büntető jellegű kárért, amely a szolgáltatás használatából származik vagy azzal kapcsolatos. A teljes összesített felelősségünk bármely követelés esetén nem haladhatja meg a követelést megelőző tizenkét hónapban nekünk fizetett összeget, vagy <strong>50 EUR-t</strong>, attól függően, amelyik nagyobb. Egyes joghatóságok nem engedélyezik bizonyos jótállások kizárását vagy a felelősség korlátozását, így a fenti feltételek egy része nem vonatkozhat rád. Ezek a Feltételek nem korlátozzák a kötelező jog szerint nem korlátozható felelősséget (beleértve a hanyagság okozta halálért vagy személyi sérülésért, illetve csalásért való felelősséget).',
+      s12_heading: '12. Megszüntetés',
+      s12_para: 'Fenntartjuk a jogot, hogy a DateScan hozzáférésedet bármikor felfüggesszük vagy megszüntessük, értesítéssel vagy anélkül, ha ésszerűen úgy ítéljük meg, hogy megszegted ezeket a Feltételeket — különösen az Elfogadható használat és AI tartalmi szabályzat szakaszt. A megszüntetés után a szolgáltatás használatának joga azonnal megszűnik. Bármikor megszüntetheted a használatot az adataid törlésével (lásd az <a href="privacy.html">Adatvédelmi tájékoztatót</a>). Mivel minden vásárlás egyszeri és nem ismétlődő, nincs előfizetés, amit le kellene mondani.',
+      s13_heading: '13. A szolgáltatás vagy a Feltételek változásai',
+      s13_para: 'Bármikor módosíthatjuk, felfüggeszthetjük vagy megszüntethetjük a DateScan bármely részét. Ezeket a Feltételeket is felülvizsgálhatjuk időről időre. A fenti „Utoljára frissítve" dátum a legfrissebb verziót tükrözi. Lényegi változások esetén ésszerű előzetes értesítést adunk az alkalmazáson belül és a honlapon. A DateScan további használata a változások után a felülvizsgált Feltételek elfogadását jelenti.',
+      s14_heading: '14. Alkalmazandó jog és vitarendezés',
+      s14_para: 'Ezeket a Feltételeket <strong>Magyarország</strong> és az Európai Unió jogszabályai szabályozzák, a kollíziós elvek figyelembevétele nélkül. Minden vitát Magyarország illetékes bíróságain kell rendezni. Ez a szakasz nem vonja meg az EU-ban, az Egyesült Királyságban vagy más kötelező fogyasztóvédelmi törvényekkel rendelkező joghatóságokban élő fogyasztókat a lakóhelyük kötelező joga által biztosított védelemtől. Az EU fogyasztók hozzáférhetnek az Európai Bizottság Online Vitarendezési platformjához a <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a> címen.',
+      s15_heading: '15. Szétválaszthatóság',
+      s15_para: 'Ha e Feltételek bármely rendelkezését végrehajthatatlannak találják, a fennmaradó rendelkezések teljes hatályukban maradnak.',
+      s16_heading: '16. Ajánlóprogram',
+      s16_intro: 'A DateScan ajánlóprogramot kínál, amely mind a meghívót, mind az új felhasználót bónusz pontokkal jutalmazza. Az ajánló funkció használatával elfogadod a következő szabályokat:',
+      s16_li1: 'Amikor megosztod a meghívó linkedet, a névtelen felhasználói azonosítód beágyazásra kerül az URL-be. Ez az azonosító mindenki számára elérhetővé válik, aki megkapja vagy megnyitja a linket.',
+      s16_li2: 'Az ajánlott felhasználó <strong>+5 bónusz pontot</strong> kap a link első megnyitásakor. Te <strong>+5 bónusz pontot</strong> kapsz, amint a háttérrendszerünk megerősíti az ajánlást. A bónusz pontok a napi pontkészletedhez adódnak és túlélik a napi visszaállításokat.',
+      s16_li3: 'Minden felhasználó csak egyszer ajánlható. Nem ajánlhatod magad, nem hozhatsz létre több fiókot ajánlások szimulálására, és nem használhatsz botokat, szkripteket vagy más automatizált eszközöket ajánlási bónuszok generálására.',
+      s16_li4: 'Fenntartjuk a jogot arra, hogy visszavonjuk azokat a bónusz pontokat, amelyeket csalással, visszaéléssel vagy ezen szabályok megsértésével szereztek, és megszüntessük az ajánlóprogramot visszaélő felhasználók fiókját.',
+      s16_li5: 'Az ajánlóprogram bármikor módosítható vagy megszüntethető előzetes értesítés nélkül. A már megszerzett bónusz pontokat nem vonjuk vissza visszamenőleg, kivéve, ha csalással szerezték.',
+      s17_heading: '17. Kapcsolat',
+      s17_para: 'Kérdésed van ezekkel a Feltételekkel kapcsolatban? Írj nekünk az <a href="mailto:info@datescan.app">info@datescan.app</a> címre vagy a közösségi csatornáinkon.',
+      footer_desc: 'Az AI-alapú szárnysegéded. Szkenneld az öltözéked, kapj azonnali stílus- és ápoltsági visszajelzést, és magabiztosan indulj a randira.',
+      footer_ondevice: 'A kameraszkennelés az eszközödön fut',
+      footer_legal: 'Jogi',
+      footer_privacy: 'Adatvédelmi tájékoztató',
+      footer_terms: 'Felhasználási feltételek',
+      footer_refund: 'Visszatérítési szabályzat',
+      footer_delete: 'Fiók törlése',
+      footer_support: 'Támogatás',
+      footer_contact: 'Kapcsolatfelvétel',
+      footer_follow: 'Kövess',
+      footer_disclaimer: 'Felelősségkizárás: A DateScan egy AI-alapú eszköz, amely kizárólag szórakoztatási és önbizalom-növelési célra készült. Nem garantálunk randi-sikert vagy konkrét társadalmi eredményeket.',
+      footer_copy: '© 2026 DateScan'
+    },
+    de: {
+      page_title: 'Nutzungsbedingungen — DateScan',
+      meta_desc: 'DateScan Nutzungsbedingungen. Die Regeln und Haftungsausschlüsse für die Nutzung unseres KI-Style-Coaches.',
+      subtitle_tag: 'Persönlicher Style-Coach',
+      back_to_app: 'Zurück zur App',
+      legal_badge: 'Rechtliches',
+      main_title: 'Nutzungsbedingungen',
+      last_updated: 'Zuletzt aktualisiert: 18. April 2026',
+      intro_para: 'Willkommen bei DateScan. Durch den Zugriff auf diesen Dienst oder dessen Nutzung erklärst du dich mit diesen Nutzungsbedingungen („Bedingungen") einverstanden. Wenn du nicht einverstanden bist, nutze den Dienst bitte nicht.',
+      only_18_badge: 'Nur 18+',
+      only_18_para: '<strong>DateScan ist ausschließlich für Erwachsene ab 18 Jahren bestimmt.</strong> Durch die Nutzung des Dienstes versicherst du und gewährleistest, dass du diese Altersanforderung erfüllst. Wir lassen Minderjährige bewusst nicht DateScan nutzen.',
+      important_badge: 'Wichtig — Bitte lesen',
+      disclaimer_para1: '<strong>Haftungsausschluss: DateScan ist ein KI-gestütztes Werkzeug, das ausschließlich der Unterhaltung und Steigerung des Selbstvertrauens dient. Wir garantieren keinen Dating-Erfolg oder bestimmte soziale Ergebnisse.</strong>',
+      disclaimer_para2: '<strong>Wir übernehmen keine Haftung für Ratschläge, Vorschläge, Bewertungen oder sonstige Ergebnisse, die von der künstlichen Intelligenz erzeugt wurden — einschließlich Ergebnisse, die sich als ungenau, irreführend, voreingenommen, beleidigend oder anderweitig unangemessen erweisen können.</strong> KI-Modelle sind fehleranfällig. Der KI-Style-Coach ist kein Ersatz für professionelle Beratung (Mode, medizinisch, psychologisch, rechtlich, Dating oder sonstiges), und jegliches Verlassen auf seine Ergebnisse erfolgt ausschließlich auf eigenes Risiko.',
+      disclaimer_para3: 'Die Nutzung von DateScan bedeutet die Anerkennung und Akzeptanz dieses Haftungsausschlusses. Die vollständigen Bedingungen zu Gewährleistungen und Haftung sind in <a href="#section-10" class="text-amber-300 underline">§10</a> und <a href="#section-11" class="text-amber-300 underline">§11</a> unten aufgeführt.',
+      s1_heading: '1. Der Dienst',
+      s1_para: 'DateScan ist ein KI-gestützter Style-Coach, der (a) als Progressive Web App unter <a href="https://datescan.app/">https://datescan.app/</a> und (b) als Android-App über den Google Play Store verfügbar ist. Er bietet zwei Hauptfunktionen:',
+      s1_li1: '<strong>On-Device-Kamera-Scan</strong> — nutzt browserbasierte KI (MediaPipe), um dein Outfit, deine Pflege, deine Haltung und die Beleuchtung aus einem Live-Kamera-Feed zu analysieren. Die gesamte Scan-Verarbeitung erfolgt lokal auf deinem Gerät; es werden keine Bilder hochgeladen.',
+      s1_li2: '<strong>KI-Style-Coach-Chat</strong> — ein Text-/Bild-Chat, der deine Nachrichten über HTTPS an unser Cloudflare-Workers-Backend sendet, welches sie an einen dritten Vision-Language-Modellanbieter weiterleitet (aktuell <strong>OpenAI</strong> und/oder <strong>Anthropic</strong>, Änderungen vorbehalten) zur Antwortgenerierung. Siehe unsere <a href="privacy.html">Datenschutzerklärung</a> zum Datenfluss.',
+      s2_heading: '2. Vorschläge, keine professionelle Beratung',
+      s2_para: 'DateScans Feedback wird von einem KI-Modell erzeugt und <strong>dient ausschließlich der Unterhaltung und Selbstverbesserung</strong>. Die Ausgabe besteht aus <strong>Stilvorschlägen</strong>, nicht aus:',
+      s2_li1: 'Professioneller Mode-, Styling- oder Image-Beratung',
+      s2_li2: 'Medizinischer, dermatologischer oder gesundheitlicher Beratung',
+      s2_li3: 'Psychologischer, beraterischer oder mentalhygienischer Anleitung',
+      s2_li4: 'Dating-, Beziehungs- oder Social-Coaching',
+      s2_para2: 'Die KI kann und macht Fehler — einschließlich der Generierung ungenauer, voreingenommener oder gelegentlich unangemessener Antworten. Du solltest dich niemals auf DateScans Ausgabe als Ersatz für eine qualifizierte Fachkraft verlassen. Wenn du Bedenken bezüglich deiner körperlichen oder geistigen Gesundheit hast — einschließlich Hauterkrankungen, Haltungsproblemen, Körperbildfragen oder Essstörungen — wende dich bitte an einen zugelassenen Fachmann. In einer Krise kontaktiere bitte deinen örtlichen Notdienst oder eine Krisenhotline (US: 988; UK: 116 123; EU: 112).',
+      s3_heading: '3. Altersanforderung — Nur 18+',
+      s3_para: 'Du musst mindestens <strong>18 Jahre alt</strong> sein, um DateScan zu nutzen. Durch die Erstellung eines Kontos, das Herunterladen der App oder anderweitige Nutzung des Dienstes erklärst du und gewährleistest, dass du 18 Jahre oder älter bist. Der Dienst ist nicht für Minderjährige konzipiert, nicht an sie gerichtet und nicht für sie geeignet.',
+      s3_1_heading: '3.1 Altersüberprüfung und Selbsterklärung',
+      s3_1_para: 'Bevor du auf den Kamera-Scanner oder den KI-Style-Coach zugreifen kannst, musst du dein Alter über das Bildschirm-Tor <strong>„Ich bin 18 oder älter"</strong> bestätigen. Wir erfassen Datum, Uhrzeit und einen groben technischen Identifikator dieser Bestätigung als Nachweis deiner Erklärung. Eine falsche Altersangabe ist ein <strong>wesentlicher Verstoß gegen diese Bedingungen</strong> und stellt in vielen Rechtsordnungen auch Betrug oder Falschaussage dar. Wir behalten uns das Recht vor, dich ausschließlich aufgrund deiner Erklärung Zugang zu gewähren.',
+      s3_2_heading: '3.2 Eltern- und Vormundverantwortung',
+      s3_2_para: 'Wenn du Elternteil oder gesetzlicher Vormund bist und feststellst, dass eine Person unter 18 in deiner Obhut DateScan genutzt hat, kontaktiere uns bitte umgehend unter der in Abschnitt 16 angegebenen Adresse, damit wir das Konto kündigen und die zugehörigen Daten löschen können. Eltern und Vormunde sind für die Überwachung der Internetnutzung Minderjähriger in ihrem Haushalt verantwortlich; DateScan kann diese Überwachung nicht ersetzen.',
+      s3_3_heading: '3.3 Keine bewusste Erhebung von Minderjährigen',
+      s3_3_para: 'Wir erheben bewusst keine persönlichen Informationen von Personen unter 18. Wenn wir erfahren — ob durch eine Nutzermeldung, eine Eltern-/Vormundmitteilung, Zahlungs-Metadaten oder unsere eigene Moderation —, dass ein Nutzer unter 18 ist, werden wir <strong>den Zugang sofort beenden</strong>, jeden aktiven Pro-Zugang widerrufen und zugehörige Daten gemäß unserer <a href="privacy.html">Datenschutzerklärung</a> löschen. Dies gilt unabhängig von einer früheren Alterserklärung.',
+      s3_4_heading: '3.4 Meldung eines minderjährigen Nutzers',
+      s3_4_para: 'Wenn du glaubst, dass ein DateScan-Nutzer unter 18 ist, schreibe uns bitte an die in Abschnitt 16 angegebene Adresse mit dem Betreff <strong>„Meldung eines minderjährigen Nutzers"</strong>. Wir bemühen uns, verifizierte Meldungen innerhalb von 72 Stunden zu bearbeiten.',
+      s4_heading: '4. Dein Konto und Zugang',
+      s4_para: 'DateScans kostenlose Stufe erfordert kein Konto. Sie umfasst <strong>5 Punkte pro Tag</strong>, wobei jeder Scan oder KI-Style-Coach-Chat <strong>1 Punkt</strong> verbraucht, und der Pool 24 Stunden nach deiner ersten Ausgabe zurückgesetzt wird. Du kannst deine Punkte nach Belieben einsetzen — ausschließlich für Scans, ausschließlich für Chat oder jede Kombination. Bezahlte Pläne sind über eine Browser-Kennung an dein Gerät gebunden; wenn du deine Browserdaten löschst, kann dein Pro-Status auf diesem Gerät verloren gehen — siehe unsere <a href="refund.html">Erstattungsrichtlinie</a> für Wiederherstellungsanweisungen.',
+      s5_heading: '5. Akzeptable Nutzung &amp; KI-Inhaltsrichtlinie',
+      s5_para: 'Bei der Nutzung von DateScan stimmst du zu, <strong>nicht</strong> Folgendes an den Kamera-Scanner oder den KI-Style-Coach-Chat zu übermitteln, hochzuladen oder zu teilen:',
+      s5_li1: 'Bilder oder Beschreibungen von <strong>Personen unter 18 Jahren</strong>, unter keinen Umständen. Dies ist eine Null-Toleranz-Regel.',
+      s5_li2: 'Sexuell eindeutige, nackte oder anzügliche Inhalte.',
+      s5_li3: 'Bilder anderer Personen ohne deren ausdrückliche, informierte Zustimmung.',
+      s5_li4: 'Inhalte, die dazu bestimmt sind, eine andere Person zu belästigen, zu schikanieren, zu verleumden, zu bedrohen oder zu schädigen.',
+      s5_li5: 'Inhalte, die Selbstverletzung, Selbstmord, Essstörungen oder andere gefährliche Verhaltensweisen fördern, verherrlichen oder Anleitungen dazu geben.',
+      s5_li6: 'Hassrede, diskriminierende Inhalte oder Inhalte, die Gewalt gegen Einzelpersonen oder Gruppen fördern.',
+      s5_li7: 'Illegale Inhalte oder Inhalte, die geltendes Recht in deiner Rechtsordnung verletzen würden.',
+      s5_li8: 'Inhalte, die dazu bestimmt sind, die KI-Sicherheitsvorkehrungen zu manipulieren, zu umgehen oder anderweitig auszuhebeln.',
+      s5_li9: 'Malware, Phishing-Links oder sonstige schädliche Nutzlasten.',
+      s5_para2: 'Du stimmst auch zu, <strong>nicht</strong>:',
+      s5_li10: 'Reverse Engineering, Dekompilierung oder den Versuch, Modellgewichte oder Quellcode über das im Browser Sichtbare hinaus zu extrahieren.',
+      s5_li11: 'Nutzungslimits, Bezahlschranken oder Sicherheitsmaßnahmen zu umgehen.',
+      s5_li12: 'Den Dienst mit Bots zu scrapen, zu spidern oder zu automatisieren.',
+      s5_li13: 'Den Dienst für eine kommerzielle Analyse Dritter zu nutzen (z.B. als Teil eines Dating-Dienstes, HR-Screenings oder Werbeprodukts).',
+      s5_li14: 'DateScan oder Teile davon weiterzuverkaufen, unterzulizenzieren oder weiterzuverteilen.',
+      s5_para3: 'Wir betreiben automatisierte und menschliche Inhaltsmoderation im KI-Style-Coach-Chat. Verstöße können zur sofortigen Beendigung deines Zugangs, zum Verlust eines ungenutzten Pro-Zugangs und gegebenenfalls zur Meldung an Strafverfolgungsbehörden führen.',
+      s5_1_heading: '5.1 Abbildungsgarantie — nur dein eigenes Gesicht',
+      s5_1_para: 'DateScan ist für die <strong>Selbstanalyse</strong> konzipiert. Durch die Nutzung des Kamera-Scanners erklärst du und gewährleistest, dass:',
+      s5_1_li1: 'Die Person vor der Kamera <strong>du</strong> bist, der Kontoinhaber, und niemand sonst;',
+      s5_1_li2: 'Du kein Foto, keinen Bildschirm, keinen Ausdruck, kein Video oder eine andere Reproduktion einer anderen Person scannst;',
+      s5_1_li3: 'Du keine <strong>Dritten</strong> scannst, analysierst oder Feedback über diese generierst — einschließlich, aber nicht beschränkt auf Freunde, Familienmitglieder, Ex-Partner, Kollegen, öffentliche Personen, Prominente, Politiker oder jede identifizierbare Einzelperson — ohne deren <strong>ausrückliche, informierte, schriftliche</strong> Zustimmung;',
+      s5_1_li4: 'Du DateScan nicht nutzt, um eine identifizierbare Person zu verspotten, zu belästigen, zu verleumden, zu sexualisieren oder deren Ruf zu schädigen.',
+      s5_1_para2: 'Zur Durchsetzung verwendet der Scanner <strong>ausschließlich Live-Kamera-Aufnahmen</strong> und wendet grundlegende Lebendigkeitsprüfungen an. Der Versuch, diese Prüfungen zu umgehen (z.B. durch Richten der Kamera auf einen Bildschirm, ein Foto, eine Maske oder ein vorab aufgenommenes Video) stellt einen wesentlichen Verstoß gegen diese Bedingungen dar.',
+      s5_2_heading: '5.2 Öffentliche Personen und Prominente',
+      s5_2_para: 'Das Einreichen von Bildern öffentlicher Personen, Prominenter, Politiker oder jeder anderen identifizierbaren dritten Partei — selbst wenn deren Abbildung weitreichend online verfügbar ist — ist <strong>strengstens untersagt</strong>. Die Tatsache, dass ein Bild öffentlich zugänglich ist, gibt dir nicht das Recht, es durch DateScan zu verarbeiten, KI-Feedback dazu zu generieren oder dieses Feedback zu teilen. Viele Rechtsordnungen (einschließlich Österreich, Deutschland und der weiteren EU) anerkennen starke Persönlichkeits-, Bild- und Würderechte, die über die Veröffentlichung hinaus bestehen.',
+      s5_3_heading: '5.3 Schadensersatz bei Abbildungsmissbrauch',
+      s5_3_para: 'Wenn du gegen die Abschnitte 5, 5.1 oder 5.2 verstößt — z.B. durch Scannen einer anderen Person ohne Zustimmung und diese Person oder eine in ihrem Namen handelnde Behörde eine Klage gegen DateScan einreicht — erklärst du dich damit einverstanden, DateScan, seine Betreiber, Auftragnehmer und verbundene Unternehmen zu <strong>verteidigen, schadlos zu halten und freizustellen</strong> von allen Ansprüchen, Schäden, Verlusten, Verbindlichkeiten, Urteilen, Strafen, Kosten und Ausgaben (einschließlich angemessener Anwaltsgebühren), die aus oder im Zusammenhang mit diesem Verstoß entstehen. Diese Verpflichtung besteht auch nach Kündigung deines Kontos fort.',
+      s6_heading: '6. KI-Inhalt melden',
+      s6_para: 'Wenn du auf eine KI-Antreffst, die beleidigend, schädlich, ungenau oder anderweitig unangemessen ist, tippe bitte auf die <strong>„Melden"</strong>-Schaltfläche unter der Nachricht im Chat. Alle Meldungen werden von unserem Moderationsteam geprüft. Dies ist der schnellste und zuverlässigste Weg, Inhalte zu kennzeichnen — die Meldung enthält automatisch die genaue Nachricht, deinen Kontext und Metadaten.',
+      s7_heading: '7. Geistiges Eigentum',
+      s7_para: 'Alle Inhalte auf DateScan — der Name „DateScan", das Logo, das Interface-Design, der Code, die Texte und das Branding — sind unser Eigentum und durch Gesetze zum geistigen Eigentum geschützt. Du darfst ohne schriftliche Genehmigung keine Kopien anfertigen, Änderungen vornehmen oder abgeleitete Werke erstellen. Von DateScan verwendete Drittanbieter-Bibliotheken (MediaPipe, Tailwind, Schriftarten usw.) unterliegen ihren eigenen Lizenzen.',
+      s8_heading: '8. Deine Inhalte',
+      s8_para: 'Du behältst das Eigentum an allen Bildern oder Texten, die du während der Nutzung von DateScan erstellst oder einreichst.',
+      s8_li1: '<strong>Kamera-Scans</strong> werden lokal verarbeitet und erreichen niemals unsere Server, sodass wir keine Rechte geltend machen können.',
+      s8_li2: '<strong>KI-Style-Coach-Chat-Eingaben</strong> (Text und optional angehängte Bilder) werden zur Verarbeitung an unseren Server gesendet. Durch das Einreichen von Inhalten im Chat gewährst du uns eine begrenzte, weltweite, nicht-ausschließliche, lizenzgebührenfreie Lizenz zur Verarbeitung, Speicherung (für die in unserer Datenschutzerklärung festgelegte Aufbewahrungsfrist), Weiterleitung an unsere KI-Drittanbieter und Analyse deiner Inhalte <strong>ausschließlich</strong> zum Zweck des Betriebs des Dienstes, der Durchsetzung dieser Bedingungen und der Einhaltung von Gesetzen. Diese Lizenz endet, wenn deine Inhalte aus unseren Systemen gelöscht werden. Wir nutzen deine Chat-Inhalte <strong>nicht</strong> zum Training von KI-Modellen.',
+      s9_heading: '9. Zahlungen &amp; Einmalkäufe',
+      s9_1_heading: '9.1 Google Play Abrechnung',
+      s9_1_para: 'DateScan wird ausschließlich über den <strong>Google Play Store</strong> vertrieben, und alle kostenpflichtigen Käufe werden ausschließlich über die <strong>Google Play Abrechnung</strong> abgewickelt. Mit dem Kauf stimmst du auch den <a href="https://play.google.com/about/play-terms/" target="_blank" rel="noopener">Google Play Nutzungsbedingungen</a> zu. Alle Zahlungs-, Abrechnungs-, Steuer- und Erstattungsanfragen werden von Google gemäß den Google Play-Richtlinien bearbeitet. Der kostenpflichtige Zugang wird als <strong>einmalige, nicht wiederkehrende In-App-Käufe</strong> verkauft — es gibt keine automatische Verlängerung und nichts zu kündigen. Wenn dein kostenpflichtiger Zeitraum endet, kehrt dein Zugang einfach zum kostenlosen Plan zurück, und du kannst jederzeit erneut kaufen.',
+      s9_2_heading: '9.2 Pläne und Preise',
+      s9_2_para: 'Wir bieten derzeit die folgenden Optionen bei Google Play an. Lokale Preise können aufgrund von Steuern, Gebühren und Währungsumrechnungen leicht abweichen:',
+      s9_2_li1: '<strong>Kostenlos</strong> — 5 Punkte / Tag (1 Punkt pro Scan oder KI-Coach-Nachricht)',
+      s9_2_li2: '<strong>Woche</strong> — $4,99, Einmalkauf, 7 Tage Zugang',
+      s9_2_li3: '<strong>Monat</strong> — $9,99, Einmalkauf, 30 Tage Zugang',
+      s9_2_li4: '<strong>Jahr</strong> — $49,99, Einmalkauf, 365 Tage Zugang (bestes Angebot)',
+      s9_2_para2: 'Alle kostenpflichtigen Optionen sind <strong>Einmalkäufe</strong>. Sie verlängern sich nicht automatisch, du wirst nicht erneut belastet, und es gibt nichts zu kündigen. Erstattungen unterliegen unserer <a href="refund.html">Erstattungsrichtlinie</a> und dem eigenen Erstattungsprozess von Google Play.',
+      s9_3_heading: '9.3 EU-Widerrufsrecht (14-tägige Bedenkzeit)',
+      s9_3_para: 'Gemäß der EU-Verbraucherrechterichtlinie (2011/83/EU) haben Sie ein 14-tägiges Widerrufsrecht bei jedem Fernabsatzkauf. Da DateScan jedoch <strong>digitale Inhalte liefert, die sofort nach dem Kauf bereitgestellt werden</strong>, erklärst du mit Abschluss des Kaufs (a) deine ausdrückliche Zustimmung zur sofortigen Bereitstellung der digitalen Inhalte und (b) nimmst zur Kenntnis, dass du damit auf dein 14-tägiges Widerrufsrecht verzichtest. Falls dein lokales Recht anders bestimmt, nutze bitte den Google-Play-Erstattungsprozess oder kontaktiere uns.',
+      s10_heading: '10. Gewährleistungsausschluss',
+      s10_para: 'DateScan wird <strong>„WIE BESEHEN" und „WIE VERFÜGBAR"</strong> bereitgestellt, ohne jegliche ausdrückliche oder stillschweigende Gewährleistung. <strong>Du erkennst ausdrücklich an, dass DateScan ein Unterhaltungs- und Selbstvertrauensprodukt ist, dass der KI-Style-Coach ungenaue, voreingenommene oder gelegentlich beleidigende Ergebnisse liefern kann und dass wir keine Verantwortung für das Verlassen auf solche Ergebnisse übernehmen.</strong> Wir gewährleisten nicht, dass:',
+      s10_li1: 'Der Dienst ununterbrochen, fehlerfrei oder sicher sein wird.',
+      s10_li2: 'Die Analyse oder das Feedback genau, vollständig oder für deinen Zweck geeignet sein wird.',
+      s10_li3: 'Der Dienst ein bestimmtes Dating-, Sozial-, Romantik- oder persönliches Ergebnis erzielen wird.',
+      s10_li4: 'Der Dienst mit deinem Gerät oder Browser kompatibel sein wird.',
+      s10_li5: 'KI-generierte Inhalte frei von Ungenauigkeiten, Voreingenommenheit oder gelegentlich unangemessenen Ergebnissen sein werden.',
+      s11_heading: '11. Haftungsbeschränkung',
+      s11_para: 'Soweit gesetzlich zulässig, haften DateScan und seine Betreiber nicht für indirekte, zufällige, besondere, Folge- oder Strafschäden, die aus oder im Zusammenhang mit deiner Nutzung des Dienstes entstehen. Unsere gesamte Gesamthaftung für einen Anspruch übersteigt nicht den Betrag, den du uns in den dem Anspruch vorausgehenden zwölf Monaten gezahlt hast, oder <strong>50 €</strong>, je nachdem, welcher Betrag höher ist. Einige Rechtsordnungen lassen den Ausschluss bestimmter Gewährleistungen oder Haftungsbeschränkungen nicht zu, sodass einige der oben genannten Bestimmungen möglicherweise nicht für dich gelten. Nichts in diesen Bedingungen beschränkt eine Haftung, die nach geltendem zwingendem Recht nicht beschränkt werden kann (einschließlich Haftung für Tod oder Körperverletzung durch Fahrlässigkeit oder für Betrug).',
+      s12_heading: '12. Kündigung',
+      s12_para: 'Wir behalten uns das Recht vor, deinen Zugang zu DateScan jederzeit mit oder ohne Vorankündigung auszusetzen oder zu kündigen, wenn wir vernünftigerweise glauben, dass du diese Bedingungen verletzt hast — insbesondere den Abschnitt zur Akzeptablen Nutzung und KI-Inhaltsrichtlinie. Bei Kündigung erlischt dein Recht zur Nutzung des Dienstes sofort. Du kannst deine Nutzung jederzeit durch Löschung deiner Daten beenden (siehe die <a href="privacy.html">Datenschutzerklärung</a>). Da alle Käufe einmalig und nicht wiederkehrend sind, gibt es kein Abonnement zu kündigen.',
+      s13_heading: '13. Änderungen am Dienst oder den Bedingungen',
+      s13_para: 'Wir können jeden Teil von DateScan jederzeit ändern, aussetzen oder einstellen. Wir können diese Bedingungen auch von Zeit zu Zeit überarbeiten. Das „Zuletzt aktualisiert"-Datum oben spiegelt die aktuellste Version wider. Bei wesentlichen Änderungen geben wir dir rechtzeitig vorher Bescheid in der App und auf der Startseite. Die fortgesetzte Nutzung von DateScan nach Änderungen bedeutet, dass du die überarbeiteten Bedingungen akzeptierst.',
+      s14_heading: '14. Anwendbares Recht &amp; Streitbeilegung',
+      s14_para: 'Diese Bedingungen unterliegen den Gesetzen <strong>Ungarns</strong> und der Europäischen Union, ohne Berücksichtigung von Kollisionsnormen. Streitigkeiten sind vor den zuständigen Gerichten Ungarns beizulegen. Diese Klausel entzieht Verbraucher in der EU, dem UK oder anderen Rechtsordnungen mit zwingendem Verbraucherschutz nicht dem Schutz, der ihnen durch das zwingende Recht ihres Wohnsitzlandes gewährt wird. EU-Verbraucher können auch die Online-Streitbeilegungsplattform der Europäischen Kommission unter <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a> nutzen.',
+      s15_heading: '15. Salvatorische Klausel',
+      s15_para: 'Sollte eine Bestimmung dieser Bedingungen für nicht durchsetzbar befunden werden, bleiben die übrigen Bestimmungen in voller Kraft und Wirkung.',
+      s16_heading: '16. Empfehlungsprogramm',
+      s16_intro: 'DateScan bietet ein Empfehlungsprogramm, das sowohl den Empfehlenden als auch den neuen Nutzer mit Bonuspunkten belohnt. Mit der Nutzung der Empfehlungsfunktion stimmst du den folgenden Regeln zu:',
+      s16_li1: 'Wenn du deinen Einladungslink teilst, wird deine anonyme Benutzer-ID in die URL eingebettet. Diese ID wird jedem zugänglich, der den Link erhält oder öffnet.',
+      s16_li2: 'Der empfohlene Nutzer erhält <strong>+5 Bonuspunkte</strong> bei erstmaligem Öffnen des Links. Du erhältst <strong>+5 Bonuspunkte</strong>, sobald unser Backend die Empfehlung bestätigt. Bonuspunkte werden deinem Tagespunktepool hinzugefügt und bleiben über tägliche Zurücksetzungen hinweg bestehen.',
+      s16_li3: 'Jeder Nutzer kann nur einmal empfohlen werden. Du darfst dich nicht selbst empfehlen, keine mehreren Konten zur Simulation von Empfehlungen erstellen und keine Bots, Skripte oder andere automatisierte Mittel zur Generierung von Empfehlungsboni verwenden.',
+      s16_li4: 'Wir behalten uns das Recht vor, Bonuspunkte, die durch Betrug, Missbrauch oder Verstoß gegen diese Regeln erlangt wurden, rückgängig zu machen und die Konten von Nutzern zu kündigen, die das Empfehlungsprogramm missbrauchen.',
+      s16_li5: 'Das Empfehlungsprogramm kann jederzeit ohne vorherige Ankündigung geändert oder eingestellt werden. Bereits verdiente Bonuspunkte werden nicht rückwirkend entfernt, es sei denn, sie wurden durch Betrug erlangt.',
+      s17_heading: '17. Kontakt',
+      s17_para: 'Fragen zu diesen Bedingungen? Schreib uns an <a href="mailto:info@datescan.app">info@datescan.app</a> oder kontaktiere uns über unsere Social-Media-Kanäle.',
+      footer_desc: 'Dein KI-gestützter Wingman. Scanne dein Outfit, erhalte sofortiges Stil- und Pflege-Feedback und geh selbstbewusst zum Date.',
+      footer_ondevice: 'Kamera-Scans laufen auf dem Gerät',
+      footer_legal: 'Rechtliches',
+      footer_privacy: 'Datenschutzerklärung',
+      footer_terms: 'Nutzungsbedingungen',
+      footer_refund: 'Erstattungsrichtlinie',
+      footer_delete: 'Account löschen',
+      footer_support: 'Support',
+      footer_contact: 'Support kontaktieren',
+      footer_follow: 'Folgen',
+      footer_disclaimer: 'Haftungsausschluss: DateScan ist ein KI-gestütztes Werkzeug, das ausschließlich der Unterhaltung und Steigerung des Selbstvertrauens dient. Wir garantieren keinen Dating-Erfolg oder bestimmte soziale Ergebnisse.',
+      footer_copy: '© 2026 DateScan'
+    }
+  };
+
+  // Detect language: _earlyLang > URL param > href regex > hash > cookie > nav_lang > localStorage > navigator > fallback
+  // Uses MULTIPLE channels because some TWA / Custom Tab / file:// environments strip query params.
+  // The early detection script (in <head> before Tailwind) already ran and set window._earlyLang.
+  // We trust that as the highest priority since it ran before any external script could fail.
+  var supported = ['en','hu','de'];
+  var lang = null;
+  var _detectedFrom = 'fallback';
+
+  // 0. Use early detection result (highest priority — ran before any external script)
+  if (window._earlyLang && supported.indexOf(window._earlyLang) !== -1) {
+    lang = window._earlyLang;
+    _detectedFrom = 'early_detection';
+  }
+
+  // 1. Check URL parameter (?lang=en / ?lang=de / ?lang=hu) via URLSearchParams
+  if (!lang) {
+    try {
+      var urlParams = new URLSearchParams(window.location.search);
+      var urlLang = urlParams.get('lang');
+      if (urlLang && supported.indexOf(urlLang) !== -1) {
+        lang = urlLang;
+        _detectedFrom = 'url_param';
+      }
+    } catch(e) {}
+  }
+  // 1b. Always also try href regex — critical for file:// protocol and some TWA/WebView environments
+  //     where window.location.search is empty but the full href still contains ?lang=XX
+  if (!lang) {
+    try {
+      var _href = window.location.href || '';
+      var hrefMatch = _href.match(/[?&]lang=([a-z]{2})(?:&|#|$)/i);
+      if (hrefMatch && supported.indexOf(hrefMatch[1]) !== -1) {
+        lang = hrefMatch[1];
+        _detectedFrom = 'url_param(href_regex)';
+      }
+    } catch(e) {}
+  }
+  // 2. Check hash parameter (#lang=hu) — survives all redirect/cache stripping
+  if (!lang) {
+    try {
+      var _href2 = window.location.href || '';
+      var hashStr = window.location.hash || '';
+      // Fallback: also try extracting hash from href when location.hash is empty
+      if (!hashStr && _href2.indexOf('#') !== -1) {
+        hashStr = _href2.substring(_href2.indexOf('#'));
+      }
+      var hashMatch = hashStr.match(/[#&]lang=([a-z]{2})/i);
+      if (hashMatch && supported.indexOf(hashMatch[1]) !== -1) {
+        lang = hashMatch[1];
+        _detectedFrom = 'hash';
+      }
+    } catch(e) {}
+  }
+  // 2b. Check cookie (datescan_lang=de) — works across file:// and incognito in some browsers
+  if (!lang) {
+    try {
+      var cookieMatch = document.cookie.match(/(?:^|;\s*)datescan_lang=([a-z]{2})/i);
+      if (cookieMatch && supported.indexOf(cookieMatch[1]) !== -1) {
+        lang = cookieMatch[1];
+        _detectedFrom = 'cookie';
+      }
+    } catch(e) {}
+  }
+  // 3. Check datescan.nav_lang (written by index.html click delegate right before navigation)
+  if (!lang) {
+    try {
+      var navLang = localStorage.getItem('datescan.nav_lang');
+      if (navLang && supported.indexOf(navLang) !== -1) {
+        lang = navLang;
+        _detectedFrom = 'nav_lang';
+      }
+    } catch(e) {}
+  }
+  // 4. Check datescan.lang (main app storage)
+  if (!lang) {
+    try {
+      var stored = localStorage.getItem('datescan.lang');
+      if (stored && stored.indexOf('auto:') === 0) {
+        var autoLang = stored.substring(5);
+        if (supported.indexOf(autoLang) !== -1) {
+          lang = autoLang;
+          _detectedFrom = 'localStorage(auto:' + autoLang + ')';
+        }
+      } else if (stored && supported.indexOf(stored) !== -1) {
+        lang = stored;
+        _detectedFrom = 'localStorage(' + stored + ')';
+      }
+    } catch(e) {}
+  }
+  // 5. Detect from browser/navigator
+  if (!lang) {
+    try {
+      var navLangs = navigator.languages && navigator.languages.length
+        ? Array.prototype.slice.call(navigator.languages)
+        : [navigator.language || navigator.userLanguage || ''];
+      for (var i = 0; i < navLangs.length; i++) {
+        var p = (navLangs[i] || '').split('-')[0].toLowerCase();
+        if (p === 'hu') { lang = 'hu'; _detectedFrom = 'navigator'; break; }
+        if (p === 'de') { lang = 'de'; _detectedFrom = 'navigator'; break; }
+      }
+    } catch(e) {}
+  }
+  // 6. Final fallback
+  if (!lang) lang = 'en';
+  console.log('[terms.html] lang=' + lang + ' from=' + _detectedFrom + ' earlyLang=' + (window._earlyLang||'none') + ' href=' + (window.location.href||''));
+
+  var strings = translations[lang] || translations.en;
+  document.documentElement.lang = lang;
+  document.title = strings.page_title;
+  var metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc) metaDesc.setAttribute('content', strings.meta_desc);
+
+  // Helper to set text by data-i18n key
+  function applyI18n() {
+    document.querySelectorAll('[data-i18n]').forEach(function(el) {
+      var key = el.getAttribute('data-i18n');
+      if (strings[key] !== undefined) el.textContent = strings[key];
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+      var key = el.getAttribute('data-i18n-html');
+      if (strings[key] !== undefined) el.innerHTML = strings[key];
+    });
+  }
+
+  // Update all subpage links in this page to include ?lang=XX
+  function updateSubpageLinks() {
+    var subpages = ['privacy.html','contact.html','terms.html','refund.html','delete-account.html'];
+    document.querySelectorAll('a[href]').forEach(function(a) {
+      var href = a.getAttribute('href') || '';
+      for (var i = 0; i < subpages.length; i++) {
+        if (href.indexOf(subpages[i]) !== -1) {
+          var base = href;
+          var hash = '';
+          var hashIdx = href.indexOf('#');
+          if (hashIdx !== -1) { hash = href.substring(hashIdx); base = href.substring(0, hashIdx); }
+          var qIdx = base.indexOf('?');
+          if (qIdx !== -1) {
+            var params = base.substring(qIdx + 1).split('&').filter(function(p) { return p.indexOf('lang=') !== 0; });
+            base = base.substring(0, qIdx) + (params.length ? '?' + params.join('&') : '');
+          }
+          var sep = base.indexOf('?') !== -1 ? '&' : '?';
+          a.setAttribute('href', base + sep + 'lang=' + lang + hash);
+          break;
+        }
+      }
+    });
+    // Also update "Back to app" links to preserve language
+    document.querySelectorAll('a[href*="index.html"]').forEach(function(a) {
+      var href = a.getAttribute('href') || '';
+      if (href.indexOf('lang=') === -1) {
+        var sep = href.indexOf('?') !== -1 ? '&' : '?';
+        a.setAttribute('href', href + sep + 'lang=' + lang);
+      }
+    });
+  }
+
+  // Expose for later use
+  window._termsLang = lang;
+  window._termsStrings = strings;
+  window._termsApplyI18n = applyI18n;
+
+  // Apply i18n — aggressive retry strategy to handle all browser/protocol combos:
+  //   - file:// protocol may delay DOMContentLoaded
+  //   - External CDN scripts (Tailwind) may block events
+  //   - Some browsers fire DOMContentLoaded before all elements are in the DOM
+  var _initDone = false;
+  function init() {
+    if (_initDone) return;
+    _initDone = true;
+    applyI18n();
+    updateSubpageLinks();
+  }
+  // Try immediately if DOM already ready
+  if (document.readyState !== 'loading') {
+    init();
+  }
+  // Also listen for DOMContentLoaded
+  document.addEventListener('DOMContentLoaded', init);
+  // Belt-and-suspenders: retry on load + multiple delays
+  window.addEventListener('load', function() {
+    if (!_initDone) init();
+    // Always re-apply on load to catch any missed elements
+    applyI18n();
+    updateSubpageLinks();
+  });
+  // Aggressive retries: 50ms, 200ms, 500ms, 1500ms — covers slow CDN, file:// delays, TWA
+  setTimeout(function() { applyI18n(); updateSubpageLinks(); }, 50);
+  setTimeout(function() { applyI18n(); updateSubpageLinks(); }, 200);
+  setTimeout(function() { applyI18n(); updateSubpageLinks(); }, 500);
+  setTimeout(function() { applyI18n(); updateSubpageLinks(); }, 1500);
+})();
+</script>
+
+<!-- ============================================================
+     DateScan — LOVE-AT-FIRST-SIGHT visual layer
+     Pure cosmetic overrides. Zero layout / markup changes.
+     Loads last in <head> so cascade wins over Tailwind CDN + local
+     styles. Remove this single <style id="ds-love-layer"> block to revert.
+     ============================================================ -->
+<style id="ds-love-layer">
+  /* ---------- design tokens ---------- */
+  :root{
+    --love-coral:#ff7eb3; --love-rose:#ff5a87; --love-pink:#ec4899;
+    --love-magenta:#d946ef; --love-violet:#a855f7; --love-deep-violet:#7c3aed;
+    --love-ink:#0a0712; --love-ink-2:#140a22;
+    --love-radius-sm:14px; --love-radius-md:20px;
+    --love-radius-lg:28px; --love-radius-xl:36px;
+    --love-shadow-2:0 1px 0 rgba(255,255,255,0.07) inset, 0 10px 30px -10px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.35);
+    --love-shadow-3:0 1px 0 rgba(255,255,255,0.08) inset, 0 24px 60px -20px rgba(124,58,237,0.35), 0 12px 30px -12px rgba(236,72,153,0.25);
+    --love-shadow-cta:0 8px 24px -6px rgba(236,72,153,0.55), 0 4px 12px -4px rgba(168,85,247,0.45), 0 1px 0 rgba(255,255,255,0.18) inset;
+  }
+
+  /* ---------- typography ---------- */
+  html, body{
+    font-family:'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    font-feature-settings:'ss01' on, 'cv11' on, 'calt' on;
+    letter-spacing:-0.005em;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  h1, h2, h3, .font-serif{ letter-spacing:-0.022em; }
+  .font-serif{ font-feature-settings:'lnum' on, 'ss02' on; }
+
+  /* ---------- sunset canvas ---------- */
+  body{
+    background-color:var(--love-ink) !important;
+    background-image:
+      radial-gradient(ellipse 90% 60% at 18% -8%, rgba(255,126,179,0.22) 0%, rgba(255,126,179,0) 55%),
+      radial-gradient(ellipse 80% 55% at 110% 8%, rgba(168,85,247,0.22) 0%, rgba(168,85,247,0) 55%),
+      radial-gradient(ellipse 100% 70% at 50% 120%, rgba(124,58,237,0.28) 0%, rgba(124,58,237,0) 60%),
+      linear-gradient(180deg,#0c0714 0%,#0a0712 55%,#080510 100%) !important;
+    background-attachment:fixed;
+    position:relative;
+  }
+  /* film grain */
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    opacity:0.05; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  /* ambient aurora — injected for pages without one */
+  body::after{
+    content:""; position:fixed; top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    width:140vw; height:140vh; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(circle at 15% 25%, rgba(255,90,135,0.16) 0%, transparent 42%),
+      radial-gradient(circle at 85% 30%, rgba(168,85,247,0.16) 0%, transparent 42%),
+      radial-gradient(circle at 50% 90%, rgba(236,72,153,0.14) 0%, transparent 45%),
+      radial-gradient(circle at 75% 75%, rgba(124,58,237,0.12) 0%, transparent 45%);
+    filter:blur(40px) saturate(1.1);
+    animation:love-aurora 22s ease-in-out infinite alternate;
+  }
+  @keyframes love-aurora{
+    0%{ transform:translate(-50%,-50%) scale(1) rotate(0); }
+    50%{ transform:translate(-48%,-52%) scale(1.05) rotate(2deg); }
+    100%{ transform:translate(-52%,-48%) scale(0.98) rotate(-2deg); }
+  }
+  /* lift actual content above the aurora */
+  body > *:not(style):not(script){ position:relative; z-index:1; }
+
+  /* ---------- glass surfaces ---------- */
+  .bg-white\/5, .bg-white\/\[0\.03\]{
+    background:linear-gradient(180deg,rgba(255,255,255,0.06) 0%,rgba(255,255,255,0.025) 100%) !important;
+    -webkit-backdrop-filter:blur(14px) saturate(140%); backdrop-filter:blur(14px) saturate(140%);
+  }
+  .bg-white\/10{
+    background:linear-gradient(180deg,rgba(255,255,255,0.10) 0%,rgba(255,255,255,0.05) 100%) !important;
+    -webkit-backdrop-filter:blur(18px) saturate(150%); backdrop-filter:blur(18px) saturate(150%);
+  }
+  .bg-white\/20{
+    background:linear-gradient(180deg,rgba(255,255,255,0.18) 0%,rgba(255,255,255,0.10) 100%) !important;
+    -webkit-backdrop-filter:blur(22px) saturate(160%); backdrop-filter:blur(22px) saturate(160%);
+  }
+  .bg-dark-950\/80, .bg-dark-950\/95,
+  .bg-\[\#09090b\], .bg-\[\#09090b\]\/95, .bg-\[\#0f0f14\]\/95,
+  .bg-black\/60, .bg-black\/70, .bg-black\/80, .bg-black\/85, .bg-black\/90{
+    background:linear-gradient(180deg,rgba(20,10,34,0.82) 0%,rgba(10,7,18,0.92) 100%) !important;
+    -webkit-backdrop-filter:blur(24px) saturate(160%); backdrop-filter:blur(24px) saturate(160%);
+  }
+  .bg-black\/30, .bg-black\/40, .bg-black\/50{
+    background:linear-gradient(180deg,rgba(20,10,34,0.55) 0%,rgba(10,7,18,0.70) 100%) !important;
+    -webkit-backdrop-filter:blur(16px) saturate(140%); backdrop-filter:blur(16px) saturate(140%);
+  }
+
+  /* ---------- radii ---------- */
+  .rounded-xl{ border-radius:var(--love-radius-sm) !important; }
+  .rounded-2xl{ border-radius:var(--love-radius-md) !important; }
+  .rounded-3xl, .rounded-\[24px\], .rounded-\[28px\]{ border-radius:var(--love-radius-lg) !important; }
+  .rounded-\[32px\]{ border-radius:var(--love-radius-xl) !important; }
+
+  .rounded-2xl.border, .rounded-3xl.border,
+  .rounded-\[24px\].border, .rounded-\[28px\].border{ box-shadow:var(--love-shadow-2); }
+  .rounded-2xl.shadow-2xl, .rounded-3xl.shadow-2xl,
+  .shadow-2xl.border{ box-shadow:var(--love-shadow-3) !important; }
+
+  /* ---------- borders ---------- */
+  .border-white\/5{ border-color:rgba(255,255,255,0.07) !important; }
+  .border-white\/10{ border-color:rgba(255,255,255,0.12) !important; }
+  .border-white\/15{ border-color:rgba(255,255,255,0.16) !important; }
+  .border-white\/20{ border-color:rgba(255,255,255,0.22) !important; }
+
+  /* ---------- brand gradient → sunset ---------- */
+  .from-brand-500.to-purple-500,
+  .from-brand-400.via-pink-400.to-purple-400,
+  .from-brand-500.via-\[\#db2777\].to-purple-500,
+  .from-\[\#ec4899\].to-\[\#9333ea\],
+  .from-pink-500.to-purple-500,
+  .from-pink-500.to-purple-600{
+    background-image:linear-gradient(135deg,#ff7eb3 0%,#ff5a87 30%,#ec4899 55%,#a855f7 85%,#7c3aed 100%) !important;
+  }
+
+  /* ---------- CTA buttons ---------- */
+  button.bg-gradient-to-tr.from-brand-500.to-purple-500,
+  button.bg-gradient-to-r.from-brand-500.to-purple-500,
+  a.bg-gradient-to-tr.from-brand-500.to-purple-500,
+  a.bg-gradient-to-r.from-brand-500.to-purple-500,
+  a.bg-gradient-to-tr.from-pink-500.to-purple-500,
+  a.bg-gradient-to-r.from-pink-500.to-purple-500,
+  button.bg-brand-500, a.bg-brand-500,
+  .bg-gradient-to-tr.from-brand-500.to-purple-500.shadow-lg,
+  .bg-gradient-to-r.from-brand-500.to-purple-500.shadow-lg{
+    position:relative;
+    box-shadow:var(--love-shadow-cta) !important;
+    transition:transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s ease, filter .25s ease !important;
+    letter-spacing:0.005em;
+  }
+  button.bg-gradient-to-tr.from-brand-500.to-purple-500:hover,
+  button.bg-gradient-to-r.from-brand-500.to-purple-500:hover,
+  a.bg-gradient-to-tr.from-brand-500.to-purple-500:hover,
+  a.bg-gradient-to-r.from-brand-500.to-purple-500:hover,
+  a.bg-gradient-to-tr.from-pink-500.to-purple-500:hover,
+  a.bg-gradient-to-r.from-pink-500.to-purple-500:hover,
+  button.bg-brand-500:hover, a.bg-brand-500:hover{
+    filter:brightness(1.06) saturate(1.05);
+    box-shadow:
+      0 14px 34px -8px rgba(236,72,153,0.65),
+      0 6px 18px -4px rgba(168,85,247,0.55),
+      0 1px 0 rgba(255,255,255,0.22) inset !important;
+  }
+  button.bg-gradient-to-tr.from-brand-500.to-purple-500:active,
+  button.bg-gradient-to-r.from-brand-500.to-purple-500:active,
+  a.bg-gradient-to-tr.from-brand-500.to-purple-500:active,
+  a.bg-gradient-to-r.from-brand-500.to-purple-500:active{
+    transform:translateY(1px) scale(0.985);
+  }
+  @keyframes love-pulse-glow{
+    0%,100%{ box-shadow:var(--love-shadow-cta); }
+    50%{ box-shadow:
+      0 10px 30px -6px rgba(236,72,153,0.70),
+      0 4px 14px -4px rgba(168,85,247,0.55),
+      0 0 0 6px rgba(236,72,153,0.08),
+      0 1px 0 rgba(255,255,255,0.20) inset; }
+  }
+
+  /* ---------- chips / pills ---------- */
+  .bg-brand-500\/10, .bg-brand-500\/15{
+    background:linear-gradient(135deg,rgba(255,126,179,0.14),rgba(168,85,247,0.10)) !important;
+    border-color:rgba(244,114,182,0.24);
+  }
+  .bg-brand-500\/20{ background:linear-gradient(135deg,rgba(255,126,179,0.22),rgba(168,85,247,0.16)) !important; }
+  .bg-brand-500\/30{ background:linear-gradient(135deg,rgba(255,126,179,0.30),rgba(168,85,247,0.22)) !important; }
+  .bg-purple-500\/10{ background:linear-gradient(135deg,rgba(168,85,247,0.14),rgba(124,58,237,0.10)) !important; }
+  .bg-purple-500\/20{ background:linear-gradient(135deg,rgba(168,85,247,0.22),rgba(124,58,237,0.16)) !important; }
+  .bg-emerald-500\/10{ background:linear-gradient(135deg,rgba(52,211,153,0.14),rgba(16,185,129,0.08)) !important; }
+  .bg-emerald-500\/20{ background:linear-gradient(135deg,rgba(52,211,153,0.26),rgba(16,185,129,0.16)) !important; }
+  .bg-amber-500\/10{ background:linear-gradient(135deg,rgba(251,191,36,0.14),rgba(249,115,22,0.08)) !important; }
+  .bg-red-500\/10{ background:linear-gradient(135deg,rgba(251,113,133,0.14),rgba(239,68,68,0.08)) !important; }
+  .bg-red-500\/15{ background:linear-gradient(135deg,rgba(251,113,133,0.20),rgba(239,68,68,0.12)) !important; }
+
+  /* ---------- text gradients ---------- */
+  .bg-clip-text.bg-gradient-to-r.from-brand-500.to-purple-500,
+  .bg-clip-text.bg-gradient-to-tr.from-brand-500.to-purple-500,
+  .bg-clip-text.bg-gradient-to-br.from-brand-500.to-purple-500,
+  .bg-clip-text.from-pink-500.to-purple-500,
+  .bg-clip-text.from-pink-400.to-purple-400{
+    background-image:linear-gradient(135deg,#ff9ec7 0%,#ff6a88 30%,#ec4899 55%,#c084fc 85%,#a855f7 100%) !important;
+  }
+
+  /* ---------- inputs ---------- */
+  input, textarea, select{
+    transition:border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+  }
+  input:focus, textarea:focus, select:focus{
+    box-shadow:
+      0 0 0 4px rgba(236,72,153,0.14),
+      0 0 0 1px rgba(236,72,153,0.55) inset;
+    outline:none !important;
+  }
+
+  /* ---------- focus visible ---------- */
+  :focus-visible{
+    outline:none;
+    box-shadow:
+      0 0 0 2px rgba(10,7,18,1),
+      0 0 0 4px rgba(236,72,153,0.55) !important;
+    border-radius:inherit;
+  }
+  button:focus-visible, a:focus-visible{ outline:none; }
+
+  /* ---------- nav blur ---------- */
+  nav[class*="fixed"], nav[class*="sticky"],
+  [role="navigation"][class*="fixed"], [role="navigation"][class*="sticky"],
+  .fixed.bottom-0[class*="bg-"]{
+    -webkit-backdrop-filter:blur(28px) saturate(170%);
+    backdrop-filter:blur(28px) saturate(170%);
+    border-top-color:rgba(255,255,255,0.08) !important;
+  }
+
+  /* ---------- micro-interactions: card lift ---------- */
+  a.rounded-2xl, a.rounded-3xl,
+  button.rounded-2xl, button.rounded-3xl,
+  [role="button"].rounded-2xl, [role="button"].rounded-3xl{
+    transition:transform .28s cubic-bezier(.2,.8,.2,1),
+               box-shadow .28s ease, border-color .28s ease, background-color .28s ease;
+  }
+  a.rounded-2xl:hover, a.rounded-3xl:hover,
+  button.rounded-2xl:hover, button.rounded-3xl:hover{ transform:translateY(-2px); }
+  a.rounded-2xl:active, a.rounded-3xl:active,
+  button.rounded-2xl:active, button.rounded-3xl:active{ transform:translateY(0) scale(0.99); }
+
+  /* ---------- shimmer on brand gradient cards ---------- */
+  .from-brand-500.to-purple-500.rounded-2xl,
+  .from-brand-500.to-purple-500.rounded-3xl{ position:relative; overflow:hidden; }
+  .from-brand-500.to-purple-500.rounded-2xl::after,
+  .from-brand-500.to-purple-500.rounded-3xl::after{
+    content:""; position:absolute; top:0; left:-60%;
+    width:60%; height:100%;
+    background:linear-gradient(100deg,transparent 0%,rgba(255,255,255,0.16) 50%,transparent 100%);
+    transform:skewX(-18deg); pointer-events:none;
+    animation:love-shimmer 5.5s ease-in-out 1s infinite;
+  }
+  @keyframes love-shimmer{
+    0%{ left:-60%; } 55%{ left:120%; } 100%{ left:120%; }
+  }
+
+  /* ---------- text color warm-up for dark surfaces ---------- */
+  .text-gray-400{ color:#b8a8c4 !important; }
+  .text-gray-500{ color:#94839f !important; }
+
+  /* ---------- selection + scrollbar ---------- */
+  ::selection{ background:rgba(236,72,153,0.32); color:#fff; }
+  @media (min-width:1024px){
+    *::-webkit-scrollbar-thumb{
+      background-image:linear-gradient(180deg,rgba(236,72,153,0.55),rgba(168,85,247,0.55)) !important;
+    }
+  }
+
+  /* ---------- safety: keep media pristine ---------- */
+  video, canvas, img{
+    backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
+  }
+
+  /* ---------- reduced motion ---------- */
+  @media (prefers-reduced-motion:reduce){
+    body::after{ animation:none !important; }
+    .from-brand-500.to-purple-500.rounded-2xl::after,
+    .from-brand-500.to-purple-500.rounded-3xl::after{ animation:none !important; display:none; }
+    a.rounded-2xl:hover, a.rounded-3xl:hover,
+    button.rounded-2xl:hover, button.rounded-3xl:hover{ transform:none; }
+  }
+</style>
 </head>
 <body class="antialiased">
 <div class="ambient-glow"></div>
-<a href="/index.html" aria-label="Back to app" class="lg:hidden fixed top-10 right-6 z-30 w-11 h-11 flex items-center justify-center rounded-full border border-white/10 bg-[#0f0f14]/80 backdrop-blur-md text-gray-300 hover:text-white hover:border-brand-500/50 hover:bg-brand-500/10 hover:shadow-[0_0_16px_rgba(236,72,153,0.25)] active:scale-95 transition-all" style="top: calc(env(safe-area-inset-top, 0px) + 2.5rem);">
+<a href="index.html?desktop=1" aria-label="Back to app" data-i18n-attr-aria-label="back_to_app" class="fixed top-10 right-6 z-30 w-11 h-11 flex items-center justify-center rounded-full border border-white/10 bg-[#0f0f14]/80 backdrop-blur-md text-gray-300 hover:text-white hover:border-brand-500/50 hover:bg-brand-500/10 hover:shadow-[0_0_16px_rgba(236,72,153,0.25)] active:scale-95 transition-all" style="top: calc(env(safe-area-inset-top, 0px) + 2.5rem);">
   <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
     <path d="M15 18l-6-6 6-6"/>
   </svg>
@@ -43,7 +971,7 @@
 
 
 <header class="relative z-10 max-w-3xl mx-auto px-6 pt-10 pb-8">
-  <a href="/" class="inline-flex items-center gap-3 group">
+  <a href="index.html?desktop=1" class="inline-flex items-center gap-3 group">
     <div class="w-12 h-12 flex items-center justify-center shrink-0">
       <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-[0_0_8px_rgba(236,72,153,0.4)]">
         <defs>
@@ -62,162 +990,175 @@
     </div>
     <div class="flex flex-col">
       <h1 class="font-bold text-xl md:text-2xl tracking-tight leading-none text-white group-hover:text-brand-400 transition-colors">DateScan<span class="text-brand-500">.</span></h1>
-      <span class="text-[10px] text-gray-400 font-medium uppercase tracking-widest mt-1">Personal Style Coach</span>
+      <span class="text-[10px] text-gray-400 font-medium uppercase tracking-widest mt-1" data-i18n="subtitle_tag">Personal Style Coach</span>
     </div>
   </a>
 </header>
 
 <main class="relative z-10 max-w-3xl mx-auto px-6 pb-20">
   <div class="mb-10 pb-8 border-b border-white/10">
-    <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-3">Legal</div>
-    <h1 class="font-serif text-4xl sm:text-5xl font-medium text-white mb-3">Terms of Service</h1>
-    <p class="text-sm text-gray-500">Last updated: April 15, 2026</p>
+    <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-3" data-i18n="legal_badge">Legal</div>
+    <h1 class="font-serif text-4xl sm:text-5xl font-medium text-white mb-3" data-i18n="main_title">Terms of Service</h1>
+    <p class="text-sm text-gray-500" data-i18n="last_updated">Last updated: April 18, 2026</p>
   </div>
 
   <article class="prose-custom">
-    <p>Welcome to DateScan. By accessing or using our service at <a href="https://datescan.app/">https://datescan.app/</a>, you agree to be bound by these Terms of Service ("Terms"). If you don't agree, please don't use the service.</p>
+    <p data-i18n-html="intro_para">Welcome to DateScan. By accessing or using our service at <a href="https://datescan.app/">https://datescan.app/</a>, you agree to be bound by these Terms of Service ("Terms"). If you don't agree, please don't use the service.</p>
 
     <div class="my-6 p-6 rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/10 to-purple-500/5">
-      <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-2">18+ Only</div>
-      <p class="text-white text-base mb-0"><strong>DateScan is intended exclusively for adults aged 18 or older.</strong> By using the service you represent and warrant that you meet this age requirement. We do not knowingly allow minors to use DateScan.</p>
+      <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-2" data-i18n="only_18_badge">18+ Only</div>
+      <p class="text-white text-base mb-0" data-i18n-html="only_18_para"><strong>DateScan is intended exclusively for adults aged 18 or older.</strong> By using the service you represent and warrant that you meet this age requirement. We do not knowingly allow minors to use DateScan.</p>
     </div>
 
     <div class="my-6 p-6 rounded-2xl border-2 border-amber-500/50 bg-gradient-to-br from-amber-500/15 to-red-500/5">
-      <div class="text-[10px] uppercase tracking-widest text-amber-400 font-bold mb-3">Important — Please Read</div>
-      <p class="text-white text-base mb-3"><strong>Disclaimer: DateScan is an AI-powered tool designed for entertainment and confidence-boosting purposes only. We do not guarantee dating success or specific social outcomes.</strong></p>
-      <p class="text-gray-100 text-sm mb-3"><strong>We do not accept any liability for advice, suggestions, scores, or any other output produced by the artificial intelligence — including outputs that may turn out to be inaccurate, misleading, biased, offensive, or otherwise inappropriate.</strong> AI models can and do make mistakes. The AI Style Coach is not a substitute for professional advice (fashion, medical, psychological, legal, dating, or otherwise) and any reliance you place on its output is strictly at your own risk.</p>
-      <p class="text-gray-100 text-sm mb-0">Use of DateScan signifies your acknowledgement and acceptance of this disclaimer. The full terms governing warranties and liability are set out in <a href="#section-10" class="text-amber-300 underline">§10</a> and <a href="#section-11" class="text-amber-300 underline">§11</a> below.</p>
+      <div class="text-[10px] uppercase tracking-widest text-amber-400 font-bold mb-3" data-i18n="important_badge">Important — Please Read</div>
+      <p class="text-white text-base mb-3" data-i18n-html="disclaimer_para1"><strong>Disclaimer: DateScan is an AI-powered tool designed for entertainment and confidence-boosting purposes only. We do not guarantee dating success or specific social outcomes.</strong></p>
+      <p class="text-gray-100 text-sm mb-3" data-i18n-html="disclaimer_para2"><strong>We do not accept any liability for advice, suggestions, scores, or any other output produced by the artificial intelligence — including outputs that may turn out to be inaccurate, misleading, biased, offensive, or otherwise inappropriate.</strong> AI models can and do make mistakes. The AI Style Coach is not a substitute for professional advice (fashion, medical, psychological, legal, dating, or otherwise) and any reliance you place on its output is strictly at your own risk.</p>
+      <p class="text-gray-100 text-sm mb-0" data-i18n-html="disclaimer_para3">Use of DateScan signifies your acknowledgement and acceptance of this disclaimer. The full terms governing warranties and liability are set out in <a href="#section-10" class="text-amber-300 underline">§10</a> and <a href="#section-11" class="text-amber-300 underline">§11</a> below.</p>
     </div>
 
-    <h2>1. The Service</h2>
-    <p>DateScan is an AI-powered style coach available (a) as a Progressive Web App at <a href="https://datescan.app/">https://datescan.app/</a> and (b) as an Android app distributed via the Google Play Store. It offers two main features:</p>
+    <h2 data-i18n="s1_heading">1. The Service</h2>
+    <p data-i18n-html="s1_para">DateScan is an AI-powered style coach available (a) as a Progressive Web App at <a href="https://datescan.app/">https://datescan.app/</a> and (b) as an Android app distributed via the Google Play Store. It offers two main features:</p>
     <ul>
-      <li><strong>On-device camera scan</strong> — uses browser-based AI (MediaPipe) to analyze your outfit, grooming, posture, and lighting from a live camera feed. All scan processing happens locally on your device; no images are uploaded.</li>
-      <li><strong>AI Style Coach chat</strong> — a text/image chat that sends your messages over HTTPS to our Cloudflare Workers backend, which forwards them to our inference partner (Novita.ai, GLM-4.6V) to generate replies. See our <a href="/privacy.html">Privacy Policy</a> for the data flow.</li>
+      <li data-i18n-html="s1_li1"><strong>On-device camera scan</strong> — uses browser-based AI (MediaPipe) to analyze your outfit, grooming, posture, and lighting from a live camera feed. All scan processing happens locally on your device; no images are uploaded.</li>
+      <li data-i18n-html="s1_li2"><strong>AI Style Coach chat</strong> — a text/image chat that sends your messages over HTTPS to our Cloudflare Workers backend, which forwards them to a third-party vision-language model provider (currently <strong>OpenAI</strong> and/or <strong>Anthropic</strong>, subject to change) to generate replies. See our <a href="privacy.html">Privacy Policy</a> for the data flow.</li>
     </ul>
 
-    <h2>2. Suggestions, Not Professional Advice</h2>
-    <p>DateScan's feedback is generated by an AI model and is provided <strong>for entertainment and self-improvement purposes only</strong>. The output consists of <strong>style suggestions</strong>, not:</p>
+    <h2 data-i18n="s2_heading">2. Suggestions, Not Professional Advice</h2>
+    <p data-i18n-html="s2_para">DateScan's feedback is generated by an AI model and is provided <strong>for entertainment and self-improvement purposes only</strong>. The output consists of <strong>style suggestions</strong>, not:</p>
     <ul>
-      <li>Professional fashion, styling, or image consulting</li>
-      <li>Medical, dermatological, or health advice</li>
-      <li>Psychological, counselling, or mental-health guidance</li>
-      <li>Dating, relationship, or social coaching</li>
+      <li data-i18n="s2_li1">Professional fashion, styling, or image consulting</li>
+      <li data-i18n="s2_li2">Medical, dermatological, or health advice</li>
+      <li data-i18n="s2_li3">Psychological, counselling, or mental-health guidance</li>
+      <li data-i18n="s2_li4">Dating, relationship, or social coaching</li>
     </ul>
-    <p>The AI can and does make mistakes — including generating inaccurate, biased, or occasionally inappropriate responses. You should never rely on DateScan's output as a substitute for a qualified professional. If you have concerns about your physical or mental health — including skin conditions, posture-related issues, body-image concerns, or eating disorders — please consult a licensed professional. If you are in crisis, please contact your local emergency services or a crisis hotline (in the US: 988; UK: 116 123; EU: 112).</p>
+    <p data-i18n="s2_para2">The AI can and does make mistakes — including generating inaccurate, biased, or occasionally inappropriate responses. You should never rely on DateScan's output as a substitute for a qualified professional. If you have concerns about your physical or mental health — including skin conditions, posture-related issues, body-image concerns, or eating disorders — please consult a licensed professional. If you are in crisis, please contact your local emergency services or a crisis hotline (in the US: 988; UK: 116 123; EU: 112).</p>
 
-    <h2>3. Age Requirement — 18+ Only</h2>
-    <p>You must be at least <strong>18 years old</strong> to use DateScan. By creating an account, downloading the app, or otherwise using the Service, you represent and warrant that you are 18 years of age or older. The Service is not designed for, marketed to, or suitable for minors.</p>
+    <h2 data-i18n="s3_heading">3. Age Requirement — 18+ Only</h2>
+    <p data-i18n-html="s3_para">You must be at least <strong>18 years old</strong> to use DateScan. By creating an account, downloading the app, or otherwise using the Service, you represent and warrant that you are 18 years of age or older. The Service is not designed for, marketed to, or suitable for minors.</p>
 
-    <h3>3.1 Age gate and self-declaration</h3>
-    <p>Before you can access the camera scanner or AI Style Coach, you must confirm your age via the on-screen <strong>"I am 18 or older"</strong> gate. We record the date, time, and a coarse technical identifier of that confirmation as evidence of your declaration. Submitting a false age declaration is a <strong>material breach of these Terms</strong> and, in many jurisdictions, also constitutes fraud or misrepresentation. We reserve the right to rely entirely on your declaration for the purposes of granting access.</p>
+    <h3 data-i18n="s3_1_heading">3.1 Age gate and self-declaration</h3>
+    <p data-i18n-html="s3_1_para">Before you can access the camera scanner or AI Style Coach, you must confirm your age via the on-screen <strong>"I am 18 or older"</strong> gate. We record the date, time, and a coarse technical identifier of that confirmation as evidence of your declaration. Submitting a false age declaration is a <strong>material breach of these Terms</strong> and, in many jurisdictions, also constitutes fraud or misrepresentation. We reserve the right to rely entirely on your declaration for the purposes of granting access.</p>
 
-    <h3>3.2 Parental and guardian responsibility</h3>
-    <p>If you are a parent or legal guardian and you discover that a person under 18 in your care has used DateScan, please contact us immediately at the address in Section 16 so that we can terminate the account and delete any associated data. Parents and guardians are responsible for supervising minors' use of internet-connected devices in their household; DateScan cannot substitute for that supervision.</p>
+    <h3 data-i18n="s3_2_heading">3.2 Parental and guardian responsibility</h3>
+    <p data-i18n="s3_2_para">If you are a parent or legal guardian and you discover that a person under 18 in your care has used DateScan, please contact us immediately at the address in Section 16 so that we can terminate the account and delete any associated data. Parents and guardians are responsible for supervising minors' use of internet-connected devices in their household; DateScan cannot substitute for that supervision.</p>
 
-    <h3>3.3 No knowing collection from minors</h3>
-    <p>We do not knowingly collect personal information from anyone under 18. If we become aware — whether through a user report, a parent/guardian notice, payment metadata, or our own moderation — that a user is under 18, we will <strong>terminate their access immediately</strong>, revoke any active Pro access, and delete associated data in accordance with our <a href="/privacy.html">Privacy Policy</a>. This applies regardless of any earlier age declaration.</p>
+    <h3 data-i18n="s3_3_heading">3.3 No knowing collection from minors</h3>
+    <p data-i18n-html="s3_3_para">We do not knowingly collect personal information from anyone under 18. If we become aware — whether through a user report, a parent/guardian notice, payment metadata, or our own moderation — that a user is under 18, we will <strong>terminate their access immediately</strong>, revoke any active Pro access, and delete associated data in accordance with our <a href="privacy.html">Privacy Policy</a>. This applies regardless of any earlier age declaration.</p>
 
-    <h3>3.4 Reporting an underage user</h3>
-    <p>If you believe a DateScan user is under 18, please email us at the address in Section 16 with the subject line <strong>"Underage user report"</strong>. We aim to action verified reports within 72 hours.</p>
+    <h3 data-i18n="s3_4_heading">3.4 Reporting an underage user</h3>
+    <p data-i18n-html="s3_4_para">If you believe a DateScan user is under 18, please email us at the address in Section 16 with the subject line <strong>"Underage user report"</strong>. We aim to act on verified reports within 72 hours.</p>
 
-    <h2>4. Your Account and Access</h2>
-    <p>DateScan's free tier does not require an account. It includes <strong>5 points per day</strong>, where each scan or AI Style Coach chat message consumes <strong>1 point</strong>, with the pool resetting 24 hours after your first spend. You can spend your points however you like — all on scans, all on chat, or any mix. Paid plans are tied to your device via a browser identifier; if you clear your browser data, your Pro status on that device may be lost — see our <a href="/refund.html">Refund Policy</a> for recovery instructions.</p>
+    <h2 data-i18n="s4_heading">4. Your Account and Access</h2>
+    <p data-i18n-html="s4_para">DateScan's free tier does not require an account. It includes <strong>5 points per day</strong>, where each scan or AI Style Coach chat message consumes <strong>1 point</strong>, with the pool resetting 24 hours after your first spend. You can spend your points however you like — all on scans, all on chat, or any mix. Paid plans are tied to your device via a browser identifier; if you clear your browser data, your Pro status on that device may be lost — see our <a href="refund.html">Refund Policy</a> for recovery instructions.</p>
 
-    <h2>5. Acceptable Use &amp; AI Content Policy</h2>
-    <p>When using DateScan, you agree <strong>not</strong> to submit, upload, or share any of the following to the camera scanner or the AI Style Coach chat:</p>
+    <h2 data-i18n="s5_heading">5. Acceptable Use &amp; AI Content Policy</h2>
+    <p data-i18n-html="s5_para">When using DateScan, you agree <strong>not</strong> to submit, upload, or share any of the following to the camera scanner or the AI Style Coach chat:</p>
     <ul>
-      <li>Images or descriptions of <strong>anyone under 18 years of age</strong>, under any circumstances. This is a zero-tolerance rule.</li>
-      <li>Sexually explicit, nude, or suggestive content.</li>
-      <li>Images of other people without their explicit, informed consent.</li>
-      <li>Content intended to harass, bully, defame, threaten, or harm another person.</li>
-      <li>Content that promotes, glorifies, or provides instructions for self-harm, suicide, eating disorders, or other dangerous behaviours.</li>
-      <li>Hate speech, content promoting discrimination, or content promoting violence against any individual or group.</li>
-      <li>Illegal content, or content that would violate any applicable law in your jurisdiction.</li>
-      <li>Content intended to manipulate, jailbreak, or otherwise circumvent the AI's safety guardrails.</li>
-      <li>Malware, phishing links, or any other malicious payload.</li>
+      <li data-i18n-html="s5_li1">Images or descriptions of <strong>anyone under 18 years of age</strong>, under any circumstances. This is a zero-tolerance rule.</li>
+      <li data-i18n="s5_li2">Sexually explicit, nude, or suggestive content.</li>
+      <li data-i18n="s5_li3">Images of other people without their explicit, informed consent.</li>
+      <li data-i18n="s5_li4">Content intended to harass, bully, defame, threaten, or harm another person.</li>
+      <li data-i18n="s5_li5">Content that promotes, glorifies, or provides instructions for self-harm, suicide, eating disorders, or other dangerous behaviours.</li>
+      <li data-i18n="s5_li6">Hate speech, content promoting discrimination, or content promoting violence against any individual or group.</li>
+      <li data-i18n="s5_li7">Illegal content, or content that would violate any applicable law in your jurisdiction.</li>
+      <li data-i18n="s5_li8">Content intended to manipulate, jailbreak, or otherwise circumvent the AI's safety guardrails.</li>
+      <li data-i18n="s5_li9">Malware, phishing links, or any other malicious payload.</li>
     </ul>
-    <p>You also agree <strong>not</strong> to:</p>
+    <p data-i18n-html="s5_para2">You also agree <strong>not</strong> to:</p>
     <ul>
-      <li>Reverse engineer, decompile, or attempt to extract model weights or source code beyond what is visible in the browser.</li>
-      <li>Attempt to bypass usage limits, paywalls, or security measures.</li>
-      <li>Scrape, spider, or automate the service with bots.</li>
-      <li>Use the service for any commercial analysis of third parties (e.g. as part of a dating service, HR screening, or advertising product).</li>
-      <li>Resell, sublicense, or redistribute DateScan or any part of it.</li>
+      <li data-i18n="s5_li10">Reverse engineer, decompile, or attempt to extract model weights or source code beyond what is visible in the browser.</li>
+      <li data-i18n="s5_li11">Attempt to bypass usage limits, paywalls, or security measures.</li>
+      <li data-i18n="s5_li12">Scrape, spider, or automate the service with bots.</li>
+      <li data-i18n="s5_li13">Use the service for any commercial analysis of third parties (e.g. as part of a dating service, HR screening, or advertising product).</li>
+      <li data-i18n="s5_li14">Resell, sublicense, or redistribute DateScan or any part of it.</li>
     </ul>
-    <p>We operate automated and human content moderation on the AI Style Coach chat. Violations may result in immediate termination of your access, forfeiture of any unused Pro access, and where appropriate, reporting to law enforcement.</p>
+    <p data-i18n="s5_para3">We operate automated and human content moderation on the AI Style Coach chat. Violations may result in immediate termination of your access, forfeiture of any unused Pro access, and where appropriate, reporting to law enforcement.</p>
 
-    <h3>5.1 Likeness warranty — only your own face</h3>
-    <p>DateScan is designed for <strong>self-analysis</strong>. By using the camera scanner you represent and warrant that:</p>
+    <h3 data-i18n="s5_1_heading">5.1 Likeness warranty — only your own face</h3>
+    <p data-i18n-html="s5_1_para">DateScan is designed for <strong>self-analysis</strong>. By using the camera scanner you represent and warrant that:</p>
     <ul>
-      <li>The person in front of the camera is <strong>you</strong>, the account holder, and no one else;</li>
-      <li>You are not scanning a photograph, screen, printout, video, or any other reproduction of another person;</li>
-      <li>You are not scanning, analysing, or generating feedback about any <strong>third party</strong> — including but not limited to friends, family members, ex-partners, colleagues, public figures, celebrities, politicians, or any identifiable individual — without their <strong>explicit, informed, written</strong> consent;</li>
-      <li>You will not use DateScan to mock, harass, defame, sexualise, or damage the reputation of any identifiable person.</li>
+      <li data-i18n-html="s5_1_li1">The person in front of the camera is <strong>you</strong>, the account holder, and no one else;</li>
+      <li data-i18n="s5_1_li2">You are not scanning a photograph, screen, printout, video, or any other reproduction of another person;</li>
+      <li data-i18n-html="s5_1_li3">You are not scanning, analysing, or generating feedback about any <strong>third party</strong> — including but not limited to friends, family members, ex-partners, colleagues, public figures, celebrities, politicians, or any identifiable individual — without their <strong>explicit, informed, written</strong> consent;</li>
+      <li data-i18n="s5_1_li4">You will not use DateScan to mock, harass, defame, sexualise, or damage the reputation of any identifiable person.</li>
     </ul>
-    <p>To enforce this, the scanner uses <strong>live camera capture only</strong> and applies basic liveness checks. Attempting to defeat these checks (e.g. by pointing the camera at a screen, photograph, mask, or pre-recorded video) is a material breach of these Terms.</p>
+    <p data-i18n-html="s5_1_para2">To enforce this, the scanner uses <strong>live camera capture only</strong> and applies basic liveness checks. Attempting to defeat these checks (e.g. by pointing the camera at a screen, photograph, mask, or pre-recorded video) is a material breach of these Terms.</p>
 
-    <h3>5.2 Public figures and celebrities</h3>
-    <p>Submitting images of public figures, celebrities, politicians, or any other identifiable third party — even where their likeness is widely available online — is <strong>strictly prohibited</strong>. The fact that an image is publicly accessible does not give you the right to process it through DateScan, generate AI feedback about it, or share that feedback. Many jurisdictions (including Austria, Germany, and the wider EU) recognise strong personality, image, and dignity rights that survive publication.</p>
+    <h3 data-i18n="s5_2_heading">5.2 Public figures and celebrities</h3>
+    <p data-i18n-html="s5_2_para">Submitting images of public figures, celebrities, politicians, or any other identifiable third party — even where their likeness is widely available online — is <strong>strictly prohibited</strong>. The fact that an image is publicly accessible does not give you the right to process it through DateScan, generate AI feedback about it, or share that feedback. Many jurisdictions (including Austria, Germany, and the wider EU) recognise strong personality, image, and dignity rights that survive publication.</p>
 
-    <h3>5.3 Indemnification for likeness misuse</h3>
-    <p>If you breach Sections 5, 5.1, or 5.2 — for example by scanning another person without consent and that person, or any authority acting on their behalf, brings a claim against DateScan — you agree to <strong>defend, indemnify, and hold harmless</strong> DateScan, its operators, contractors, and affiliates from and against any and all claims, damages, losses, liabilities, judgments, fines, costs, and expenses (including reasonable legal fees) arising out of or related to that breach. This obligation survives termination of your account.</p>
+    <h3 data-i18n="s5_3_heading">5.3 Indemnification for likeness misuse</h3>
+    <p data-i18n-html="s5_3_para">If you breach Sections 5, 5.1, or 5.2 — for example by scanning another person without consent and that person, or any authority acting on their behalf, brings a claim against DateScan — you agree to <strong>defend, indemnify, and hold harmless</strong> DateScan, its operators, contractors, and affiliates from and against any and all claims, damages, losses, liabilities, judgments, fines, costs, and expenses (including reasonable legal fees) arising out of or related to that breach. This obligation survives termination of your account.</p>
 
-    <h2>6. Reporting AI Content</h2>
-    <p>If you encounter an AI response that is offensive, harmful, inaccurate, or otherwise inappropriate, please tap the <strong>"Report"</strong> button below the message in the chat. All reports are reviewed by our moderation team. This is the fastest and most reliable way to flag content — the report includes the exact message, your context, and metadata automatically.</p>
+    <h2 data-i18n="s6_heading">6. Reporting AI Content</h2>
+    <p data-i18n-html="s6_para">If you encounter an AI response that is offensive, harmful, inaccurate, or otherwise inappropriate, please tap the <strong>"Report"</strong> button below the message in the chat. All reports are reviewed by our moderation team. This is the fastest and most reliable way to flag content — the report includes the exact message, your context, and metadata automatically.</p>
 
-    <h2>7. Intellectual Property</h2>
-    <p>All content on DateScan — the name "DateScan", the logo, the interface design, the code, copywriting, and branding — is owned by us and protected by intellectual property laws. You may not copy, modify, or create derivative works without written permission. Third-party libraries used by DateScan (MediaPipe, Tailwind, fonts, etc.) are governed by their own licenses.</p>
+    <h2 data-i18n="s7_heading">7. Intellectual Property</h2>
+    <p data-i18n="s7_para">All content on DateScan — the name "DateScan", the logo, the interface design, the code, copywriting, and branding — is owned by us and protected by intellectual property laws. You may not copy, modify, or create derivative works without written permission. Third-party libraries used by DateScan (MediaPipe, Tailwind, fonts, etc.) are governed by their own licenses.</p>
 
-    <h2>8. Your Content</h2>
-    <p>You retain ownership of any images or text you create or submit while using DateScan.</p>
+    <h2 data-i18n="s8_heading">8. Your Content</h2>
+    <p data-i18n="s8_para">You retain ownership of any images or text you create or submit while using DateScan.</p>
     <ul>
-      <li><strong>Camera scans</strong> are processed locally and never reach our servers, so we have nothing to claim rights to.</li>
-      <li><strong>AI Style Coach chat inputs</strong> (text and optional attached images) are sent to our server for processing. By submitting content to the chat, you grant us a limited, worldwide, non-exclusive, royalty-free licence to process, store (for the retention period set out in our Privacy Policy), transmit to our third-party AI providers, and analyse your content <strong>solely</strong> for the purpose of operating the service, enforcing these Terms, and complying with law. This licence ends when your content is deleted from our systems. We do <strong>not</strong> use your chat content to train AI models.</li>
-    </ul>
-
-    <h2>9. Payments &amp; One-Time Purchases</h2>
-
-    <h3>9.1 Google Play Billing</h3>
-    <p>DateScan is distributed exclusively through the <strong>Google Play Store</strong>, and all paid purchases are processed exclusively through <strong>Google Play Billing</strong>. By purchasing you also agree to the <a href="https://play.google.com/about/play-terms/" target="_blank" rel="noopener">Google Play Terms of Service</a>. All payment, billing, tax, and refund requests are handled by Google in accordance with Google Play's policies. Paid access is sold as <strong>one-time, non-recurring in-app purchases</strong> — there is no auto-renewal and nothing to cancel. When your paid period ends, your access simply reverts to the Free plan, and you may purchase again at any time.</p>
-
-    <h3>9.2 Plans and pricing</h3>
-    <p>We currently offer the following options on Google Play. Local prices may vary slightly due to taxes, fees, and currency conversion:</p>
-    <ul>
-      <li><strong>Free</strong> — 5 points / day (1 point per scan or AI Coach message)</li>
-      <li><strong>Week</strong> — $4.99, one-time purchase, 7 days of access</li>
-      <li><strong>Month</strong> — $9.99, one-time purchase, 30 days of access</li>
-      <li><strong>Year</strong> — $49.99, one-time purchase, 365 days of access (best value)</li>
-    </ul>
-    <p>All paid options are <strong>one-time purchases</strong>. They do not auto-renew, you will not be charged again automatically, and there is nothing to cancel. Refunds are governed by our <a href="/refund.html">Refund Policy</a> and by Google Play's own refund process.</p>
-
-    <h2 id="section-10">10. Disclaimer of Warranties</h2>
-    <p>DateScan is provided <strong>"AS IS" and "AS AVAILABLE"</strong>, without warranties of any kind, express or implied. <strong>You expressly acknowledge that DateScan is an entertainment and confidence-boosting product, that the AI Style Coach can produce inaccurate, biased, or occasionally offensive output, and that we accept no responsibility for any reliance you place on such output.</strong> We do not warrant that:</p>
-    <ul>
-      <li>The service will be uninterrupted, error-free, or secure.</li>
-      <li>The analysis or feedback will be accurate, complete, or suitable for your purpose.</li>
-      <li>The service will achieve any specific dating, social, romantic, or personal outcome.</li>
-      <li>The service will be compatible with your device or browser.</li>
-      <li>AI-generated content will be free of inaccuracies, biases, or occasional inappropriate output.</li>
+      <li data-i18n-html="s8_li1"><strong>Camera scans</strong> are processed locally and never reach our servers, so we have nothing to claim rights to.</li>
+      <li data-i18n-html="s8_li2"><strong>AI Style Coach chat inputs</strong> (text and optional attached images) are sent to our server for processing. By submitting content to the chat, you grant us a limited, worldwide, non-exclusive, royalty-free license to process, store (for the retention period set out in our Privacy Policy), transmit to our third-party AI providers, and analyze your content <strong>solely</strong> for the purpose of operating the service, enforcing these Terms, and complying with law. This license ends when your content is deleted from our systems. We do <strong>not</strong> use your chat content to train AI models.</li>
     </ul>
 
-    <h2 id="section-11">11. Limitation of Liability</h2>
-    <p>To the maximum extent permitted by law, DateScan and its operators shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or related to your use of the service. Our total aggregate liability for any claim shall not exceed the amount you paid us in the twelve months preceding the claim, or <strong>€50</strong>, whichever is greater. Some jurisdictions do not allow the exclusion of certain warranties or limitations on liability, so some of the above may not apply to you. Nothing in these Terms limits liability that cannot be limited under applicable mandatory law (including liability for death or personal injury caused by negligence, or for fraud).</p>
+    <h2 data-i18n="s9_heading">9. Payments &amp; One-Time Purchases</h2>
 
-    <h2>12. Termination</h2>
-    <p>We reserve the right to suspend or terminate your access to DateScan at any time, with or without notice, if we reasonably believe you have violated these Terms — in particular the Acceptable Use and AI Content Policy section. Upon termination your right to use the service ceases immediately. You may terminate your use at any time by deleting your data (see the <a href="/privacy.html">Privacy Policy</a>). Since all purchases are one-time and non-recurring, there is no subscription to cancel.</p>
+    <h3 data-i18n="s9_1_heading">9.1 Google Play Billing</h3>
+    <p data-i18n-html="s9_1_para">DateScan is distributed exclusively through the <strong>Google Play Store</strong>, and all paid purchases are processed exclusively through <strong>Google Play Billing</strong>. By purchasing you also agree to the <a href="https://play.google.com/about/play-terms/" target="_blank" rel="noopener">Google Play Terms of Service</a>. All payment, billing, tax, and refund requests are handled by Google in accordance with Google Play's policies. Paid access is sold as <strong>one-time, non-recurring in-app purchases</strong> — there is no auto-renewal and nothing to cancel. When your paid period ends, your access simply reverts to the Free plan, and you may purchase again at any time.</p>
 
-    <h2>13. Changes to the Service or Terms</h2>
-    <p>We may modify, suspend, or discontinue any part of DateScan at any time. We may also revise these Terms from time to time. The "Last updated" date at the top reflects the most recent version. For material changes we will give you reasonable advance notice inside the app and via the homepage. Continued use of DateScan after changes means you accept the revised Terms.</p>
+    <h3 data-i18n="s9_2_heading">9.2 Plans and pricing</h3>
+    <p data-i18n="s9_2_para">We currently offer the following options on Google Play. Local prices may vary slightly due to taxes, fees, and currency conversion:</p>
+    <ul>
+      <li data-i18n-html="s9_2_li1"><strong>Free</strong> — 5 points / day (1 point per scan or AI Coach message)</li>
+      <li data-i18n-html="s9_2_li2"><strong>Week</strong> — $4.99, one-time purchase, 7 days of access</li>
+      <li data-i18n-html="s9_2_li3"><strong>Month</strong> — $9.99, one-time purchase, 30 days of access</li>
+      <li data-i18n-html="s9_2_li4"><strong>Year</strong> — $49.99, one-time purchase, 365 days of access (best value)</li>
+    </ul>
+    <p data-i18n-html="s9_2_para2">All paid options are <strong>one-time purchases</strong>. They do not auto-renew, you will not be charged again automatically, and there is nothing to cancel. Refunds are governed by our <a href="refund.html">Refund Policy</a> and by Google Play's own refund process.</p>
 
-    <h2>14. Governing Law &amp; Dispute Resolution</h2>
-    <p>These Terms are governed by the laws of the European Union and the country in which DateScan's operators are established, without regard to conflict-of-law principles. Any dispute shall be resolved in the competent courts of that jurisdiction. Nothing in this clause deprives consumers in the EU, UK, or other jurisdictions with mandatory consumer protection laws of the protection afforded to them by the mandatory laws of their country of residence. EU consumers may also access the European Commission's Online Dispute Resolution platform at <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>.</p>
+    <h3 data-i18n="s9_3_heading">9.3 EU right of withdrawal (14-day cooling-off)</h3>
+    <p data-i18n-html="s9_3_para">Under the EU Consumer Rights Directive (2011/83/EU), you have a 14-day right of withdrawal from any distance purchase. However, because DateScan delivers <strong>digital content that begins immediately upon purchase</strong>, by completing your purchase you (a) expressly consent to the immediate provision of the digital content, and (b) acknowledge that you thereby waive your 14-day right of withdrawal. If applicable local law provides otherwise, please refer to Google Play's refund process or contact us.</p>
 
-    <h2>15. Severability</h2>
-    <p>If any provision of these Terms is found to be unenforceable, the remaining provisions shall remain in full force and effect.</p>
+    <h2 id="section-10" data-i18n="s10_heading">10. Disclaimer of Warranties</h2>
+    <p data-i18n-html="s10_para">DateScan is provided <strong>"AS IS" and "AS AVAILABLE"</strong>, without warranties of any kind, express or implied. <strong>You expressly acknowledge that DateScan is an entertainment and confidence-boosting product, that the AI Style Coach can produce inaccurate, biased, or occasionally offensive output, and that we accept no responsibility for any reliance you place on such output.</strong> We do not warrant that:</p>
+    <ul>
+      <li data-i18n="s10_li1">The service will be uninterrupted, error-free, or secure.</li>
+      <li data-i18n="s10_li2">The analysis or feedback will be accurate, complete, or suitable for your purpose.</li>
+      <li data-i18n="s10_li3">The service will achieve any specific dating, social, romantic, or personal outcome.</li>
+      <li data-i18n="s10_li4">The service will be compatible with your device or browser.</li>
+      <li data-i18n="s10_li5">AI-generated content will be free of inaccuracies, biases, or occasional inappropriate output.</li>
+    </ul>
 
-    <h2>16. Contact</h2>
-    <p>Questions about these Terms? Submit them via <a href="/delete-account.html">datescan.app/delete-account.html</a> with "Terms Question" in the reason field, or DM us on the social channels linked in the footer.</p>
+    <h2 id="section-11" data-i18n="s11_heading">11. Limitation of Liability</h2>
+    <p data-i18n-html="s11_para">To the maximum extent permitted by law, DateScan and its operators shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or related to your use of the service. Our total aggregate liability for any claim shall not exceed the amount you paid us in the twelve months preceding the claim, or <strong>€50</strong>, whichever is greater. Some jurisdictions do not allow the exclusion of certain warranties or limitations on liability, so some of the above may not apply to you. Nothing in these Terms limits liability that cannot be limited under applicable mandatory law (including liability for death or personal injury caused by negligence, or for fraud).</p>
+
+    <h2 data-i18n="s12_heading">12. Termination</h2>
+    <p data-i18n-html="s12_para">We reserve the right to suspend or terminate your access to DateScan at any time, with or without notice, if we reasonably believe you have violated these Terms — in particular the Acceptable Use and AI Content Policy section. Upon termination your right to use the service ceases immediately. You may terminate your use at any time by deleting your data (see the <a href="privacy.html">Privacy Policy</a>). Since all purchases are one-time and non-recurring, there is no subscription to cancel.</p>
+
+    <h2 data-i18n="s13_heading">13. Changes to the Service or Terms</h2>
+    <p data-i18n="s13_para">We may modify, suspend, or discontinue any part of DateScan at any time. We may also revise these Terms from time to time. The "Last updated" date at the top reflects the most recent version. For material changes we will give you reasonable advance notice inside the app and via the homepage. Continued use of DateScan after changes means you accept the revised Terms.</p>
+
+    <h2 data-i18n="s14_heading">14. Governing Law &amp; Dispute Resolution</h2>
+    <p data-i18n-html="s14_para">These Terms are governed by the laws of <strong>Hungary</strong> and the European Union, without regard to conflict-of-law principles. Any dispute shall be resolved in the competent courts of Hungary. Nothing in this clause deprives consumers in the EU, UK, or other jurisdictions with mandatory consumer protection laws of the protection afforded to them by the mandatory laws of their country of residence. EU consumers may also access the European Commission's Online Dispute Resolution platform at <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>.</p>
+
+    <h2 data-i18n="s15_heading">15. Severability</h2>
+    <p data-i18n="s15_para">If any provision of these Terms is found to be unenforceable, the remaining provisions shall remain in full force and effect.</p>
+
+    <h2 data-i18n="s16_heading">16. Referral Programme</h2>
+    <p data-i18n="s16_intro">DateScan offers a referral programme that rewards both the referrer and the new user with bonus points. By using the referral feature you agree to the following rules:</p>
+    <ul>
+      <li data-i18n-html="s16_li1">When you share your invite link, your anonymous user ID is embedded in the URL. This ID is shared with anyone who receives or opens the link.</li>
+      <li data-i18n-html="s16_li2">The referred user receives <strong>+5 bonus points</strong> upon first opening the link. You receive <strong>+5 bonus points</strong> once our backend confirms the referral. Bonus points are added on top of your daily point pool and persist across daily resets.</li>
+      <li data-i18n-html="s16_li3">Each user can only be referred once. You may not refer yourself, create multiple accounts to simulate referrals, or use bots, scripts, or other automated means to generate referral bonuses.</li>
+      <li data-i18n-html="s16_li4">We reserve the right to reverse bonus points that were obtained through fraud, abuse, or violation of these rules, and to terminate the accounts of users who abuse the referral programme.</li>
+      <li data-i18n-html="s16_li5">The referral programme may be modified or discontinued at any time without prior notice. Bonus points already earned will not be retroactively removed unless obtained through fraud.</li>
+    </ul>
+
+    <h2 data-i18n="s17_heading">17. Contact</h2>
+    <p data-i18n-html="s17_para">Questions about these Terms? Email us at <a href="mailto:info@datescan.app">info@datescan.app</a> or reach out on our social channels.</p>
   </article>
 </main>
 
@@ -230,7 +1171,7 @@
 
       <!-- Brand column -->
       <div class="col-span-2 lg:col-span-5">
-        <a href="/" class="inline-flex items-center gap-3 group mb-4">
+        <a href="index.html?desktop=1" class="inline-flex items-center gap-3 group mb-4">
           <div class="w-11 h-11 flex items-center justify-center shrink-0">
             <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-[0_0_8px_rgba(236,72,153,0.4)]">
               <defs>
@@ -249,40 +1190,40 @@
           </div>
           <div class="flex flex-col">
             <span class="font-bold text-xl tracking-tight leading-none text-white group-hover:text-brand-400 transition-colors">DateScan<span class="text-brand-500">.</span></span>
-            <span class="text-[10px] text-gray-500 font-medium uppercase tracking-widest mt-1.5">Personal Style Coach</span>
+            <span class="text-[10px] text-gray-500 font-medium uppercase tracking-widest mt-1.5" data-i18n="subtitle_tag">Personal Style Coach</span>
           </div>
         </a>
-        <p class="text-sm text-gray-400 leading-relaxed max-w-sm mb-5">
+        <p class="text-sm text-gray-400 leading-relaxed max-w-sm mb-5" data-i18n="footer_desc">
           Your AI-powered wingman. Scan your outfit, get instant style and grooming feedback, and walk into your date with confidence.
         </p>
         <div class="inline-flex items-center gap-2 text-[10px] text-gray-500 px-3 py-1.5 rounded-full border border-white/10 bg-white/5">
           <svg class="w-3 h-3 text-brand-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-          <span>Camera scans run on-device</span>
+          <span data-i18n="footer_ondevice">Camera scans run on-device</span>
         </div>
       </div>
 
       <!-- Legal -->
       <div class="lg:col-span-2 lg:col-start-7">
-        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4">Legal</h3>
+        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4" data-i18n="footer_legal">Legal</h3>
         <ul class="space-y-2.5 text-sm">
-          <li><a href="/privacy.html" class="text-gray-400 hover:text-brand-400 transition-colors">Privacy Policy</a></li>
-          <li><a href="/terms.html" class="text-gray-400 hover:text-brand-400 transition-colors">Terms of Service</a></li>
-          <li><a href="/refund.html" class="text-gray-400 hover:text-brand-400 transition-colors">Refund Policy</a></li>
-          <li><a href="/delete-account.html" class="text-gray-400 hover:text-brand-400 transition-colors">Delete Account</a></li>
+          <li><a href="privacy.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_privacy">Privacy Policy</a></li>
+          <li><a href="terms.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_terms">Terms of Service</a></li>
+          <li><a href="refund.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_refund">Refund Policy</a></li>
+          <li><a href="delete-account.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_delete">Delete Account</a></li>
         </ul>
       </div>
 
       <!-- Support -->
       <div class="lg:col-span-2">
-        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4">Support</h3>
+        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4" data-i18n="footer_support">Support</h3>
         <ul class="space-y-2.5 text-sm">
-          <li><a href="/contact.html" class="text-gray-400 hover:text-brand-400 transition-colors">Contact Support</a></li>
+          <li><a href="contact.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_contact">Contact Support</a></li>
         </ul>
       </div>
 
       <!-- Social -->
       <div class="lg:col-span-3">
-        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4">Follow</h3>
+        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4" data-i18n="footer_follow">Follow</h3>
         <div class="flex items-center gap-2.5">
           <a href="https://www.tiktok.com/@datescan" target="_blank" rel="noopener noreferrer" aria-label="DateScan on TikTok" class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/10 bg-white/5 text-gray-400 hover:text-white hover:border-brand-500/50 hover:bg-brand-500/10 hover:shadow-[0_0_16px_rgba(236,72,153,0.25)] transition-all">
             <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.321 5.562a5.124 5.124 0 0 1-.443-.258 6.228 6.228 0 0 1-1.137-.966c-.849-.971-1.166-1.956-1.282-2.645h.004C16.369 1.104 16.41.5 16.41.5h-3.31v12.789c0 .171 0 .341-.007.508l-.001.064-.003.085v.007a3.535 3.535 0 0 1-1.78 2.801 3.474 3.474 0 0 1-1.724.454c-1.933 0-3.502-1.579-3.502-3.524s1.569-3.524 3.502-3.524c.366 0 .718.057 1.049.162l.004-3.37a6.844 6.844 0 0 0-5.283 1.524A6.842 6.842 0 0 0 3 13.304c0 1.599.503 3.123 1.456 4.4a6.838 6.838 0 0 0 5.475 2.78c3.78 0 6.844-3.064 6.844-6.844V8.168a9.533 9.533 0 0 0 5.565 1.781V6.642c-1.175 0-2.218-.391-3.019-1.08Z"/></svg>
@@ -302,5 +1243,49 @@
 
     <!-- Bottom strip -->
     <div class="border-t border-white/5 pt-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-      <p class="text-[11px] text-gray-600 italic leading-relaxed max-w-2xl">
-        Disclaimer: DateScan is an AI-powered tool designed for entertainment and confidence-boosting purposes only. We do not guarantee dating success 
+      <p class="text-[11px] text-gray-600 italic leading-relaxed max-w-2xl" data-i18n="footer_disclaimer">
+        Disclaimer: DateScan is an AI-powered tool designed for entertainment and confidence-boosting purposes only. We do not guarantee dating success or specific social outcomes.
+      </p>
+      <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 shrink-0">
+        <span class="text-[11px] text-gray-600" data-i18n="footer_copy">&copy; 2026 DateScan</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ── Haptic Feedback: vibration on interactive element press ── -->
+<script>
+(function(){
+  // Vibration API — works on Android/mobile, silently ignored on desktop/iOS
+  if (!navigator.vibrate && !navigator.webkitVibrate) return;
+  var vibrate = navigator.vibrate || navigator.webkitVibrate;
+
+  // Respect reduced-motion preference
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  function hapticTap(ms) {
+    try { vibrate.call(navigator, ms); } catch(e) {}
+  }
+
+  document.addEventListener('pointerdown', function(e) {
+    var el = e.target.closest(
+      'button, a, [role="button"], input[type="submit"], input[type="button"], input[type="checkbox"], label.checkbox-row, .btn-danger, [data-haptic]'
+    );
+    if (!el) return;
+    // Skip disabled elements
+    if (el.disabled || el.getAttribute('aria-disabled') === 'true') return;
+
+    // Intensity tiers
+    if (el.closest('.btn-danger') || el.matches('[data-haptic="heavy"]')) {
+      hapticTap(25);          // destructive / important actions
+    } else if (el.matches('a[href]') && !el.matches('[role="button"]')) {
+      hapticTap(5);           // light tap for plain links
+    } else {
+      hapticTap(10);          // standard tap for buttons / controls
+    }
+  }, { passive: true });
+})();
+</script>
+
+</body>
+</html>

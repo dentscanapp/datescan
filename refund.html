@@ -9,6 +9,23 @@
 <link rel="canonical" href="https://datescan.app/refund.html" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='40' y2='40' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%23ec4899'/%3E%3Cstop offset='1' stop-color='%239333ea'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M10 5 H5 V10' stroke='url(%23bg)' stroke-width='2' fill='none'/%3E%3Cpath d='M30 5 H35 V10' stroke='url(%23bg)' stroke-width='2' fill='none'/%3E%3Cpath d='M10 35 H5 V30' stroke='url(%23bg)' stroke-width='2' fill='none'/%3E%3Cpath d='M30 35 H35 V30' stroke='url(%23bg)' stroke-width='2' fill='none'/%3E%3Cpath d='M20 13.5C20 13.5 16 9 11.5 9C7.5 9 5 12.5 5 16.5C5 22 13 28 20 32C27 28 35 22 35 16.5C35 12.5 32.5 9 28.5 9C24 9 20 13.5 20 13.5Z' fill='url(%23bg)' fill-opacity='0.15' stroke='url(%23bg)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='4' y1='20' x2='36' y2='20' stroke='%23f472b6' stroke-width='1.5' stroke-dasharray='2 2' opacity='0.8'/%3E%3C/svg%3E">
+<script>
+// ── EARLY lang detection (runs BEFORE any external script) ──
+(function(){
+  var supported=['en','hu','de'];var lang=null;var _h='';
+  try{_h=decodeURIComponent(window.location.href||'');}catch(e){_h=window.location.href||'';}
+  try{var p=new URLSearchParams(window.location.search);var v=p.get('lang');if(v&&supported.indexOf(v)!==-1)lang=v;}catch(e){}
+  if(!lang){try{var m=_h.match(/[?&]lang=([a-z]{2})(?:&|#|$)/i);if(m&&supported.indexOf(m[1])!==-1)lang=m[1];}catch(e){}}
+  if(!lang){try{var h=window.location.hash||'';if(!h&&_h.indexOf('#')!==-1)h=_h.substring(_h.indexOf('#'));var hm=h.match(/[#&]lang=([a-z]{2})/i);if(hm&&supported.indexOf(hm[1])!==-1)lang=hm[1];}catch(e){}}
+  if(!lang){try{var cm=document.cookie.match(/(?:^|;\s*)datescan_lang=([a-z]{2})/i);if(cm&&supported.indexOf(cm[1])!==-1)lang=cm[1];}catch(e){}}
+  if(!lang){try{var nl=localStorage.getItem('datescan.nav_lang');if(nl&&supported.indexOf(nl)!==-1)lang=nl;}catch(e){}}
+  if(!lang){try{var sl=localStorage.getItem('datescan.lang');if(sl&&sl.indexOf('auto:')===0)sl=sl.substring(5);if(sl&&supported.indexOf(sl)!==-1)lang=sl;}catch(e){}}
+  if(!lang){try{var nls=navigator.languages&&navigator.languages.length?Array.prototype.slice.call(navigator.languages):[navigator.language||navigator.userLanguage||''];for(var i=0;i<nls.length;i++){var pp=(nls[i]||'').split('-')[0].toLowerCase();if(pp==='hu'){lang='hu';break;}if(pp==='de'){lang='de';break;}}}catch(e){}}
+  if(lang)window._earlyLang=lang;if(!lang)lang='en';
+  var titles={en:'Refund Policy — DateScan',hu:'Visszatérítési szabályzat — DateScan',de:'Erstattungsrichtlinie — DateScan'};
+  document.title=titles[lang]||titles.en;document.documentElement.lang=lang;
+})();
+</script>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
 <script>
@@ -34,10 +51,690 @@
   .plan-card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
   .plan-card:hover { transform: translateY(-2px); border-color: rgba(236,72,153,0.4); }
 </style>
+<script>
+// ── i18n for refund.html ──
+(function(){
+  var translations = {
+    en: {
+      page_title: 'Plans & Refund Policy — DateScan',
+      meta_desc: "DateScan plans, pricing, and 14-day refund policy. You're 1 tweak away from a better first impression.",
+      back_aria: 'Back to app',
+      subtitle_tag: 'Personal Style Coach',
+      hero_badge: 'Plans & Refunds',
+      hero_title: "You're <span class='italic text-brand-400'>1 tweak</span> away from a better first impression.",
+      hero_desc: "Most users typically experience a noticeable improvement in their overall appearance. Find the offer that matches your next date's style, or start the process free of charge, without any obligations.",
+      plans_title: 'Plans We Offer',
+      free_label: 'Free',
+      free_price: '$0 <span class="text-sm text-gray-500 font-sans">/ until canceled</span>',
+      free_badge: 'No card required',
+      free_desc: 'Try the full experience daily. Perfect for casual check-ins before a date night.',
+      free_feat1: '<strong class="text-white">5 points per day</strong> (resets every 24h)',
+      free_feat2: '<strong class="text-white">1 point per scan or AI Coach message</strong> — spend them however you like',
+      free_feat3: 'Core style, grooming &amp; posture feedback',
+      week_label: 'Week',
+      week_desc: 'Quick improvements before your next date',
+      week_price: '$4.99 <span class="text-sm text-gray-500 font-sans">/ week</span>',
+      week_feat1: 'Unlimited scans',
+      week_feat2: 'Unlimited AI coaching',
+      week_feat3: 'Full improvement breakdown',
+      month_badge: 'Popular',
+      month_label: 'Month',
+      month_desc: 'Build confidence fast',
+      month_price: '$9.99 <span class="text-sm text-gray-500 font-sans">/ month</span>',
+      month_feat1: 'Unlimited scans + coaching',
+      month_feat2: 'Full improvement breakdown',
+      month_feat3: 'Track your progress',
+      year_badge: 'Best value — save 58%',
+      year_label: 'Year',
+      year_desc: 'Become consistently attractive',
+      year_price: '$49.99 <span class="text-sm text-gray-500 font-sans">/ year</span>',
+      year_equiv: '≈ $4.17/month · 12 months paid upfront',
+      year_feat1: 'Everything, all year',
+      year_feat2: 'Unlimited scans + coaching',
+      year_feat3: 'Priority support',
+      billing_note: 'Secure billing via Google Play. Data protected by <a href="https://www.cloudflare.com/" target="_blank" rel="noopener" class="text-brand-400 hover:text-brand-500 font-medium">Cloudflare</a>.',
+      refund_title: 'Refund Policy',
+      last_updated: 'Last updated: April 18, 2026',
+      refund_intro: "We want you to be happy with DateScan. If you're not, here's exactly how refunds work — no dark patterns, no hoops.",
+      refund_gp_title: 'Refunds for Google Play Store Purchases',
+      refund_gp_p1: "If you subscribed to Pro via the <strong>Google Play Store</strong> (Android app), refunds are handled by Google according to <a href=\"https://support.google.com/googleplay/answer/2479637\" target=\"_blank\" rel=\"noopener\">Google Play's refund policy</a>, not by us. To request a refund for a Play Store purchase:",
+      refund_gp_li1: 'Open the <a href="https://play.google.com/store/account/orderhistory" target="_blank" rel="noopener">Google Play order history</a>.',
+      refund_gp_li2: 'Find the DateScan subscription and tap "Request a refund".',
+      refund_gp_li3: 'Alternatively: Play Store → your profile → Payments &amp; subscriptions → Subscriptions → DateScan → Cancel or Refund.',
+      refund_gp_p2: "Google generally allows self-service refunds within 48 hours of purchase; after that, refund decisions are made by Google on a case-by-case basis. We cannot override Google's decision on Play Store refunds, but we can support your case — email us with your Google Play order ID and we'll provide any information Google needs.",
+      refund_14_title: '14-Day Goodwill Refund Window',
+      refund_14_p1: "Beyond Google Play's 48-hour self-serve window, we offer a discretionary <strong>14-day goodwill refund</strong> if you're not satisfied — <strong>provided the service was not substantially used</strong>. To request one, email us (see below) and we'll coordinate the refund through Google Play on your behalf.",
+      refund_subst_title: 'What "Substantially Used" Means',
+      refund_subst_p1: 'To keep things fair and prevent abuse, a purchase is considered "substantially used" — and therefore ineligible for a refund — when any of the following apply:',
+      refund_subst_li1: 'You have completed <strong>more than 10 scans</strong> after upgrading.',
+      refund_subst_li2: 'You have sent <strong>more than 20 AI Coach messages</strong> after upgrading.',
+      refund_subst_li3: 'You have used the Service for more than a total of <strong>60 minutes</strong> of active session time.',
+      refund_subst_li4: 'You have already received a refund for a previous DateScan purchase.',
+      refund_subst_li5: 'The 14-day window has expired, counted from the moment of the original transaction.',
+      refund_subst_p2: 'Scans and messages used under the free tier (5 points per day, 1 point per scan or AI Coach message) do not count toward these limits.',
+      refund_eu_title: 'EU Statutory Right of Withdrawal',
+      refund_eu_p1: 'Customers in the European Union also have a statutory right of withdrawal within 14 days under Directive 2011/83/EU. Because DateScan is digital content delivered instantly, this right may be waived at checkout once you begin using Pro features. If you have not yet used any Pro features, the statutory right applies in full and overrides the "substantially used" rule above.',
+      refund_how_title: 'How to Request a Refund',
+      refund_how_p1: 'You have two options:',
+      refund_how_optA: '<strong>Option A — Self-serve via Google Play:</strong> Open the <a href="https://play.google.com/store/account/orderhistory" target="_blank" rel="noopener">Google Play order history</a>, find DateScan, and tap "Request a refund". This is the fastest path within the first 48 hours after purchase.',
+      refund_how_optB: '<strong>Option B — Contact us:</strong> If Google Play denies your refund or if you purchased more than 48 hours ago, DM us on any of our social channels (links in the footer) with "<strong>Refund Request</strong>" and include:',
+      refund_how_li1: 'The Google account email used for the purchase',
+      refund_how_li2: 'The plan you bought (Week, Month, or Year)',
+      refund_how_li3: 'The Google Play order ID from your receipt (starts with <code>GPA.</code>)',
+      refund_how_li4: "A brief explanation of why you're requesting a refund",
+      refund_how_p2: 'We aim to respond within <strong>3 business days</strong>. Approved refunds are processed by Google Play back to your original payment method and typically appear on your statement within 5–10 business days.',
+      refund_cancel_title: 'Cancellation vs. Refund',
+      refund_cancel_p1: "Canceling a subscription stops future renewals but is <em>not</em> the same as a refund. When you cancel, you keep Pro access until the end of your current billing period and simply aren't charged again. To request money back, follow the refund steps above within the 14-day window.",
+      refund_chargeback_title: 'Chargebacks',
+      refund_chargeback_p1: "If you have a billing concern, please contact us first. Initiating a chargeback with your bank without reaching out may result in permanent suspension of your Pro access. We'd much rather just issue the refund directly — it's faster for everyone.",
+      refund_partial_title: 'No Partial Refunds for Active Periods',
+      refund_partial_p1: "Once the 14-day window expires, we do not prorate partial refunds for unused days of an active Week, Month, or Year period. You keep Pro access until the end of the period, and simply aren't charged again.",
+      refund_contact_title: 'Contact',
+      refund_contact_p1: 'Need a refund or have a billing question? Contact Google Play support directly via the Play Store for the fastest resolution, or DM us on any of our social channels (links in the footer).',
+      withdraw_title: 'EU Right of Withdrawal (14-day cooling-off)',
+      withdraw_p1: 'Under the EU Consumer Rights Directive (2011/83/EU) and Hungarian Government Decree 45/2014 (II.26.), consumers have a 14-day right of withdrawal from distance purchases. Because DateScan delivers <strong>digital content that begins immediately upon purchase</strong>, by completing your purchase you expressly consent to immediate delivery and acknowledge that you lose your 14-day withdrawal right. This does not affect your right to request a refund through Google Play within their standard refund window.',
+      footer_desc: 'Your AI-powered wingman. Scan your outfit, get instant style and grooming feedback, and walk into your date with confidence.',
+      footer_ondevice: 'Camera scans run on-device',
+      footer_legal: 'Legal',
+      footer_privacy: 'Privacy Policy',
+      footer_terms: 'Terms of Service',
+      footer_refund: 'Refund Policy',
+      footer_delete: 'Delete Account',
+      footer_support: 'Support',
+      footer_contact: 'Contact Support',
+      footer_follow: 'Follow',
+      footer_disclaimer: "Disclaimer: DateScan is an AI-powered tool designed for entertainment and confidence-boosting purposes only. We do not guarantee dating success or specific outcomes. Results are suggestions, not professional advice. Use responsibly and always trust your own judgment.",
+      footer_copy: 'DateScan. All rights reserved.'
+    },
+    hu: {
+      page_title: 'Csomagok és visszatérítési szabályzat — DateScan',
+      meta_desc: 'DateScan csomagok, árak és 14 napos visszatérítési szabályzat. Egy apró változtatás választ el a jobb első benyomástól.',
+      back_aria: 'Vissza az alkalmazáshoz',
+      subtitle_tag: 'Személyes Stílusedző',
+      hero_badge: 'Csomagok és visszatérítés',
+      hero_title: "Egy <span class='italic text-brand-400'>apró változtatás</span> választ el a jobb első benyomástól.",
+      hero_desc: "Rendszerint érezhető javulást tapasztalnak a felhasználók az összképük megítélésében. Találd meg a következő randid stílusához passzoló ajánlatot, vagy kezdd el a folyamatot díjmentesen, bármiféle kötelezettség nélkül.",
+      plans_title: 'Csomagjaink',
+      free_label: 'Ingyenes',
+      free_price: '$0 <span class="text-sm text-gray-500 font-sans">/ visszavonásig</span>',
+      free_badge: 'Nincs szükség kártyára',
+      free_desc: 'Próbáld ki a teljes élményt naponta. Tökéletes alkalmi ellenőrzésre a randi előtt.',
+      free_feat1: '<strong class="text-white">5 pont naponta</strong> (24 óránként visszaáll)',
+      free_feat2: '<strong class="text-white">1 pont szkennelésenként vagy AI Edző üzenetenként</strong> — költsd ahogy szeretnéd',
+      free_feat3: 'Alapvető stílus, ápoltság és testtartás visszajelzés',
+      week_label: 'Hét',
+      week_desc: 'Gyors javulás a következő randi előtt',
+      week_price: '$4.99 <span class="text-sm text-gray-500 font-sans">/ hét</span>',
+      week_feat1: 'Korlátlan szkennelés',
+      week_feat2: 'Korlátlan AI edző',
+      week_feat3: 'Teljes javulási értékelés',
+      month_badge: 'Népszerű',
+      month_label: 'Hónap',
+      month_desc: 'Építsd magabiztosságodat gyorsan',
+      month_price: '$9.99 <span class="text-sm text-gray-500 font-sans">/ hónap</span>',
+      month_feat1: 'Korlátlan szkennelés + AI edző',
+      month_feat2: 'Teljes javulási értékelés',
+      month_feat3: 'Kövesd a fejlődésed',
+      year_badge: 'Legjobb ajánlat — 58% megtakarítás',
+      year_label: 'Év',
+      year_desc: 'Fejleszd a megjelenésed tudatosan!',
+      year_price: '$49.99 <span class="text-sm text-gray-500 font-sans">/ év</span>',
+      year_equiv: '≈ $4.17/hó · 12 hónap előre fizetve',
+      year_feat1: 'Stílusos fellépés minden évszakban',
+      year_feat2: 'Korlátlan szkennelés + AI edző',
+      year_feat3: 'Prioritásos támogatás',
+      billing_note: 'Biztonságos számlázás a Google Playen keresztül. Adatvédelem: <a href="https://www.cloudflare.com/" target="_blank" rel="noopener" class="text-brand-400 hover:text-brand-500 font-medium">Cloudflare</a>.',
+      refund_title: 'Visszatérítési szabályzat',
+      last_updated: 'Utoljára frissítve: 2026. április 18.',
+      refund_intro: 'Azt szeretnénk, hogy elégedett legyél a DateScannel. Ha mégsem, itt találod pontosan, hogyan működnek a visszatérítések — nincs rejtett csapda, nincs kerülő út.',
+      refund_gp_title: 'Google Play Áruházas vásárlások visszatérítése',
+      refund_gp_p1: 'Ha a Pro-ra a <strong>Google Play Store</strong>-on (Android alkalmazás) fizettél elő, a visszatérítéseket a Google kezeli a <a href="https://support.google.com/googleplay/answer/2479637" target="_blank" rel="noopener">Google Play visszatérítési szabályzata</a> szerint, nem mi. Play Store vásárlás visszatérítésének kéréséhez:',
+      refund_gp_li1: 'Nyisd meg a <a href="https://play.google.com/store/account/orderhistory" target="_blank" rel="noopener">Google Play rendelési előzményeket</a>.',
+      refund_gp_li2: 'Keresd meg a DateScan előfizetést, és koppints a „Visszatérítés kérése" gombra.',
+      refund_gp_li3: 'Alternatívan: Play Store → profilod → Fizetések és előfizetések → Előfizetések → DateScan → Lemondás vagy Visszatérítés.',
+      refund_gp_p2: "A Google általában 48 órán belül engedélyezi az önkiszolgáló visszatérítést a vásárlástól számítva; ezt követően a Google esetről esetre dönt a visszatérítésről. Nem tudjuk felülbírálni a Google döntését a Play Store visszatérítésekről, de támogatni tudjuk az ügyedet — írj nekünk a Google Play rendelési azonosítóddal, és megadjuk a Google számára szükséges információkat.",
+      refund_14_title: '14 napos jóakaratú visszatérítési ablak',
+      refund_14_p1: "A Google Play 48 órás önkiszolgáló ablakán túl <strong>14 napos jóakaratú visszatérítést</strong> kínálunk, ha nem vagy elégedett — <strong>feltéve, hogy a szolgáltatást nem használtad lényegesen</strong>. Kéréshez írj nekünk (lásd lent), és a Google Playen keresztül koordináljuk a visszatérítést a nevedben.",
+      refund_subst_title: 'Mit jelent a „lényeges használat"',
+      refund_subst_p1: 'A tisztességes kezelés és a visszaélések megelőzése érdekében a vásárlás „lényegesen használtnek" minősül — és így nem jogosult visszatérítésre —, ha a következők bármelyike fennáll:',
+      refund_subst_li1: '<strong>10-nél több szkennelést</strong> végeztél a frissítés után.',
+      refund_subst_li2: '<strong>20-nál több AI Edző üzenetet</strong> küldtél a frissítés után.',
+      refund_subst_li3: 'Összesen <strong>60 percnél több</strong> aktív munkamenet-időt használtál.',
+      refund_subst_li4: 'Már kaptál visszatérítést egy korábbi DateScan vásárlásra.',
+      refund_subst_li5: 'A 14 napos ablak lejárt, az eredeti tranzakció időpontjától számítva.',
+      refund_subst_p2: 'Az ingyenes csomagban használt szkennelések és üzenetek (napi 5 pont, 1 pont szkennelésenként vagy AI Edző üzenetenként) nem számítanak bele ezekbe a korlátokba.',
+      refund_eu_title: 'EU jogi elállási jog',
+      refund_eu_p1: 'Az Európai Unióban élő ügyfelek szintén jogosultak a 14 napon belüli elállásra a 2011/83/EU irányelv alapján. Mivel a DateScan azonnal kézbesített digitális tartalom, ez a jog a pénztárnál lemondható, amint elkezded használni a Pro funkciókat. Ha még nem használtál Pro funkciókat, a jogszabályi jog teljes mértékben érvényesül, és felülírja a fenti „lényeges használat" szabályt.',
+      refund_how_title: 'Hogyan kérj visszatérítést',
+      refund_how_p1: 'Két lehetőséged van:',
+      refund_how_optA: '<strong>A lehetőség — Önkiszolgáló a Google Playen:</strong> Nyisd meg a <a href="https://play.google.com/store/account/orderhistory" target="_blank" rel="noopener">Google Play rendelési előzményeket</a>, keresd meg a DateScan-t, és koppints a „Visszatérítés kérése" gombra. Ez a leggyorsabb út a vásárlástól számított első 48 órában.',
+      refund_how_optB: '<strong>B lehetőség — Lépj kapcsolatba velünk:</strong> Ha a Google Play elutasította a visszatérítést, vagy 48 órán túl vásároltál, írj nekünk bármelyik közösségi csatornánkon (linkek a láblécben) a „<strong>Visszatérítési kérelem</strong>" tárgymegjelöléssel, és tüntesd fel:',
+      refund_how_li1: 'A vásárláshoz használt Google-fiók e-mail címe',
+      refund_how_li2: 'A megvásárolt csomag (Hét, Hónap vagy Év)',
+      refund_how_li3: 'A nyugtán szereplő Google Play rendelési azonosító (<code>GPA.</code> kezdetű)',
+      refund_how_li4: 'Rövid indoklás, miért kéred a visszatérítést',
+      refund_how_p2: '<strong>3 munkanapon</strong> belül válaszolni törekszünk. A jóváhagyott visszatérítéseket a Google Play dolgozza fel, az eredeti fizetési módra térítve, és általában 5–10 munkanapon belül megjelennek a kivonatodon.',
+      refund_cancel_title: 'Lemondás és visszatérítés',
+      refund_cancel_p1: 'Az előfizetés lemondása megszünteti a jövőbeli megújításokat, de <em>nem</em> egyenlő a visszatérítéssel. Lemondáskor a Pro hozzáférésed a jelenlegi számlázási időszak végéig megmarad, és egyszerűen nem számítunk fel új díjat. Pénz visszakéréséhez kövesd a fenti visszatérítési lépéseket a 14 napos ablakon belül.',
+      refund_chargeback_title: 'Visszaterhelések',
+      refund_chargeback_p1: 'Ha számlázási problémád van, kérjük, először lépj kapcsolatba velünk. A banknál kezdeményezett visszaterhelés a Pro hozzáférésed végleges felfüggesztéséhez vezethet. Sokkal inkább közvetlenül kiállítjuk a visszatérítést — ez mindenkinek gyorsabb.',
+      refund_partial_title: 'Nincs arányos visszatérítés aktív időszakokra',
+      refund_partial_p1: 'A 14 napos ablak lejárta után nem biztosítunk arányos visszatérítést az aktív Hét, Hónap vagy Év időszak fel nem használt napjaira. A Pro hozzáférésed az időszak végéig megmarad, és egyszerűen nem számítunk fel új díjat.',
+      refund_contact_title: 'Kapcsolat',
+      refund_contact_p1: 'Visszatérítésre van szükséged vagy számlázási kérdésed van? A leggyorsabb megoldásért keresd a Google Play ügyfélszolgálatát a Play Store-ban, vagy írj nekünk bármelyik közösségi csatornánkon (linkek a láblécben).',
+      withdraw_title: 'EU elállási jog (14 napos elállás)',
+      withdraw_p1: 'Az EU Fogyasztói Jogok Irányelve (2011/83/EU) és a 45/2014. (II.26.) Korm. rendelet alapján a fogyasztókat 14 napos elállási jog illeti meg távollévők között kötött vásárlás esetén. Mivel a DateScan <strong>a vásárlás után azonnal hozzáférhetővé váló digitális tartalmat</strong> nyújt, a vásárlás befejezésével kifejezetten hozzájárulsz az azonnali teljesítéshez, és tudomásul veszed, hogy a 14 napos elállási jogodat elveszíted. Ez nem érinti a Google Play-en keresztüli visszatérítés-kérelmi jogodat a standard visszatérítési határidőn belül.',
+      footer_desc: 'Az AI-alapú szárnysegéded. Szkenneld az öltözéked, kapj azonnali stílus- és ápoltsági visszajelzést, és magabiztosan indulj a randira.',
+      footer_ondevice: 'A kameraszkennelés az eszközödön fut',
+      footer_legal: 'Jogi',
+      footer_privacy: 'Adatvédelmi tájékoztató',
+      footer_terms: 'Felhasználási feltételek',
+      footer_refund: 'Visszatérítési szabályzat',
+      footer_delete: 'Fiók törlése',
+      footer_support: 'Támogatás',
+      footer_contact: 'Kapcsolatfelvétel',
+      footer_follow: 'Kövess',
+      footer_disclaimer: "Jogi nyilatkozat: A DateScan egy AI-alapú eszköz, kizárólag szórakoztatási és önbizalom-növelő célra. Nem garantálunk randisikert vagy konkrét eredményeket. Az eredmények javaslatok, nem szakmai tanácsadás. Használd felelősségteljesen, és mindig bízz a saját ítéletedben.",
+      footer_copy: 'DateScan. Minden jog fenntartva.'
+    },
+    de: {
+      page_title: 'Pläne & Erstattungsrichtlinie — DateScan',
+      meta_desc: 'DateScan Pläne, Preise und 14-Tage-Erstattungsrichtlinie. Du bist 1 Optimierung von einem besseren ersten Eindruck entfernt.',
+      back_aria: 'Zurück zur App',
+      subtitle_tag: 'Persönlicher Style-Coach',
+      hero_badge: 'Pläne & Erstattungen',
+      hero_title: "Du bist <span class='italic text-brand-400'>1 Optimierung</span> von einem besseren ersten Eindruck entfernt.",
+      hero_desc: "In der Regel stellen Nutzer eine spürbare Verbesserung ihrer Gesamterscheinung fest. Finde das passende Outfit für dein nächstes Date oder starte den Prozess jetzt kostenlos und völlig unverbindlich.",
+      plans_title: 'Unsere Pläne',
+      free_label: 'Kostenlos',
+      free_price: '$0 <span class="text-sm text-gray-500 font-sans">/ bis zur Kündigung</span>',
+      free_badge: 'Keine Karte erforderlich',
+      free_desc: 'Probiere täglich das volle Erlebnis. Perfekt für lockere Check-ins vor dem Date.',
+      free_feat1: '<strong class="text-white">5 Punkte täglich</strong> (wird alle 24 Std. erneuert)',
+      free_feat2: '<strong class="text-white">1 Punkt pro Scan oder KI-Coach-Nachricht</strong> — gib sie aus, wie du möchtest',
+      free_feat3: 'Basis-Style-, Pflege- &amp; Haltungs-Feedback',
+      week_label: 'Woche',
+      week_desc: 'Schnelle Verbesserungen vor dem nächsten Date',
+      week_price: '$4.99 <span class="text-sm text-gray-500 font-sans">/ Woche</span>',
+      week_feat1: 'Unbegrenzte Scans',
+      week_feat2: 'Unbegrenztes KI-Coaching',
+      week_feat3: 'Vollständige Verbesserungsanalyse',
+      month_badge: 'Beliebt',
+      month_label: 'Monat',
+      month_desc: 'Schnell Selbstbewusstsein aufbauen',
+      month_price: '$9.99 <span class="text-sm text-gray-500 font-sans">/ Monat</span>',
+      month_feat1: 'Unbegrenzte Scans + Coaching',
+      month_feat2: 'Vollständige Verbesserungsanalyse',
+      month_feat3: 'Verfolge deinen Fortschritt',
+      year_badge: 'Bestes Preis-Leistungs-Verhältnis — 58% Ersparnis',
+      year_label: 'Jahr',
+      year_desc: 'Stetig attraktiv werden',
+      year_price: '$49.99 <span class="text-sm text-gray-500 font-sans">/ Jahr</span>',
+      year_equiv: '≈ $4.17/Monat · 12 Monate im Voraus bezahlt',
+      year_feat1: 'Alles, das ganze Jahr',
+      year_feat2: 'Unbegrenzte Scans + Coaching',
+      year_feat3: 'Prioritäts-Support',
+      billing_note: 'Sichere Abrechnung über Google Play. Daten geschützt durch <a href="https://www.cloudflare.com/" target="_blank" rel="noopener" class="text-brand-400 hover:text-brand-500 font-medium">Cloudflare</a>.',
+      refund_title: 'Erstattungsrichtlinie',
+      last_updated: 'Zuletzt aktualisiert: 18. April 2026',
+      refund_intro: 'Wir möchten, dass du mit DateScan zufrieden bist. Wenn nicht, erfährst du hier genau, wie Erstattungen funktionieren — keine versteckten Tricks, keine Hürden.',
+      refund_gp_title: 'Erstattungen für Google Play Store Käufe',
+      refund_gp_p1: 'Wenn du Pro über den <strong>Google Play Store</strong> (Android-App) abonniert hast, werden Erstattungen von Google gemäß der <a href="https://support.google.com/googleplay/answer/2479637" target="_blank" rel="noopener">Google Play Erstattungsrichtlinie</a> bearbeitet, nicht von uns. So beantragst du eine Erstattung für einen Play Store Kauf:',
+      refund_gp_li1: 'Öffne die <a href="https://play.google.com/store/account/orderhistory" target="_blank" rel="noopener">Google Play Bestellhistorie</a>.',
+      refund_gp_li2: 'Finde das DateScan-Abo und tippe auf „Erstattung beantragen".',
+      refund_gp_li3: 'Alternativ: Play Store → dein Profil → Zahlungen &amp; Abos → Abos → DateScan → Kündigen oder Erstattung.',
+      refund_gp_p2: "Google erlaubt im Allgemeinen Selbstbedienungs-Erstattungen innerhalb von 48 Stunden nach dem Kauf; danach entscheidet Google von Fall zu Fall. Wir können Googles Entscheidung bei Play Store Erstattungen nicht außer Kraft setzen, können aber deinen Fall unterstützen — schreib uns mit deiner Google Play Bestell-ID und wir stellen Google alle benötigten Informationen zur Verfügung.",
+      refund_14_title: '14-Tage-Goodwill-Erstattungszeitraum',
+      refund_14_p1: "Über das 48-Stunden-Selbstbedienungs-Fenster von Google Play hinaus bieten wir eine freiwillige <strong>14-Tage-Goodwill-Erstattung</strong> an, wenn du nicht zufrieden bist — <strong>vorausgesetzt, der Service wurde nicht wesentlich genutzt</strong>. Um eine zu beantragen, schreib uns (siehe unten) und wir koordinieren die Erstattung über Google Play in deinem Namen.",
+      refund_subst_title: 'Was „wesentlich genutzt" bedeutet',
+      refund_subst_p1: 'Um Fairness zu gewährleisten und Missbrauch zu verhindern, gilt ein Kauf als „wesentlich genutzt" — und daher nicht erstattungsfähig —, wenn einer der folgenden Punkte zutrifft:',
+      refund_subst_li1: 'Du hast <strong>mehr als 10 Scans</strong> nach dem Upgrade durchgeführt.',
+      refund_subst_li2: 'Du hast <strong>mehr als 20 KI-Coach-Nachrichten</strong> nach dem Upgrade gesendet.',
+      refund_subst_li3: 'Du hast den Service insgesamt <strong>mehr als 60 Minuten</strong> aktive Sitzungszeit genutzt.',
+      refund_subst_li4: 'Du hast bereits eine Erstattung für einen früheren DateScan-Kauf erhalten.',
+      refund_subst_li5: 'Der 14-Tage-Zeitraum ist abgelaufen, gerechnet ab dem Zeitpunkt der ursprünglichen Transaktion.',
+      refund_subst_p2: 'Scans und Nachrichten, die im kostenlosen Tarif verwendet wurden (5 Punkte pro Tag, 1 Punkt pro Scan oder KI-Coach-Nachricht), zählen nicht zu diesen Limits.',
+      refund_eu_title: 'EU-Gesetzliches Widerrufsrecht',
+      refund_eu_p1: 'Kunden in der Europäischen Union haben ebenfalls ein gesetzliches Widerrufsrecht innerhalb von 14 Tagen gemäß der Richtlinie 2011/83/EU. Da DateScan sofort gelieferter digitaler Inhalt ist, kann dieses Recht an der Kasse verzichtet werden, sobald du Pro-Funktionen nutzt. Wenn du noch keine Pro-Funktionen genutzt hast, gilt das gesetzliche Recht vollumfänglich und übertrifft die „wesentlich genutzt"-Regel oben.',
+      refund_how_title: 'So beantragst du eine Erstattung',
+      refund_how_p1: 'Du hast zwei Möglichkeiten:',
+      refund_how_optA: '<strong>Option A — Selbstbedienung über Google Play:</strong> Öffne die <a href="https://play.google.com/store/account/orderhistory" target="_blank" rel="noopener">Google Play Bestellhistorie</a>, finde DateScan und tippe auf „Erstattung beantragen". Dies ist der schnellste Weg innerhalb der ersten 48 Stunden nach dem Kauf.',
+      refund_how_optB: '<strong>Option B — Kontaktiere uns:</strong> Wenn Google Play deine Erstattung abgelehnt hat oder dein Kauf mehr als 48 Stunden zurückliegt, schreib uns über einen unserer Social-Media-Kanäle (Links in der Fußzeile) mit dem Betreff „<strong>Erstattungsanfrage</strong>" und gib Folgendes an:',
+      refund_how_li1: 'Die für den Kauf verwendete Google-Konto-E-Mail',
+      refund_how_li2: 'Den gekauften Plan (Woche, Monat oder Jahr)',
+      refund_how_li3: 'Die Google Play Bestell-ID aus deiner Quittung (beginnt mit <code>GPA.</code>)',
+      refund_how_li4: 'Eine kurze Erklärung, warum du eine Erstattung beantragst',
+      refund_how_p2: 'Wir bemühen uns, innerhalb von <strong>3 Werktagen</strong> zu antworten. Genehmigte Erstattungen werden von Google Play auf deine ursprüngliche Zahlungsmethode zurückerstattet und erscheinen in der Regel innerhalb von 5–10 Werktagen auf deinem Kontoauszug.',
+      refund_cancel_title: 'Kündigung vs. Erstattung',
+      refund_cancel_p1: 'Die Kündigung eines Abos stoppt zukünftige Verlängerungen, ist aber <em>nicht</em> dasselbe wie eine Erstattung. Bei Kündigung behältst du den Pro-Zugang bis zum Ende deines aktuellen Abrechnungszeitraums und wirst einfach nicht erneut belastet. Um Geld zurückzubekommen, folge den Erstattungsschritten oben innerhalb des 14-Tage-Zeitraums.',
+      refund_chargeback_title: 'Rückbuchungen',
+      refund_chargeback_p1: 'Wenn du ein Abrechnungsanliegen hast, kontaktiere uns bitte zuerst. Eine Rückbuchung bei deiner Bank ohne vorherige Kontaktaufnahme kann zur dauerhaften Sperrung deines Pro-Zugangs führen. Wir stellen die Erstattung viel lieber direkt aus — das ist für alle schneller.',
+      refund_partial_title: 'Keine anteiligen Erstattungen für aktive Zeiträume',
+      refund_partial_p1: 'Nach Ablauf des 14-Tage-Zeitraums gewähren wir keine anteiligen Erstattungen für ungenutzte Tage eines aktiven Wochen-, Monats- oder Jahreszeitraums. Du behältst den Pro-Zugang bis zum Ende des Zeitraums und wirst einfach nicht erneut belastet.',
+      refund_contact_title: 'Kontakt',
+      refund_contact_p1: 'Brauchst du eine Erstattung oder hast eine Abrechnungsfrage? Kontaktiere den Google Play Support direkt über den Play Store für die schnellste Lösung, oder schreib uns über einen unserer Social-Media-Kanäle (Links in der Fußzeile).',
+      withdraw_title: 'EU-Widerrufsrecht (14-tägige Bedenkzeit)',
+      withdraw_p1: 'Gemäß der EU-Verbraucherrechterichtlinie (2011/83/EU) haben Verbraucher ein 14-tägiges Widerrufsrecht bei Fernabsatzkäufen. Da DateScan <strong>digitale Inhalte liefert, die sofort nach dem Kauf bereitgestellt werden</strong>, erklärst du mit Abschluss des Kaufs deine ausdrückliche Zustimmung zur sofortigen Bereitstellung und nimmst zur Kenntnis, dass du damit auf dein 14-tägiges Widerrufsrecht verzichtest. Dies berührt nicht dein Recht, innerhalb des Standard-Erstattungszeitraums eine Erstattung über Google Play zu beantragen.',
+      footer_desc: 'Dein KI-gestützter Wingman. Scanne dein Outfit, erhalte sofortiges Stil- und Pflege-Feedback und geh selbstbewusst zum Date.',
+      footer_ondevice: 'Kamera-Scans laufen auf dem Gerät',
+      footer_legal: 'Rechtliches',
+      footer_privacy: 'Datenschutzerklärung',
+      footer_terms: 'Nutzungsbedingungen',
+      footer_refund: 'Erstattungsrichtlinie',
+      footer_delete: 'Account löschen',
+      footer_support: 'Support',
+      footer_contact: 'Support kontaktieren',
+      footer_follow: 'Folgen',
+      footer_disclaimer: "Haftungsausschluss: DateScan ist ein KI-gestütztes Tool, das ausschließlich der Unterhaltung und Selbstbewusstseinssteigerung dient. Wir garantieren keinen Dating-Erfolg oder bestimmte Ergebnisse. Die Ergebnisse sind Vorschläge, keine professionelle Beratung. Nutze es verantwortungsvoll und vertraue immer deinem eigenen Urteil.",
+      footer_copy: 'DateScan. Alle Rechte vorbehalten.'
+    }
+  };
+
+  // Detect language: _earlyLang > URL param > href regex > hash > cookie > nav_lang > localStorage > navigator > fallback
+  var supported = ['en','hu','de'];
+  var lang = null;
+  var _detectedFrom = 'fallback';
+  // 0. Use early detection result (highest priority — ran before any external script)
+  if (window._earlyLang && supported.indexOf(window._earlyLang) !== -1) {
+    lang = window._earlyLang; _detectedFrom = 'early_detection';
+  }
+  // 1. URL parameter
+  if (!lang) { try {
+    var urlParams = new URLSearchParams(window.location.search);
+    var urlLang = urlParams.get('lang');
+    if (urlLang && supported.indexOf(urlLang) !== -1) { lang = urlLang; _detectedFrom = 'url_param'; }
+  } catch(e) {} }
+  // 1b. href regex
+  if (!lang) { try {
+    var hrefMatch = window.location.href.match(/[?&]lang=([a-z]{2})(?:&|#|$)/i);
+    if (hrefMatch && supported.indexOf(hrefMatch[1]) !== -1) { lang = hrefMatch[1]; _detectedFrom = 'url_param(href_regex)'; }
+  } catch(e) {} }
+  // 2. Hash parameter
+  if (!lang) { try {
+    var _href2 = window.location.href || '';
+    var hashStr = window.location.hash || '';
+    if (!hashStr && _href2.indexOf('#') !== -1) { hashStr = _href2.substring(_href2.indexOf('#')); }
+    var hashMatch = hashStr.match(/[#&]lang=([a-z]{2})/i);
+    if (hashMatch && supported.indexOf(hashMatch[1]) !== -1) { lang = hashMatch[1]; _detectedFrom = 'hash'; }
+  } catch(e) {} }
+  // 2b. Cookie
+  if (!lang) { try {
+    var cookieMatch = document.cookie.match(/(?:^|;\s*)datescan_lang=([a-z]{2})/i);
+    if (cookieMatch && supported.indexOf(cookieMatch[1]) !== -1) { lang = cookieMatch[1]; _detectedFrom = 'cookie'; }
+  } catch(e) {} }
+  // 3. datescan.nav_lang
+  if (!lang) { try {
+    var navLang = localStorage.getItem('datescan.nav_lang');
+    if (navLang && supported.indexOf(navLang) !== -1) { lang = navLang; _detectedFrom = 'nav_lang'; }
+  } catch(e) {} }
+  // 4. datescan.lang
+  if (!lang) { try {
+    var stored = localStorage.getItem('datescan.lang');
+    if (stored && stored.indexOf('auto:') === 0) { var autoLang = stored.substring(5); if (supported.indexOf(autoLang) !== -1) { lang = autoLang; _detectedFrom = 'localStorage(auto)'; } }
+    else if (stored && supported.indexOf(stored) !== -1) { lang = stored; _detectedFrom = 'localStorage'; }
+  } catch(e) {} }
+  // 5. Browser/navigator
+  if (!lang) { try {
+    var navLangs = navigator.languages && navigator.languages.length ? Array.prototype.slice.call(navigator.languages) : [navigator.language || navigator.userLanguage || ''];
+    for (var i = 0; i < navLangs.length; i++) { var p = (navLangs[i] || '').split('-')[0].toLowerCase(); if (p === 'hu') { lang = 'hu'; _detectedFrom = 'navigator'; break; } if (p === 'de') { lang = 'de'; _detectedFrom = 'navigator'; break; } }
+  } catch(e) {} }
+  // 6. Final fallback
+  if (!lang) lang = 'en';
+  console.log('[refund.html] lang=' + lang + ' from=' + _detectedFrom + ' earlyLang=' + (window._earlyLang||'none'));
+
+  var strings = translations[lang] || translations.en;
+  document.documentElement.lang = lang;
+  document.title = strings.page_title;
+  var metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc) metaDesc.setAttribute('content', strings.meta_desc);
+
+  // Helper to set text by data-i18n key
+  function applyI18n() {
+    document.querySelectorAll('[data-i18n]').forEach(function(el) {
+      var key = el.getAttribute('data-i18n');
+      if (strings[key] !== undefined) el.textContent = strings[key];
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+      var key = el.getAttribute('data-i18n-html');
+      if (strings[key] !== undefined) el.innerHTML = strings[key];
+    });
+    document.querySelectorAll('[data-i18n-aria]').forEach(function(el) {
+      var key = el.getAttribute('data-i18n-aria');
+      if (strings[key] !== undefined) el.setAttribute('aria-label', strings[key]);
+    });
+  }
+
+  // Update all subpage links in this page to include ?lang=XX
+  function updateSubpageLinks() {
+    var subpages = ['privacy.html','contact.html','terms.html','refund.html','delete-account.html'];
+    document.querySelectorAll('a[href]').forEach(function(a) {
+      var href = a.getAttribute('href') || '';
+      for (var i = 0; i < subpages.length; i++) {
+        if (href.indexOf(subpages[i]) !== -1) {
+          var base = href;
+          var hash = '';
+          var hashIdx = href.indexOf('#');
+          if (hashIdx !== -1) { hash = href.substring(hashIdx); base = href.substring(0, hashIdx); }
+          var qIdx = base.indexOf('?');
+          if (qIdx !== -1) {
+            var params = base.substring(qIdx + 1).split('&').filter(function(p) { return p.indexOf('lang=') !== 0; });
+            base = base.substring(0, qIdx) + (params.length ? '?' + params.join('&') : '');
+          }
+          var sep = base.indexOf('?') !== -1 ? '&' : '?';
+          a.setAttribute('href', base + sep + 'lang=' + lang + hash);
+          break;
+        }
+      }
+    });
+    // Also update "Back to app" links to preserve language
+    document.querySelectorAll('a[href*="index.html"]').forEach(function(a) {
+      var href = a.getAttribute('href') || '';
+      if (href.indexOf('lang=') === -1) {
+        var sep = href.indexOf('?') !== -1 ? '&' : '?';
+        a.setAttribute('href', href + sep + 'lang=' + lang);
+      }
+    });
+  }
+
+  // Expose for later use
+  window._refundLang = lang;
+  window._refundStrings = strings;
+  window._refundApplyI18n = applyI18n;
+
+  // Apply i18n — aggressive retry strategy for file://, slow CDN, TWA environments
+  var _initDone = false;
+  function init() {
+    if (_initDone) return;
+    _initDone = true;
+    applyI18n();
+    updateSubpageLinks();
+  }
+  if (document.readyState !== 'loading') { init(); }
+  document.addEventListener('DOMContentLoaded', init);
+  window.addEventListener('load', function() {
+    if (!_initDone) init();
+    applyI18n(); updateSubpageLinks();
+  });
+  setTimeout(function() { applyI18n(); updateSubpageLinks(); }, 50);
+  setTimeout(function() { applyI18n(); updateSubpageLinks(); }, 200);
+  setTimeout(function() { applyI18n(); updateSubpageLinks(); }, 500);
+  setTimeout(function() { applyI18n(); updateSubpageLinks(); }, 1500);
+})();
+</script>
+
+<!-- ============================================================
+     DateScan — LOVE-AT-FIRST-SIGHT visual layer
+     Pure cosmetic overrides. Zero layout / markup changes.
+     Loads last in <head> so cascade wins over Tailwind CDN + local
+     styles. Remove this single <style id="ds-love-layer"> block to revert.
+     ============================================================ -->
+<style id="ds-love-layer">
+  /* ---------- design tokens ---------- */
+  :root{
+    --love-coral:#ff7eb3; --love-rose:#ff5a87; --love-pink:#ec4899;
+    --love-magenta:#d946ef; --love-violet:#a855f7; --love-deep-violet:#7c3aed;
+    --love-ink:#0a0712; --love-ink-2:#140a22;
+    --love-radius-sm:14px; --love-radius-md:20px;
+    --love-radius-lg:28px; --love-radius-xl:36px;
+    --love-shadow-2:0 1px 0 rgba(255,255,255,0.07) inset, 0 10px 30px -10px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.35);
+    --love-shadow-3:0 1px 0 rgba(255,255,255,0.08) inset, 0 24px 60px -20px rgba(124,58,237,0.35), 0 12px 30px -12px rgba(236,72,153,0.25);
+    --love-shadow-cta:0 8px 24px -6px rgba(236,72,153,0.55), 0 4px 12px -4px rgba(168,85,247,0.45), 0 1px 0 rgba(255,255,255,0.18) inset;
+  }
+
+  /* ---------- typography ---------- */
+  html, body{
+    font-family:'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    font-feature-settings:'ss01' on, 'cv11' on, 'calt' on;
+    letter-spacing:-0.005em;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  h1, h2, h3, .font-serif{ letter-spacing:-0.022em; }
+  .font-serif{ font-feature-settings:'lnum' on, 'ss02' on; }
+
+  /* ---------- sunset canvas ---------- */
+  body{
+    background-color:var(--love-ink) !important;
+    background-image:
+      radial-gradient(ellipse 90% 60% at 18% -8%, rgba(255,126,179,0.22) 0%, rgba(255,126,179,0) 55%),
+      radial-gradient(ellipse 80% 55% at 110% 8%, rgba(168,85,247,0.22) 0%, rgba(168,85,247,0) 55%),
+      radial-gradient(ellipse 100% 70% at 50% 120%, rgba(124,58,237,0.28) 0%, rgba(124,58,237,0) 60%),
+      linear-gradient(180deg,#0c0714 0%,#0a0712 55%,#080510 100%) !important;
+    background-attachment:fixed;
+    position:relative;
+  }
+  /* film grain */
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    opacity:0.05; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  /* ambient aurora — injected for pages without one */
+  body::after{
+    content:""; position:fixed; top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    width:140vw; height:140vh; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(circle at 15% 25%, rgba(255,90,135,0.16) 0%, transparent 42%),
+      radial-gradient(circle at 85% 30%, rgba(168,85,247,0.16) 0%, transparent 42%),
+      radial-gradient(circle at 50% 90%, rgba(236,72,153,0.14) 0%, transparent 45%),
+      radial-gradient(circle at 75% 75%, rgba(124,58,237,0.12) 0%, transparent 45%);
+    filter:blur(40px) saturate(1.1);
+    animation:love-aurora 22s ease-in-out infinite alternate;
+  }
+  @keyframes love-aurora{
+    0%{ transform:translate(-50%,-50%) scale(1) rotate(0); }
+    50%{ transform:translate(-48%,-52%) scale(1.05) rotate(2deg); }
+    100%{ transform:translate(-52%,-48%) scale(0.98) rotate(-2deg); }
+  }
+  /* lift actual content above the aurora */
+  body > *:not(style):not(script){ position:relative; z-index:1; }
+
+  /* ---------- glass surfaces ---------- */
+  .bg-white\/5, .bg-white\/\[0\.03\]{
+    background:linear-gradient(180deg,rgba(255,255,255,0.06) 0%,rgba(255,255,255,0.025) 100%) !important;
+    -webkit-backdrop-filter:blur(14px) saturate(140%); backdrop-filter:blur(14px) saturate(140%);
+  }
+  .bg-white\/10{
+    background:linear-gradient(180deg,rgba(255,255,255,0.10) 0%,rgba(255,255,255,0.05) 100%) !important;
+    -webkit-backdrop-filter:blur(18px) saturate(150%); backdrop-filter:blur(18px) saturate(150%);
+  }
+  .bg-white\/20{
+    background:linear-gradient(180deg,rgba(255,255,255,0.18) 0%,rgba(255,255,255,0.10) 100%) !important;
+    -webkit-backdrop-filter:blur(22px) saturate(160%); backdrop-filter:blur(22px) saturate(160%);
+  }
+  .bg-dark-950\/80, .bg-dark-950\/95,
+  .bg-\[\#09090b\], .bg-\[\#09090b\]\/95, .bg-\[\#0f0f14\]\/95,
+  .bg-black\/60, .bg-black\/70, .bg-black\/80, .bg-black\/85, .bg-black\/90{
+    background:linear-gradient(180deg,rgba(20,10,34,0.82) 0%,rgba(10,7,18,0.92) 100%) !important;
+    -webkit-backdrop-filter:blur(24px) saturate(160%); backdrop-filter:blur(24px) saturate(160%);
+  }
+  .bg-black\/30, .bg-black\/40, .bg-black\/50{
+    background:linear-gradient(180deg,rgba(20,10,34,0.55) 0%,rgba(10,7,18,0.70) 100%) !important;
+    -webkit-backdrop-filter:blur(16px) saturate(140%); backdrop-filter:blur(16px) saturate(140%);
+  }
+
+  /* ---------- radii ---------- */
+  .rounded-xl{ border-radius:var(--love-radius-sm) !important; }
+  .rounded-2xl{ border-radius:var(--love-radius-md) !important; }
+  .rounded-3xl, .rounded-\[24px\], .rounded-\[28px\]{ border-radius:var(--love-radius-lg) !important; }
+  .rounded-\[32px\]{ border-radius:var(--love-radius-xl) !important; }
+
+  .rounded-2xl.border, .rounded-3xl.border,
+  .rounded-\[24px\].border, .rounded-\[28px\].border{ box-shadow:var(--love-shadow-2); }
+  .rounded-2xl.shadow-2xl, .rounded-3xl.shadow-2xl,
+  .shadow-2xl.border{ box-shadow:var(--love-shadow-3) !important; }
+
+  /* ---------- borders ---------- */
+  .border-white\/5{ border-color:rgba(255,255,255,0.07) !important; }
+  .border-white\/10{ border-color:rgba(255,255,255,0.12) !important; }
+  .border-white\/15{ border-color:rgba(255,255,255,0.16) !important; }
+  .border-white\/20{ border-color:rgba(255,255,255,0.22) !important; }
+
+  /* ---------- brand gradient → sunset ---------- */
+  .from-brand-500.to-purple-500,
+  .from-brand-400.via-pink-400.to-purple-400,
+  .from-brand-500.via-\[\#db2777\].to-purple-500,
+  .from-\[\#ec4899\].to-\[\#9333ea\],
+  .from-pink-500.to-purple-500,
+  .from-pink-500.to-purple-600{
+    background-image:linear-gradient(135deg,#ff7eb3 0%,#ff5a87 30%,#ec4899 55%,#a855f7 85%,#7c3aed 100%) !important;
+  }
+
+  /* ---------- CTA buttons ---------- */
+  button.bg-gradient-to-tr.from-brand-500.to-purple-500,
+  button.bg-gradient-to-r.from-brand-500.to-purple-500,
+  a.bg-gradient-to-tr.from-brand-500.to-purple-500,
+  a.bg-gradient-to-r.from-brand-500.to-purple-500,
+  a.bg-gradient-to-tr.from-pink-500.to-purple-500,
+  a.bg-gradient-to-r.from-pink-500.to-purple-500,
+  button.bg-brand-500, a.bg-brand-500,
+  .bg-gradient-to-tr.from-brand-500.to-purple-500.shadow-lg,
+  .bg-gradient-to-r.from-brand-500.to-purple-500.shadow-lg{
+    position:relative;
+    box-shadow:var(--love-shadow-cta) !important;
+    transition:transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s ease, filter .25s ease !important;
+    letter-spacing:0.005em;
+  }
+  button.bg-gradient-to-tr.from-brand-500.to-purple-500:hover,
+  button.bg-gradient-to-r.from-brand-500.to-purple-500:hover,
+  a.bg-gradient-to-tr.from-brand-500.to-purple-500:hover,
+  a.bg-gradient-to-r.from-brand-500.to-purple-500:hover,
+  a.bg-gradient-to-tr.from-pink-500.to-purple-500:hover,
+  a.bg-gradient-to-r.from-pink-500.to-purple-500:hover,
+  button.bg-brand-500:hover, a.bg-brand-500:hover{
+    filter:brightness(1.06) saturate(1.05);
+    box-shadow:
+      0 14px 34px -8px rgba(236,72,153,0.65),
+      0 6px 18px -4px rgba(168,85,247,0.55),
+      0 1px 0 rgba(255,255,255,0.22) inset !important;
+  }
+  button.bg-gradient-to-tr.from-brand-500.to-purple-500:active,
+  button.bg-gradient-to-r.from-brand-500.to-purple-500:active,
+  a.bg-gradient-to-tr.from-brand-500.to-purple-500:active,
+  a.bg-gradient-to-r.from-brand-500.to-purple-500:active{
+    transform:translateY(1px) scale(0.985);
+  }
+  @keyframes love-pulse-glow{
+    0%,100%{ box-shadow:var(--love-shadow-cta); }
+    50%{ box-shadow:
+      0 10px 30px -6px rgba(236,72,153,0.70),
+      0 4px 14px -4px rgba(168,85,247,0.55),
+      0 0 0 6px rgba(236,72,153,0.08),
+      0 1px 0 rgba(255,255,255,0.20) inset; }
+  }
+
+  /* ---------- chips / pills ---------- */
+  .bg-brand-500\/10, .bg-brand-500\/15{
+    background:linear-gradient(135deg,rgba(255,126,179,0.14),rgba(168,85,247,0.10)) !important;
+    border-color:rgba(244,114,182,0.24);
+  }
+  .bg-brand-500\/20{ background:linear-gradient(135deg,rgba(255,126,179,0.22),rgba(168,85,247,0.16)) !important; }
+  .bg-brand-500\/30{ background:linear-gradient(135deg,rgba(255,126,179,0.30),rgba(168,85,247,0.22)) !important; }
+  .bg-purple-500\/10{ background:linear-gradient(135deg,rgba(168,85,247,0.14),rgba(124,58,237,0.10)) !important; }
+  .bg-purple-500\/20{ background:linear-gradient(135deg,rgba(168,85,247,0.22),rgba(124,58,237,0.16)) !important; }
+  .bg-emerald-500\/10{ background:linear-gradient(135deg,rgba(52,211,153,0.14),rgba(16,185,129,0.08)) !important; }
+  .bg-emerald-500\/20{ background:linear-gradient(135deg,rgba(52,211,153,0.26),rgba(16,185,129,0.16)) !important; }
+  .bg-amber-500\/10{ background:linear-gradient(135deg,rgba(251,191,36,0.14),rgba(249,115,22,0.08)) !important; }
+  .bg-red-500\/10{ background:linear-gradient(135deg,rgba(251,113,133,0.14),rgba(239,68,68,0.08)) !important; }
+  .bg-red-500\/15{ background:linear-gradient(135deg,rgba(251,113,133,0.20),rgba(239,68,68,0.12)) !important; }
+
+  /* ---------- text gradients ---------- */
+  .bg-clip-text.bg-gradient-to-r.from-brand-500.to-purple-500,
+  .bg-clip-text.bg-gradient-to-tr.from-brand-500.to-purple-500,
+  .bg-clip-text.bg-gradient-to-br.from-brand-500.to-purple-500,
+  .bg-clip-text.from-pink-500.to-purple-500,
+  .bg-clip-text.from-pink-400.to-purple-400{
+    background-image:linear-gradient(135deg,#ff9ec7 0%,#ff6a88 30%,#ec4899 55%,#c084fc 85%,#a855f7 100%) !important;
+  }
+
+  /* ---------- inputs ---------- */
+  input, textarea, select{
+    transition:border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+  }
+  input:focus, textarea:focus, select:focus{
+    box-shadow:
+      0 0 0 4px rgba(236,72,153,0.14),
+      0 0 0 1px rgba(236,72,153,0.55) inset;
+    outline:none !important;
+  }
+
+  /* ---------- focus visible ---------- */
+  :focus-visible{
+    outline:none;
+    box-shadow:
+      0 0 0 2px rgba(10,7,18,1),
+      0 0 0 4px rgba(236,72,153,0.55) !important;
+    border-radius:inherit;
+  }
+  button:focus-visible, a:focus-visible{ outline:none; }
+
+  /* ---------- nav blur ---------- */
+  nav[class*="fixed"], nav[class*="sticky"],
+  [role="navigation"][class*="fixed"], [role="navigation"][class*="sticky"],
+  .fixed.bottom-0[class*="bg-"]{
+    -webkit-backdrop-filter:blur(28px) saturate(170%);
+    backdrop-filter:blur(28px) saturate(170%);
+    border-top-color:rgba(255,255,255,0.08) !important;
+  }
+
+  /* ---------- micro-interactions: card lift ---------- */
+  a.rounded-2xl, a.rounded-3xl,
+  button.rounded-2xl, button.rounded-3xl,
+  [role="button"].rounded-2xl, [role="button"].rounded-3xl{
+    transition:transform .28s cubic-bezier(.2,.8,.2,1),
+               box-shadow .28s ease, border-color .28s ease, background-color .28s ease;
+  }
+  a.rounded-2xl:hover, a.rounded-3xl:hover,
+  button.rounded-2xl:hover, button.rounded-3xl:hover{ transform:translateY(-2px); }
+  a.rounded-2xl:active, a.rounded-3xl:active,
+  button.rounded-2xl:active, button.rounded-3xl:active{ transform:translateY(0) scale(0.99); }
+
+  /* ---------- shimmer on brand gradient cards ---------- */
+  .from-brand-500.to-purple-500.rounded-2xl,
+  .from-brand-500.to-purple-500.rounded-3xl{ position:relative; overflow:hidden; }
+  .from-brand-500.to-purple-500.rounded-2xl::after,
+  .from-brand-500.to-purple-500.rounded-3xl::after{
+    content:""; position:absolute; top:0; left:-60%;
+    width:60%; height:100%;
+    background:linear-gradient(100deg,transparent 0%,rgba(255,255,255,0.16) 50%,transparent 100%);
+    transform:skewX(-18deg); pointer-events:none;
+    animation:love-shimmer 5.5s ease-in-out 1s infinite;
+  }
+  @keyframes love-shimmer{
+    0%{ left:-60%; } 55%{ left:120%; } 100%{ left:120%; }
+  }
+
+  /* ---------- text color warm-up for dark surfaces ---------- */
+  .text-gray-400{ color:#b8a8c4 !important; }
+  .text-gray-500{ color:#94839f !important; }
+
+  /* ---------- selection + scrollbar ---------- */
+  ::selection{ background:rgba(236,72,153,0.32); color:#fff; }
+  @media (min-width:1024px){
+    *::-webkit-scrollbar-thumb{
+      background-image:linear-gradient(180deg,rgba(236,72,153,0.55),rgba(168,85,247,0.55)) !important;
+    }
+  }
+
+  /* ---------- safety: keep media pristine ---------- */
+  video, canvas, img{
+    backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
+  }
+
+  /* ---------- reduced motion ---------- */
+  @media (prefers-reduced-motion:reduce){
+    body::after{ animation:none !important; }
+    .from-brand-500.to-purple-500.rounded-2xl::after,
+    .from-brand-500.to-purple-500.rounded-3xl::after{ animation:none !important; display:none; }
+    a.rounded-2xl:hover, a.rounded-3xl:hover,
+    button.rounded-2xl:hover, button.rounded-3xl:hover{ transform:none; }
+  }
+</style>
 </head>
 <body class="antialiased">
 <div class="ambient-glow"></div>
-<a href="/index.html" aria-label="Back to app" class="lg:hidden fixed top-10 right-6 z-30 w-11 h-11 flex items-center justify-center rounded-full border border-white/10 bg-[#0f0f14]/80 backdrop-blur-md text-gray-300 hover:text-white hover:border-brand-500/50 hover:bg-brand-500/10 hover:shadow-[0_0_16px_rgba(236,72,153,0.25)] active:scale-95 transition-all" style="top: calc(env(safe-area-inset-top, 0px) + 2.5rem);">
+<a href="index.html?desktop=1" data-i18n-aria="back_aria" aria-label="Back to app" class="fixed top-10 right-6 z-30 w-11 h-11 flex items-center justify-center rounded-full border border-white/10 bg-[#0f0f14]/80 backdrop-blur-md text-gray-300 hover:text-white hover:border-brand-500/50 hover:bg-brand-500/10 hover:shadow-[0_0_16px_rgba(236,72,153,0.25)] active:scale-95 transition-all" style="top: calc(env(safe-area-inset-top, 0px) + 2.5rem);">
   <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
     <path d="M15 18l-6-6 6-6"/>
   </svg>
@@ -45,7 +742,7 @@
 
 
 <header class="relative z-10 max-w-3xl mx-auto px-6 pt-10 pb-8">
-  <a href="/" class="inline-flex items-center gap-3 group">
+  <a href="index.html?desktop=1" class="inline-flex items-center gap-3 group">
     <div class="w-12 h-12 flex items-center justify-center shrink-0">
       <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-[0_0_8px_rgba(236,72,153,0.4)]">
         <defs>
@@ -64,7 +761,7 @@
     </div>
     <div class="flex flex-col">
       <h1 class="font-bold text-xl md:text-2xl tracking-tight leading-none text-white group-hover:text-brand-400 transition-colors">DateScan<span class="text-brand-500">.</span></h1>
-      <span class="text-[10px] text-gray-400 font-medium uppercase tracking-widest mt-1">Personal Style Coach</span>
+      <span class="text-[10px] text-gray-400 font-medium uppercase tracking-widest mt-1" data-i18n="subtitle_tag">Personal Style Coach</span>
     </div>
   </a>
 </header>
@@ -73,18 +770,18 @@
 
   <!-- Hero -->
   <div class="mb-10 pb-8 border-b border-white/10">
-    <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-3">Plans &amp; Refunds</div>
-    <h1 class="font-serif text-4xl sm:text-5xl font-medium text-white mb-4 leading-tight">
+    <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-3" data-i18n="hero_badge">Plans &amp; Refunds</div>
+    <h1 class="font-serif text-4xl sm:text-5xl font-medium text-white mb-4 leading-tight" data-i18n-html="hero_title">
       You're <span class="italic text-brand-400">1 tweak</span> away from a better first impression.
     </h1>
-    <p class="text-base text-gray-400 leading-relaxed max-w-xl">
+    <p class="text-base text-gray-400 leading-relaxed max-w-xl" data-i18n-html="hero_desc">
       Most users improve <strong class="text-white">+8–15 points</strong> with the full breakdown. Pick the plan that fits your next date — or start free, no card required.
     </p>
   </div>
 
   <!-- Plans We Offer -->
   <section class="mb-16">
-    <h2 class="font-serif text-2xl font-semibold text-white mb-6">Plans We Offer</h2>
+    <h2 class="font-serif text-2xl font-semibold text-white mb-6" data-i18n="plans_title">Plans We Offer</h2>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
@@ -92,64 +789,64 @@
       <div class="plan-card sm:col-span-2 p-6 rounded-2xl border border-white/10 bg-white/[0.02]">
         <div class="flex items-start justify-between gap-4 mb-3">
           <div>
-            <div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Free</div>
-            <div class="font-serif text-3xl text-white">$0 <span class="text-sm text-gray-500 font-sans">/ forever</span></div>
+            <div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1" data-i18n="free_label">Free</div>
+            <div class="font-serif text-3xl text-white" data-i18n-html="free_price">$0 <span class="text-sm text-gray-500 font-sans">/ until canceled</span></div>
           </div>
-          <span class="text-[10px] font-semibold text-gray-400 px-2.5 py-1 rounded-full border border-white/10">No card required</span>
+          <span class="text-[10px] font-semibold text-gray-400 px-2.5 py-1 rounded-full border border-white/10" data-i18n="free_badge">No card required</span>
         </div>
-        <p class="text-sm text-gray-400 mb-4">Try the full experience daily. Perfect for casual check-ins before a date night.</p>
+        <p class="text-sm text-gray-400 mb-4" data-i18n="free_desc">Try the full experience daily. Perfect for casual check-ins before a date night.</p>
         <ul class="text-sm text-gray-300 space-y-2">
-          <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">✔</span> <strong class="text-white">5 points per day</strong> (resets every 24h)</li>
-          <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">✔</span> <strong class="text-white">1 point per scan or AI Coach message</strong> — spend them however you like</li>
-          <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">✔</span> Core style, grooming &amp; posture feedback</li>
+          <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">✔</span> <span data-i18n-html="free_feat1"><strong class="text-white">5 points per day</strong> (resets every 24h)</span></li>
+          <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">✔</span> <span data-i18n-html="free_feat2"><strong class="text-white">1 point per scan or AI Coach message</strong> — spend them however you like</span></li>
+          <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">✔</span> <span data-i18n="free_feat3">Core style, grooming &amp; posture feedback</span></li>
         </ul>
       </div>
 
       <!-- Week -->
       <div class="plan-card p-6 rounded-2xl border border-white/10 bg-white/[0.02]">
-        <div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Week</div>
-        <div class="text-xs text-gray-500 mb-3">Quick improvements before your next date</div>
-        <div class="font-serif text-3xl text-white mb-4">$4.99 <span class="text-sm text-gray-500 font-sans">/ week</span></div>
+        <div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1" data-i18n="week_label">Week</div>
+        <div class="text-xs text-gray-500 mb-3" data-i18n="week_desc">Quick improvements before your next date</div>
+        <div class="font-serif text-3xl text-white mb-4" data-i18n-html="week_price">$4.99 <span class="text-sm text-gray-500 font-sans">/ week</span></div>
         <ul class="text-sm text-gray-300 space-y-2">
-          <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">✔</span> Unlimited scans</li>
-          <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">✔</span> Unlimited AI coaching</li>
-          <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">✔</span> Full improvement breakdown</li>
+          <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">✔</span> <span data-i18n="week_feat1">Unlimited scans</span></li>
+          <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">✔</span> <span data-i18n="week_feat2">Unlimited AI coaching</span></li>
+          <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">✔</span> <span data-i18n="week_feat3">Full improvement breakdown</span></li>
         </ul>
       </div>
 
       <!-- Month -->
       <div class="plan-card p-6 rounded-2xl border border-brand-500/40 bg-gradient-to-br from-brand-500/10 to-purple-500/5 shadow-lg shadow-brand-500/10 relative">
-        <span class="absolute -top-2.5 right-4 text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full bg-brand-500 text-white">Popular</span>
-        <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-1">Month</div>
-        <div class="text-xs text-gray-400 mb-3">Build confidence fast</div>
-        <div class="font-serif text-3xl text-white mb-4">$9.99 <span class="text-sm text-gray-500 font-sans">/ month</span></div>
+        <span class="absolute -top-2.5 right-4 text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full bg-brand-500 text-white" data-i18n="month_badge">Popular</span>
+        <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-1" data-i18n="month_label">Month</div>
+        <div class="text-xs text-gray-400 mb-3" data-i18n="month_desc">Build confidence fast</div>
+        <div class="font-serif text-3xl text-white mb-4" data-i18n-html="month_price">$9.99 <span class="text-sm text-gray-500 font-sans">/ month</span></div>
         <ul class="text-sm text-gray-300 space-y-2">
-          <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">✔</span> Unlimited scans + coaching</li>
-          <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">✔</span> Full improvement breakdown</li>
-          <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">✔</span> Track your progress</li>
+          <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">✔</span> <span data-i18n="month_feat1">Unlimited scans + coaching</span></li>
+          <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">✔</span> <span data-i18n="month_feat2">Full improvement breakdown</span></li>
+          <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">✔</span> <span data-i18n="month_feat3">Track your progress</span></li>
         </ul>
       </div>
 
       <!-- Year -->
       <div class="plan-card sm:col-span-2 p-6 rounded-2xl border border-white/10 bg-white/[0.02] relative">
-        <span class="absolute -top-2.5 right-4 text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full bg-gradient-to-r from-brand-500 to-purple-500 text-white">Best value — save 58%</span>
+        <span class="absolute -top-2.5 right-4 text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full bg-gradient-to-r from-brand-500 to-purple-500 text-white" data-i18n="year_badge">Best value — save 58%</span>
         <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           <div>
-            <div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Year</div>
-            <div class="text-xs text-gray-500 mb-3">Become consistently attractive</div>
-            <div class="font-serif text-3xl text-white mb-1">$49.99 <span class="text-sm text-gray-500 font-sans">/ year</span></div>
-            <p class="text-xs text-gray-500">≈ $4.17/month · 12 months paid upfront</p>
+            <div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1" data-i18n="year_label">Year</div>
+            <div class="text-xs text-gray-500 mb-3" data-i18n="year_desc">Become consistently attractive</div>
+            <div class="font-serif text-3xl text-white mb-1" data-i18n-html="year_price">$49.99 <span class="text-sm text-gray-500 font-sans">/ year</span></div>
+            <p class="text-xs text-gray-500" data-i18n="year_equiv">≈ $4.17/month · 12 months paid upfront</p>
           </div>
           <ul class="text-sm text-gray-300 space-y-2 sm:text-right">
-            <li class="flex items-start gap-2 sm:justify-end"><span class="text-brand-400 mt-0.5">✔</span> Everything, all year</li>
-            <li class="flex items-start gap-2 sm:justify-end"><span class="text-brand-400 mt-0.5">✔</span> Unlimited scans + coaching</li>
-            <li class="flex items-start gap-2 sm:justify-end"><span class="text-brand-400 mt-0.5">✔</span> Priority support</li>
+            <li class="flex items-start gap-2 sm:justify-end"><span class="text-brand-400 mt-0.5">✔</span> <span data-i18n="year_feat1">Everything, all year</span></li>
+            <li class="flex items-start gap-2 sm:justify-end"><span class="text-brand-400 mt-0.5">✔</span> <span data-i18n="year_feat2">Unlimited scans + coaching</span></li>
+            <li class="flex items-start gap-2 sm:justify-end"><span class="text-brand-400 mt-0.5">✔</span> <span data-i18n="year_feat3">Priority support</span></li>
           </ul>
         </div>
       </div>
     </div>
 
-    <p class="text-xs text-gray-500 mt-6 flex items-center gap-2">
+    <p class="text-xs text-gray-500 mt-6 flex items-center gap-2" data-i18n-html="billing_note">
       <svg class="w-3.5 h-3.5 text-brand-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
       Secure billing via Google Play. Data protected by <a href="https://www.cloudflare.com/" target="_blank" rel="noopener" class="text-brand-400 hover:text-brand-500 font-medium">Cloudflare</a>.
     </p>
@@ -157,60 +854,63 @@
 
   <!-- Refund Policy -->
   <article class="prose-custom">
-    <h2 style="margin-top:0;">Refund Policy</h2>
-    <p class="text-sm text-gray-500">Last updated: April 10, 2026</p>
+    <h2 style="margin-top:0;" data-i18n="refund_title">Refund Policy</h2>
+    <p class="text-sm text-gray-500" data-i18n="last_updated">Last updated: April 18, 2026</p>
 
-    <p>We want you to be happy with DateScan. If you're not, here's exactly how refunds work — no dark patterns, no hoops.</p>
+    <p data-i18n="refund_intro">We want you to be happy with DateScan. If you're not, here's exactly how refunds work — no dark patterns, no hoops.</p>
 
-    <h3>Refunds for Google Play Store Purchases</h3>
-    <p>If you subscribed to Pro via the <strong>Google Play Store</strong> (Android app), refunds are handled by Google according to <a href="https://support.google.com/googleplay/answer/2479637" target="_blank" rel="noopener">Google Play's refund policy</a>, not by us. To request a refund for a Play Store purchase:</p>
+    <h3 data-i18n="refund_gp_title">Refunds for Google Play Store Purchases</h3>
+    <p data-i18n-html="refund_gp_p1">If you subscribed to Pro via the <strong>Google Play Store</strong> (Android app), refunds are handled by Google according to <a href="https://support.google.com/googleplay/answer/2479637" target="_blank" rel="noopener">Google Play's refund policy</a>, not by us. To request a refund for a Play Store purchase:</p>
     <ul>
-      <li>Open the <a href="https://play.google.com/store/account/orderhistory" target="_blank" rel="noopener">Google Play order history</a>.</li>
-      <li>Find the DateScan subscription and tap "Request a refund".</li>
-      <li>Alternatively: Play Store → your profile → Payments &amp; subscriptions → Subscriptions → DateScan → Cancel or Refund.</li>
+      <li data-i18n-html="refund_gp_li1">Open the <a href="https://play.google.com/store/account/orderhistory" target="_blank" rel="noopener">Google Play order history</a>.</li>
+      <li data-i18n-html="refund_gp_li2">Find the DateScan subscription and tap "Request a refund".</li>
+      <li data-i18n-html="refund_gp_li3">Alternatively: Play Store → your profile → Payments &amp; subscriptions → Subscriptions → DateScan → Cancel or Refund.</li>
     </ul>
-    <p>Google generally allows self-service refunds within 48 hours of purchase; after that, refund decisions are made by Google on a case-by-case basis. We cannot override Google's decision on Play Store refunds, but we can support your case — email us with your Google Play order ID and we'll provide any information Google needs.</p>
+    <p data-i18n="refund_gp_p2">Google generally allows self-service refunds within 48 hours of purchase; after that, refund decisions are made by Google on a case-by-case basis. We cannot override Google's decision on Play Store refunds, but we can support your case — email us with your Google Play order ID and we'll provide any information Google needs.</p>
 
-    <h3>14-Day Goodwill Refund Window</h3>
-    <p>Beyond Google Play's 48-hour self-serve window, we offer a discretionary <strong>14-day goodwill refund</strong> if you're not satisfied — <strong>provided the service was not substantially used</strong>. To request one, email us (see below) and we'll coordinate the refund through Google Play on your behalf.</p>
+    <h3 data-i18n="refund_14_title">14-Day Goodwill Refund Window</h3>
+    <p data-i18n-html="refund_14_p1">Beyond Google Play's 48-hour self-serve window, we offer a discretionary <strong>14-day goodwill refund</strong> if you're not satisfied — <strong>provided the service was not substantially used</strong>. To request one, email us (see below) and we'll coordinate the refund through Google Play on your behalf.</p>
 
-    <h3>What "Substantially Used" Means</h3>
-    <p>To keep things fair and prevent abuse, a purchase is considered "substantially used" — and therefore ineligible for a refund — when any of the following apply:</p>
+    <h3 data-i18n="refund_subst_title">What "Substantially Used" Means</h3>
+    <p data-i18n="refund_subst_p1">To keep things fair and prevent abuse, a purchase is considered "substantially used" — and therefore ineligible for a refund — when any of the following apply:</p>
     <ul>
-      <li>You have completed <strong>more than 10 scans</strong> after upgrading.</li>
-      <li>You have sent <strong>more than 20 AI Coach messages</strong> after upgrading.</li>
-      <li>You have used the Service for more than a total of <strong>60 minutes</strong> of active session time.</li>
-      <li>You have already received a refund for a previous DateScan purchase.</li>
-      <li>The 14-day window has expired, counted from the moment of the original transaction.</li>
+      <li data-i18n-html="refund_subst_li1">You have completed <strong>more than 10 scans</strong> after upgrading.</li>
+      <li data-i18n-html="refund_subst_li2">You have sent <strong>more than 20 AI Coach messages</strong> after upgrading.</li>
+      <li data-i18n-html="refund_subst_li3">You have used the Service for more than a total of <strong>60 minutes</strong> of active session time.</li>
+      <li data-i18n-html="refund_subst_li4">You have already received a refund for a previous DateScan purchase.</li>
+      <li data-i18n-html="refund_subst_li5">The 14-day window has expired, counted from the moment of the original transaction.</li>
     </ul>
-    <p>Scans and messages used under the free tier (5 points per day, 1 point per scan or AI Coach message) do not count toward these limits.</p>
+    <p data-i18n="refund_subst_p2">Scans and messages used under the free tier (5 points per day, 1 point per scan or AI Coach message) do not count toward these limits.</p>
 
-    <h3>EU Statutory Right of Withdrawal</h3>
-    <p>Customers in the European Union also have a statutory right of withdrawal within 14 days under Directive 2011/83/EU. Because DateScan is digital content delivered instantly, this right may be waived at checkout once you begin using Pro features. If you have not yet used any Pro features, the statutory right applies in full and overrides the "substantially used" rule above.</p>
+    <h3 data-i18n="refund_eu_title">EU Statutory Right of Withdrawal</h3>
+    <p data-i18n="refund_eu_p1">Customers in the European Union also have a statutory right of withdrawal within 14 days under Directive 2011/83/EU. Because DateScan is digital content delivered instantly, this right may be waived at checkout once you begin using Pro features. If you have not yet used any Pro features, the statutory right applies in full and overrides the "substantially used" rule above.</p>
 
-    <h3>How to Request a Refund</h3>
-    <p>You have two options:</p>
-    <p><strong>Option A — Self-serve via Google Play:</strong> Open the <a href="https://play.google.com/store/account/orderhistory" target="_blank" rel="noopener">Google Play order history</a>, find DateScan, and tap "Request a refund". This is the fastest path within the first 48 hours after purchase.</p>
-    <p><strong>Option B — Contact us:</strong> If Google Play denies your refund or if you purchased more than 48 hours ago, DM us on any of our social channels (links in the footer) with "<strong>Refund Request</strong>" and include:</p>
+    <h3 data-i18n="refund_how_title">How to Request a Refund</h3>
+    <p data-i18n="refund_how_p1">You have two options:</p>
+    <p data-i18n-html="refund_how_optA"><strong>Option A — Self-serve via Google Play:</strong> Open the <a href="https://play.google.com/store/account/orderhistory" target="_blank" rel="noopener">Google Play order history</a>, find DateScan, and tap "Request a refund". This is the fastest path within the first 48 hours after purchase.</p>
+    <p data-i18n-html="refund_how_optB"><strong>Option B — Contact us:</strong> If Google Play denies your refund or if you purchased more than 48 hours ago, DM us on any of our social channels (links in the footer) with "<strong>Refund Request</strong>" and include:</p>
     <ul>
-      <li>The Google account email used for the purchase</li>
-      <li>The plan you bought (Week, Month, or Year)</li>
-      <li>The Google Play order ID from your receipt (starts with <code>GPA.</code>)</li>
-      <li>A brief explanation of why you're requesting a refund</li>
+      <li data-i18n="refund_how_li1">The Google account email used for the purchase</li>
+      <li data-i18n="refund_how_li2">The plan you bought (Week, Month, or Year)</li>
+      <li data-i18n-html="refund_how_li3">The Google Play order ID from your receipt (starts with <code>GPA.</code>)</li>
+      <li data-i18n="refund_how_li4">A brief explanation of why you're requesting a refund</li>
     </ul>
-    <p>We aim to respond within <strong>3 business days</strong>. Approved refunds are processed by Google Play back to your original payment method and typically appear on your statement within 5–10 business days.</p>
+    <p data-i18n-html="refund_how_p2">We aim to respond within <strong>3 business days</strong>. Approved refunds are processed by Google Play back to your original payment method and typically appear on your statement within 5–10 business days.</p>
 
-    <h3>Cancellation vs. Refund</h3>
-    <p>Cancelling a subscription stops future renewals but is <em>not</em> the same as a refund. When you cancel, you keep Pro access until the end of your current billing period and simply aren't charged again. To request money back, follow the refund steps above within the 14-day window.</p>
+    <h3 data-i18n="refund_cancel_title">Cancellation vs. Refund</h3>
+    <p data-i18n-html="refund_cancel_p1">Canceling a subscription stops future renewals but is <em>not</em> the same as a refund. When you cancel, you keep Pro access until the end of your current billing period and simply aren't charged again. To request money back, follow the refund steps above within the 14-day window.</p>
 
-    <h3>Chargebacks</h3>
-    <p>If you have a billing concern, please contact us first. Initiating a chargeback with your bank without reaching out may result in permanent suspension of your Pro access. We'd much rather just issue the refund directly — it's faster for everyone.</p>
+    <h3 data-i18n="refund_chargeback_title">Chargebacks</h3>
+    <p data-i18n="refund_chargeback_p1">If you have a billing concern, please contact us first. Initiating a chargeback with your bank without reaching out may result in permanent suspension of your Pro access. We'd much rather just issue the refund directly — it's faster for everyone.</p>
 
-    <h3>No Partial Refunds for Active Periods</h3>
-    <p>Once the 14-day window expires, we do not prorate partial refunds for unused days of an active Week, Month, or Year period. You keep Pro access until the end of the period, and simply aren't charged again.</p>
+    <h3 data-i18n="refund_partial_title">No Partial Refunds for Active Periods</h3>
+    <p data-i18n="refund_partial_p1">Once the 14-day window expires, we do not prorate partial refunds for unused days of an active Week, Month, or Year period. You keep Pro access until the end of the period, and simply aren't charged again.</p>
 
-    <h3>Contact</h3>
-    <p>Need a refund or have a billing question? Contact Google Play support directly via the Play Store for the fastest resolution, or DM us on any of our social channels (links in the footer).</p>
+    <h3 data-i18n="withdraw_title">EU Right of Withdrawal (14-day cooling-off)</h3>
+    <p data-i18n-html="withdraw_p1">Under the EU Consumer Rights Directive (2011/83/EU) and Hungarian Government Decree 45/2014 (II.26.), consumers have a 14-day right of withdrawal from distance purchases. Because DateScan delivers <strong>digital content that begins immediately upon purchase</strong>, by completing your purchase you expressly consent to immediate delivery and acknowledge that you lose your 14-day withdrawal right. This does not affect your right to request a refund through Google Play within their standard refund window.</p>
+
+    <h3 data-i18n="refund_contact_title">Contact</h3>
+    <p data-i18n="refund_contact_p1">Need a refund or have a billing question? Contact Google Play support directly via the Play Store for the fastest resolution, or DM us on any of our social channels (links in the footer).</p>
   </article>
 </main>
 
@@ -223,7 +923,7 @@
 
       <!-- Brand column -->
       <div class="col-span-2 lg:col-span-5">
-        <a href="/" class="inline-flex items-center gap-3 group mb-4">
+        <a href="index.html?desktop=1" class="inline-flex items-center gap-3 group mb-4">
           <div class="w-11 h-11 flex items-center justify-center shrink-0">
             <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-[0_0_8px_rgba(236,72,153,0.4)]">
               <defs>
@@ -242,40 +942,40 @@
           </div>
           <div class="flex flex-col">
             <span class="font-bold text-xl tracking-tight leading-none text-white group-hover:text-brand-400 transition-colors">DateScan<span class="text-brand-500">.</span></span>
-            <span class="text-[10px] text-gray-500 font-medium uppercase tracking-widest mt-1.5">Personal Style Coach</span>
+            <span class="text-[10px] text-gray-500 font-medium uppercase tracking-widest mt-1.5" data-i18n="subtitle_tag">Personal Style Coach</span>
           </div>
         </a>
-        <p class="text-sm text-gray-400 leading-relaxed max-w-sm mb-5">
+        <p class="text-sm text-gray-400 leading-relaxed max-w-sm mb-5" data-i18n="footer_desc">
           Your AI-powered wingman. Scan your outfit, get instant style and grooming feedback, and walk into your date with confidence.
         </p>
         <div class="inline-flex items-center gap-2 text-[10px] text-gray-500 px-3 py-1.5 rounded-full border border-white/10 bg-white/5">
           <svg class="w-3 h-3 text-brand-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-          <span>Camera scans run on-device</span>
+          <span data-i18n="footer_ondevice">Camera scans run on-device</span>
         </div>
       </div>
 
       <!-- Legal -->
       <div class="lg:col-span-2 lg:col-start-7">
-        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4">Legal</h3>
+        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4" data-i18n="footer_legal">Legal</h3>
         <ul class="space-y-2.5 text-sm">
-          <li><a href="/privacy.html" class="text-gray-400 hover:text-brand-400 transition-colors">Privacy Policy</a></li>
-          <li><a href="/terms.html" class="text-gray-400 hover:text-brand-400 transition-colors">Terms of Service</a></li>
-          <li><a href="/refund.html" class="text-gray-400 hover:text-brand-400 transition-colors">Refund Policy</a></li>
-          <li><a href="/delete-account.html" class="text-gray-400 hover:text-brand-400 transition-colors">Delete Account</a></li>
+          <li><a href="privacy.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_privacy">Privacy Policy</a></li>
+          <li><a href="terms.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_terms">Terms of Service</a></li>
+          <li><a href="refund.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_refund">Refund Policy</a></li>
+          <li><a href="delete-account.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_delete">Delete Account</a></li>
         </ul>
       </div>
 
       <!-- Support -->
       <div class="lg:col-span-2">
-        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4">Support</h3>
+        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4" data-i18n="footer_support">Support</h3>
         <ul class="space-y-2.5 text-sm">
-          <li><a href="/contact.html" class="text-gray-400 hover:text-brand-400 transition-colors">Contact Support</a></li>
+          <li><a href="contact.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_contact">Contact Support</a></li>
         </ul>
       </div>
 
       <!-- Social -->
       <div class="lg:col-span-3">
-        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4">Follow</h3>
+        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4" data-i18n="footer_follow">Follow</h3>
         <div class="flex items-center gap-2.5">
           <a href="https://www.tiktok.com/@datescan" target="_blank" rel="noopener noreferrer" aria-label="DateScan on TikTok" class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/10 bg-white/5 text-gray-400 hover:text-white hover:border-brand-500/50 hover:bg-brand-500/10 hover:shadow-[0_0_16px_rgba(236,72,153,0.25)] transition-all">
             <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.321 5.562a5.124 5.124 0 0 1-.443-.258 6.228 6.228 0 0 1-1.137-.966c-.849-.971-1.166-1.956-1.282-2.645h.004C16.369 1.104 16.41.5 16.41.5h-3.31v12.789c0 .171 0 .341-.007.508l-.001.064-.003.085v.007a3.535 3.535 0 0 1-1.78 2.801 3.474 3.474 0 0 1-1.724.454c-1.933 0-3.502-1.579-3.502-3.524s1.569-3.524 3.502-3.524c.366 0 .718.057 1.049.162l.004-3.37a6.844 6.844 0 0 0-5.283 1.524A6.842 6.842 0 0 0 3 13.304c0 1.599.503 3.123 1.456 4.4a6.838 6.838 0 0 0 5.475 2.78c3.78 0 6.844-3.064 6.844-6.844V8.168a9.533 9.533 0 0 0 5.565 1.781V6.642c-1.175 0-2.218-.391-3.019-1.08Z"/></svg>
@@ -295,5 +995,50 @@
 
     <!-- Bottom strip -->
     <div class="border-t border-white/5 pt-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-      <p class="text-[11px] text-gray-600 italic leading-relaxed max-w-2xl">
-        Disclaimer: DateScan is an AI-powered tool designed for entertainment and confidence-boosting purposes only. We do not guarantee dating success 
+      <p class="text-[11px] text-gray-600 italic leading-relaxed max-w-2xl" data-i18n="footer_disclaimer">
+        Disclaimer: DateScan is an AI-powered tool designed for entertainment and confidence-boosting purposes only. We do not guarantee dating success or specific outcomes. Results are suggestions, not professional advice. Use responsibly and always trust your own judgment.
+      </p>
+      <div class="flex items-center gap-4 text-xs text-gray-600 shrink-0">
+        <p>&copy; 2025 <span data-i18n="footer_copy">DateScan. All rights reserved.</span></p>
+        <p>info@datescan.app</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ── Haptic Feedback: vibration on interactive element press ── -->
+<script>
+(function(){
+  // Vibration API — works on Android/mobile, silently ignored on desktop/iOS
+  if (!navigator.vibrate && !navigator.webkitVibrate) return;
+  var vibrate = navigator.vibrate || navigator.webkitVibrate;
+
+  // Respect reduced-motion preference
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  function hapticTap(ms) {
+    try { vibrate.call(navigator, ms); } catch(e) {}
+  }
+
+  document.addEventListener('pointerdown', function(e) {
+    var el = e.target.closest(
+      'button, a, [role="button"], input[type="submit"], input[type="button"], input[type="checkbox"], label.checkbox-row, .btn-danger, [data-haptic]'
+    );
+    if (!el) return;
+    // Skip disabled elements
+    if (el.disabled || el.getAttribute('aria-disabled') === 'true') return;
+
+    // Intensity tiers
+    if (el.closest('.btn-danger') || el.matches('[data-haptic="heavy"]')) {
+      hapticTap(25);          // destructive / important actions
+    } else if (el.matches('a[href]') && !el.matches('[role="button"]')) {
+      hapticTap(5);           // light tap for plain links
+    } else {
+      hapticTap(10);          // standard tap for buttons / controls
+    }
+  }, { passive: true });
+})();
+</script>
+
+</body>
+</html>

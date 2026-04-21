@@ -2,6 +2,18 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<!-- ============================================================
+     ANDROID APP REDIRECT (inline, before paint)
+     Google Play policy: no web checkout inside TWA.
+     ============================================================ -->
+<script>
+(function(){
+  try{
+    var p=new URLSearchParams(location.search);
+    if(p.get('platform')==='android'){location.replace('index.html?platform=android');}
+  }catch(e){}
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#09090b">
 <title>DateScan Premium — Unlock Your Edge</title>
@@ -18,440 +30,832 @@ body{
   background:#09090b;
   color:#fafafa;
   min-height:100vh;
+  min-height:100dvh;
   overflow-x:clip;
   overscroll-behavior-x:none;
   -webkit-font-smoothing:antialiased;
 }
 
-.ambient-glow{
-  position:fixed;inset:0;pointer-events:none;z-index:0;
-  background:
-    radial-gradient(circle at 20% 10%,rgba(236,72,153,.10) 0%,transparent 45%),
-    radial-gradient(circle at 80% 85%,rgba(147,51,234,.08) 0%,transparent 45%);
+/* ── Ambient Glow ── */
+.ambient{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.ambient::before{
+  content:'';position:absolute;
+  width:420px;height:420px;
+  top:-80px;left:-60px;
+  background:radial-gradient(circle,rgba(236,72,153,.14) 0%,transparent 70%);
+  filter:blur(40px);
+}
+.ambient::after{
+  content:'';position:absolute;
+  width:360px;height:360px;
+  bottom:-40px;right:-80px;
+  background:radial-gradient(circle,rgba(147,51,234,.10) 0%,transparent 70%);
+  filter:blur(50px);
 }
 
-.container{
+.wrap{
   position:relative;z-index:1;
   max-width:480px;width:100%;margin:0 auto;
   padding:32px 20px 60px;
 }
 
-/* ── Header ── */
-.header{text-align:center;margin-bottom:28px}
-
-.crown-badge{
-  display:inline-flex;align-items:center;gap:8px;
-  background:rgba(236,72,153,.08);
-  border:1px solid rgba(236,72,153,.20);
-  padding:6px 16px;border-radius:9999px;
-  font-size:11px;font-weight:600;
-  letter-spacing:.15em;text-transform:uppercase;
-  color:#f472b6;margin-bottom:16px;
+/* ── Back Button (fixed, top-right, matching contact.html) ── */
+.back{
+  position:fixed;
+  top:calc(env(safe-area-inset-top, 0px) + 2.5rem);
+  right:24px;
+  z-index:30;
+  width:44px;height:44px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(15,15,20,.80);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  color:#b0a8ba;
+  text-decoration:none;cursor:pointer;
+  transition:all .2s ease;
 }
-.crown-badge i{font-size:10px}
+.back:hover{
+  color:#fff;
+  border-color:rgba(236,72,153,.50);
+  background:rgba(236,72,153,.10);
+  box-shadow:0 0 16px rgba(236,72,153,.25);
+}
+.back:active{transform:scale(.95)}
+.back svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 
-h1{font-size:2rem;font-weight:800;line-height:1.15;letter-spacing:-.02em;margin-bottom:10px}
-h1 .gradient{
-  background:linear-gradient(135deg,#ec4899 0%,#9333ea 100%);
+/* ── Header ── */
+.hdr{text-align:center;margin-bottom:26px}
+
+.pill{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(236,72,153,.07);
+  border:1px solid rgba(236,72,153,.18);
+  padding:5px 15px;border-radius:9999px;
+  font-size:10px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;
+  color:#f472b6;margin-bottom:14px;
+}
+.pill i{font-size:9px}
+
+h1{font-size:1.85rem;font-weight:800;line-height:1.15;letter-spacing:-.025em;margin-bottom:10px}
+h1 .gr{
+  background:linear-gradient(135deg,#ec4899 0%,#a855f7 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
   background-clip:text;
 }
+.sub{color:#71717a;font-size:.88rem;line-height:1.55;max-width:340px;margin:0 auto}
 
-.subtitle{color:#9ca3af;font-size:.92rem;line-height:1.55;max-width:360px;margin:0 auto}
-
-/* ── Feature box ── */
-.features-box{
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.07);
+/* ── Glass card ── */
+.glass{
+  background:rgba(255,255,255,.025);
+  border:1px solid rgba(255,255,255,.06);
   border-radius:1rem;
-  padding:18px 16px;margin-bottom:30px;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
 }
 
-.feature-item{
-  display:flex;align-items:flex-start;gap:12px;
-  padding:10px 0;
-  border-bottom:1px solid rgba(255,255,255,.05);
+/* ── Plans ── */
+.plans-label{
+  text-align:center;font-size:10px;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:#52525b;margin-bottom:14px;font-weight:700;
 }
-.feature-item:last-child{border-bottom:none}
 
-.feature-icon{
-  width:34px;height:34px;flex-shrink:0;
-  border-radius:10px;
-  background:rgba(236,72,153,.10);
-  border:1px solid rgba(236,72,153,.20);
+.plan{position:relative;margin-bottom:14px;cursor:pointer}
+.plan input{position:absolute;opacity:0;width:0;height:0}
+
+.card{
+  display:flex;align-items:stretch;width:100%;
+  border-radius:1rem;text-decoration:none;color:#fafafa;
+  overflow:hidden;
+  transition:border-color .2s,transform .1s,box-shadow .2s;
+}
+.plan:hover .card{transform:translateY(-1px)}
+.plan:active .card{transform:translateY(0)}
+
+.card .left{flex:1;display:flex;align-items:center;gap:12px;padding:16px 16px}
+.card .right{
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:12px 16px;border-left:1px solid rgba(255,255,255,.06);
+  min-width:86px;
+}
+.price{font-size:1.2rem;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.period{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#52525b;margin-top:2px}
+
+.plan-ic{
+  width:36px;height:36px;flex-shrink:0;border-radius:9px;
   display:flex;align-items:center;justify-content:center;
-  color:#f472b6;font-size:14px;
+  font-size:14px;
 }
 
-.feature-text{flex:1}
-.feature-title{font-weight:600;font-size:.92rem;margin-bottom:2px;color:#fafafa}
-.feature-desc{color:#6b7280;font-size:.8rem;line-height:1.4}
+.plan-name{font-weight:700;font-size:.95rem;line-height:1.2}
+.plan-meta{color:#52525b;font-size:11px;margin-top:1px}
+.plan-save{color:#34d399;font-size:11px;font-weight:600;margin-top:2px}
 
-/* ── Section label ── */
-.section-label{
-  text-align:center;font-size:11px;
-  letter-spacing:.18em;text-transform:uppercase;
-  color:#6b7280;margin-bottom:16px;font-weight:600;
+/* Radio dot */
+.dot{
+  width:18px;height:18px;flex-shrink:0;border-radius:50%;
+  border:2px solid rgba(255,255,255,.12);
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;margin-left:auto;align-self:center;margin-right:4px;
 }
+.dot::after{content:'';width:0;height:0;border-radius:50%;background:#fff;transition:all .2s}
 
-/* ── Plan buttons (horizontal split) ── */
-.plan-wrapper{position:relative;margin-bottom:16px}
-
-.plan-wrapper.popular .plan-btn{
-  border-color:rgba(236,72,153,.40);
-  background:linear-gradient(180deg,rgba(236,72,153,.06) 0%,rgba(236,72,153,.01) 100%);
-  box-shadow:0 0 30px rgba(236,72,153,.12);
+/* Selected state */
+.plan input:checked ~ .card{
+  border-color:#ec4899 !important;
+  box-shadow:0 0 0 1px rgba(236,72,153,.25),0 0 28px rgba(236,72,153,.10);
 }
-.plan-wrapper.best-value .plan-btn{
-  border-color:rgba(147,51,234,.35);
-  background:linear-gradient(180deg,rgba(147,51,234,.05) 0%,rgba(147,51,234,.01) 100%);
-}
+.plan input:checked ~ .card .dot{border-color:#ec4899;background:#ec4899}
+.plan input:checked ~ .card .dot::after{width:6px;height:6px}
 
+/* Week card */
+.plan--week .card{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06)}
+.plan--week .plan-ic{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#a1a1aa}
+
+/* Month card (Popular) */
+.plan--month .card{
+  background:linear-gradient(180deg,rgba(236,72,153,.05) 0%,rgba(236,72,153,.01) 100%);
+  border:1px solid rgba(236,72,153,.30);
+  box-shadow:0 0 24px rgba(236,72,153,.08);
+}
+.plan--month .plan-ic{background:rgba(236,72,153,.10);border:1px solid rgba(236,72,153,.20);color:#f472b6}
+
+/* Year card (Best Value) */
+.plan--year .card{
+  background:linear-gradient(180deg,rgba(147,51,234,.04) 0%,rgba(147,51,234,.01) 100%);
+  border:1px solid rgba(147,51,234,.28);
+}
+.plan--year .plan-ic{background:rgba(147,51,234,.10);border:1px solid rgba(147,51,234,.22);color:#a78bfa}
+
+/* ── Badges ── */
 .badge{
   position:absolute;top:-10px;left:50%;transform:translateX(-50%);
-  padding:4px 14px;border-radius:9999px;
-  font-size:10px;font-weight:700;
+  padding:3px 13px;border-radius:9999px;
+  font-size:9px;font-weight:800;
   letter-spacing:.1em;text-transform:uppercase;
   white-space:nowrap;color:#fff;z-index:2;
 }
-.badge-popular{
-  background:linear-gradient(135deg,#ec4899,#9333ea);
-  box-shadow:0 4px 14px rgba(236,72,153,.35);
-}
-.badge-value{
-  background:linear-gradient(135deg,#9333ea,#6d28d9);
-  box-shadow:0 4px 14px rgba(147,51,234,.35);
-}
+.badge--pop{background:linear-gradient(135deg,#ec4899,#a855f7);box-shadow:0 3px 12px rgba(236,72,153,.35)}
+.badge--val{background:linear-gradient(135deg,#a855f7,#7c3aed);box-shadow:0 3px 12px rgba(147,51,234,.35)}
 
-.plan-btn{
-  display:flex;align-items:stretch;
-  width:100%;
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.07);
-  border-radius:1rem;
-  text-decoration:none;color:#fafafa;
-  overflow:hidden;
-  transition:border-color .2s ease,transform .1s ease,box-shadow .2s ease;
-  cursor:pointer;
+/* ── CTA Button (SOLID — NOT transparent) ── */
+.cta{
+  display:block;width:100%;margin-top:18px;
+  background:#ec4899;
+  color:#fff;
+  border:none;border-radius:14px;
+  padding:16px 20px;
+  font-family:inherit;font-size:1rem;font-weight:700;
+  letter-spacing:.02em;
+  text-align:center;cursor:pointer;
+  box-shadow:0 4px 20px rgba(236,72,153,.40),0 0 0 1px rgba(236,72,153,.15);
+  transition:all .2s ease;
 }
-.plan-btn:hover{
-  border-color:rgba(236,72,153,.25);
-  transform:translateY(-1px);
-  box-shadow:0 8px 24px rgba(0,0,0,.4);
-}
-.plan-btn:active{transform:translateY(0)}
+.cta:hover{background:#db2777;transform:translateY(-1px);box-shadow:0 6px 28px rgba(236,72,153,.50)}
+.cta:active{transform:scale(.98)}
 
-.plan-left{
-  flex:1;
-  display:flex;align-items:center;gap:14px;
-  padding:18px 20px;
-}
+/* ── Trust ── */
+.trust{display:flex;justify-content:center;gap:16px;margin:18px 0;flex-wrap:wrap}
+.trust span{display:flex;align-items:center;gap:5px;color:#52525b;font-size:11px;font-weight:500}
+.trust i{color:#34d399;font-size:10px}
 
-.plan-icon{
-  width:40px;height:40px;flex-shrink:0;
-  border-radius:10px;
-  background:rgba(236,72,153,.10);
-  border:1px solid rgba(236,72,153,.20);
+/* ── Guarantee ── */
+.guarantee{
+  background:rgba(16,185,129,.05);
+  border:1px solid rgba(16,185,129,.14);
+  border-radius:1rem;padding:14px 16px;
+  margin:16px 0;display:flex;align-items:flex-start;gap:11px;
+}
+.guarantee-ic{
+  width:34px;height:34px;flex-shrink:0;border-radius:9px;
+  background:rgba(16,185,129,.10);
   display:flex;align-items:center;justify-content:center;
-  color:#f472b6;font-size:15px;
+  color:#34d399;font-size:14px;
 }
-.best-value .plan-icon{
-  background:rgba(147,51,234,.10);
-  border-color:rgba(147,51,234,.25);
-  color:#a78bfa;
-}
+.guarantee-t{font-weight:600;font-size:.85rem;color:#fafafa;margin-bottom:2px}
+.guarantee-d{color:#52525b;font-size:.76rem;line-height:1.45}
+.guarantee-d a{color:#f472b6;text-decoration:none}
 
-.plan-details{display:flex;flex-direction:column;gap:2px}
-.plan-name{font-weight:700;font-size:1rem;line-height:1.2}
-.plan-meta{color:#6b7280;font-size:12px}
-.plan-savings{color:#34d399;font-size:12px;font-weight:600;margin-top:1px}
-
-.plan-right{
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:14px 20px;
-  border-left:1px solid rgba(255,255,255,.08);
-  min-width:90px;
-}
-.plan-price{font-size:1.25rem;font-weight:800;letter-spacing:-.02em;line-height:1.1}
-.plan-period{
-  font-size:10px;font-weight:600;
-  letter-spacing:.12em;text-transform:uppercase;
-  color:#6b7280;margin-top:3px;
-}
-
-/* ── Trust row ── */
-.trust-row{
-  display:flex;justify-content:center;gap:18px;
-  margin:22px 0;flex-wrap:wrap;
-}
-.trust-item{
-  display:flex;align-items:center;gap:6px;
-  color:#6b7280;font-size:12px;font-weight:500;
-}
-.trust-item i{color:#34d399;font-size:11px}
+/* ── Social proof ── */
+.proof{text-align:center;margin:16px 0 8px;color:#52525b;font-size:.76rem;line-height:1.5}
+.proof .stars{color:#fbbf24;font-size:12px;letter-spacing:2px;margin-bottom:3px}
+.proof em{color:#71717a;font-style:normal}
 
 /* ── Activation ── */
-.activation-area{
-  margin-top:32px;
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.07);
-  border-radius:1rem;padding:22px 18px;
-}
-.activation-title{text-align:center;font-size:.95rem;font-weight:600;margin-bottom:4px}
-.activation-sub{text-align:center;color:#6b7280;font-size:12px;margin-bottom:14px}
+.act{margin-top:28px;padding:20px 16px}
+.act-t{text-align:center;font-size:.92rem;font-weight:600;margin-bottom:3px}
+.act-s{text-align:center;color:#52525b;font-size:12px;margin-bottom:12px}
 
-input{
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.10);
-  color:#fafafa;padding:13px 14px;
-  border-radius:.75rem;width:100%;
-  font-family:inherit;font-size:.92rem;
+input[type="text"]{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  color:#fafafa;padding:12px 14px;
+  border-radius:12px;width:100%;
+  font-family:inherit;font-size:.9rem;
   margin-bottom:10px;text-align:center;
-  letter-spacing:.05em;
-  transition:border-color .2s ease,box-shadow .2s ease;
+  letter-spacing:.06em;
+  transition:border-color .2s,box-shadow .2s;
 }
-input:focus{
+input[type="text"]:focus{
   outline:none;
-  border-color:rgba(236,72,153,.50);
-  box-shadow:0 0 0 3px rgba(236,72,153,.12);
+  border-color:rgba(236,72,153,.45);
+  box-shadow:0 0 0 3px rgba(236,72,153,.10);
 }
-input::placeholder{color:#4b5563}
+input[type="text"]::placeholder{color:#3f3f46}
 
-.activate-link-btn{
-  background:linear-gradient(135deg,#ec4899 0%,#9333ea 100%);
+.act-btn{
+  background:linear-gradient(135deg,#ec4899 0%,#a855f7 100%);
   color:#fff;border:none;width:100%;
-  padding:13px;border-radius:.75rem;
-  font-weight:600;font-family:inherit;font-size:.92rem;
+  padding:13px;border-radius:12px;
+  font-weight:600;font-family:inherit;font-size:.9rem;
   cursor:pointer;
-  transition:transform .15s ease,box-shadow .2s ease;
-  box-shadow:0 4px 14px rgba(236,72,153,.30);
+  transition:transform .15s,box-shadow .2s;
+  box-shadow:0 4px 14px rgba(236,72,153,.28);
 }
-.activate-link-btn:hover{
-  transform:translateY(-1px);
-  box-shadow:0 6px 20px rgba(236,72,153,.40);
-}
-.activate-link-btn:active{transform:scale(.98)}
-.activate-link-btn:disabled{opacity:.5;cursor:not-allowed}
+.act-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(236,72,153,.38)}
+.act-btn:active{transform:scale(.98)}
+.act-btn:disabled{opacity:.5;cursor:not-allowed}
 
-#status-msg{margin-top:12px;font-size:13px;font-weight:500;min-height:20px;text-align:center}
+#status-msg{margin-top:10px;font-size:12px;font-weight:500;min-height:18px;text-align:center}
 
-.footer-note{
-  text-align:center;color:#4b5563;
-  font-size:11px;margin-top:22px;line-height:1.5;
-}
-.footer-note a{color:#f472b6;text-decoration:none}
+.foot{text-align:center;color:#3f3f46;font-size:10px;margin-top:18px;line-height:1.6}
+.foot a{color:#f472b6;text-decoration:none}
 
-/* ── Hidden utility ── */
+/* ── PRO Status CSS ── */
+body.user-is-pro .upgrade-section{display:none!important}
+.pro-feature{display:none!important}
+body.user-is-pro .pro-feature{display:revert!important}
+
+/* Android app users */
+body.platform-android .gumroad-only{display:none!important}
+.app-only{display:none!important}
+body.platform-android .app-only{display:revert!important}
+
+/* Hidden utility */
 .hidden{display:none!important}
 
+/* Already Pro */
+.pro-banner{
+  text-align:center;padding:18px;margin-bottom:22px;
+  background:rgba(16,185,129,.06);
+  border:1px solid rgba(16,185,129,.16);
+  border-radius:1rem;
+}
+.pro-banner .chk{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:44px;height:44px;border-radius:50%;
+  background:rgba(16,185,129,.12);
+  margin-bottom:10px;font-size:20px;color:#34d399;
+}
+.pro-banner h2{font-size:1.1rem;font-weight:700;color:#fafafa;margin-bottom:3px}
+.pro-banner p{font-size:.82rem;color:#71717a;line-height:1.5}
+
 @media(max-width:420px){
-  h1{font-size:1.75rem}
-  .container{padding:24px 16px 40px}
-  .plan-left{padding:14px 14px}
-  .plan-right{padding:12px 14px;min-width:80px}
-  .plan-price{font-size:1.1rem}
+  h1{font-size:1.6rem}
+  .wrap{padding:20px 14px 36px}
+  .card .left{padding:12px 12px}
+  .card .right{padding:10px 12px;min-width:74px}
+  .price{font-size:1.05rem}
 }
 </style>
+
+<!-- ============================================================
+     i18n — Upgrade Page Translations
+     ============================================================ -->
+<script>
+(function(){
+  var translations = {
+    en: {
+      page_title: 'DateScan Premium — Unlock Your Edge',
+      back_label: 'Back',
+      pill_text: 'DateScan Premium',
+      h1_before: 'Unlock Your',
+      h1_gradient: 'Unfair Advantage',
+      subtitle: 'Stop guessing. Start matching. Turn every photo into a weapon that gets real results.',
+      plans_label: 'Choose Your Plan',
+      week_name: 'Weekly Pass',
+      week_meta: 'Unlimited AI coaching & scanning',
+      week_period: '/week',
+      month_name: 'Monthly Pass',
+      month_meta: 'Unlimited AI coaching & scanning',
+      month_period: '/month',
+      month_badge: 'Most Popular',
+      year_name: 'Yearly Access',
+      year_meta: 'Unlimited AI coaching & scanning',
+      year_period: '/year',
+      year_badge: 'Best Value — Save 58%',
+      year_save: 'Save 58% — Best deal',
+      cta_btn: 'Get Premium Now',
+      trust_secure: 'Secure Checkout',
+      trust_cancel: 'Cancel Anytime',
+      trust_safe: 'Private & Safe',
+      guarantee_title: '14-Day Goodwill Refund Guarantee',
+      guarantee_desc: 'Not satisfied? Contact <a href="mailto:info@datescan.app">info@datescan.app</a> within 14 days for a full refund. Subject to our Refund Policy conditions.',
+      proof_quote: '"Finally, honest feedback that actually improved my matches."',
+      act_title: 'Already Purchased?',
+      act_subtitle: 'Enter your License Key from your email to activate Premium.',
+      act_placeholder: 'XXXX-XXXX-XXXX-XXXX',
+      act_btn: 'Activate Premium',
+      act_empty: 'Please enter your License Key.',
+      act_verifying: 'Verifying License Key...',
+      act_success: '\u2713 Success! Premium activated.',
+      act_invalid: 'Invalid License Key. Please check your email and try again.',
+      act_error: 'Connection error. Check your internet.',
+      footer_text: 'Payments processed by Gumroad. Check email for License Key after purchase.',
+      footer_support: 'Support:',
+      pro_title: "You're already PRO!",
+      pro_desc: 'Premium access active. No need to purchase again.'
+    },
+    hu: {
+      page_title: 'DateScan Premium — Szerezz előnyt',
+      back_label: 'Vissza',
+      pill_text: 'DateScan Premium',
+      h1_before: 'Szerezz',
+      h1_gradient: 'Páratlan Előnyt',
+      subtitle: 'Ne találgass. Kezdj matchelni. Alakíts minden fotót fegyverré, ami valódi eredményeket hoz.',
+      plans_label: 'Válassz csomagot',
+      week_name: 'Heti bérlet',
+      week_meta: 'Korlátlan AI coaching és szkennelés',
+      week_period: '/hét',
+      month_name: 'Havi bérlet',
+      month_meta: 'Korlátlan AI coaching és szkennelés',
+      month_period: '/hónap',
+      month_badge: 'Legnépszerűbb',
+      year_name: 'Éves hozzáférés',
+      year_meta: 'Korlátlan AI coaching és szkennelés',
+      year_period: '/év',
+      year_badge: 'Legjobb ár — 58% megtakarítás',
+      year_save: '58% megtakarítás — Legjobb ajánlat',
+      cta_btn: 'Prémium vásárlása',
+      trust_secure: 'Biztonságos fizetés',
+      trust_cancel: 'Bármikor lemondható',
+      trust_safe: 'Privát & Biztonságos',
+      guarantee_title: '14 napos jóakaratú visszatérítési garancia',
+      guarantee_desc: 'Nem elégedett? Írj a <a href="mailto:info@datescan.app">info@datescan.app</a> címre 14 napon belül a teljes visszatérítésért. A visszatérítési feltételek érvényesek.',
+      proof_quote: '"Végre őszinte visszajelzés, ami tényleg javította a matcheimet."',
+      act_title: 'Már vásároltál?',
+      act_subtitle: 'Írd be az emailedben kapott licenckulcsot a Premium aktiválásához.',
+      act_placeholder: 'XXXX-XXXX-XXXX-XXXX',
+      act_btn: 'Premium aktiválása',
+      act_empty: 'Kérjük, írd be a licenckulcsodat.',
+      act_verifying: 'Licenckulcs ellenőrzése...',
+      act_success: '\u2713 Siker! Premium aktiválva.',
+      act_invalid: 'Érvénytelen licenckulcs. Kérjük, ellenőrizd az emailedet és próbáld újra.',
+      act_error: 'Kapcsolathiiba. Ellenőrizd az internetkapcsolatodat.',
+      footer_text: 'A fizetést a Gumroad kezeli. A vásárlás után ellenőrizd az emailedet a licenckulcsért.',
+      footer_support: 'Támogatás:',
+      pro_title: 'Már PRO vagy!',
+      pro_desc: 'A Prémium hozzáférés aktív. Nem kell újra vásárolnod.'
+    },
+    de: {
+      page_title: 'DateScan Premium — Hol dir den Vorteil',
+      back_label: 'Zurück',
+      pill_text: 'DateScan Premium',
+      h1_before: 'Hol dir deinen',
+      h1_gradient: 'unfairen Vorteil',
+      subtitle: 'Hör auf zu raten. Fang an zu matchen. Mach jedes Foto zur Waffe, die echte Ergebnisse liefert.',
+      plans_label: 'Wähle deinen Plan',
+      week_name: 'Wochen-Pass',
+      week_meta: 'Unbegrenztes AI-Coaching & Scannen',
+      week_period: '/Woche',
+      month_name: 'Monats-Pass',
+      month_meta: 'Unbegrenztes AI-Coaching & Scannen',
+      month_period: '/Monat',
+      month_badge: 'Am beliebtesten',
+      year_name: 'Jahreszugang',
+      year_meta: 'Unbegrenztes AI-Coaching & Scannen',
+      year_period: '/Jahr',
+      year_badge: 'Bestes Preis-Leistungs-Verhältnis — 58% sparen',
+      year_save: '58% sparen — Bestes Angebot',
+      cta_btn: 'Premium jetzt holen',
+      trust_secure: 'Sichere Bezahlung',
+      trust_cancel: 'Jederzeit kündbar',
+      trust_safe: 'Privat & Sicher',
+      guarantee_title: '14-Tage-Gute-Wille-Geld-zurück-Garantie',
+      guarantee_desc: 'Nicht zufrieden? Kontaktiere <a href="mailto:info@datescan.app">info@datescan.app</a> innerhalb von 14 Tagen für eine volle Rückerstattung. Vorbehaltlich unserer Erstattungsrichtlinie.',
+      proof_quote: '"Endlich ehrliches Feedback, das meine Matches wirklich verbessert hat."',
+      act_title: 'Schon gekauft?',
+      act_subtitle: 'Gib deinen Lizenzschlüssel aus der E-Mail ein, um Premium zu aktivieren.',
+      act_placeholder: 'XXXX-XXXX-XXXX-XXXX',
+      act_btn: 'Premium aktivieren',
+      act_empty: 'Bitte gib deinen Lizenzschlüssel ein.',
+      act_verifying: 'Lizenzschlüssel wird überprüft...',
+      act_success: '\u2713 Erfolg! Premium aktiviert.',
+      act_invalid: 'Ungültiger Lizenzschlüssel. Bitte überprüfe deine E-Mail und versuche es erneut.',
+      act_error: 'Verbindungsfehler. Überprüfe deine Internetverbindung.',
+      footer_text: 'Zahlungen werden von Gumroad abgewickelt. Überprüfe deine E-Mail nach dem Kauf für den Lizenzschlüssel.',
+      footer_support: 'Support:',
+      pro_title: 'Du bist bereits PRO!',
+      pro_desc: 'Premium-Zugang aktiv. Du musst nicht noch einmal kaufen.'
+    }
+  };
+
+  // ── Language detection (same cascade as contact.html) ──
+  var supported = ['en','hu','de'];
+  var lang = null;
+
+  // 1. URL parameter (?lang=en / ?lang=de / ?lang=hu)
+  try {
+    var urlParams = new URLSearchParams(window.location.search);
+    var urlLang = urlParams.get('lang');
+    if (urlLang && supported.indexOf(urlLang) !== -1) {
+      lang = urlLang;
+    }
+  } catch(e) {}
+
+  // 2. localStorage
+  if (!lang) {
+    try {
+      var stored = localStorage.getItem('datescan.lang');
+      if (stored && stored.indexOf('auto:') === 0) {
+        var autoLang = stored.substring(5);
+        if (supported.indexOf(autoLang) !== -1) lang = autoLang;
+      } else if (stored && supported.indexOf(stored) !== -1) {
+        lang = stored;
+      }
+    } catch(e) {}
+  }
+
+  // 3. Browser/navigator
+  if (!lang) {
+    try {
+      var navLangs = navigator.languages && navigator.languages.length
+        ? Array.prototype.slice.call(navigator.languages)
+        : [navigator.language || navigator.userLanguage || ''];
+      for (var i = 0; i < navLangs.length; i++) {
+        var p = (navLangs[i] || '').split('-')[0].toLowerCase();
+        if (p === 'hu') { lang = 'hu'; break; }
+        if (p === 'de') { lang = 'de'; break; }
+      }
+    } catch(e) {}
+  }
+
+  // 4. Fallback
+  if (!lang) lang = 'en';
+
+  var strings = translations[lang] || translations.en;
+  document.documentElement.lang = lang;
+  document.title = strings.page_title;
+
+  // ── Helper to apply translations ──
+  function applyI18n() {
+    document.querySelectorAll('[data-i18n]').forEach(function(el) {
+      var key = el.getAttribute('data-i18n');
+      if (strings[key] !== undefined) el.textContent = strings[key];
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+      var key = el.getAttribute('data-i18n-html');
+      if (strings[key] !== undefined) el.innerHTML = strings[key];
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
+      var key = el.getAttribute('data-i18n-placeholder');
+      if (strings[key] !== undefined) el.placeholder = strings[key];
+    });
+  }
+
+  // ── Update subpage links to include ?lang=XX ──
+  function updateSubpageLinks() {
+    var subpages = ['privacy.html','contact.html','terms.html','refund.html','delete-account.html','upgrade.html'];
+    document.querySelectorAll('a[href]').forEach(function(a) {
+      var href = a.getAttribute('href') || '';
+      for (var i = 0; i < subpages.length; i++) {
+        if (href.indexOf(subpages[i]) !== -1) {
+          var base = href;
+          var hash = '';
+          var hashIdx = href.indexOf('#');
+          if (hashIdx !== -1) { hash = href.substring(hashIdx); base = href.substring(0, hashIdx); }
+          var qIdx = base.indexOf('?');
+          if (qIdx !== -1) {
+            var params = base.substring(qIdx + 1).split('&').filter(function(p) { return p.indexOf('lang=') !== 0; });
+            base = base.substring(0, qIdx) + (params.length ? '?' + params.join('&') : '');
+          }
+          var sep = base.indexOf('?') !== -1 ? '&' : '?';
+          a.setAttribute('href', base + sep + 'lang=' + lang + hash);
+          break;
+        }
+      }
+    });
+    // Also update "Back to app" links to preserve language
+    document.querySelectorAll('a[href*="index.html"]').forEach(function(a) {
+      var href = a.getAttribute('href') || '';
+      if (href.indexOf('lang=') === -1) {
+        var sep = href.indexOf('?') !== -1 ? '&' : '?';
+        a.setAttribute('href', href + sep + 'lang=' + lang);
+      }
+    });
+  }
+
+  // Expose for later use in activation logic
+  window._upgradeLang = lang;
+  window._upgradeStrings = strings;
+  window._upgradeApplyI18n = applyI18n;
+
+  // Apply on DOMContentLoaded with aggressive retries
+  var _initDone = false;
+  function init() {
+    if (_initDone) return;
+    _initDone = true;
+    applyI18n();
+    updateSubpageLinks();
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+  window.addEventListener('load', function() {
+    if (!_initDone) init();
+    applyI18n();
+    updateSubpageLinks();
+  });
+  setTimeout(function() { applyI18n(); updateSubpageLinks(); }, 80);
+  setTimeout(function() { applyI18n(); updateSubpageLinks(); }, 300);
+  setTimeout(function() { applyI18n(); updateSubpageLinks(); }, 1000);
+})();
+</script>
 </head>
 <body>
-<div class="ambient-glow"></div>
-<div class="container">
+<div class="ambient"></div>
 
-  <!-- ── Header ── -->
-  <div class="header">
-    <div class="crown-badge"><i class="fas fa-crown"></i> DateScan Premium</div>
-    <h1>Unlock Your <span class="gradient">Unfair Advantage</span></h1>
-    <p class="subtitle">Stop guessing. Start matching. Turn every photo into a weapon that gets real results.</p>
+<!-- Back (fixed top-right, matching contact.html) -->
+<a href="index.html" class="back" id="backBtn" data-i18n-attr-aria-label="back_label" aria-label="Back">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+</a>
+
+<div class="wrap">
+
+  <!-- Already PRO -->
+  <div id="alreadyProBanner" class="pro-banner hidden">
+    <div class="chk"><i class="fas fa-check"></i></div>
+    <h2 data-i18n="pro_title">You're already PRO!</h2>
+    <p data-i18n="pro_desc">Premium access active. No need to purchase again.</p>
   </div>
 
-  <!-- ── Features ── -->
-  <div id="features-section" class="features-box">
-    <div class="feature-item">
-      <div class="feature-icon"><i class="fas fa-infinity"></i></div>
-      <div class="feature-text">
-        <div class="feature-title">Unlimited Profile Scans</div>
-        <div class="feature-desc">Test every photo, every angle, every outfit. No caps. No cooldowns.</div>
-      </div>
-    </div>
-    <div class="feature-item">
-      <div class="feature-icon"><i class="fas fa-brain"></i></div>
-      <div class="feature-text">
-        <div class="feature-title">Deep Attraction Analysis</div>
-        <div class="feature-desc">Brutal AI feedback on what actually gets swipe-rights.</div>
-      </div>
-    </div>
-    <div class="feature-item">
-      <div class="feature-icon"><i class="fas fa-bolt"></i></div>
-      <div class="feature-text">
-        <div class="feature-title">Priority Processing</div>
-        <div class="feature-desc">Skip queues. Results in seconds, not minutes.</div>
-      </div>
-    </div>
-    <div class="feature-item">
-      <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
-      <div class="feature-text">
-        <div class="feature-title">Style DNA Report</div>
-        <div class="feature-desc">Know your signature look. Double down on what works.</div>
-      </div>
-    </div>
+  <!-- Header -->
+  <div class="hdr upgrade-section">
+    <div class="pill"><i class="fas fa-crown"></i> <span data-i18n="pill_text">DateScan Premium</span></div>
+    <h1><span data-i18n="h1_before">Unlock Your</span> <span class="gr" data-i18n="h1_gradient">Unfair Advantage</span></h1>
+    <p class="sub" data-i18n="subtitle">Stop guessing. Start matching. Turn every photo into a weapon that gets real results.</p>
   </div>
 
-  <!-- ── Plans (hidden for Android app users) ── -->
-  <div id="plans-section">
-    <div class="section-label">Choose Your Plan</div>
+  <!-- Plans -->
+  <div id="plans-section" class="upgrade-section">
+    <div class="plans-label" data-i18n="plans_label">Choose Your Plan</div>
 
     <!-- Weekly -->
-    <div class="plan-wrapper">
-      <a href="https://datascanapp.gumroad.com/l/week" class="gumroad-button plan-btn">
-        <div class="plan-left">
-          <div class="plan-icon"><i class="fas fa-bolt"></i></div>
-          <div class="plan-details">
-            <div class="plan-name">Weekly Pass</div>
-            <div class="plan-meta">7 days full access</div>
+    <label class="plan plan--week gumroad-only">
+      <input type="radio" name="plan" value="week" data-url="https://datascanapp.gumroad.com/l/week">
+      <div class="card">
+        <div class="left">
+          <div class="plan-ic"><i class="fas fa-bolt"></i></div>
+          <div>
+            <div class="plan-name" data-i18n="week_name">Weekly Pass</div>
+            <div class="plan-meta" data-i18n="week_meta">Unlimited AI coaching & scanning</div>
           </div>
         </div>
-        <div class="plan-right">
-          <div class="plan-price">$4.99</div>
-          <div class="plan-period">/week</div>
+        <div class="dot"></div>
+        <div class="right">
+          <div class="price">$4.99</div>
+          <div class="period" data-i18n="week_period">/week</div>
         </div>
-      </a>
-    </div>
+      </div>
+    </label>
 
-    <!-- Monthly -->
-    <div class="plan-wrapper popular">
-      <div class="badge badge-popular"><i class="fas fa-fire"></i>&ensp;Most Popular</div>
-      <a href="https://datascanapp.gumroad.com/l/month" class="gumroad-button plan-btn">
-        <div class="plan-left">
-          <div class="plan-icon"><i class="fas fa-crown"></i></div>
-          <div class="plan-details">
-            <div class="plan-name">Monthly Pass</div>
-            <div class="plan-meta">30 days full access</div>
-            <div class="plan-savings">Save 50%</div>
+    <!-- Monthly (Popular) -->
+    <label class="plan plan--month gumroad-only">
+      <div class="badge badge--pop"><i class="fas fa-fire"></i>&ensp;<span data-i18n="month_badge">Most Popular</span></div>
+      <input type="radio" name="plan" value="month" data-url="https://datascanapp.gumroad.com/l/month" checked>
+      <div class="card">
+        <div class="left">
+          <div class="plan-ic"><i class="fas fa-crown"></i></div>
+          <div>
+            <div class="plan-name" data-i18n="month_name">Monthly Pass</div>
+            <div class="plan-meta" data-i18n="month_meta">Unlimited AI coaching & scanning</div>
           </div>
         </div>
-        <div class="plan-right">
-          <div class="plan-price">$9.99</div>
-          <div class="plan-period">/month</div>
+        <div class="dot"></div>
+        <div class="right">
+          <div class="price">$9.99</div>
+          <div class="period" data-i18n="month_period">/month</div>
         </div>
-      </a>
-    </div>
+      </div>
+    </label>
 
-    <!-- Yearly -->
-    <div class="plan-wrapper best-value">
-      <div class="badge badge-value"><i class="fas fa-gem"></i>&ensp;Best Value</div>
-      <a href="https://datascanapp.gumroad.com/l/year" class="gumroad-button plan-btn">
-        <div class="plan-left">
-          <div class="plan-icon"><i class="fas fa-gem"></i></div>
-          <div class="plan-details">
-            <div class="plan-name">Yearly Access</div>
-            <div class="plan-meta">365 days full access</div>
-            <div class="plan-savings">Save 58%</div>
+    <!-- Yearly (Best Value) -->
+    <label class="plan plan--year gumroad-only">
+      <div class="badge badge--val"><i class="fas fa-gem"></i>&ensp;<span data-i18n="year_badge">Best Value — Save 58%</span></div>
+      <input type="radio" name="plan" value="year" data-url="https://datascanapp.gumroad.com/l/year">
+      <div class="card">
+        <div class="left">
+          <div class="plan-ic"><i class="fas fa-gem"></i></div>
+          <div>
+            <div class="plan-name" data-i18n="year_name">Yearly Access</div>
+            <div class="plan-meta" data-i18n="year_meta">Unlimited AI coaching & scanning</div>
+            <div class="plan-save" data-i18n="year_save">Save 58% — Best deal</div>
           </div>
         </div>
-        <div class="plan-right">
-          <div class="plan-price">$49.99</div>
-          <div class="plan-period">/year</div>
+        <div class="dot"></div>
+        <div class="right">
+          <div class="price">$49.99</div>
+          <div class="period" data-i18n="year_period">/year</div>
         </div>
-      </a>
+      </div>
+    </label>
+
+    <!-- SOLID CTA -->
+    <button class="cta gumroad-only" id="buyBtn" onclick="openCheckout()">
+      <i class="fas fa-lock"></i>&ensp;<span data-i18n="cta_btn">Get Premium Now</span>
+    </button>
+
+    <div class="trust gumroad-only">
+      <span><i class="fas fa-lock"></i> <span data-i18n="trust_secure">Secure Checkout</span></span>
+      <span><i class="fas fa-undo"></i> <span data-i18n="trust_cancel">Cancel Anytime</span></span>
+      <span><i class="fas fa-shield-alt"></i> <span data-i18n="trust_safe">Private & Safe</span></span>
     </div>
 
-    <div class="trust-row">
-      <div class="trust-item"><i class="fas fa-lock"></i> Secure Checkout</div>
-      <div class="trust-item"><i class="fas fa-undo"></i> Cancel Anytime</div>
-      <div class="trust-item"><i class="fas fa-shield-alt"></i> Private &amp; Safe</div>
+    <!-- Guarantee -->
+    <div class="guarantee gumroad-only">
+      <div class="guarantee-ic"><i class="fas fa-shield-alt"></i></div>
+      <div>
+        <div class="guarantee-t" data-i18n="guarantee_title">14-Day Goodwill Refund Guarantee</div>
+        <div class="guarantee-d" data-i18n-html="guarantee_desc">Not satisfied? Contact <a href="mailto:info@datescan.app">info@datescan.app</a> within 14 days for a full refund. Subject to our Refund Policy conditions.</div>
+      </div>
+    </div>
+
+    <!-- Social proof -->
+    <div class="proof gumroad-only">
+      <div class="stars">★★★★★</div>
+      <em data-i18n="proof_quote">"Finally, honest feedback that actually improved my matches."</em>
     </div>
   </div>
 
-  <!-- ── Activation (always visible) ── -->
-  <div class="activation-area">
-    <div class="activation-title">Already Purchased?</div>
-    <div class="activation-sub">Enter your License Key from your email to activate Premium.</div>
-    <input type="text" id="sale-id" placeholder="XXXX-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false">
-    <button class="activate-link-btn" onclick="runActivation()">Activate Premium</button>
+  <!-- Activation -->
+  <div id="activation-section" class="act glass upgrade-section">
+    <div class="act-t" data-i18n="act_title">Already Purchased?</div>
+    <div class="act-s" data-i18n="act_subtitle">Enter your License Key from your email to activate Premium.</div>
+    <input type="text" id="sale-id" data-i18n-placeholder="act_placeholder" placeholder="XXXX-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false">
+    <button class="act-btn" onclick="runActivation()" data-i18n="act_btn">Activate Premium</button>
     <div id="status-msg"></div>
   </div>
 
-  <div id="footer-gumroad" class="footer-note">Payments processed by Gumroad. Check email for License Key after purchase.</div>
+  <div id="footer-gumroad" class="foot gumroad-only upgrade-section">
+    <span data-i18n="footer_text">Payments processed by Gumroad. Check email for License Key after purchase.</span><br>
+    <span data-i18n="footer_support">Support:</span> <a href="mailto:info@datescan.app">info@datescan.app</a>
+  </div>
 
 </div>
 
 <script>
-/* ── Routing Logic ── */
+/* ============================================================
+   PRO STATUS CHECK
+   ============================================================ */
 (function(){
-  const params = new URLSearchParams(window.location.search);
-  const isAndroidApp = params.get('platform') === 'android';
-  const isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  try{
+    var isPro=false;
+    var proFlag=localStorage.getItem('is_pro')==='true'||localStorage.getItem('datescan.pro')==='true';
+    var expiryRaw=localStorage.getItem('premium_until')||localStorage.getItem('pro_expiry')||'0';
+    var expiry=parseInt(expiryRaw,10);
 
-  // Scenario A: Desktop → redirect to landing
-  if (!isMobile) {
-    window.location.href = 'https://datescan.app/landing';
-    return;
-  }
+    if(proFlag&&(expiry===0||expiry>Date.now())){
+      isPro=true;
+    }else if(proFlag&&expiry>0&&expiry<=Date.now()){
+      localStorage.removeItem('is_pro');
+      localStorage.removeItem('premium_until');
+      isPro=false;
+    }
 
-  // Scenario C: Android App → hide payment links, show activation only
-  if (isAndroidApp) {
-    document.getElementById('plans-section').classList.add('hidden');
-    document.getElementById('features-section').classList.add('hidden');
-    document.getElementById('footer-gumroad').classList.add('hidden');
-  }
+    if(isPro) document.body.classList.add('user-is-pro');
 
-  // Scenario B: Mobile web without ?platform=android → stays on upgrade.html (default)
+    var params=new URLSearchParams(location.search);
+    if(params.get('platform')==='android'){
+      document.body.classList.add('platform-android');
+    }
+
+    document.addEventListener('DOMContentLoaded',function(){
+      if(isPro){
+        var b=document.getElementById('alreadyProBanner');
+        if(b) b.classList.remove('hidden');
+      }
+      // Preserve platform param on back button
+      var backBtn=document.getElementById('backBtn');
+      if(backBtn){
+        var href='index.html';
+        var sep='?';
+        if(params.get('platform')){
+          href+='?platform='+encodeURIComponent(params.get('platform'));
+          sep='&';
+        }
+        var bLang=window._upgradeLang;
+        if(bLang) href+=sep+'lang='+bLang;
+        backBtn.href=href;
+      }
+
+      // Apply placeholder translations
+      var s = window._upgradeStrings;
+      if (s) {
+        var inp = document.getElementById('sale-id');
+        if (inp && s.act_placeholder) inp.placeholder = s.act_placeholder;
+      }
+    });
+  }catch(e){}
 })();
 
-/* ── Activation Logic ── */
-async function runActivation(){
-  const idInput = document.getElementById('sale-id');
-  const msg = document.getElementById('status-msg');
-  const btn = document.querySelector('.activate-link-btn');
-  
-  const id = idInput.value.trim();
+/* ============================================================
+   DESKTOP REDIRECT
+   ============================================================ */
+(function(){
+  try{
+    var isMobile=/Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    var isDesktop=window.matchMedia&&window.matchMedia('(pointer: fine)').matches&&window.matchMedia('(hover: hover)').matches;
+    if(!isMobile&&isDesktop){location.replace('https://datescan.app/landing');}
+  }catch(e){}
+})();
 
-  if (!id) {
-    msg.style.color = '#ef4444';
-    msg.innerText = 'Please enter your License Key.';
+/* ============================================================
+   CHECKOUT — Open selected plan on Gumroad
+   ============================================================ */
+function openCheckout(){
+  var sel=document.querySelector('input[name="plan"]:checked');
+  if(!sel)return;
+  var url=sel.getAttribute('data-url');
+  if(url) window.open(url,'_blank');
+}
+
+/* ============================================================
+   ACTIVATION LOGIC (i18n-aware)
+   ============================================================ */
+async function runActivation(){
+  var idInput=document.getElementById('sale-id');
+  var msg=document.getElementById('status-msg');
+  var btn=document.querySelector('.act-btn');
+
+  var s = window._upgradeStrings || {};
+  var id=idInput.value.trim();
+
+  if(!id){
+    msg.style.color='#ef4444';
+    msg.innerText=s.act_empty||'Please enter your License Key.';
     return;
   }
 
-  btn.disabled = true;
-  msg.style.color = '#9ca3af';
-  msg.innerText = 'Verifying License Key...';
+  btn.disabled=true;
+  msg.style.color='#71717a';
+  msg.innerText=s.act_verifying||'Verifying License Key...';
 
-  try {
-    const res = await fetch('https://core.datescan.app/api/verify-license', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ license_key: id })
+  try{
+    var res=await fetch('https://core.datescan.app/api/verify-license',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({license_key:id})
     });
-    
-    const data = await res.json();
 
-    if (data.valid) {
-      const exp = new Date();
-      exp.setDate(exp.getDate() + data.days);
-      localStorage.setItem('premium_until', exp.getTime());
-      
-      msg.style.color = '#22c55e';
-      msg.innerText = '\u2713 Success! ' + data.product + ' activated.';
-      
+    var data=await res.json();
+
+    if(data.valid){
+      // Save PRO status — same keys as index.html
+      localStorage.setItem('is_pro','true');
+      localStorage.setItem('datescan.pro','true');
+
+      if(data.expires_at){
+        var expiresAt=data.expires_at;
+        if(typeof expiresAt==='string') expiresAt=new Date(expiresAt).getTime();
+        localStorage.setItem('premium_until',String(expiresAt));
+      }else if(data.days){
+        var exp=Date.now()+(data.days*24*60*60*1000);
+        localStorage.setItem('premium_until',String(exp));
+      }else{
+        localStorage.setItem('premium_until','0');
+      }
+
+      msg.style.color='#22c55e';
+      msg.innerText=s.act_success||('\u2713 Success! Premium activated.');
+
       setTimeout(function(){
-        window.location.href = 'index.html?platform=android';
-      }, 2000);
-      
-    } else {
-      msg.style.color = '#ef4444';
-      msg.innerText = 'Invalid License Key. Please check your email and try again.';
-      btn.disabled = false;
+        var params=new URLSearchParams(location.search);
+        var pp=params.get('platform');
+        var redir='index.html';
+        if(pp) redir+='?platform='+encodeURIComponent(pp);
+        var lang=window._upgradeLang;
+        if(lang&&lang!=='en') redir+=(pp?'&':'?')+'lang='+lang;
+        location.href=redir;
+      },2000);
+
+    }else{
+      msg.style.color='#ef4444';
+      msg.innerText=s.act_invalid||'Invalid License Key. Please check your email and try again.';
+      btn.disabled=false;
     }
-  } catch (err) {
-    msg.style.color = '#ef4444';
-    msg.innerText = 'Connection error. Check your internet.';
-    btn.disabled = false;
+  }catch(err){
+    msg.style.color='#ef4444';
+    msg.innerText=s.act_error||'Connection error. Check your internet.';
+    btn.disabled=false;
   }
 }
 
-document.getElementById('sale-id').addEventListener('keypress', function(e){
-  if (e.key === 'Enter') runActivation();
+document.getElementById('sale-id').addEventListener('keypress',function(e){
+  if(e.key==='Enter') runActivation();
 });
 </script>
 </body>

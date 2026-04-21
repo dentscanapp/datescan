@@ -5,10 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="theme-color" content="#09090b" />
 <title>Privacy Policy — DateScan</title>
-<meta name="description" content="DateScan Privacy Policy. 100% on-device AI — your photos never leave your browser." />
+<meta name="description" content="DateScan Privacy Policy. 100% on-device AI — your photos never leave your device." />
 <link rel="canonical" href="https://datescan.app/privacy.html" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='40' y2='40' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%23ec4899'/%3E%3Cstop offset='1' stop-color='%239333ea'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M10 5 H5 V10' stroke='url(%23bg)' stroke-width='2' fill='none'/%3E%3Cpath d='M30 5 H35 V10' stroke='url(%23bg)' stroke-width='2' fill='none'/%3E%3Cpath d='M10 35 H5 V30' stroke='url(%23bg)' stroke-width='2' fill='none'/%3E%3Cpath d='M30 35 H35 V30' stroke='url(%23bg)' stroke-width='2' fill='none'/%3E%3Cpath d='M20 13.5C20 13.5 16 9 11.5 9C7.5 9 5 12.5 5 16.5C5 22 13 28 20 32C27 28 35 22 35 16.5C35 12.5 32.5 9 28.5 9C24 9 20 13.5 20 13.5Z' fill='url(%23bg)' fill-opacity='0.15' stroke='url(%23bg)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='4' y1='20' x2='36' y2='20' stroke='%23f472b6' stroke-width='1.5' stroke-dasharray='2 2' opacity='0.8'/%3E%3C/svg%3E">
+<script>
+// ── EARLY lang detection (runs BEFORE any external script) ──
+(function(){
+  var supported=['en','hu','de'];var lang=null;var _h='';
+  try{_h=decodeURIComponent(window.location.href||'');}catch(e){_h=window.location.href||'';}
+  try{var p=new URLSearchParams(window.location.search);var v=p.get('lang');if(v&&supported.indexOf(v)!==-1)lang=v;}catch(e){}
+  if(!lang){try{var m=_h.match(/[?&]lang=([a-z]{2})(?:&|#|$)/i);if(m&&supported.indexOf(m[1])!==-1)lang=m[1];}catch(e){}}
+  if(!lang){try{var h=window.location.hash||'';if(!h&&_h.indexOf('#')!==-1)h=_h.substring(_h.indexOf('#'));var hm=h.match(/[#&]lang=([a-z]{2})/i);if(hm&&supported.indexOf(hm[1])!==-1)lang=hm[1];}catch(e){}}
+  if(!lang){try{var cm=document.cookie.match(/(?:^|;\s*)datescan_lang=([a-z]{2})/i);if(cm&&supported.indexOf(cm[1])!==-1)lang=cm[1];}catch(e){}}
+  if(!lang){try{var nl=localStorage.getItem('datescan.nav_lang');if(nl&&supported.indexOf(nl)!==-1)lang=nl;}catch(e){}}
+  if(!lang){try{var sl=localStorage.getItem('datescan.lang');if(sl&&sl.indexOf('auto:')===0)sl=sl.substring(5);if(sl&&supported.indexOf(sl)!==-1)lang=sl;}catch(e){}}
+  if(!lang){try{var nls=navigator.languages&&navigator.languages.length?Array.prototype.slice.call(navigator.languages):[navigator.language||navigator.userLanguage||''];for(var i=0;i<nls.length;i++){var pp=(nls[i]||'').split('-')[0].toLowerCase();if(pp==='hu'){lang='hu';break;}if(pp==='de'){lang='de';break;}}}catch(e){}}
+  if(lang)window._earlyLang=lang;if(!lang)lang='en';
+  var titles={en:'Privacy Policy — DateScan',hu:'Adatvédelmi tájékoztató — DateScan',de:'Datenschutzerklärung — DateScan'};
+  document.title=titles[lang]||titles.en;document.documentElement.lang=lang;
+})();
+</script>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
 <script>
@@ -32,10 +49,818 @@
     radial-gradient(circle at 85% 90%, rgba(139,92,246,0.08) 0%, transparent 40%);
     pointer-events: none; z-index: 0; }
 </style>
+<script>
+// ── i18n for privacy.html ──
+(function(){
+  var translations = {
+    en: {
+      page_title: 'Privacy Policy — DateScan',
+      meta_desc: 'DateScan Privacy Policy. 100% on-device AI — your photos never leave your device.',
+      subtitle_tag: 'Personal Style Coach',
+      back_aria: 'Back to app',
+      legal_badge: 'Legal',
+      main_title: 'Privacy Policy',
+      last_updated: 'Last updated: April 18, 2026',
+      summary_badge: 'Plain-English summary',
+      summary_intro: "<strong>Two things happen in DateScan, and they're treated very differently.</strong>",
+      summary_cam_item: '<strong class="text-white">Camera scans</strong> (outfit, grooming, posture checks) run <strong>on your device</strong>. Video frames never leave your device.',
+      summary_chat_item: "<strong class=\"text-white\">AI Style Coach chat</strong> (text messages and any photos you choose to attach) <strong>is sent to our server</strong> and forwarded to a third-party vision-language model so you can get a reply. We don't train models on your chats and we don't retain them beyond what's needed to operate the service.",
+      account_badge: 'Your account',
+      account_id_title: 'Your account ID',
+      account_id_desc: "DateScan does not use email or passwords. You're identified by an anonymous ID stored only on this device. <strong class=\"text-white\">You will need this ID if you want to request data deletion via our website.</strong>",
+      copy_btn: 'Copy',
+      copied_text: 'Copied!',
+      web_deletion_label: 'Email:',
+      web_deletion_link: 'info@datescan.app',
+      delete_title: 'Delete my account &amp; data',
+      delete_desc: 'To delete your account and all associated data, email us at info@datescan.app with "Delete my account" in the subject.',
+      delete_btn: 'Email us to delete',
+      s1_title: '1. Who We Are',
+      s1_body: 'DateScan is an AI-powered style coach available as a web app at <a href="https://datescan.app/">https://datescan.app/</a> and as an Android app distributed via the Google Play Store.<br><br><strong>Data controller:</strong> Petor Péter, 2233 Ecser, Nádas Béla utca 10, Hungary. Email: <a href="mailto:info@datescan.app">info@datescan.app</a>. For any privacy question, email us or reach out on our social channels.',
+      s2_title: '2. Age Restriction — 18+ Only',
+      s2_body: '<strong>DateScan is intended exclusively for users aged 18 or older.</strong> The Service is not directed at children or teenagers, and we do not knowingly collect any data from anyone under 18. By using DateScan you represent and warrant that you are at least 18 years of age. If we learn that we have collected data from a person under 18, we will delete it promptly. If you believe a minor has used DateScan, please contact us immediately at the address above.',
+      s3_title: '3. How Camera Scans Work (On-Device)',
+      s3_intro: "When you run a scan, Google's MediaPipe face-landmark model is loaded into your browser and executes entirely on your device's own CPU and GPU via WebGL/WebAssembly. For the scan feature specifically, this means:",
+      s3_li1: 'Your camera feed is processed frame-by-frame <strong>on your device</strong>.',
+      s3_li2: 'Raw frames, biometric landmarks, and video are discarded the moment you leave the scan screen.',
+      s3_li3: 'No image data from the scan feature is uploaded to our servers or to any third party. <strong>Note on biometric data:</strong> The facial landmarks generated by MediaPipe are used solely for real-time style feedback and are never stored, exported, or used to uniquely identify any individual. They do not constitute "biometric data" within the meaning of GDPR Art. 9(1) read with Art. 4(14), as they are not processed for the purpose of uniquely identifying a natural person.',
+      s4_title: '4. How the AI Style Coach Chat Works (Server-Side)',
+      s4_intro: 'The AI Style Coach chat is a separate feature from the on-device scan. <strong>Legal basis</strong>: performance of contract (GDPR Art. 6(1)(b)) — processing is necessary to provide the service you requested. When you send a message to the Style Coach — with or without an attached photo — the following happens:',
+      s4_li1: 'Your message text, any attached image, and a short recent chat history are sent over HTTPS to our backend at <code>api.datescan.app</code>.',
+      s4_li2: 'Our backend forwards the request to a third-party vision-language model provider (currently <strong>OpenAI</strong> and/or <strong>Anthropic</strong>, subject to change) so the model can generate a reply.',
+      s4_li3: 'The reply is streamed back to your device.',
+      s4_li4: 'We retain request logs (message content, image references, timestamp, anonymized user identifier) for up to <strong>30 days</strong> for abuse prevention, debugging, and moderation. After 30 days the content is automatically deleted.',
+      s4_li5: 'We do <strong>not</strong> use your chat content to train AI models. Our third-party providers operate under zero-retention and no-training agreements where available; please consult their policies below for details.',
+      s4_li6: 'If you attach a photo, you are asked for explicit consent via an in-app modal before the upload happens. You can turn off all image uploads in chat by enabling <strong>Private Mode</strong> in the Privacy panel.',
+      s4_warning: '<strong>Do not upload photos of other people without their consent, and never upload photos of anyone under 18.</strong> You are solely responsible for the content you submit to the Style Coach.',
+      s5_title: '5. Data We Store',
+      s5_local_title: 'On your device (local)',
+      s5_local_intro: "DateScan uses your browser's <code>localStorage</code> and <code>IndexedDB</code> to remember your progress and preferences between visits. This data never leaves your device and includes:",
+      s5_local_li1: 'Onboarding completion state',
+      s5_local_li2: 'Your XP, level, streak, and mission history',
+      s5_local_li3: 'Your digital closet (photos you save yourself)',
+      s5_local_li4: 'Your daily free-tier points balance and any bonus points earned through the referral programme (5 base points per day — each scan or AI Coach message costs 1 point; the pool resets 24 hours after your first spend; bonus points persist across resets)',
+      s5_local_li5: 'Whether you have an active Pro subscription',
+      s5_local_li6: 'Your cookie-banner and privacy-panel choices',
+      s5_local_erase: 'You can erase all of this at any time by opening the <strong>Privacy</strong> panel in the app and tapping <strong>"Erase everything on this device"</strong>, or by clearing site data for datescan.app in your browser.',
+      s5_server_title: 'On our server',
+      s5_server_li1: '<strong>AI Style Coach chat logs</strong> — retained up to 30 days (see §4).',
+      s5_server_li2: '<strong>Content moderation reports</strong> — when you tap "Report" on an AI response, we store the reported text, your chosen category, and any optional note, retained for up to 12 months for safety auditing.',
+      s5_server_li3: '<strong>Server access logs</strong> — IP address, user agent, request path, timestamp, retained for up to 14 days for security, retained longer in aggregated/anonymized form for analytics. <em>Legal basis: legitimate interest (GDPR Art. 6(1)(f)) — security and abuse prevention.</em>',
+      s5_server_li4: '<strong>Subscription/entitlement records</strong> — we store a minimal record linking your anonymized device/account ID to your Pro status, plan type, and renewal date for the purpose of gating premium features.',
+      s5_payment_title: 'Payment data',
+      s5_payment_body: "We do not store full payment card details on our servers under any circumstance. All subscription payments are processed by <strong>Google Play Billing</strong>. Google collects the billing data and shares only minimal entitlement information with us (plan, renewal date, anonymized purchase token). See <a href=\"https://policies.google.com/privacy\" target=\"_blank\" rel=\"noopener\">Google's Privacy Policy</a>.",
+      s5_infra_title: 'Infrastructure &amp; server logs',
+      s5_infra_body: 'Our static files are served via <strong>Cloudflare</strong>, which handles TLS termination, DDoS protection, caching, and abuse prevention. Cloudflare automatically records standard request metadata (IP address, user agent, timestamps) in its own server logs for security purposes.',
+      s6_title: '6. What We Do NOT Collect',
+      s6_li1: 'We do <strong>not</strong> upload camera-scan frames, scan results, or on-device biometric landmarks to any server.',
+      s6_li2: 'We do <strong>not</strong> use facial recognition or any other biometric data to identify you.',
+      s6_li3: 'We do <strong>not</strong> sell data to advertisers or data brokers.',
+      s6_li4: 'We do <strong>not</strong> serve behavioural advertising inside the app.',
+      s6_li5: 'We do <strong>not</strong> use your Style Coach messages or photos to train AI models.',
+      s6_li6: 'We do <strong>not</strong> require an email or password to use the free tier on the web.',
+      s7_title: '7. Third-Party Services',
+      s7_intro: 'The following third-party providers are involved in running DateScan:',
+      s7_li1: '<strong>Google Play Billing</strong> — subscription processing for the Android app. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Privacy Policy</a>',
+      s7_li2: '<strong>OpenAI</strong> and/or <strong>Anthropic</strong> — vision-language model providers for the AI Style Coach chat. Chat messages and attached images are forwarded to them to generate replies. We use API terms that prohibit training on user data where available. <a href="https://openai.com/policies/privacy-policy" target="_blank" rel="noopener">OpenAI privacy</a> · <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener">Anthropic privacy</a>',
+      s7_li3: '<strong>Cloudflare</strong> — CDN, TLS, DDoS protection, and security layer. <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Privacy Policy</a>',
+      s7_li4: '<strong>Google Fonts</strong> — Inter and Playfair Display typefaces. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Privacy Policy</a>',
+      s7_li5: '<strong>jsDelivr CDN</strong> — delivers the MediaPipe face-landmark library. <a href="https://www.jsdelivr.com/terms/privacy-policy-jsdelivr-net" target="_blank" rel="noopener">Privacy Policy</a>',
+      s7_li6: '<strong>Skimlinks</strong> — affiliate link monetization service. When you click an affiliate link, Skimlinks may set cookies and unique identifiers to track the referral and attribute any resulting commission. <em>Legal basis: consent (GDPR Art. 6(1)(a)).</em> <a href="https://skimlinks.com/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>',
+      s8_title: '8. Affiliate Links',
+      s8_body1: 'DateScan may include affiliate links within the app. If you click on an affiliate link and subsequently make a purchase, we may receive a commission from the retailer or service provider at <strong>no additional cost to you</strong>. These affiliate partnerships help support the ongoing development and maintenance of DateScan.',
+      s8_body2: "To track affiliate clicks and correctly attribute commissions, third-party affiliate networks such as <strong>Skimlinks</strong> may place cookies and unique identifiers on your browser. These tracking mechanisms allow the affiliate network to recognize that your purchase originated from a link within our app. Affiliate tracking cookies are set by the third-party service directly — not by DateScan — and are subject to the third party's own privacy policy (see §7 above for links).",
+      s8_body3: "You can manage or delete affiliate tracking cookies at any time through your browser's cookie settings. For more information on how we handle cookies overall, see §9 below.",
+      s9_title: '9. Cookies &amp; Local Storage',
+      s9_intro: 'DateScan itself does not set any advertising or tracking cookies. We use:',
+      s9_li1: '<strong>LocalStorage &amp; IndexedDB</strong> — to remember your progress, preferences, and closet on your device.',
+      s9_li2: '<strong>Strictly necessary cookies</strong> — set by Cloudflare for security, bot detection, and load balancing.',
+      s9_note: 'Strictly necessary cookies cannot be disabled because the service cannot function without them. We do not set any analytics, advertising, or behavioural-tracking cookies.',
+      s10_title: '10. Your Rights (GDPR, UK GDPR &amp; CCPA)',
+      s10_intro: 'If you are located in the European Economic Area, the United Kingdom, or California, you have the following rights regarding any personal data we hold:',
+      s10_li1: '<strong>Right of access</strong> — request a copy of your data.',
+      s10_li2: '<strong>Right to erasure</strong> — request deletion (see §11 below).',
+      s10_li3: '<strong>Right to rectification</strong> — correct inaccurate data.',
+      s10_li4: '<strong>Right to object</strong> — object to how we process your data.',
+      s10_li5: '<strong>Right to portability</strong> — receive your data in a machine-readable format.',
+      s10_li6: '<strong>Right to lodge a complaint</strong> — with your local data protection authority.',
+      s10_exercise: 'To exercise any of these rights, email us at <a href="mailto:info@datescan.app">info@datescan.app</a> with your request. We respond within 30 days. If you are in Hungary, your supervisory authority is the <strong>NAIH</strong> (Nemzeti Adatvédelmi és Információszabadság Hatóság), 1055 Budapest, Falk Miksa u. 9-11., <a href="https://www.naih.hu" target="_blank" rel="noopener">www.naih.hu</a>.',
+      s11_title: '11. Data Deletion',
+      s11_intro: 'You have two ways to delete your data:',
+      s11_li1: '<strong>In-app wipe (local data only):</strong> Open the Privacy panel inside DateScan and tap <strong>"Erase everything on this device"</strong>. This wipes your closet, scan history, local settings, and cached service worker data from the current device.',
+      s11_li2: '<strong>Account &amp; data deletion:</strong> Email us at <a href="mailto:info@datescan.app?subject=Delete%20my%20account"><strong>info@datescan.app</strong></a> with "Delete my account" in the subject. We will permanently delete your chat logs, moderation reports, and entitlement records associated with your email/device identifier within 30 days.',
+      s11_cancel: 'Deleting your data does <strong>not</strong> cancel an active subscription. To cancel Pro, open the <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">Google Play subscriptions page</a> — see also our <a href="refund.html">Refund Policy</a>.',
+      s12_title: '12. Data Retention',
+      s12_intro: 'We retain different categories of data for different periods:',
+      s12_li1: '<strong>On-device data</strong> — kept on your device until you delete it.',
+      s12_li2: '<strong>AI Style Coach chat logs</strong> — up to 30 days for abuse prevention and debugging, then automatically deleted.',
+      s12_li3: '<strong>Content moderation reports</strong> — up to 12 months for safety auditing.',
+      s12_li4: '<strong>Server access logs</strong> — up to 14 days in raw form.',
+      s12_li5: '<strong>Subscription records</strong> — for the duration of the subscription plus the period required by applicable tax and accounting law (typically 7 years in the EU).',
+      s12_li6: "<strong>Billing records held by Google Play</strong> — as long as required by Google Play's policies and applicable tax law.",
+      s13_title: '13. International Data Transfers',
+      s13_body: 'Our backend and AI model providers may process your data in the United States and other countries outside your country of residence. Where required, we rely on Standard Contractual Clauses (SCCs) and the EU-US Data Privacy Framework to transfer data lawfully out of the EEA/UK.',
+      s14_title: '14. Security',
+      s14_body: 'All traffic to datescan.app and api.datescan.app is encrypted via HTTPS/TLS. We follow industry-standard security practices including encryption at rest, access controls, and regular security reviews. No system is 100% secure, however — please keep your device, browser, and Google account up to date and notify us immediately if you suspect a security issue.',
+      s15_title: '15. AI-Generated Content &amp; Content Moderation',
+      s15_body: 'The AI Style Coach produces machine-generated responses and can make mistakes, including giving inaccurate or inappropriate advice. You can report any AI response by tapping the <strong>"Report"</strong> button below the message. We review every flagged response and use the feedback to improve the service and enforce our content policies. Certain categories of input are blocked client-side and server-side, including: content involving minors, sexually explicit content, and content encouraging self-harm. See our <a href="terms.html">Terms of Service</a> for the full list.',
+      s16_title: '16. Changes to This Policy',
+      s16_body: 'We may update this Privacy Policy from time to time. The "Last updated" date at the top of this page will always reflect the most recent version. Material changes will be announced inside the app and on the homepage. Continued use after the effective date of the new policy means you accept the update.',
+      s17_title: '17. Referral & Bonus Points',
+      s17_intro: 'DateScan offers a referral programme that lets you earn bonus points by inviting friends. Here is how it works and what data is involved:',
+      s17_li1: 'When you tap <strong>"Share Invite Link"</strong>, the app generates a unique referral link in the format <code>https://datescan.app/?ref={yourUserId}</code>. Your anonymous user ID (a random string starting with <code>u_</code>) is embedded in the link so we can identify you as the referrer.',
+      s17_li2: "If someone opens your referral link for the first time, the app gives them <strong>+5 bonus points</strong> automatically and records your ID as their referrer in their browser's localStorage (<code>datescan.referredBy</code>). Each user can only be referred once — if they already have a referrer on record, no additional referral is recorded.",
+      s17_li3: "The app then sends a <strong>POST request</strong> to <code>api.datescan.app/api/referral</code> containing your referrer ID and the new user's ID, so our backend can award you <strong>+5 bonus points</strong> as well. This request includes only the two anonymous user IDs — no personal information, no email, no names.",
+      s17_li4: 'On every page load, the app calls <strong>GET <code>api.datescan.app/api/check-rewards?userId={yourId}</code></strong> to check whether any pending referral bonuses are available for you. If a bonus is found, the points are added to your balance and a toast notification appears.',
+      s17_li5: "Bonus points are stored in your browser's localStorage alongside your regular daily points (<code>datescan.points</code>). They persist across daily resets and are not lost when your 24-hour point pool refreshes.",
+      s17_li6: 'You may not create multiple accounts or use automated means to generate referrals. Abuse of the referral programme may result in forfeiture of bonus points and termination of access.',
+      s18_title: '18. Contact',
+      s18_body: 'Questions? Email us at <a href="mailto:info@datescan.app">info@datescan.app</a> or reach out on our social channels.',
+      footer_desc: 'Your AI-powered wingman. Scan your outfit, get instant style and grooming feedback, and walk into your date with confidence.',
+      footer_ondevice: 'Camera scans run on-device',
+      footer_legal: 'Legal',
+      footer_privacy: 'Privacy Policy',
+      footer_terms: 'Terms of Service',
+      footer_refund: 'Refund Policy',
+      footer_delete: 'Delete Account',
+      footer_support: 'Support',
+      footer_contact: 'Contact Support',
+      footer_follow: 'Follow',
+      footer_disclaimer: 'Disclaimer: DateScan is an AI-powered tool designed for entertainment and confidence-boosting purposes only. We do not guarantee dating success or specific social outcomes.'
+    },
+    hu: {
+      page_title: 'Adatvédelmi tájékoztató — DateScan',
+      meta_desc: 'DateScan adatvédelmi tájékoztató. 100%-ban eszközön futó AI — a fotóid sosem hagyják el a böngésződet.',
+      subtitle_tag: 'Személyes Stílusedző',
+      back_aria: 'Vissza az alkalmazáshoz',
+      legal_badge: 'Jogi',
+      main_title: 'Adatvédelmi tájékoztató',
+      last_updated: 'Utoljára frissítve: 2026. április 18.',
+      summary_badge: 'Érthető összefoglaló',
+      summary_intro: '<strong>A DateScanben két dolog történik, és nagyon máshogy kezeljük őket.</strong>',
+      summary_cam_item: '<strong class="text-white">Kamera szkennelés</strong> (ruha, ápoltság, testtartás ellenőrzése) <strong>a készülékeden fut</strong>. A videó képkockái sosem hagyják el a böngésződet.',
+      summary_chat_item: '<strong class="text-white">AI Stílusedző chat</strong> (szöveges üzenetek és az általad csatolt fotók) <strong>elküldésre kerül a szerverünkre</strong>, és továbbítódik egy harmadik fél látás-nyelvi modelljéhez, hogy választ kaphass. Nem tanítunk modelleket a csevegéseiteken, és nem tároljuk őket a szolgáltatás működtetéséhez szükségesnél tovább.',
+      account_badge: 'Fiókod',
+      account_id_title: 'Fiókazonosítód',
+      account_id_desc: 'A DateScan nem használ emailt vagy jelszót. Egy névtelen azonosító azonosít, amely csak ezen az eszközön van tárolva. <strong class="text-white">Szükséged lesz erre az azonosítóra, ha adattörlést szeretnél kérni a weboldalunkon.</strong>',
+      copy_btn: 'Másolás',
+      copied_text: 'Lemásolva!',
+      web_deletion_label: 'Email:',
+      web_deletion_link: 'info@datescan.app',
+      delete_title: 'Fiókom és adataim törlése',
+      delete_desc: 'A fiókod és az összes kapcsolódó adat törléséhez írj az info@datescan.app címre „Fiók törlése" tárgymegjelöléssel.',
+      delete_btn: 'Írj nekünk a törléshez',
+      s1_title: '1. Kik vagyunk',
+      s1_body: 'A DateScan egy AI-alapú stílusedző, elérhető webalkalmazásként a <a href="https://datescan.app/">https://datescan.app/</a> címen, és Android alkalmazásként a Google Play Áruházon keresztül.<br><br><strong>Adatkezelő:</strong> Petor Péter, 2233 Ecser, Nádas Béla utca 10, Magyarország. Email: <a href="mailto:info@datescan.app">info@datescan.app</a>. Bármilyen adatvédelmi kérdés esetén írj nekünk vagy a közösségi csatornáinkon.',
+      s2_title: '2. Korhatár — Csak 18 évesek felett',
+      s2_body: '<strong>A DateScan kizárólag 18 éves vagy idősebb felhasználók számára készült.</strong> A Szolgáltatás nem gyermekeknek vagy fiatalkorúaknak szól, és tudatosan nem gyűjtünk adatot 18 év alattiaktól. A DateScan használatával kijelented és garantálod, hogy legalább 18 éves vagy. Ha tudomást szerzünk róla, hogy 18 év alatti személytől gyűjtöttünk adatot, haladéktalanul töröljük. Ha úgy gondolod, hogy kiskorú használta a DateScant, kérjük, azonnal lépj kapcsolatba velünk a fenti címen.',
+      s3_title: '3. Hogyan működnek a kameraszkennelések (eszközön)',
+      s3_intro: 'Amikor elindítasz egy szkennelést, a Google MediaPipe arcvonalkategória-modellje betöltődik a böngésződbe, és teljes egészében a készüléked saját CPU-ján és GPU-ján fut WebGL/WebAssembly segítségével. A szkennelési funkcióra vonatkozóan ez azt jelenti:',
+      s3_li1: 'A kameraképed képkockánként <strong>a készülékeden</strong> kerül feldolgozásra.',
+      s3_li2: 'A nyers képkockák, biometrikus mérvópontok és videó abban a pillanatban törlődnek, amikor elhagyod a szkennelés képernyőjét.',
+      s3_li3: 'A szkennelési funkcióból származó képi adat nem kerül feltöltésre a szervereinkre vagy harmadik félhez. <strong>Megjegyzés a biometrikus adatokról:</strong> A MediaPipe által generált arcvonalkategória-pontok kizárólag valós idejű stílus-visszajelzésre szolgálnak, és soha nem kerülnek tárolásra, exportálásra vagy természetes személy egyedi azonosítására. Nem minősülnek „biometrikus adatnak" a GDPR 9. cikk (1) és 4. cikk (14) értelmében, mivel nem természetes személy egyedi azonosítása céljából kerülnek feldolgozásra.',
+      s4_title: '4. Hogyan működik az AI Stílusedző chat (szerveroldal)',
+      s4_intro: 'Az AI Stílusedző chat külön funkció az eszközön futó szkenneléstől. <strong>Jogalap</strong>: szerződés teljesítése (GDPR 6. cikk (1)(b)) — az adatkezelés a kért szolgáltatás nyújtásához szükséges. Amikor üzenetet küldesz a Stílusedzőnek — csatolt fotóval vagy anélkül — a következő történik:',
+      s4_li1: 'Az üzenetszöveged, esetleg csatolt képed és egy rövid legutóbbi csevegési előzmény HTTPS-en keresztül elküldésre kerül a <code>api.datescan.app</code> című backendünkre.',
+      s4_li2: 'A backendünk továbbítja a kérést egy harmadik fél látás-nyelvi modell szolgáltatójának (jelenleg <strong>OpenAI</strong> és/vagy <strong>Anthropic</strong>, változhat), hogy a modell választ generálhasson.',
+      s4_li3: 'A válasz streamelve kerül vissza a készülékedre.',
+      s4_li4: 'A kérési naplókat (üzenettartalom, képhivatkozások, időbélyeg, névtelenített felhasználóazonosító) legfeljebb <strong>30 napig</strong> őrizzük meg visszaélés-megelőzés, hibakeresés és moderáció céljából. 30 nap után a tartalom automatikusan törlődik.',
+      s4_li5: '<strong>Nem</strong> használjuk a csevegési tartalmadat AI modellek tanítására. Harmadik fél szolgáltatóink nulla-megőrzés és nincs-tanítás megállapodások alatt működnek, ahol elérhető; a részletekért kérjük, tekintsd meg az alábbi szabályzataikat.',
+      s4_li6: 'Ha fotót csatolsz, kifejezett beleegyezést kérünk egy alkalmazáson belüli felugró ablakban a feltöltés előtt. A képfeltöltéseket kikapcsolhatod a chatben a <strong>Privát mód</strong> engedélyezésével az Adatvédelem panelen.',
+      s4_warning: '<strong>Ne tölts fel másokról fotókat az engedélyük nélkül, és soha ne tölts fel 18 év alatti személyről fotót.</strong> A Stílusedzőnek beküldött tartalomért kizárólag te vagy a felelős.',
+      s5_title: '5. Tárolt adatok',
+      s5_local_title: 'A készülékeden (helyi)',
+      s5_local_intro: 'A DateScan a böngésződ <code>localStorage</code> és <code>IndexedDB</code> tárolóját használja a haladásod és beállításaid megjegyzésére a látogatások között. Ezek az adatok sosem hagyják el a készüléked, és a következőket tartalmazzák:',
+      s5_local_li1: 'Bevezetés befejezési állapota',
+      s5_local_li2: 'Az XP-d, szinted, sorozatod és küldetéstörténeted',
+      s5_local_li3: 'A digitális szekrényed (az általad mentett fotók)',
+      s5_local_li4: 'A napi ingyenes pontegyenleged és az ajánlóprogramból szerzett bónusz pontok (napi 5 alap pont — minden szkennelés vagy AI Edző üzenet 1 pontba kerül; a készlet az első költés után 24 órával visszaáll; a bónusz pontok túlélik a visszaállítást)',
+      s5_local_li5: 'Hogy van-e aktív Pro előfizetésed',
+      s5_local_li6: 'A süti-banner és adatvédelmi panel választásaid',
+      s5_local_erase: 'Bármikor törölheted mindezt az <strong>Adatvédelem</strong> panel megnyitásával az alkalmazásban, és a <strong>„Minden törlése ezen az eszközön"</strong> gombra koppintva, vagy a datescan.app oldaladatok törlésével a böngésződben.',
+      s5_server_title: 'A szerverünkön',
+      s5_server_li1: '<strong>AI Stílusedző csevegési naplók</strong> — legfeljebb 30 napig megőrzve (lásd §4).',
+      s5_server_li2: '<strong>Tartalommoderációs jelentések</strong> — amikor az AI válaszon a „Jelentés" gombra koppintasz, tároljuk a jelentett szöveget, a választott kategóriát és az opcionális megjegyzést, legfeljebb 12 hónapig biztonsági audit céljából.',
+      s5_server_li3: '<strong>Szerverhozzáférési naplók</strong> — IP-cím, felhasználói ügynök, kérési útvonal, időbélyeg, legfeljebb 14 napig biztonsági célból, továbbá összesített/névtelenített formában analitikához. <em>Jogalap: jogos érdek (GDPR 6. cikk (1)(f)) — biztonság és visszaélés-megelőzés.</em>',
+      s5_server_li4: '<strong>Előfizetés/jogosultsági rekordok</strong> — minimális rekordot tárolunk, amely a névtelenített eszköz/fiók azonosítódat a Pro státuszodhoz, csomagtípusodhoz és megújítási dátumodhoz kapcsolja a prémium funkciók korlátozásának céljából.',
+      s5_payment_title: 'Fizetési adatok',
+      s5_payment_body: 'Semmilyen körülmények között nem tárolunk teljes fizetési kártyaadatokat a szervereinken. Az összes előfizetési fizetést a <strong>Google Play Billing</strong> kezeli. A Google gyűjti a számlázási adatokat, és csak minimális jogosultsági információt oszt meg velünk (csomag, megújítási dátum, névtelenített vásárlási token). Lásd <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">a Google Adatvédelmi szabályzatát</a>.',
+      s5_infra_title: 'Infrastruktúra és szervernaplók',
+      s5_infra_body: 'A statikus fájljainkat a <strong>Cloudflare</strong> szolgáltatja, amely a TLS-lezárást, DDoS-védelmet, gyorsítótárazást és visszaélés-megelőzést kezeli. A Cloudflare automatikusan rögzíti a szabványos kérési metaadatokat (IP-cím, felhasználói ügynök, időbélyegek) a saját szervernaplóiban biztonsági célokból.',
+      s6_title: '6. Amit NEM gyűjtünk',
+      s6_li1: '<strong>Nem</strong> töltünk fel kameraszkennelés képkockákat, szkennelési eredményeket vagy eszközön tárolt biometrikus mérvópontokat semmilyen szerverre.',
+      s6_li2: '<strong>Nem</strong> használunk arcfelismerést vagy más biometrikus adatot az azonosításodra.',
+      s6_li3: '<strong>Nem</strong> adunk el adatot hirdetőknek vagy adatközvetítőknek.',
+      s6_li4: '<strong>Nem</strong> jelenítünk meg viselkedésalapú hirdetéseket az alkalmazásban.',
+      s6_li5: '<strong>Nem</strong> használjuk a Stílusedző üzeneteidet vagy fotóidat AI modellek tanítására.',
+      s6_li6: '<strong>Nem</strong> követelünk emailt vagy jelszót a webes ingyenes szint használatához.',
+      s7_title: '7. Harmadik fél szolgáltatásai',
+      s7_intro: 'A következő harmadik fél szolgáltatók vesznek részt a DateScan működtetésében:',
+      s7_li1: '<strong>Google Play Billing</strong> — az Android alkalmazás előfizetés-feldolgozása. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Adatvédelmi szabályzat</a>',
+      s7_li2: '<strong>OpenAI</strong> és/vagy <strong>Anthropic</strong> — az AI Stílusedző chat látás-nyelvi modell szolgáltatói. A csevegési üzenetek és csatolt képek továbbításra kerülnek hozzájuk a válaszgeneráláshoz. Az elérhető API-feltételek tiltják a felhasználói adatokon történő tanítást. <a href="https://openai.com/policies/privacy-policy" target="_blank" rel="noopener">OpenAI adatvédelem</a> · <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener">Anthropic adatvédelem</a>',
+      s7_li3: '<strong>Cloudflare</strong> — CDN, TLS, DDoS-védelem és biztonsági réteg. <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Adatvédelmi szabályzat</a>',
+      s7_li4: '<strong>Google Fonts</strong> — Inter és Playfair Display betűtípusok. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Adatvédelmi szabályzat</a>',
+      s7_li5: '<strong>jsDelivr CDN</strong> — a MediaPipe arcvonalkategória-könyvtár szállítása. <a href="https://www.jsdelivr.com/terms/privacy-policy-jsdelivr-net" target="_blank" rel="noopener">Adatvédelmi szabályzat</a>',
+      s7_li6: '<strong>Skimlinks</strong> — affiliate link monetizációs szolgáltatás. Amikor affiliate linkre kattintasz, a Skimlinks sütiket és egyedi azonosítókat helyezhet el az ajánlás nyomon követésére és a jutalékok kifizetésére. <em>Jogalap: hozzájárulás (GDPR 6. cikk (1)(a)).</em> <a href="https://skimlinks.com/privacy-policy" target="_blank" rel="noopener">Adatvédelmi szabályzat</a>',
+      s8_title: '8. Affiliate linkek',
+      s8_body1: 'A DateScan affiliate linkeket tartalmazhat az alkalmazáson belül. Ha rákattintasz egy affiliate linkre, és utána vásárolsz, jutalékot kaphatunk a kereskedőtől vagy szolgáltatótól, <strong>számodra többletköltség nélkül</strong>. Ezek az affiliate partnerségek segítenek támogatni a DateScan folyamatos fejlesztését és karbantartását.',
+      s8_body2: 'Az affiliate kattintások nyomon követésére és a jutalékok helyes kifizetésére harmadik fél affiliate hálózatok, például a <strong>Skimlinks</strong>, sütiket és egyedi azonosítókat helyezhetnek el a böngésződben. Ezek a nyomkövetési mechanizmusok lehetővé teszik az affiliate hálózat számára, hogy felismerje, a vásárlásod az alkalmazásunkon belüli linkből származik. Az affiliate nyomkövető sütiket a harmadik fél szolgáltatás közvetlenül helyezi el — nem a DateScan —, és a harmadik fél saját adatvédelmi szabályzatának alávetettek (lásd a §7-et fenti linkekkel).',
+      s8_body3: 'Az affiliate nyomkövető sütiket bármikor kezelheted vagy törölheted a böngésződ süti-beállításain keresztül. A sütikezelésünkről részletes információért lásd az alábbi §9-et.',
+      s9_title: '9. Sütik és helyi tárhely',
+      s9_intro: 'A DateScan maga nem állít be hirdetési vagy nyomkövető sütiket. A következőket használjuk:',
+      s9_li1: '<strong>LocalStorage és IndexedDB</strong> — a haladásod, beállításaid és szekrényed megjegyzésére a készülékeden.',
+      s9_li2: '<strong>Szigorúan szükséges sütik</strong> — a Cloudflare által biztonság, botfelismerés és terhelésmegosztás céljából beállítva.',
+      s9_note: 'A szigorúan szükséges sütiket nem lehet letiltani, mert a szolgáltatás nélkülük nem működik. Nem állítunk be analitikai, hirdetési vagy viselkedésalapú nyomkövető sütiket.',
+      s10_title: '10. Jogaid (GDPR, UK GDPR és CCPA)',
+      s10_intro: 'Ha az Európai Gazdasági Térségben, az Egyesült Királyságban vagy Kaliforniában tartózkodsz, a következő jogokkal rendelkezel az általunk tárolt személyes adatokkal kapcsolatban:',
+      s10_li1: '<strong>Hozzáférési jog</strong> — adatod másolatának kérése.',
+      s10_li2: '<strong>Törlési jog</strong> — törlés kérése (lásd §11 alább).',
+      s10_li3: '<strong>Helyesbítési jog</strong> — pontatlan adatok kijavítása.',
+      s10_li4: '<strong>Kifogás joga</strong> — kifogás az adatkezelési mód ellen.',
+      s10_li5: '<strong>Hordozhatósági jog</strong> — adataid gépileg olvasható formátumban történő megkapása.',
+      s10_li6: '<strong>Panasztételi jog</strong> — a helyi adatvédelmi hatósághoz.',
+      s10_exercise: 'Ezen jogok bármelyikének gyakorlásához írj nekünk az <a href="mailto:info@datescan.app">info@datescan.app</a> címre a kérelmeddel. 30 napon belül válaszolunk. Magyarországon a felügyeleti hatóság a <strong>NAIH</strong> (Nemzeti Adatvédelmi és Információszabadság Hatóság), 1055 Budapest, Falk Miksa u. 9-11., <a href="https://www.naih.hu" target="_blank" rel="noopener">www.naih.hu</a>.',
+      s11_title: '11. Adattörlés',
+      s11_intro: 'Két módja van az adataid törlésének:',
+      s11_li1: '<strong>Alkalmazáson belüli törlés (csak helyi adatok):</strong> Nyisd meg az Adatvédelem panelt a DateScanben, és koppints a <strong>„Minden törlése ezen az eszközön"</strong> gombra. Ez törli a szekrényedet, szkennelési előzményeidet, helyi beállításaidat és a gyorsítótárazott service worker adatokat az aktuális eszközről.',
+      s11_li2: '<strong>Fiók- és adattörlés:</strong> Írj az <a href="mailto:info@datescan.app?subject=Fiók%20törlése"><strong>info@datescan.app</strong></a> címre „Fiók törlése" tárgymegjelöléssel. A csevegési naplókat, moderációs jelentéseket és jogosultsági rekordokat az email/eszköz azonosítódhoz kapcsolódóan 30 napon belül véglegesen töröljük.',
+      s11_cancel: 'Az adatok törlése <strong>nem</strong> mondja le az aktív előfizetést. A Pro lemondásához nyisd meg a <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">Google Play előfizetések oldalát</a> — lásd még a <a href="refund.html">Visszatérítési szabályzatunkat</a>.',
+      s12_title: '12. Adatmegőrzés',
+      s12_intro: 'Különböző adatkategóriákat különböző ideig őrzünk meg:',
+      s12_li1: '<strong>Eszközön tárolt adatok</strong> — a készülékeden maradnak, amíg nem törlöd őket.',
+      s12_li2: '<strong>AI Stílusedző csevegési naplók</strong> — legfeljebb 30 napig visszaélés-megelőzés és hibakeresés céljából, majd automatikusan törlődnek.',
+      s12_li3: '<strong>Tartalommoderációs jelentések</strong> — legfeljebb 12 hónapig biztonsági audit céljából.',
+      s12_li4: '<strong>Szerverhozzáférési naplók</strong> — nyers formában legfeljebb 14 napig.',
+      s12_li5: '<strong>Előfizetési rekordok</strong> — az előfizetés időtartamára, plusz az alkalmazandó adó- és számviteli jog által megkövetelt ideig (általában 7 év az EU-ban).',
+      s12_li6: '<strong>A Google Play által tárolt számlázási rekordok</strong> — ameddig a Google Play szabályzatai és az alkalmazandó adójog megköveteli.',
+      s13_title: '13. Nemzetközi adattovábbítás',
+      s13_body: 'A backendünk és AI modell szolgáltatók az Egyesült Államokban és más országokban dolgozhatják fel az adataidat, a lakóhelyed szerinti országon kívül. Ahol szükséges, Standard Szerződési Klauzulákra (SCC) és az EU-US Adatvédelmi Keretrendszerre támaszkodunk az adatok EEA/UK-ból történő jogszerű továbbításához.',
+      s14_title: '14. Biztonság',
+      s14_body: 'A datescan.app és az api.datescan.app felé irányuló összes forgalom HTTPS/TLS titkosítással védett. Iparági szabványú biztonsági gyakorlatokat követünk, beleértve a titkosítást tárolásnál, hozzáférés-vezérlést és rendszeres biztonsági felülvizsgálatokat. Egyetlen rendszer sem 100%-ban biztonságos — kérjük, tartsd naprakészen a készülékedet, böngésződet és Google-fiókodat, és azonnal értesíts, ha biztonsági problémát gyanítasz.',
+      s15_title: '15. AI által generált tartalom és tartalommoderáció',
+      s15_body: 'Az AI Stílusedző gép által generált válaszokat ad, és hibázhat, beleértve a pontatlan vagy nem megfelelő tanácsok adását. Bármely AI választ jelentheted az üzenet alatti <strong>„Jelentés"</strong> gombra koppintva. Minden megjelölt választ felülvizsgálunk, és a visszajelzést a szolgáltatás javítására és tartalmi szabályzataink érvényesítésére használjuk. Bizonyos bemeneti kategóriák kliens- és szerveroldalon is blokkolásra kerülnek, beleértve: kiskorúakat érintő tartalom, szexuálisan explicit tartalom és önkárosításra ösztönző tartalom. A teljes listát lásd a <a href="terms.html">Felhasználási feltételekben</a>.',
+      s16_title: '16. A szabályzat változásai',
+      s16_body: 'Időről időre frissíthetjük ezt az Adatvédelmi tájékoztatót. Az oldal tetején található „Utoljára frissítve" dátum mindig a legfrissebb verziót tükrözi. A lényeges változásokat az alkalmazásban és a kezdőlapon jelentjük be. A frissített szabályzat hatálybalépési dátuma utáni további használat az elfogadásodat jelenti.',
+      s17_title: '17. Ajánlórendszer és bónusz pontok',
+      s17_intro: 'A DateScan ajánlóprogramot kínál, amely lehetővé teszi, hogy bónusz pontokat szerezz barátok meghívásával. Így működik és milyen adatok érintettek:',
+      s17_li1: 'Amikor megnyomod a <strong>„Meghívó link megosztása"</strong> gombot, az alkalmazás egy egyedi meghívó linket generál a <code>https://datescan.app/?ref={felhasznaloId}</code> formátumban. A névtelen felhasználói azonosítód (egy <code>u_</code>-vel kezdődő véletlenszerű karakterlánc) beágyazásra kerül a linkbe, hogy meghívóként azonosítsunk.',
+      s17_li2: 'Ha valaki először nyitja meg a meghívó linkedet, az alkalmazás automatikusan <strong>+5 bónusz pontot</strong> ad neki, és rögzíti az azonosítódat mint meghívóját a böngészője localStorage-jában (<code>datescan.referredBy</code>). Minden felhasználó csak egyszer hívható meg — ha már van rögzített meghívója, további ajánlás nem kerül rögzítésre.',
+      s17_li3: 'Az alkalmazás ezután <strong>POST kérést</strong> küld a <code>api.datescan.app/api/referral</code> címre, amely tartalmazza a meghívó azonosítóját és az új felhasználó azonosítóját, hogy a háttérrendszerünk <strong>+5 bónusz pontot</strong> írhasson jóvá neked is. Ez a kérés csak a két névtelen felhasználói azonosítót tartalmazza — semmilyen személyes információt, e-mailt vagy nevet nem.',
+      s17_li4: 'Minden oldalletöltéskor az alkalmazás meghívja a <strong>GET <code>api.datescan.app/api/check-rewards?userId={azId-d}</code></strong> végpontot, hogy ellenőrizze, vár-e rád bónusz pont. Ha bónusz található, a pontok hozzáadódnak az egyenlegedhez, és egy értesítés jelenik meg.',
+      s17_li5: 'A bónusz pontok a böngésződ localStorage-jában tárolódnak a napi pontjaid mellett (<code>datescan.points</code>). Túlélik a napi visszaállításokat, és nem vesznek el, amikor a 24 órás pontkészleted frissül.',
+      s17_li6: 'Nem hozhatsz létre több fiókot és nem használhatsz automatizált eszközöket ajánlások generálására. Az ajánlóprogram visszaélésszerű használata a bónusz pontok elvesztéséhez és a hozzáférés megszüntetéséhez vezethet.',
+      s18_title: '18. Kapcsolat',
+      s18_body: 'Kérdés esetén írj nekünk az <a href="mailto:info@datescan.app">info@datescan.app</a> címre vagy a közösségi csatornáinkon.',
+      footer_desc: 'Az AI-alapú szárnysegéded. Szkenneld az öltözéked, kapj azonnali stílus- és ápoltsági visszajelzést, és magabiztosan indulj a randira.',
+      footer_ondevice: 'A kameraszkennelés az eszközödön fut',
+      footer_legal: 'Jogi',
+      footer_privacy: 'Adatvédelmi tájékoztató',
+      footer_terms: 'Felhasználási feltételek',
+      footer_refund: 'Visszatérítési szabályzat',
+      footer_delete: 'Fiók törlése',
+      footer_support: 'Támogatás',
+      footer_contact: 'Kapcsolatfelvétel',
+      footer_follow: 'Kövess',
+      footer_disclaimer: 'Jogi nyilatkozat: A DateScan egy AI-alapú eszköz, kizárólag szórakoztatási és önbizalom-növelési célra tervezve. Nem garantálunk randi-sikert vagy konkrét társadalmi eredményeket.'
+    },
+    de: {
+      page_title: 'Datenschutzerklärung — DateScan',
+      meta_desc: 'DateScan Datenschutzerklärung. 100 % On-Device-KI — deine Fotos verlassen niemals dein Gerät.',
+      subtitle_tag: 'Persönlicher Style-Coach',
+      back_aria: 'Zurück zur App',
+      legal_badge: 'Rechtliches',
+      main_title: 'Datenschutzerklärung',
+      last_updated: 'Zuletzt aktualisiert: 18. April 2026',
+      summary_badge: 'Leicht verständliche Zusammenfassung',
+      summary_intro: '<strong>In DateScan passieren zwei Dinge, und sie werden sehr unterschiedlich behandelt.</strong>',
+      summary_cam_item: '<strong class="text-white">Kamera-Scans</strong> (Outfit-, Pflege-, Haltungs-Checks) laufen <strong>auf deinem Gerät</strong>. Videobilder verlassen nie deinen Browser.',
+      summary_chat_item: '<strong class="text-white">KI-Style-Coach-Chat</strong> (Textnachrichten und ggf. angehängte Fotos) <strong>wird an unseren Server gesendet</strong> und an ein drittes Vision-Language-Modell weitergeleitet, damit du eine Antwort erhältst. Wir trainieren keine Modelle mit deinen Chats und speichern sie nicht länger als für den Betrieb des Dienstes erforderlich.',
+      account_badge: 'Dein Konto',
+      account_id_title: 'Deine Konto-ID',
+      account_id_desc: 'DateScan verwendet keine E-Mail oder Passwörter. Du wirst durch eine anonyme ID identifiziert, die nur auf diesem Gerät gespeichert ist. <strong class="text-white">Du benötigst diese ID, wenn du eine Datenlöschung über unsere Website beantragen möchtest.</strong>',
+      copy_btn: 'Kopieren',
+      copied_text: 'Kopiert!',
+      web_deletion_label: 'E-Mail:',
+      web_deletion_link: 'info@datescan.app',
+      delete_title: 'Mein Konto &amp; Daten löschen',
+      delete_desc: 'Um dein Konto und alle damit verbundenen Daten zu löschen, schreibe an info@datescan.app mit dem Betreff „Konto löschen".',
+      delete_btn: 'E-Mail zum Löschen',
+      s1_title: '1. Wer wir sind',
+      s1_body: 'DateScan ist ein KI-gestützter Style-Coach, verfügbar als Web-App unter <a href="https://datescan.app/">https://datescan.app/</a> und als Android-App über den Google Play Store.<br><br><strong>Verantwortlicher:</strong> Petor Péter, 2233 Ecser, Nádas Béla utca 10, Ungarn. E-Mail: <a href="mailto:info@datescan.app">info@datescan.app</a>. Bei Datenschutzfragen schreib uns oder kontaktiere uns über unsere Social-Media-Kanäle.',
+      s2_title: '2. Altersbeschränkung — Nur ab 18',
+      s2_body: '<strong>DateScan richtet sich ausschließlich an Nutzer ab 18 Jahren.</strong> Der Dienst ist nicht an Kinder oder Jugendliche gerichtet, und wir erfassen wissentlich keine Daten von Personen unter 18 Jahren. Mit der Nutzung von DateScan erklärst und gewährleistest du, dass du mindestens 18 Jahre alt bist. Wenn wir erfahren, dass wir Daten von einer Person unter 18 Jahren erfasst haben, werden wir diese umgehend löschen. Wenn du glaubst, dass ein Minderjähriger DateScan genutzt hat, kontaktiere uns bitte umgehend unter der oben genannten Adresse.',
+      s3_title: '3. Wie Kamera-Scans funktionieren (On-Device)',
+      s3_intro: 'Wenn du einen Scan startest, wird Googles MediaPipe Face-Landmark-Modell in deinen Browser geladen und läuft vollständig auf der CPU und GPU deines eigenen Geräts über WebGL/WebAssembly. Für die Scan-Funktion bedeutet dies konkret:',
+      s3_li1: 'Dein Kamera-Feed wird Bild für Bild <strong>auf deinem Gerät</strong> verarbeitet.',
+      s3_li2: 'Rohbilder, biometrische Landmarks und Videos werden in dem Moment verworfen, in dem du den Scan-Bildschirm verlässt.',
+      s3_li3: 'Es werden keine Bilddaten aus der Scan-Funktion auf unsere Server oder an Dritte hochgeladen. <strong>Hinweis zu biometrischen Daten:</strong> Die von MediaPipe erzeugten Gesichtslandmarken dienen ausschließlich dem Echtzeit-Stil-Feedback und werden niemals gespeichert, exportiert oder zur eindeutigen Identifizierung einer Person verwendet. Sie stellen keine „biometrischen Daten" im Sinne von DSGVO Art. 9(1) i.V.m. Art. 4(14) dar, da sie nicht zum Zweck der eindeutigen Identifizierung einer natürlichen Person verarbeitet werden.',
+      s4_title: '4. Wie der KI-Style-Coach-Chat funktioniert (Serverseitig)',
+      s4_intro: 'Der KI-Style-Coach-Chat ist eine separate Funktion vom On-Device-Scan. <strong>Rechtsgrundlage</strong>: Vertragserfüllung (DSGVO Art. 6(1)(b)) — die Verarbeitung ist zur Erbringung des von dir angeforderten Dienstes erforderlich. Wenn du eine Nachricht an den Style Coach sendest — mit oder ohne angehängtes Foto —, geschieht Folgendes:',
+      s4_li1: 'Dein Nachrichtentext, ein eventuell angehängtes Bild und ein kurzer aktueller Chat-Verlauf werden über HTTPS an unser Backend unter <code>api.datescan.app</code> gesendet.',
+      s4_li2: 'Unser Backend leitet die Anfrage an einen dritten Vision-Language-Modellanbieter weiter (aktuell <strong>OpenAI</strong> und/oder <strong>Anthropic</strong>, Änderungen vorbehalten), damit das Modell eine Antwort generieren kann.',
+      s4_li3: 'Die Antwort wird als Stream an dein Gerät zurückgesendet.',
+      s4_li4: 'Wir speichern Anfrageprotokolle (Nachrichteninhalt, Bildverweise, Zeitstempel, anonymisierte Nutzerkennung) bis zu <strong>30 Tage</strong> für Missbrauchsprävention, Debugging und Moderation. Nach 30 Tagen wird der Inhalt automatisch gelöscht.',
+      s4_li5: 'Wir nutzen deinen Chat-Inhalt <strong>nicht</strong> zum Training von KI-Modellen. Unsere Drittanbieter arbeiten, soweit verfügbar, unter Zero-Retention- und No-Training-Vereinbarungen; Details findest du in deren unten verlinkten Richtlinien.',
+      s4_li6: 'Wenn du ein Foto anhängst, wirst du vor dem Upload über ein In-App-Popup um ausdrückliche Zustimmung gebeten. Du kannst alle Bild-Uploads im Chat deaktivieren, indem du den <strong>Privatmodus</strong> im Datenschutz-Panel aktivierst.',
+      s4_warning: '<strong>Lade keine Fotos anderer Personen ohne deren Zustimmung hoch und lade niemals Fotos von Personen unter 18 hoch.</strong> Du bist allein für die Inhalte verantwortlich, die du dem Style Coach übermittelst.',
+      s5_title: '5. Welche Daten wir speichern',
+      s5_local_title: 'Auf deinem Gerät (lokal)',
+      s5_local_intro: 'DateScan nutzt den <code>localStorage</code> und <code>IndexedDB</code> deines Browsers, um deinen Fortschritt und deine Einstellungen zwischen Besuchen zu speichern. Diese Daten verlassen nie dein Gerät und umfassen:',
+      s5_local_li1: 'Onboarding-Abschlussstatus',
+      s5_local_li2: 'Deine XP, dein Level, deinen Streak und deine Missionshistorie',
+      s5_local_li3: 'Deinen digitalen Kleiderschrank (selbst gespeicherte Fotos)',
+      s5_local_li4: 'Dein tägliches Gratiskontingent und alle durch das Empfehlungsprogramm verdienten Bonuspunkte (5 Basispunkte pro Tag — jeder Scan oder KI-Coach-Nachricht kostet 1 Punkt; das Kontingent wird 24 Stunden nach deiner ersten Ausgabe zurückgesetzt; Bonuspunkte bleiben über Zurücksetzungen hinweg bestehen)',
+      s5_local_li5: 'Ob du ein aktives Pro-Abo hast',
+      s5_local_li6: 'Deine Cookie-Banner- und Datenschutz-Panel-Auswahlen',
+      s5_local_erase: 'Du kannst all dies jederzeit löschen, indem du das <strong>Datenschutz</strong>-Panel in der App öffnest und auf <strong>„Alles auf diesem Gerät löschen"</strong> tippst, oder indem du die Seitendaten für datescan.app in deinem Browser löschst.',
+      s5_server_title: 'Auf unserem Server',
+      s5_server_li1: '<strong>KI-Style-Coach-Chatprotokolle</strong> — bis zu 30 Tage aufbewahrt (siehe §4).',
+      s5_server_li2: '<strong>Inhaltsmoderationsberichte</strong> — wenn du auf einer KI-Antwort auf „Melden" tippst, speichern wir den gemeldeten Text, deine gewählte Kategorie und eine optionale Notiz, bis zu 12 Monate für Sicherheitsaudits.',
+      s5_server_li3: '<strong>Server-Zugriffsprotokolle</strong> — IP-Adresse, User-Agent, Anfragepfad, Zeitstempel, bis zu 14 Tage für Sicherheit, länger in aggregierter/anonymisierter Form für Analysezwecke. <em>Rechtsgrundlage: berechtigtes Interesse (DSGVO Art. 6(1)(f)) — Sicherheit und Missbrauchsprävention.</em>',
+      s5_server_li4: '<strong>Abo-/Berechtigungsdatensätze</strong> — wir speichern einen minimalen Datensatz, der deine anonymisierte Geräte-/Konto-ID mit deinem Pro-Status, Plantyp und Verlängerungsdatum verknüpft, um Premium-Funktionen zu steuern.',
+      s5_payment_title: 'Zahlungsdaten',
+      s5_payment_body: 'Wir speichern unter keinen Umständen vollständige Zahlungskartendaten auf unseren Servern. Alle Abo-Zahlungen werden über <strong>Google Play Billing</strong> abgewickelt. Google erfasst die Abrechnungsdaten und teilt nur minimale Berechtigungsinformationen mit uns (Plan, Verlängerungsdatum, anonymisiertes Kauf-Token). Siehe <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Googles Datenschutzerklärung</a>.',
+      s5_infra_title: 'Infrastruktur &amp; Serverprotokolle',
+      s5_infra_body: 'Unsere statischen Dateien werden über <strong>Cloudflare</strong> ausgeliefert, das TLS-Terminierung, DDoS-Schutz, Caching und Missbrauchsprävention übernimmt. Cloudflare zeichnet automatisch Standard-Anfragemetadaten (IP-Adresse, User-Agent, Zeitstempel) in seinen eigenen Serverprotokollen zu Sicherheitszwecken auf.',
+      s6_title: '6. Was wir NICHT erfassen',
+      s6_li1: 'Wir laden <strong>keine</strong> Kamera-Scan-Bilder, Scan-Ergebnisse oder On-Device-Biometrie-Landmarks auf irgendwelche Server hoch.',
+      s6_li2: 'Wir nutzen <strong>keine</strong> Gesichtserkennung oder andere biometrische Daten, um dich zu identifizieren.',
+      s6_li3: 'Wir verkaufen <strong>keine</strong> Daten an Werbetreibende oder Datenbroker.',
+      s6_li4: 'Wir schalten <strong>keine</strong> verhaltensbasierte Werbung in der App.',
+      s6_li5: 'Wir nutzen deine Style-Coach-Nachrichten oder Fotos <strong>nicht</strong> zum Training von KI-Modellen.',
+      s6_li6: 'Wir verlangen <strong>keine</strong> E-Mail oder Passwort für die Nutzung der kostenlosen Web-Version.',
+      s7_title: '7. Drittanbieter-Dienste',
+      s7_intro: 'Die folgenden Drittanbieter sind in den Betrieb von DateScan eingebunden:',
+      s7_li1: '<strong>Google Play Billing</strong> — Abo-Abwicklung für die Android-App. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Datenschutzerklärung</a>',
+      s7_li2: '<strong>OpenAI</strong> und/oder <strong>Anthropic</strong> — Vision-Language-Modellanbieter für den KI-Style-Coach-Chat. Chat-Nachrichten und angehängte Bilder werden zu ihnen weitergeleitet, um Antworten zu generieren. Wir nutzen API-Bedingungen, die das Training mit Nutzerdaten verbieten, soweit verfügbar. <a href="https://openai.com/policies/privacy-policy" target="_blank" rel="noopener">OpenAI-Datenschutz</a> · <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener">Anthropic-Datenschutz</a>',
+      s7_li3: '<strong>Cloudflare</strong> — CDN, TLS, DDoS-Schutz und Sicherheitsschicht. <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Datenschutzerklärung</a>',
+      s7_li4: '<strong>Google Fonts</strong> — Inter- und Playfair-Display-Schriften. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Datenschutzerklärung</a>',
+      s7_li5: '<strong>jsDelivr CDN</strong> — liefert die MediaPipe-Face-Landmark-Bibliothek. <a href="https://www.jsdelivr.com/terms/privacy-policy-jsdelivr-net" target="_blank" rel="noopener">Datenschutzerklärung</a>',
+      s7_li6: '<strong>Skimlinks</strong> — Affiliate-Link-Monetarisierungsdienst. Wenn du auf einen Affiliate-Link klickst, kann Skimlinks Cookies und eindeutige Kennungen setzen, um die Weiterleitung zu verfolgen und entstehende Provisionen zuzuordnen. <em>Rechtsgrundlage: Einwilligung (DSGVO Art. 6(1)(a)).</em> <a href="https://skimlinks.com/privacy-policy" target="_blank" rel="noopener">Datenschutzerklärung</a>',
+      s8_title: '8. Affiliate-Links',
+      s8_body1: 'DateScan kann Affiliate-Links innerhalb der App enthalten. Wenn du auf einen Affiliate-Link klickst und anschließend einen Kauf tätigst, können wir eine Provision vom Händler oder Dienstleister erhalten — <strong>ohne zusätzliche Kosten für dich</strong>. Diese Affiliate-Partnerschaften helfen, die laufende Entwicklung und Wartung von DateScan zu unterstützen.',
+      s8_body2: 'Um Affiliate-Klicks zu verfolgen und Provisionen korrekt zuzuordnen, können Drittanbieter-Affiliate-Netzwerke wie <strong>Skimlinks</strong> Cookies und eindeutige Kennungen in deinem Browser platzieren. Diese Tracking-Mechanismen ermöglichen es dem Affiliate-Netzwerk zu erkennen, dass dein Kauf von einem Link innerhalb unserer App stammt. Affiliate-Tracking-Cookies werden direkt vom Drittanbieter gesetzt — nicht von DateScan — und unterliegen der eigenen Datenschutzerklärung des Drittanbieters (siehe §7 oben für Links).',
+      s8_body3: 'Du kannst Affiliate-Tracking-Cookies jederzeit über die Cookie-Einstellungen deines Browsers verwalten oder löschen. Weitere Informationen zum Umgang mit Cookies findest du in §9 unten.',
+      s9_title: '9. Cookies &amp; lokaler Speicher',
+      s9_intro: 'DateScan selbst setzt keine Werbe- oder Tracking-Cookies. Wir verwenden:',
+      s9_li1: '<strong>LocalStorage &amp; IndexedDB</strong> — um deinen Fortschritt, deine Einstellungen und deinen Kleiderschrank auf deinem Gerät zu speichern.',
+      s9_li2: '<strong>Streng notwendige Cookies</strong> — von Cloudflare für Sicherheit, Bot-Erkennung und Lastverteilung gesetzt.',
+      s9_note: 'Streng notwendige Cookies können nicht deaktiviert werden, da der Dienst ohne sie nicht funktioniert. Wir setzen keine Analyse-, Werbe- oder verhaltensbasierten Tracking-Cookies.',
+      s10_title: '10. Deine Rechte (GDPR, UK GDPR &amp; CCPA)',
+      s10_intro: 'Wenn du dich im Europäischen Wirtschaftsraum, im Vereinigten Königreich oder in Kalifornien befindest, hast du folgende Rechte bezüglich deiner personenbezogenen Daten, die wir speichern:',
+      s10_li1: '<strong>Auskunftsrecht</strong> — eine Kopie deiner Daten anfordern.',
+      s10_li2: '<strong>Recht auf Löschung</strong> — Löschung beantragen (siehe §11 unten).',
+      s10_li3: '<strong>Berichtigungsrecht</strong> — ungenaue Daten korrigieren.',
+      s10_li4: '<strong>Widerspruchsrecht</strong> — der Verarbeitung deiner Daten widersprechen.',
+      s10_li5: '<strong>Recht auf Datenübertragbarkeit</strong> — deine Daten in maschinenlesbarem Format erhalten.',
+      s10_li6: '<strong>Beschwerderecht</strong> — bei deiner örtlichen Datenschutzaufsichtsbehörde.',
+      s10_exercise: 'Um eines dieser Rechte auszuüben, schreib uns an <a href="mailto:info@datescan.app">info@datescan.app</a> mit deiner Anfrage. Wir antworten innerhalb von 30 Tagen. Für Nutzer in Ungarn ist die zuständige Aufsichtsbehörde die <strong>NAIH</strong> (Nemzeti Adatvédelmi és Információszabadság Hatóság), 1055 Budapest, Falk Miksa u. 9-11., <a href="https://www.naih.hu" target="_blank" rel="noopener">www.naih.hu</a>.',
+      s11_title: '11. Datenlöschung',
+      s11_intro: 'Du hast zwei Möglichkeiten, deine Daten zu löschen:',
+      s11_li1: '<strong>In-App-Löschung (nur lokale Daten):</strong> Öffne das Datenschutz-Panel in DateScan und tippe auf <strong>„Alles auf diesem Gerät löschen"</strong>. Dies löscht deinen Kleiderschrank, deine Scan-Historie, lokale Einstellungen und zwischengespeicherte Service-Worker-Daten vom aktuellen Gerät.',
+      s11_li2: '<strong>Konto- &amp; Datenlöschung:</strong> Schreib an <a href="mailto:info@datescan.app?subject=Konto%20löschen"><strong>info@datescan.app</strong></a> mit dem Betreff „Konto löschen". Wir werden deine Chat-Protokolle, Moderationsberichte und Berechtigungsdatensätze, die mit deiner E-Mail-/Gerätekennung verknüpft sind, innerhalb von 30 Tagen dauerhaft löschen.',
+      s11_cancel: 'Das Löschen deiner Daten <strong>kündigt</strong> kein aktives Abo. Um Pro zu kündigen, öffne die <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">Google Play Abo-Seite</a> — siehe auch unsere <a href="refund.html">Erstattungsrichtlinie</a>.',
+      s12_title: '12. Datenaufbewahrung',
+      s12_intro: 'Wir bewahren verschiedene Datenkategorien für unterschiedliche Zeiträume auf:',
+      s12_li1: '<strong>On-Device-Daten</strong> — bleiben auf deinem Gerät, bis du sie löschst.',
+      s12_li2: '<strong>KI-Style-Coach-Chatprotokolle</strong> — bis zu 30 Tage für Missbrauchsprävention und Debugging, danach automatische Löschung.',
+      s12_li3: '<strong>Inhaltsmoderationsberichte</strong> — bis zu 12 Monate für Sicherheitsaudits.',
+      s12_li4: '<strong>Server-Zugriffsprotokolle</strong> — bis zu 14 Tage in Rohform.',
+      s12_li5: '<strong>Abo-Datensätze</strong> — für die Dauer des Abos plus den nach geltendem Steuer- und Bilanzrecht erforderlichen Zeitraum (in der Regel 7 Jahre in der EU).',
+      s12_li6: '<strong>Von Google Play gehaltene Abrechnungsdatensätze</strong> — solange wie nach Google Play Richtlinien und geltendem Steuerrecht erforderlich.',
+      s13_title: '13. Internationale Datenübertragungen',
+      s13_body: 'Unser Backend und unsere KI-Modellanbieter können deine Daten in den Vereinigten Staaten und anderen Ländern außerhalb deines Wohnsitzlandes verarbeiten. Wo erforderlich, stützen wir uns auf Standardvertragsklauseln (SCCs) und das EU-US Data Privacy Framework, um Daten rechtsgültig aus dem EWR/UK zu übertragen.',
+      s14_title: '14. Sicherheit',
+      s14_body: 'Der gesamte Verkehr zu datescan.app und api.datescan.app ist über HTTPS/TLS verschlüsselt. Wir folgen branchenüblichen Sicherheitspraktiken, einschließlich Verschlüsselung im Ruhezustand, Zugriffssteuerung und regelmäßigen Sicherheitsüberprüfungen. Kein System ist jedoch zu 100 % sicher — halte bitte dein Gerät, deinen Browser und dein Google-Konto auf dem neuesten Stand und benachrichtige uns umgehend, wenn du ein Sicherheitsproblem vermutest.',
+      s15_title: '15. KI-generierte Inhalte &amp; Inhaltsmoderation',
+      s15_body: 'Der KI-Style-Coach erstellt maschinell generierte Antworten und kann Fehler machen, einschließlich ungenauer oder unangemessener Ratschläge. Du kannst jede KI-Antwort melden, indem du auf die Schaltfläche <strong>„Melden"</strong> unter der Nachricht tippst. Wir prüfen jede gemeldete Antwort und nutzen das Feedback zur Verbesserung des Dienstes und zur Durchsetzung unserer Inhaltsrichtlinien. Bestimmte Eingabekategorien werden client- und serverseitig blockiert, darunter: Inhalte mit Minderjährigenbezug, sexuell explizite Inhalte und Inhalte, die Selbstverletzung fördern. Die vollständige Liste findest du in unseren <a href="terms.html">Nutzungsbedingungen</a>.',
+      s16_title: '16. Änderungen dieser Richtlinie',
+      s16_body: 'Wir können diese Datenschutzerklärung von Zeit zu Zeit aktualisieren. Das Datum „Zuletzt aktualisiert" oben auf dieser Seite gibt immer die aktuellste Version wieder. Wesentliche Änderungen werden in der App und auf der Startseite angekündigt. Fortgesetzte Nutzung nach dem Inkrafttreten der neuen Richtlinie bedeutet, dass du die Aktualisierung akzeptierst.',
+      s17_title: '17. Empfehlungsprogramm und Bonuspunkte',
+      s17_intro: 'DateScan bietet ein Empfehlungsprogramm, mit dem du Bonuspunkte durch die Einladung von Freunden sammeln kannst. So funktioniert es und welche Daten dabei eine Rolle spielen:',
+      s17_li1: 'Wenn du auf <strong>„Einladungslink teilen"</strong> tippst, generiert die App einen eindeutigen Empfehlungslink im Format <code>https://datescan.app/?ref={deineBenutzerId}</code>. Deine anonyme Benutzer-ID (eine zufällige Zeichenkette beginnend mit <code>u_</code>) ist in den Link eingebettet, damit wir dich als Empfehlenden identifizieren können.',
+      s17_li2: 'Wenn jemand deinen Empfehlungslink zum ersten Mal öffnet, erhält die App automatisch <strong>+5 Bonuspunkte</strong> und speichert deine ID als Empfehlenden im localStorage des Browsers (<code>datescan.referredBy</code>). Jeder Nutzer kann nur einmal empfohlen werden — wenn bereits ein Empfehlender erfasst ist, wird keine weitere Empfehlung aufgezeichnet.',
+      s17_li3: 'Die App sendet dann eine <strong>POST-Anfrage</strong> an <code>api.datescan.app/api/referral</code> mit deiner Empfehlenden-ID und der ID des neuen Nutzers, damit unser Backend auch dir <strong>+5 Bonuspunkte</strong> gutschreiben kann. Diese Anfrage enthält nur die zwei anonymen Benutzer-IDs — keine persönlichen Informationen, keine E-Mail, keine Namen.',
+      s17_li4: 'Bei jedem Seitenaufruf ruft die App <strong>GET <code>api.datescan.app/api/check-rewards?userId={deineId}</code></strong> auf, um zu prüfen, ob ausstehende Empfehlungsboni für dich verfügbar sind. Wenn ein Bonus gefunden wird, werden die Punkte deinem Guthaben hinzugefügt und eine Benachrichtigung angezeigt.',
+      s17_li5: 'Bonuspunkte werden im localStorage deines Browsers zusammen mit deinen regulären Tagespunkten gespeichert (<code>datescan.points</code>). Sie bleiben über tägliche Zurücksetzungen hinweg bestehen und gehen nicht verloren, wenn sich dein 24-Stunden-Punktepool aktualisiert.',
+      s17_li6: 'Du darfst keine mehreren Konten erstellen oder automatisierte Mittel zur Generierung von Empfehlungen verwenden. Missbrauch des Empfehlungsprogramms kann zum Verlust von Bonuspunkten und zur Beendigung des Zugangs führen.',
+      s18_title: '18. Kontakt',
+      s18_body: 'Fragen? Schreib uns an <a href="mailto:info@datescan.app">info@datescan.app</a> oder kontaktiere uns über unsere Social-Media-Kanäle.',
+      footer_desc: 'Dein KI-gestützter Wingman. Scanne dein Outfit, erhalte sofortiges Stil- und Pflege-Feedback und geh selbstbewusst zum Date.',
+      footer_ondevice: 'Kamera-Scans laufen auf dem Gerät',
+      footer_legal: 'Rechtliches',
+      footer_privacy: 'Datenschutzerklärung',
+      footer_terms: 'Nutzungsbedingungen',
+      footer_refund: 'Erstattungsrichtlinie',
+      footer_delete: 'Account löschen',
+      footer_support: 'Support',
+      footer_contact: 'Support kontaktieren',
+      footer_follow: 'Folgen',
+      footer_disclaimer: 'Haftungsausschluss: DateScan ist ein KI-gestütztes Werkzeug, das ausschließlich der Unterhaltung und Steigerung des Selbstbewusstseins dient. Wir garantieren keinen Dating-Erfolg oder bestimmte soziale Ergebnisse.'
+    }
+  };
+
+  // Detect language: _earlyLang > URL param > href regex > hash > cookie > nav_lang > localStorage > navigator > fallback
+  var supported = ['en','hu','de'];
+  var lang = null;
+  var _detectedFrom = 'fallback';
+  // 0. Use early detection result (highest priority — ran before any external script)
+  if (window._earlyLang && supported.indexOf(window._earlyLang) !== -1) {
+    lang = window._earlyLang; _detectedFrom = 'early_detection';
+  }
+  // 1. URL parameter (?lang=hu)
+  if (!lang) { try {
+    var urlParams = new URLSearchParams(window.location.search);
+    var urlLang = urlParams.get('lang');
+    if (urlLang && supported.indexOf(urlLang) !== -1) { lang = urlLang; _detectedFrom = 'url_param'; }
+  } catch(e) {} }
+  // 1b. href regex — critical for file:// and some TWA/WebView environments
+  if (!lang) { try {
+    var hrefMatch = window.location.href.match(/[?&]lang=([a-z]{2})(?:&|#|$)/i);
+    if (hrefMatch && supported.indexOf(hrefMatch[1]) !== -1) { lang = hrefMatch[1]; _detectedFrom = 'url_param(href_regex)'; }
+  } catch(e) {} }
+  // 2. Hash parameter (#lang=hu) — survives TWA/CCT redirect stripping
+  if (!lang) { try {
+    var _href2 = window.location.href || '';
+    var hashStr = window.location.hash || '';
+    if (!hashStr && _href2.indexOf('#') !== -1) { hashStr = _href2.substring(_href2.indexOf('#')); }
+    var hashMatch = hashStr.match(/[#&]lang=([a-z]{2})/i);
+    if (hashMatch && supported.indexOf(hashMatch[1]) !== -1) { lang = hashMatch[1]; _detectedFrom = 'hash'; }
+  } catch(e) {} }
+  // 2b. Cookie
+  if (!lang) { try {
+    var cookieMatch = document.cookie.match(/(?:^|;\s*)datescan_lang=([a-z]{2})/i);
+    if (cookieMatch && supported.indexOf(cookieMatch[1]) !== -1) { lang = cookieMatch[1]; _detectedFrom = 'cookie'; }
+  } catch(e) {} }
+  // 3. datescan.nav_lang
+  if (!lang) { try {
+    var navLang = localStorage.getItem('datescan.nav_lang');
+    if (navLang && supported.indexOf(navLang) !== -1) { lang = navLang; _detectedFrom = 'nav_lang'; }
+  } catch(e) {} }
+  // 4. datescan.lang
+  if (!lang) { try {
+    var stored = localStorage.getItem('datescan.lang');
+    if (stored && stored.indexOf('auto:') === 0) { var autoLang = stored.substring(5); if (supported.indexOf(autoLang) !== -1) { lang = autoLang; _detectedFrom = 'localStorage(auto)'; } }
+    else if (stored && supported.indexOf(stored) !== -1) { lang = stored; _detectedFrom = 'localStorage'; }
+  } catch(e) {} }
+  // 5. Browser/navigator
+  if (!lang) { try {
+    var navLangs = navigator.languages && navigator.languages.length ? Array.prototype.slice.call(navigator.languages) : [navigator.language || navigator.userLanguage || ''];
+    for (var i = 0; i < navLangs.length; i++) { var p = (navLangs[i] || '').split('-')[0].toLowerCase(); if (p === 'hu') { lang = 'hu'; _detectedFrom = 'navigator'; break; } if (p === 'de') { lang = 'de'; _detectedFrom = 'navigator'; break; } }
+  } catch(e) {} }
+  // 6. Final fallback
+  if (!lang) lang = 'en';
+  console.log('[privacy.html] lang=' + lang + ' from=' + _detectedFrom + ' earlyLang=' + (window._earlyLang||'none'));
+
+  var strings = translations[lang] || translations.en;
+  document.documentElement.lang = lang;
+  document.title = strings.page_title;
+  var metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc) metaDesc.setAttribute('content', strings.meta_desc);
+
+  // Helper to set text by data-i18n key
+  function applyI18n() {
+    document.querySelectorAll('[data-i18n]').forEach(function(el) {
+      var key = el.getAttribute('data-i18n');
+      if (strings[key] !== undefined) el.textContent = strings[key];
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+      var key = el.getAttribute('data-i18n-html');
+      if (strings[key] !== undefined) el.innerHTML = strings[key];
+    });
+  }
+
+  // Update all subpage links in this page to include ?lang=XX
+  function updateSubpageLinks() {
+    var subpages = ['privacy.html','contact.html','terms.html','refund.html','delete-account.html'];
+    document.querySelectorAll('a[href]').forEach(function(a) {
+      var href = a.getAttribute('href') || '';
+      for (var i = 0; i < subpages.length; i++) {
+        if (href.indexOf(subpages[i]) !== -1) {
+          var base = href;
+          var hash = '';
+          var hashIdx = href.indexOf('#');
+          if (hashIdx !== -1) { hash = href.substring(hashIdx); base = href.substring(0, hashIdx); }
+          var qIdx = base.indexOf('?');
+          if (qIdx !== -1) {
+            var params = base.substring(qIdx + 1).split('&').filter(function(p) { return p.indexOf('lang=') !== 0; });
+            base = base.substring(0, qIdx) + (params.length ? '?' + params.join('&') : '');
+          }
+          var sep = base.indexOf('?') !== -1 ? '&' : '?';
+          a.setAttribute('href', base + sep + 'lang=' + lang + hash);
+          break;
+        }
+      }
+    });
+    // Also update "Back to app" links to preserve language
+    document.querySelectorAll('a[href*="index.html"]').forEach(function(a) {
+      var href = a.getAttribute('href') || '';
+      if (href.indexOf('lang=') === -1) {
+        var sep = href.indexOf('?') !== -1 ? '&' : '?';
+        a.setAttribute('href', href + sep + 'lang=' + lang);
+      }
+    });
+  }
+
+  // Expose for later use (bottom script needs copied_text)
+  window._privacyLang = lang;
+  window._privacyStrings = strings;
+  window._privacyApplyI18n = applyI18n;
+
+  // Apply i18n — aggressive retry strategy for file://, slow CDN, TWA environments
+  var _initDone = false;
+  function init() {
+    if (_initDone) return;
+    _initDone = true;
+    applyI18n();
+    updateSubpageLinks();
+  }
+  if (document.readyState !== 'loading') { init(); }
+  document.addEventListener('DOMContentLoaded', init);
+  window.addEventListener('load', function() {
+    if (!_initDone) init();
+    applyI18n(); updateSubpageLinks();
+  });
+  setTimeout(function() { applyI18n(); updateSubpageLinks(); }, 50);
+  setTimeout(function() { applyI18n(); updateSubpageLinks(); }, 200);
+  setTimeout(function() { applyI18n(); updateSubpageLinks(); }, 500);
+  setTimeout(function() { applyI18n(); updateSubpageLinks(); }, 1500);
+})();
+</script>
+
+<!-- ============================================================
+     DateScan — LOVE-AT-FIRST-SIGHT visual layer
+     Pure cosmetic overrides. Zero layout / markup changes.
+     Loads last in <head> so cascade wins over Tailwind CDN + local
+     styles. Remove this single <style id="ds-love-layer"> block to revert.
+     ============================================================ -->
+<style id="ds-love-layer">
+  /* ---------- design tokens ---------- */
+  :root{
+    --love-coral:#ff7eb3; --love-rose:#ff5a87; --love-pink:#ec4899;
+    --love-magenta:#d946ef; --love-violet:#a855f7; --love-deep-violet:#7c3aed;
+    --love-ink:#0a0712; --love-ink-2:#140a22;
+    --love-radius-sm:14px; --love-radius-md:20px;
+    --love-radius-lg:28px; --love-radius-xl:36px;
+    --love-shadow-2:0 1px 0 rgba(255,255,255,0.07) inset, 0 10px 30px -10px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.35);
+    --love-shadow-3:0 1px 0 rgba(255,255,255,0.08) inset, 0 24px 60px -20px rgba(124,58,237,0.35), 0 12px 30px -12px rgba(236,72,153,0.25);
+    --love-shadow-cta:0 8px 24px -6px rgba(236,72,153,0.55), 0 4px 12px -4px rgba(168,85,247,0.45), 0 1px 0 rgba(255,255,255,0.18) inset;
+  }
+
+  /* ---------- typography ---------- */
+  html, body{
+    font-family:'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    font-feature-settings:'ss01' on, 'cv11' on, 'calt' on;
+    letter-spacing:-0.005em;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  h1, h2, h3, .font-serif{ letter-spacing:-0.022em; }
+  .font-serif{ font-feature-settings:'lnum' on, 'ss02' on; }
+
+  /* ---------- sunset canvas ---------- */
+  body{
+    background-color:var(--love-ink) !important;
+    background-image:
+      radial-gradient(ellipse 90% 60% at 18% -8%, rgba(255,126,179,0.22) 0%, rgba(255,126,179,0) 55%),
+      radial-gradient(ellipse 80% 55% at 110% 8%, rgba(168,85,247,0.22) 0%, rgba(168,85,247,0) 55%),
+      radial-gradient(ellipse 100% 70% at 50% 120%, rgba(124,58,237,0.28) 0%, rgba(124,58,237,0) 60%),
+      linear-gradient(180deg,#0c0714 0%,#0a0712 55%,#080510 100%) !important;
+    background-attachment:fixed;
+    position:relative;
+  }
+  /* film grain */
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    opacity:0.05; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  /* ambient aurora — injected for pages without one */
+  body::after{
+    content:""; position:fixed; top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    width:140vw; height:140vh; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(circle at 15% 25%, rgba(255,90,135,0.16) 0%, transparent 42%),
+      radial-gradient(circle at 85% 30%, rgba(168,85,247,0.16) 0%, transparent 42%),
+      radial-gradient(circle at 50% 90%, rgba(236,72,153,0.14) 0%, transparent 45%),
+      radial-gradient(circle at 75% 75%, rgba(124,58,237,0.12) 0%, transparent 45%);
+    filter:blur(40px) saturate(1.1);
+    animation:love-aurora 22s ease-in-out infinite alternate;
+  }
+  @keyframes love-aurora{
+    0%{ transform:translate(-50%,-50%) scale(1) rotate(0); }
+    50%{ transform:translate(-48%,-52%) scale(1.05) rotate(2deg); }
+    100%{ transform:translate(-52%,-48%) scale(0.98) rotate(-2deg); }
+  }
+  /* lift actual content above the aurora */
+  body > *:not(style):not(script){ position:relative; z-index:1; }
+
+  /* ---------- glass surfaces ---------- */
+  .bg-white\/5, .bg-white\/\[0\.03\]{
+    background:linear-gradient(180deg,rgba(255,255,255,0.06) 0%,rgba(255,255,255,0.025) 100%) !important;
+    -webkit-backdrop-filter:blur(14px) saturate(140%); backdrop-filter:blur(14px) saturate(140%);
+  }
+  .bg-white\/10{
+    background:linear-gradient(180deg,rgba(255,255,255,0.10) 0%,rgba(255,255,255,0.05) 100%) !important;
+    -webkit-backdrop-filter:blur(18px) saturate(150%); backdrop-filter:blur(18px) saturate(150%);
+  }
+  .bg-white\/20{
+    background:linear-gradient(180deg,rgba(255,255,255,0.18) 0%,rgba(255,255,255,0.10) 100%) !important;
+    -webkit-backdrop-filter:blur(22px) saturate(160%); backdrop-filter:blur(22px) saturate(160%);
+  }
+  .bg-dark-950\/80, .bg-dark-950\/95,
+  .bg-\[\#09090b\], .bg-\[\#09090b\]\/95, .bg-\[\#0f0f14\]\/95,
+  .bg-black\/60, .bg-black\/70, .bg-black\/80, .bg-black\/85, .bg-black\/90{
+    background:linear-gradient(180deg,rgba(20,10,34,0.82) 0%,rgba(10,7,18,0.92) 100%) !important;
+    -webkit-backdrop-filter:blur(24px) saturate(160%); backdrop-filter:blur(24px) saturate(160%);
+  }
+  .bg-black\/30, .bg-black\/40, .bg-black\/50{
+    background:linear-gradient(180deg,rgba(20,10,34,0.55) 0%,rgba(10,7,18,0.70) 100%) !important;
+    -webkit-backdrop-filter:blur(16px) saturate(140%); backdrop-filter:blur(16px) saturate(140%);
+  }
+
+  /* ---------- radii ---------- */
+  .rounded-xl{ border-radius:var(--love-radius-sm) !important; }
+  .rounded-2xl{ border-radius:var(--love-radius-md) !important; }
+  .rounded-3xl, .rounded-\[24px\], .rounded-\[28px\]{ border-radius:var(--love-radius-lg) !important; }
+  .rounded-\[32px\]{ border-radius:var(--love-radius-xl) !important; }
+
+  .rounded-2xl.border, .rounded-3xl.border,
+  .rounded-\[24px\].border, .rounded-\[28px\].border{ box-shadow:var(--love-shadow-2); }
+  .rounded-2xl.shadow-2xl, .rounded-3xl.shadow-2xl,
+  .shadow-2xl.border{ box-shadow:var(--love-shadow-3) !important; }
+
+  /* ---------- borders ---------- */
+  .border-white\/5{ border-color:rgba(255,255,255,0.07) !important; }
+  .border-white\/10{ border-color:rgba(255,255,255,0.12) !important; }
+  .border-white\/15{ border-color:rgba(255,255,255,0.16) !important; }
+  .border-white\/20{ border-color:rgba(255,255,255,0.22) !important; }
+
+  /* ---------- brand gradient → sunset ---------- */
+  .from-brand-500.to-purple-500,
+  .from-brand-400.via-pink-400.to-purple-400,
+  .from-brand-500.via-\[\#db2777\].to-purple-500,
+  .from-\[\#ec4899\].to-\[\#9333ea\],
+  .from-pink-500.to-purple-500,
+  .from-pink-500.to-purple-600{
+    background-image:linear-gradient(135deg,#ff7eb3 0%,#ff5a87 30%,#ec4899 55%,#a855f7 85%,#7c3aed 100%) !important;
+  }
+
+  /* ---------- CTA buttons ---------- */
+  button.bg-gradient-to-tr.from-brand-500.to-purple-500,
+  button.bg-gradient-to-r.from-brand-500.to-purple-500,
+  a.bg-gradient-to-tr.from-brand-500.to-purple-500,
+  a.bg-gradient-to-r.from-brand-500.to-purple-500,
+  a.bg-gradient-to-tr.from-pink-500.to-purple-500,
+  a.bg-gradient-to-r.from-pink-500.to-purple-500,
+  button.bg-brand-500, a.bg-brand-500,
+  .bg-gradient-to-tr.from-brand-500.to-purple-500.shadow-lg,
+  .bg-gradient-to-r.from-brand-500.to-purple-500.shadow-lg{
+    position:relative;
+    box-shadow:var(--love-shadow-cta) !important;
+    transition:transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s ease, filter .25s ease !important;
+    letter-spacing:0.005em;
+  }
+  button.bg-gradient-to-tr.from-brand-500.to-purple-500:hover,
+  button.bg-gradient-to-r.from-brand-500.to-purple-500:hover,
+  a.bg-gradient-to-tr.from-brand-500.to-purple-500:hover,
+  a.bg-gradient-to-r.from-brand-500.to-purple-500:hover,
+  a.bg-gradient-to-tr.from-pink-500.to-purple-500:hover,
+  a.bg-gradient-to-r.from-pink-500.to-purple-500:hover,
+  button.bg-brand-500:hover, a.bg-brand-500:hover{
+    filter:brightness(1.06) saturate(1.05);
+    box-shadow:
+      0 14px 34px -8px rgba(236,72,153,0.65),
+      0 6px 18px -4px rgba(168,85,247,0.55),
+      0 1px 0 rgba(255,255,255,0.22) inset !important;
+  }
+  button.bg-gradient-to-tr.from-brand-500.to-purple-500:active,
+  button.bg-gradient-to-r.from-brand-500.to-purple-500:active,
+  a.bg-gradient-to-tr.from-brand-500.to-purple-500:active,
+  a.bg-gradient-to-r.from-brand-500.to-purple-500:active{
+    transform:translateY(1px) scale(0.985);
+  }
+  @keyframes love-pulse-glow{
+    0%,100%{ box-shadow:var(--love-shadow-cta); }
+    50%{ box-shadow:
+      0 10px 30px -6px rgba(236,72,153,0.70),
+      0 4px 14px -4px rgba(168,85,247,0.55),
+      0 0 0 6px rgba(236,72,153,0.08),
+      0 1px 0 rgba(255,255,255,0.20) inset; }
+  }
+
+  /* ---------- chips / pills ---------- */
+  .bg-brand-500\/10, .bg-brand-500\/15{
+    background:linear-gradient(135deg,rgba(255,126,179,0.14),rgba(168,85,247,0.10)) !important;
+    border-color:rgba(244,114,182,0.24);
+  }
+  .bg-brand-500\/20{ background:linear-gradient(135deg,rgba(255,126,179,0.22),rgba(168,85,247,0.16)) !important; }
+  .bg-brand-500\/30{ background:linear-gradient(135deg,rgba(255,126,179,0.30),rgba(168,85,247,0.22)) !important; }
+  .bg-purple-500\/10{ background:linear-gradient(135deg,rgba(168,85,247,0.14),rgba(124,58,237,0.10)) !important; }
+  .bg-purple-500\/20{ background:linear-gradient(135deg,rgba(168,85,247,0.22),rgba(124,58,237,0.16)) !important; }
+  .bg-emerald-500\/10{ background:linear-gradient(135deg,rgba(52,211,153,0.14),rgba(16,185,129,0.08)) !important; }
+  .bg-emerald-500\/20{ background:linear-gradient(135deg,rgba(52,211,153,0.26),rgba(16,185,129,0.16)) !important; }
+  .bg-amber-500\/10{ background:linear-gradient(135deg,rgba(251,191,36,0.14),rgba(249,115,22,0.08)) !important; }
+  .bg-red-500\/10{ background:linear-gradient(135deg,rgba(251,113,133,0.14),rgba(239,68,68,0.08)) !important; }
+  .bg-red-500\/15{ background:linear-gradient(135deg,rgba(251,113,133,0.20),rgba(239,68,68,0.12)) !important; }
+
+  /* ---------- text gradients ---------- */
+  .bg-clip-text.bg-gradient-to-r.from-brand-500.to-purple-500,
+  .bg-clip-text.bg-gradient-to-tr.from-brand-500.to-purple-500,
+  .bg-clip-text.bg-gradient-to-br.from-brand-500.to-purple-500,
+  .bg-clip-text.from-pink-500.to-purple-500,
+  .bg-clip-text.from-pink-400.to-purple-400{
+    background-image:linear-gradient(135deg,#ff9ec7 0%,#ff6a88 30%,#ec4899 55%,#c084fc 85%,#a855f7 100%) !important;
+  }
+
+  /* ---------- inputs ---------- */
+  input, textarea, select{
+    transition:border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+  }
+  input:focus, textarea:focus, select:focus{
+    box-shadow:
+      0 0 0 4px rgba(236,72,153,0.14),
+      0 0 0 1px rgba(236,72,153,0.55) inset;
+    outline:none !important;
+  }
+
+  /* ---------- focus visible ---------- */
+  :focus-visible{
+    outline:none;
+    box-shadow:
+      0 0 0 2px rgba(10,7,18,1),
+      0 0 0 4px rgba(236,72,153,0.55) !important;
+    border-radius:inherit;
+  }
+  button:focus-visible, a:focus-visible{ outline:none; }
+
+  /* ---------- nav blur ---------- */
+  nav[class*="fixed"], nav[class*="sticky"],
+  [role="navigation"][class*="fixed"], [role="navigation"][class*="sticky"],
+  .fixed.bottom-0[class*="bg-"]{
+    -webkit-backdrop-filter:blur(28px) saturate(170%);
+    backdrop-filter:blur(28px) saturate(170%);
+    border-top-color:rgba(255,255,255,0.08) !important;
+  }
+
+  /* ---------- micro-interactions: card lift ---------- */
+  a.rounded-2xl, a.rounded-3xl,
+  button.rounded-2xl, button.rounded-3xl,
+  [role="button"].rounded-2xl, [role="button"].rounded-3xl{
+    transition:transform .28s cubic-bezier(.2,.8,.2,1),
+               box-shadow .28s ease, border-color .28s ease, background-color .28s ease;
+  }
+  a.rounded-2xl:hover, a.rounded-3xl:hover,
+  button.rounded-2xl:hover, button.rounded-3xl:hover{ transform:translateY(-2px); }
+  a.rounded-2xl:active, a.rounded-3xl:active,
+  button.rounded-2xl:active, button.rounded-3xl:active{ transform:translateY(0) scale(0.99); }
+
+  /* ---------- shimmer on brand gradient cards ---------- */
+  .from-brand-500.to-purple-500.rounded-2xl,
+  .from-brand-500.to-purple-500.rounded-3xl{ position:relative; overflow:hidden; }
+  .from-brand-500.to-purple-500.rounded-2xl::after,
+  .from-brand-500.to-purple-500.rounded-3xl::after{
+    content:""; position:absolute; top:0; left:-60%;
+    width:60%; height:100%;
+    background:linear-gradient(100deg,transparent 0%,rgba(255,255,255,0.16) 50%,transparent 100%);
+    transform:skewX(-18deg); pointer-events:none;
+    animation:love-shimmer 5.5s ease-in-out 1s infinite;
+  }
+  @keyframes love-shimmer{
+    0%{ left:-60%; } 55%{ left:120%; } 100%{ left:120%; }
+  }
+
+  /* ---------- text color warm-up for dark surfaces ---------- */
+  .text-gray-400{ color:#b8a8c4 !important; }
+  .text-gray-500{ color:#94839f !important; }
+
+  /* ---------- selection + scrollbar ---------- */
+  ::selection{ background:rgba(236,72,153,0.32); color:#fff; }
+  @media (min-width:1024px){
+    *::-webkit-scrollbar-thumb{
+      background-image:linear-gradient(180deg,rgba(236,72,153,0.55),rgba(168,85,247,0.55)) !important;
+    }
+  }
+
+  /* ---------- safety: keep media pristine ---------- */
+  video, canvas, img{
+    backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
+  }
+
+  /* ---------- reduced motion ---------- */
+  @media (prefers-reduced-motion:reduce){
+    body::after{ animation:none !important; }
+    .from-brand-500.to-purple-500.rounded-2xl::after,
+    .from-brand-500.to-purple-500.rounded-3xl::after{ animation:none !important; display:none; }
+    a.rounded-2xl:hover, a.rounded-3xl:hover,
+    button.rounded-2xl:hover, button.rounded-3xl:hover{ transform:none; }
+  }
+</style>
 </head>
 <body class="antialiased">
 <div class="ambient-glow"></div>
-<a href="/index.html" aria-label="Back to app" class="lg:hidden fixed top-10 right-6 z-30 w-11 h-11 flex items-center justify-center rounded-full border border-white/10 bg-[#0f0f14]/80 backdrop-blur-md text-gray-300 hover:text-white hover:border-brand-500/50 hover:bg-brand-500/10 hover:shadow-[0_0_16px_rgba(236,72,153,0.25)] active:scale-95 transition-all" style="top: calc(env(safe-area-inset-top, 0px) + 2.5rem);">
+<a href="index.html?desktop=1" data-i18n-aria="back_aria" aria-label="Back to app" class="fixed top-10 right-6 z-30 w-11 h-11 flex items-center justify-center rounded-full border border-white/10 bg-[#0f0f14]/80 backdrop-blur-md text-gray-300 hover:text-white hover:border-brand-500/50 hover:bg-brand-500/10 hover:shadow-[0_0_16px_rgba(236,72,153,0.25)] active:scale-95 transition-all" style="top: calc(env(safe-area-inset-top, 0px) + 2.5rem);">
   <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
     <path d="M15 18l-6-6 6-6"/>
   </svg>
@@ -43,7 +868,7 @@
 
 
 <header class="relative z-10 max-w-3xl mx-auto px-6 pt-10 pb-8">
-  <a href="/" class="inline-flex items-center gap-3 group">
+  <a href="index.html?desktop=1" class="inline-flex items-center gap-3 group">
     <div class="w-12 h-12 flex items-center justify-center shrink-0">
       <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-[0_0_8px_rgba(236,72,153,0.4)]">
         <defs>
@@ -62,25 +887,25 @@
     </div>
     <div class="flex flex-col">
       <h1 class="font-bold text-xl md:text-2xl tracking-tight leading-none text-white group-hover:text-brand-400 transition-colors">DateScan<span class="text-brand-500">.</span></h1>
-      <span class="text-[10px] text-gray-400 font-medium uppercase tracking-widest mt-1">Personal Style Coach</span>
+      <span class="text-[10px] text-gray-400 font-medium uppercase tracking-widest mt-1" data-i18n="subtitle_tag">Personal Style Coach</span>
     </div>
   </a>
 </header>
 
 <main class="relative z-10 max-w-3xl mx-auto px-6 pb-20">
   <div class="mb-10 pb-8 border-b border-white/10">
-    <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-3">Legal</div>
-    <h1 class="font-serif text-4xl sm:text-5xl font-medium text-white mb-3">Privacy Policy</h1>
-    <p class="text-sm text-gray-500">Last updated: April 10, 2026</p>
+    <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-3" data-i18n="legal_badge">Legal</div>
+    <h1 class="font-serif text-4xl sm:text-5xl font-medium text-white mb-3" data-i18n="main_title">Privacy Policy</h1>
+    <p class="text-sm text-gray-500" data-i18n="last_updated">Last updated: April 18, 2026</p>
   </div>
 
   <article class="prose-custom">
     <div class="my-6 p-6 rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/10 to-purple-500/5">
-      <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-2">Plain-English summary</div>
-      <p class="text-white text-base mb-3"><strong>Two things happen in DateScan, and they're treated very differently.</strong></p>
+      <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-2" data-i18n="summary_badge">Plain-English summary</div>
+      <p class="text-white text-base mb-3" data-i18n-html="summary_intro"><strong>Two things happen in DateScan, and they're treated very differently.</strong></p>
       <ul class="text-gray-200 text-sm space-y-1.5 mb-0 list-disc pl-5">
-        <li><strong class="text-white">Camera scans</strong> (outfit, grooming, posture checks) run <strong>on your device</strong>. Video frames never leave your browser.</li>
-        <li><strong class="text-white">AI Style Coach chat</strong> (text messages and any photos you choose to attach) <strong>is sent to our server</strong> and forwarded to a third-party vision-language model so you can get a reply. We don't train models on your chats and we don't retain them beyond what's needed to operate the service.</li>
+        <li data-i18n-html="summary_cam_item"><strong class="text-white">Camera scans</strong> (outfit, grooming, posture checks) run <strong>on your device</strong>. Video frames never leave your device.</li>
+        <li data-i18n-html="summary_chat_item"><strong class="text-white">AI Style Coach chat</strong> (text messages and any photos you choose to attach) <strong>is sent to our server</strong> and forwarded to a third-party vision-language model so you can get a reply. We don't train models on your chats and we don't retain them beyond what's needed to operate the service.</li>
       </ul>
     </div>
 
@@ -91,158 +916,169 @@
          ============================================================ -->
     <section id="delete" class="my-8 scroll-mt-8">
       <div class="p-6 rounded-2xl border border-white/10 bg-white/5 mb-4">
-        <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-2">Your account</div>
-        <h3 class="!mt-0 !mb-2 text-lg font-semibold text-white">Your account ID</h3>
-        <p class="text-sm text-gray-400 mb-4 leading-relaxed">DateScan does not use email or passwords. You're identified by an anonymous ID stored only on this device. <strong class="text-white">You will need this ID if you want to request data deletion via our website.</strong></p>
+        <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-2" data-i18n="account_badge">Your account</div>
+        <h3 class="!mt-0 !mb-2 text-lg font-semibold text-white" data-i18n="account_id_title">Your account ID</h3>
+        <p class="text-sm text-gray-400 mb-4 leading-relaxed" data-i18n-html="account_id_desc">DateScan does not use email or passwords. You're identified by an anonymous ID stored only on this device. <strong class="text-white">You will need this ID if you want to request data deletion via our website.</strong></p>
         <div class="flex gap-2">
           <input id="userIdField" type="text" readonly class="flex-1 min-w-0 px-3 py-2.5 rounded-lg bg-black/40 border border-white/10 text-xs text-gray-200 font-mono select-all" value="" />
-          <button id="copyUserIdBtn" type="button" class="shrink-0 px-4 py-2.5 rounded-lg bg-white/10 border border-white/15 text-xs font-semibold text-white hover:bg-white/15 active:scale-[0.98] transition-all">Copy</button>
+          <button id="copyUserIdBtn" type="button" data-i18n="copy_btn" class="shrink-0 px-4 py-2.5 rounded-lg bg-white/10 border border-white/15 text-xs font-semibold text-white hover:bg-white/15 active:scale-[0.98] transition-all">Copy</button>
         </div>
-        <p class="text-[11px] text-gray-500 mt-3">Web deletion form: <a href="/delete-account.html" class="text-brand-400 hover:text-brand-500 underline">datescan.app/delete-account.html</a></p>
+        <p class="text-[11px] text-gray-500 mt-3"><span data-i18n="web_deletion_label">Email:</span> <a href="mailto:info@datescan.app?subject=Delete%20my%20account" class="text-brand-400 hover:text-brand-500 underline" data-i18n="web_deletion_link">info@datescan.app</a></p>
       </div>
 
       <div class="p-6 rounded-2xl border border-red-500/20 bg-red-500/5">
-        <h3 class="!mt-0 !mb-2 text-lg font-semibold text-white">Delete my account &amp; data</h3>
-        <p class="text-sm text-gray-300 mb-4 leading-relaxed">To delete your account and all associated data, please copy your ID and visit our deletion page.</p>
-        <a href="https://datescan.app/delete-account.html" class="block text-center w-full py-3 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-sm font-semibold hover:bg-red-500/25 active:scale-[0.98] transition-all">
-          Go to Deletion Page
+        <h3 class="!mt-0 !mb-2 text-lg font-semibold text-white" data-i18n="delete_title">Delete my account &amp; data</h3>
+        <p class="text-sm text-gray-300 mb-4 leading-relaxed" data-i18n="delete_desc">To delete your account and all associated data, email us at info@datescan.app with "Delete my account" in the subject.</p>
+        <a href="mailto:info@datescan.app?subject=Delete%20my%20account" class="block text-center w-full py-3 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-sm font-semibold hover:bg-red-500/25 active:scale-[0.98] transition-all" data-i18n="delete_btn">
+          Email us to delete
         </a>
       </div>
     </section>
 
-    <h2>1. Who We Are</h2>
-    <p>DateScan is an AI-powered style coach available as a web app at <a href="https://datescan.app/">https://datescan.app/</a> and as an Android app distributed via the Google Play Store. For any privacy question, use the deletion form at <a href="/delete-account.html">datescan.app/delete-account.html</a> with "Privacy Request" in the reason field, or DM us on the social channels linked in the footer.</p>
+    <h2 data-i18n="s1_title">1. Who We Are</h2>
+    <p data-i18n-html="s1_body">DateScan is an AI-powered style coach available as a web app at <a href="https://datescan.app/">https://datescan.app/</a> and as an Android app distributed via the Google Play Store.<br><br><strong>Data controller:</strong> Petor Péter, 2233 Ecser, Nádas Béla utca 10, Hungary. Email: <a href="mailto:info@datescan.app">info@datescan.app</a>. For any privacy question, email us or reach out on our social channels.</p>
 
-    <h2>2. Age Restriction — 18+ Only</h2>
-    <p><strong>DateScan is intended exclusively for users aged 18 or older.</strong> The Service is not directed at children or teenagers, and we do not knowingly collect any data from anyone under 18. By using DateScan you represent and warrant that you are at least 18 years of age. If we learn that we have collected data from a person under 18, we will delete it promptly. If you believe a minor has used DateScan, please contact us immediately at the address above.</p>
+    <h2 data-i18n="s2_title">2. Age Restriction — 18+ Only</h2>
+    <p data-i18n-html="s2_body"><strong>DateScan is intended exclusively for users aged 18 or older.</strong> The Service is not directed at children or teenagers, and we do not knowingly collect any data from anyone under 18. By using DateScan you represent and warrant that you are at least 18 years of age. If we learn that we have collected data from a person under 18, we will delete it promptly. If you believe a minor has used DateScan, please contact us immediately at the address above.</p>
 
-    <h2>3. How Camera Scans Work (On-Device)</h2>
-    <p>When you run a scan, Google's MediaPipe face-landmark model is loaded into your browser and executes entirely on your device's own CPU and GPU via WebGL/WebAssembly. For the scan feature specifically, this means:</p>
+    <h2 data-i18n="s3_title">3. How Camera Scans Work (On-Device)</h2>
+    <p data-i18n="s3_intro">When you run a scan, Google's MediaPipe face-landmark model is loaded into your browser and executes entirely on your device's own CPU and GPU via WebGL/WebAssembly. For the scan feature specifically, this means:</p>
     <ul>
-      <li>Your camera feed is processed frame-by-frame <strong>on your device</strong>.</li>
-      <li>Raw frames, biometric landmarks, and video are discarded the moment you leave the scan screen.</li>
-      <li>No image data from the scan feature is uploaded to our servers or to any third party.</li>
+      <li data-i18n-html="s3_li1">Your camera feed is processed frame-by-frame <strong>on your device</strong>.</li>
+      <li data-i18n="s3_li2">Raw frames, biometric landmarks, and video are discarded the moment you leave the scan screen.</li>
+      <li data-i18n-html="s3_li3">No image data from the scan feature is uploaded to our servers or to any third party. <strong>Note on biometric data:</strong> The facial landmarks generated by MediaPipe are used solely for real-time style feedback and are never stored, exported, or used to uniquely identify any individual. They do not constitute "biometric data" within the meaning of GDPR Art. 9(1) read with Art. 4(14), as they are not processed for the purpose of uniquely identifying a natural person.</li>
     </ul>
 
-    <h2>4. How the AI Style Coach Chat Works (Server-Side)</h2>
-    <p>The AI Style Coach chat is a separate feature from the on-device scan. When you send a message to the Style Coach — with or without an attached photo — the following happens:</p>
+    <h2 data-i18n="s4_title">4. How the AI Style Coach Chat Works (Server-Side)</h2>
+    <p data-i18n-html="s4_intro">The AI Style Coach chat is a separate feature from the on-device scan. <strong>Legal basis</strong>: performance of contract (GDPR Art. 6(1)(b)) — processing is necessary to provide the service you requested. When you send a message to the Style Coach — with or without an attached photo — the following happens:</p>
     <ul>
-      <li>Your message text, any attached image, and a short recent chat history are sent over HTTPS to our backend at <code>api.datescan.app</code>.</li>
-      <li>Our backend forwards the request to a third-party vision-language model provider (currently <strong>OpenAI</strong> and/or <strong>Anthropic</strong>, subject to change) so the model can generate a reply.</li>
-      <li>The reply is streamed back to your device.</li>
-      <li>We retain request logs (message content, image references, timestamp, anonymized user identifier) for up to <strong>30 days</strong> for abuse prevention, debugging, and moderation. After 30 days the content is automatically deleted.</li>
-      <li>We do <strong>not</strong> use your chat content to train AI models. Our third-party providers operate under zero-retention and no-training agreements where available; please consult their policies below for details.</li>
-      <li>If you attach a photo, you are asked for explicit consent via an in-app modal before the upload happens. You can turn off all image uploads in chat by enabling <strong>Private Mode</strong> in the Privacy panel.</li>
+      <li data-i18n-html="s4_li1">Your message text, any attached image, and a short recent chat history are sent over HTTPS to our backend at <code>api.datescan.app</code>.</li>
+      <li data-i18n-html="s4_li2">Our backend forwards the request to a third-party vision-language model provider (currently <strong>OpenAI</strong> and/or <strong>Anthropic</strong>, subject to change) so the model can generate a reply.</li>
+      <li data-i18n="s4_li3">The reply is streamed back to your device.</li>
+      <li data-i18n-html="s4_li4">We retain request logs (message content, image references, timestamp, anonymized user identifier) for up to <strong>30 days</strong> for abuse prevention, debugging, and moderation. After 30 days the content is automatically deleted.</li>
+      <li data-i18n-html="s4_li5">We do <strong>not</strong> use your chat content to train AI models. Our third-party providers operate under zero-retention and no-training agreements where available; please consult their policies below for details.</li>
+      <li data-i18n-html="s4_li6">If you attach a photo, you are asked for explicit consent via an in-app modal before the upload happens. You can turn off all image uploads in chat by enabling <strong>Private Mode</strong> in the Privacy panel.</li>
     </ul>
-    <p><strong>Do not upload photos of other people without their consent, and never upload photos of anyone under 18.</strong> You are solely responsible for the content you submit to the Style Coach.</p>
+    <p data-i18n-html="s4_warning"><strong>Do not upload photos of other people without their consent, and never upload photos of anyone under 18.</strong> You are solely responsible for the content you submit to the Style Coach.</p>
 
-    <h2>5. Data We Store</h2>
+    <h2 data-i18n="s5_title">5. Data We Store</h2>
 
-    <h3>On your device (local)</h3>
-    <p>DateScan uses your browser's <code>localStorage</code> and <code>IndexedDB</code> to remember your progress and preferences between visits. This data never leaves your device and includes:</p>
+    <h3 data-i18n="s5_local_title">On your device (local)</h3>
+    <p data-i18n-html="s5_local_intro">DateScan uses your browser's <code>localStorage</code> and <code>IndexedDB</code> to remember your progress and preferences between visits. This data never leaves your device and includes:</p>
     <ul>
-      <li>Onboarding completion state</li>
-      <li>Your XP, level, streak, and mission history</li>
-      <li>Your digital closet (photos you save yourself)</li>
-      <li>Your daily free-tier points balance (5 points per day — each scan or AI Coach message costs 1 point; the pool resets 24 hours after your first spend)</li>
-      <li>Whether you have an active Pro subscription</li>
-      <li>Your cookie-banner and privacy-panel choices</li>
+      <li data-i18n="s5_local_li1">Onboarding completion state</li>
+      <li data-i18n="s5_local_li2">Your XP, level, streak, and mission history</li>
+      <li data-i18n="s5_local_li3">Your digital closet (photos you save yourself)</li>
+      <li data-i18n="s5_local_li4">Your daily free-tier points balance and any bonus points earned through the referral programme (5 base points per day — each scan or AI Coach message costs 1 point; the pool resets 24 hours after your first spend; bonus points persist across resets)</li>
+      <li data-i18n="s5_local_li5">Whether you have an active Pro subscription</li>
+      <li data-i18n="s5_local_li6">Your cookie-banner and privacy-panel choices</li>
     </ul>
-    <p>You can erase all of this at any time by opening the <strong>Privacy</strong> panel in the app and tapping <strong>"Erase everything on this device"</strong>, or by clearing site data for datescan.app in your browser.</p>
+    <p data-i18n-html="s5_local_erase">You can erase all of this at any time by opening the <strong>Privacy</strong> panel in the app and tapping <strong>"Erase everything on this device"</strong>, or by clearing site data for datescan.app in your browser.</p>
 
-    <h3>On our server</h3>
+    <h3 data-i18n="s5_server_title">On our server</h3>
     <ul>
-      <li><strong>AI Style Coach chat logs</strong> — retained up to 30 days (see §4).</li>
-      <li><strong>Content moderation reports</strong> — when you tap "Report" on an AI response, we store the reported text, your chosen category, and any optional note, retained for up to 12 months for safety auditing.</li>
-      <li><strong>Server access logs</strong> — IP address, user agent, request path, timestamp, retained for up to 14 days for security, retained longer in aggregated/anonymized form for analytics.</li>
-      <li><strong>Subscription/entitlement records</strong> — we store a minimal record linking your anonymized device/account ID to your Pro status, plan type, and renewal date for the purpose of gating premium features.</li>
-    </ul>
-
-    <h3>Payment data</h3>
-    <p>We do not store full payment card details on our servers under any circumstance. All subscription payments are processed by <strong>Google Play Billing</strong>. Google collects the billing data and shares only minimal entitlement information with us (plan, renewal date, anonymized purchase token). See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</p>
-
-    <h3>Infrastructure &amp; server logs</h3>
-    <p>Our static files are served via <strong>Cloudflare</strong>, which handles TLS termination, DDoS protection, caching, and abuse prevention. Cloudflare automatically records standard request metadata (IP address, user agent, timestamps) in its own server logs for security purposes.</p>
-
-    <h2>6. What We Do NOT Collect</h2>
-    <ul>
-      <li>We do <strong>not</strong> upload camera-scan frames, scan results, or on-device biometric landmarks to any server.</li>
-      <li>We do <strong>not</strong> use facial recognition or any other biometric data to identify you.</li>
-      <li>We do <strong>not</strong> sell data to advertisers or data brokers.</li>
-      <li>We do <strong>not</strong> serve behavioural advertising inside the app.</li>
-      <li>We do <strong>not</strong> use your Style Coach messages or photos to train AI models.</li>
-      <li>We do <strong>not</strong> require an email or password to use the free tier on the web.</li>
+      <li data-i18n-html="s5_server_li1"><strong>AI Style Coach chat logs</strong> — retained up to 30 days (see §4).</li>
+      <li data-i18n-html="s5_server_li2"><strong>Content moderation reports</strong> — when you tap "Report" on an AI response, we store the reported text, your chosen category, and any optional note, retained for up to 12 months for safety auditing.</li>
+      <li data-i18n-html="s5_server_li3"><strong>Server access logs</strong> — IP address, user agent, request path, timestamp, retained for up to 14 days for security, retained longer in aggregated/anonymized form for analytics. <em>Legal basis: legitimate interest (GDPR Art. 6(1)(f)) — security and abuse prevention.</em></li>
+      <li data-i18n-html="s5_server_li4"><strong>Subscription/entitlement records</strong> — we store a minimal record linking your anonymized device/account ID to your Pro status, plan type, and renewal date for the purpose of gating premium features.</li>
     </ul>
 
-    <h2>7. Third-Party Services</h2>
-    <p>The following third-party providers are involved in running DateScan:</p>
+    <h3 data-i18n="s5_payment_title">Payment data</h3>
+    <p data-i18n-html="s5_payment_body">We do not store full payment card details on our servers under any circumstance. All subscription payments are processed by <strong>Google Play Billing</strong>. Google collects the billing data and shares only minimal entitlement information with us (plan, renewal date, anonymized purchase token). See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</p>
+
+    <h3 data-i18n="s5_infra_title">Infrastructure &amp; server logs</h3>
+    <p data-i18n-html="s5_infra_body">Our static files are served via <strong>Cloudflare</strong>, which handles TLS termination, DDoS protection, caching, and abuse prevention. Cloudflare automatically records standard request metadata (IP address, user agent, timestamps) in its own server logs for security purposes.</p>
+
+    <h2 data-i18n="s6_title">6. What We Do NOT Collect</h2>
     <ul>
-      <li><strong>Google Play Billing</strong> — subscription processing for the Android app. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Privacy policy</a></li>
-      <li><strong>OpenAI</strong> and/or <strong>Anthropic</strong> — vision-language model providers for the AI Style Coach chat. Chat messages and attached images are forwarded to them to generate replies. We use API terms that prohibit training on user data where available. <a href="https://openai.com/policies/privacy-policy" target="_blank" rel="noopener">OpenAI privacy</a> · <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener">Anthropic privacy</a></li>
-      <li><strong>Cloudflare</strong> — CDN, TLS, DDoS protection, and security layer. <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Privacy policy</a></li>
-      <li><strong>Google Fonts</strong> — Inter and Playfair Display typefaces. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Privacy policy</a></li>
-      <li><strong>jsDelivr CDN</strong> — delivers the MediaPipe face-landmark library. <a href="https://www.jsdelivr.com/terms/privacy-policy-jsdelivr-net" target="_blank" rel="noopener">Privacy policy</a></li>
-      <li><strong>Skimlinks</strong> — affiliate link monetization service. When you click an affiliate link, Skimlinks may set cookies and unique identifiers to track the referral and attribute any resulting commission. <a href="https://skimlinks.com/privacy-policy" target="_blank" rel="noopener">Privacy policy</a></li>
+      <li data-i18n-html="s6_li1">We do <strong>not</strong> upload camera-scan frames, scan results, or on-device biometric landmarks to any server.</li>
+      <li data-i18n-html="s6_li2">We do <strong>not</strong> use facial recognition or any other biometric data to identify you.</li>
+      <li data-i18n-html="s6_li3">We do <strong>not</strong> sell data to advertisers or data brokers.</li>
+      <li data-i18n-html="s6_li4">We do <strong>not</strong> serve behavioural advertising inside the app.</li>
+      <li data-i18n-html="s6_li5">We do <strong>not</strong> use your Style Coach messages or photos to train AI models.</li>
+      <li data-i18n-html="s6_li6">We do <strong>not</strong> require an email or password to use the free tier on the web.</li>
     </ul>
 
-    <h2>8. Affiliate Links</h2>
-    <p>DateScan may include affiliate links within the app. If you click on an affiliate link and subsequently make a purchase, we may receive a commission from the retailer or service provider at <strong>no additional cost to you</strong>. These affiliate partnerships help support the ongoing development and maintenance of DateScan.</p>
-    <p>To track affiliate clicks and correctly attribute commissions, third-party affiliate networks such as <strong>Skimlinks</strong> may place cookies and unique identifiers on your browser. These tracking mechanisms allow the affiliate network to recognize that your purchase originated from a link within our app. Affiliate tracking cookies are set by the third-party service directly — not by DateScan — and are subject to the third party's own privacy policy (see §7 above for links).</p>
-    <p>You can manage or delete affiliate tracking cookies at any time through your browser's cookie settings. For more information on how we handle cookies overall, see §9 below.</p>
-
-    <h2>9. Cookies &amp; Local Storage</h2>
-    <p>DateScan itself does not set any advertising or tracking cookies. We use:</p>
+    <h2 data-i18n="s7_title">7. Third-Party Services</h2>
+    <p data-i18n="s7_intro">The following third-party providers are involved in running DateScan:</p>
     <ul>
-      <li><strong>LocalStorage &amp; IndexedDB</strong> — to remember your progress, preferences, and closet on your device.</li>
-      <li><strong>Strictly necessary cookies</strong> — set by Cloudflare for security, bot detection, and load balancing.</li>
-    </ul>
-    <p>Strictly necessary cookies cannot be disabled because the service cannot function without them. We do not set any analytics, advertising, or behavioural-tracking cookies.</p>
-
-    <h2>10. Your Rights (GDPR, UK GDPR &amp; CCPA)</h2>
-    <p>If you are located in the European Economic Area, the United Kingdom, or California, you have the following rights regarding any personal data we hold:</p>
-    <ul>
-      <li><strong>Right of access</strong> — request a copy of your data.</li>
-      <li><strong>Right to erasure</strong> — request deletion (see §11 below).</li>
-      <li><strong>Right to rectification</strong> — correct inaccurate data.</li>
-      <li><strong>Right to object</strong> — object to how we process your data.</li>
-      <li><strong>Right to portability</strong> — receive your data in a machine-readable format.</li>
-      <li><strong>Right to lodge a complaint</strong> — with your local data protection authority.</li>
-    </ul>
-    <p>To exercise any of these rights, submit a request via <a href="/delete-account.html">datescan.app/delete-account.html</a> and specify "Privacy Request — [your right]" in the reason field. We respond within 30 days.</p>
-
-    <h2>11. Data Deletion</h2>
-    <p>You have two ways to delete your data:</p>
-    <ul>
-      <li><strong>In-app wipe (local data only):</strong> Open the Privacy panel inside DateScan and tap <strong>"Erase everything on this device"</strong>. This wipes your closet, scan history, local settings, and cached service worker data from the current device.</li>
-      <li><strong>Web-based account deletion (local + server data):</strong> Visit <a href="/delete-account.html"><strong>https://datescan.app/delete-account.html</strong></a> and submit the form. No login is required. We will permanently delete your chat logs, moderation reports, and entitlement records associated with your email/device identifier within 30 days. This URL is also the account deletion link we submit to the Google Play Store, in compliance with Google Play's account deletion policy.</li>
-    </ul>
-    <p>Deleting your data does <strong>not</strong> cancel an active subscription. To cancel Pro, open the <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">Google Play subscriptions page</a> — see also our <a href="/refund.html">Refund Policy</a>.</p>
-
-    <h2>12. Data Retention</h2>
-    <p>We retain different categories of data for different periods:</p>
-    <ul>
-      <li><strong>On-device data</strong> — kept on your device until you delete it.</li>
-      <li><strong>AI Style Coach chat logs</strong> — up to 30 days for abuse prevention and debugging, then automatically deleted.</li>
-      <li><strong>Content moderation reports</strong> — up to 12 months for safety auditing.</li>
-      <li><strong>Server access logs</strong> — up to 14 days in raw form.</li>
-      <li><strong>Subscription records</strong> — for the duration of the subscription plus the period required by applicable tax and accounting law (typically 7 years in the EU).</li>
-      <li><strong>Billing records held by Google Play</strong> — as long as required by Google Play's policies and applicable tax law.</li>
+      <li data-i18n-html="s7_li1"><strong>Google Play Billing</strong> — subscription processing for the Android app. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Privacy Policy</a></li>
+      <li data-i18n-html="s7_li2"><strong>OpenAI</strong> and/or <strong>Anthropic</strong> — vision-language model providers for the AI Style Coach chat. Chat messages and attached images are forwarded to them to generate replies. We use API terms that prohibit training on user data where available. <a href="https://openai.com/policies/privacy-policy" target="_blank" rel="noopener">OpenAI privacy</a> · <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener">Anthropic privacy</a></li>
+      <li data-i18n-html="s7_li3"><strong>Cloudflare</strong> — CDN, TLS, DDoS protection, and security layer. <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Privacy Policy</a></li>
+      <li data-i18n-html="s7_li4"><strong>Google Fonts</strong> — Inter and Playfair Display typefaces. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Privacy Policy</a></li>
+      <li data-i18n-html="s7_li5"><strong>jsDelivr CDN</strong> — delivers the MediaPipe face-landmark library. <a href="https://www.jsdelivr.com/terms/privacy-policy-jsdelivr-net" target="_blank" rel="noopener">Privacy Policy</a></li>
+      <li data-i18n-html="s7_li6"><strong>Skimlinks</strong> — affiliate link monetization service. When you click an affiliate link, Skimlinks may set cookies and unique identifiers to track the referral and attribute any resulting commission. <em>Legal basis: consent (GDPR Art. 6(1)(a)).</em> <a href="https://skimlinks.com/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a></li>
     </ul>
 
-    <h2>13. International Data Transfers</h2>
-    <p>Our backend and AI model providers may process your data in the United States and other countries outside your country of residence. Where required, we rely on Standard Contractual Clauses (SCCs) and the EU-US Data Privacy Framework to transfer data lawfully out of the EEA/UK.</p>
+    <h2 data-i18n="s8_title">8. Affiliate Links</h2>
+    <p data-i18n-html="s8_body1">DateScan may include affiliate links within the app. If you click on an affiliate link and subsequently make a purchase, we may receive a commission from the retailer or service provider at <strong>no additional cost to you</strong>. These affiliate partnerships help support the ongoing development and maintenance of DateScan.</p>
+    <p data-i18n-html="s8_body2">To track affiliate clicks and correctly attribute commissions, third-party affiliate networks such as <strong>Skimlinks</strong> may place cookies and unique identifiers on your browser. These tracking mechanisms allow the affiliate network to recognize that your purchase originated from a link within our app. Affiliate tracking cookies are set by the third-party service directly — not by DateScan — and are subject to the third party's own privacy policy (see §7 above for links).</p>
+    <p data-i18n="s8_body3">You can manage or delete affiliate tracking cookies at any time through your browser's cookie settings. For more information on how we handle cookies overall, see §9 below.</p>
 
-    <h2>14. Security</h2>
-    <p>All traffic to datescan.app and api.datescan.app is encrypted via HTTPS/TLS. We follow industry-standard security practices including encryption at rest, access controls, and regular security reviews. No system is 100% secure, however — please keep your device, browser, and Google account up to date and notify us immediately if you suspect a security issue.</p>
+    <h2 data-i18n="s9_title">9. Cookies &amp; Local Storage</h2>
+    <p data-i18n="s9_intro">DateScan itself does not set any advertising or tracking cookies. We use:</p>
+    <ul>
+      <li data-i18n-html="s9_li1"><strong>LocalStorage &amp; IndexedDB</strong> — to remember your progress, preferences, and closet on your device.</li>
+      <li data-i18n-html="s9_li2"><strong>Strictly necessary cookies</strong> — set by Cloudflare for security, bot detection, and load balancing.</li>
+    </ul>
+    <p data-i18n="s9_note">Strictly necessary cookies cannot be disabled because the service cannot function without them. We do not set any analytics, advertising, or behavioural-tracking cookies.</p>
 
-    <h2>15. AI-Generated Content &amp; Content Moderation</h2>
-    <p>The AI Style Coach produces machine-generated responses and can make mistakes, including giving inaccurate or inappropriate advice. You can report any AI response by tapping the <strong>"Report"</strong> button below the message. We review every flagged response and use the feedback to improve the service and enforce our content policies. Certain categories of input are blocked client-side and server-side, including: content involving minors, sexually explicit content, and content encouraging self-harm. See our <a href="/terms.html">Terms of Service</a> for the full list.</p>
+    <h2 data-i18n="s10_title">10. Your Rights (GDPR, UK GDPR &amp; CCPA)</h2>
+    <p data-i18n="s10_intro">If you are located in the European Economic Area, the United Kingdom, or California, you have the following rights regarding any personal data we hold:</p>
+    <ul>
+      <li data-i18n-html="s10_li1"><strong>Right of access</strong> — request a copy of your data.</li>
+      <li data-i18n-html="s10_li2"><strong>Right to erasure</strong> — request deletion (see §11 below).</li>
+      <li data-i18n-html="s10_li3"><strong>Right to rectification</strong> — correct inaccurate data.</li>
+      <li data-i18n-html="s10_li4"><strong>Right to object</strong> — object to how we process your data.</li>
+      <li data-i18n-html="s10_li5"><strong>Right to portability</strong> — receive your data in a machine-readable format.</li>
+      <li data-i18n-html="s10_li6"><strong>Right to lodge a complaint</strong> — with your local data protection authority.</li>
+    </ul>
+    <p data-i18n-html="s10_exercise">To exercise any of these rights, email us at <a href="mailto:info@datescan.app">info@datescan.app</a> with your request. We respond within 30 days. If you are in Hungary, your supervisory authority is the <strong>NAIH</strong> (Nemzeti Adatvédelmi és Információszabadság Hatóság), 1055 Budapest, Falk Miksa u. 9-11., <a href="https://www.naih.hu" target="_blank" rel="noopener">www.naih.hu</a>.</p>
 
-    <h2>16. Changes to This Policy</h2>
-    <p>We may update this Privacy Policy from time to time. The "Last updated" date at the top of this page will always reflect the most recent version. Material changes will be announced inside the app and on the homepage. Continued use after the effective date of the new policy means you accept the update.</p>
+    <h2 data-i18n="s11_title">11. Data Deletion</h2>
+    <p data-i18n="s11_intro">You have two ways to delete your data:</p>
+    <ul>
+      <li data-i18n-html="s11_li1"><strong>In-app wipe (local data only):</strong> Open the Privacy panel inside DateScan and tap <strong>"Erase everything on this device"</strong>. This wipes your closet, scan history, local settings, and cached service worker data from the current device.</li>
+      <li data-i18n-html="s11_li2"><strong>Account &amp; data deletion:</strong> Email us at <a href="mailto:info@datescan.app?subject=Delete%20my%20account"><strong>info@datescan.app</strong></a> with "Delete my account" in the subject. We will permanently delete your chat logs, moderation reports, and entitlement records associated with your email/device identifier within 30 days.</li>
+    </ul>
+    <p data-i18n-html="s11_cancel">Deleting your data does <strong>not</strong> cancel an active subscription. To cancel Pro, open the <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">Google Play subscriptions page</a> — see also our <a href="refund.html">Refund Policy</a>.</p>
 
-    <h2>17. Contact</h2>
-    <p>Questions, concerns, or privacy requests? Submit them via <a href="/delete-account.html">datescan.app/delete-account.html</a> with "Privacy Request" in the reason field, or DM us on the social channels linked in the footer.</p>
+    <h2 data-i18n="s12_title">12. Data Retention</h2>
+    <p data-i18n="s12_intro">We retain different categories of data for different periods:</p>
+    <ul>
+      <li data-i18n-html="s12_li1"><strong>On-device data</strong> — kept on your device until you delete it.</li>
+      <li data-i18n-html="s12_li2"><strong>AI Style Coach chat logs</strong> — up to 30 days for abuse prevention and debugging, then automatically deleted.</li>
+      <li data-i18n-html="s12_li3"><strong>Content moderation reports</strong> — up to 12 months for safety auditing.</li>
+      <li data-i18n-html="s12_li4"><strong>Server access logs</strong> — up to 14 days in raw form.</li>
+      <li data-i18n-html="s12_li5"><strong>Subscription records</strong> — for the duration of the subscription plus the period required by applicable tax and accounting law (typically 7 years in the EU).</li>
+      <li data-i18n-html="s12_li6"><strong>Billing records held by Google Play</strong> — as long as required by Google Play's policies and applicable tax law.</li>
+    </ul>
+
+    <h2 data-i18n="s13_title">13. International Data Transfers</h2>
+    <p data-i18n="s13_body">Our backend and AI model providers may process your data in the United States and other countries outside your country of residence. Where required, we rely on Standard Contractual Clauses (SCCs) and the EU-US Data Privacy Framework to transfer data lawfully out of the EEA/UK.</p>
+
+    <h2 data-i18n="s14_title">14. Security</h2>
+    <p data-i18n="s14_body">All traffic to datescan.app and api.datescan.app is encrypted via HTTPS/TLS. We follow industry-standard security practices including encryption at rest, access controls, and regular security reviews. No system is 100% secure, however — please keep your device, browser, and Google account up to date and notify us immediately if you suspect a security issue.</p>
+
+    <h2 data-i18n="s15_title">15. AI-Generated Content &amp; Content Moderation</h2>
+    <p data-i18n-html="s15_body">The AI Style Coach produces machine-generated responses and can make mistakes, including giving inaccurate or inappropriate advice. You can report any AI response by tapping the <strong>"Report"</strong> button below the message. We review every flagged response and use the feedback to improve the service and enforce our content policies. Certain categories of input are blocked client-side and server-side, including: content involving minors, sexually explicit content, and content encouraging self-harm. See our <a href="terms.html">Terms of Service</a> for the full list.</p>
+
+    <h2 data-i18n="s16_title">16. Changes to This Policy</h2>
+    <p data-i18n="s16_body">We may update this Privacy Policy from time to time. The "Last updated" date at the top of this page will always reflect the most recent version. Material changes will be announced inside the app and on the homepage. Continued use after the effective date of the new policy means you accept the update.</p>
+
+    <h2 data-i18n="s17_title">17. Referral & Bonus Points</h2>
+    <p data-i18n="s17_intro">DateScan offers a referral programme that lets you earn bonus points by inviting friends. Here is how it works and what data is involved:</p>
+    <ul>
+      <li data-i18n-html="s17_li1">When you tap <strong>"Share Invite Link"</strong>, the app generates a unique referral link in the format <code>https://datescan.app/?ref={yourUserId}</code>. Your anonymous user ID (a random string starting with <code>u_</code>) is embedded in the link so we can identify you as the referrer.</li>
+      <li data-i18n-html="s17_li2">If someone opens your referral link for the first time, the app gives them <strong>+5 bonus points</strong> automatically and records your ID as their referrer in their browser's localStorage (<code>datescan.referredBy</code>). Each user can only be referred once.</li>
+      <li data-i18n-html="s17_li3">The app then sends a <strong>POST request</strong> to <code>api.datescan.app/api/referral</code> containing your referrer ID and the new user's ID, so our backend can award you <strong>+5 bonus points</strong> as well. This request includes only the two anonymous user IDs — no personal information.</li>
+      <li data-i18n-html="s17_li4">On every page load, the app calls <strong>GET <code>api.datescan.app/api/check-rewards?userId={yourId}</code></strong> to check for pending referral bonuses. If a bonus is found, points are added and a toast notification appears.</li>
+      <li data-i18n-html="s17_li5">Bonus points are stored in your browser's localStorage alongside your regular daily points (<code>datescan.points</code>). They persist across daily resets.</li>
+      <li data-i18n-html="s17_li6">You may not create multiple accounts or use automated means to generate referrals. Abuse may result in forfeiture of bonus points and termination of access.</li>
+    </ul>
+
+    <h2 data-i18n="s18_title">18. Contact</h2>
+    <p data-i18n-html="s18_body">Questions? Email us at <a href="mailto:info@datescan.app">info@datescan.app</a> or reach out on our social channels.</p>
   </article>
 </main>
 
@@ -255,7 +1091,7 @@
 
       <!-- Brand column -->
       <div class="col-span-2 lg:col-span-5">
-        <a href="/" class="inline-flex items-center gap-3 group mb-4">
+        <a href="index.html?desktop=1" class="inline-flex items-center gap-3 group mb-4">
           <div class="w-11 h-11 flex items-center justify-center shrink-0">
             <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-[0_0_8px_rgba(236,72,153,0.4)]">
               <defs>
@@ -274,40 +1110,40 @@
           </div>
           <div class="flex flex-col">
             <span class="font-bold text-xl tracking-tight leading-none text-white group-hover:text-brand-400 transition-colors">DateScan<span class="text-brand-500">.</span></span>
-            <span class="text-[10px] text-gray-500 font-medium uppercase tracking-widest mt-1.5">Personal Style Coach</span>
+            <span class="text-[10px] text-gray-500 font-medium uppercase tracking-widest mt-1.5" data-i18n="subtitle_tag">Personal Style Coach</span>
           </div>
         </a>
-        <p class="text-sm text-gray-400 leading-relaxed max-w-sm mb-5">
+        <p class="text-sm text-gray-400 leading-relaxed max-w-sm mb-5" data-i18n="footer_desc">
           Your AI-powered wingman. Scan your outfit, get instant style and grooming feedback, and walk into your date with confidence.
         </p>
         <div class="inline-flex items-center gap-2 text-[10px] text-gray-500 px-3 py-1.5 rounded-full border border-white/10 bg-white/5">
           <svg class="w-3 h-3 text-brand-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-          <span>Camera scans run on-device</span>
+          <span data-i18n="footer_ondevice">Camera scans run on-device</span>
         </div>
       </div>
 
       <!-- Legal -->
       <div class="lg:col-span-2 lg:col-start-7">
-        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4">Legal</h3>
+        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4" data-i18n="footer_legal">Legal</h3>
         <ul class="space-y-2.5 text-sm">
-          <li><a href="/privacy.html" class="text-gray-400 hover:text-brand-400 transition-colors">Privacy Policy</a></li>
-          <li><a href="/terms.html" class="text-gray-400 hover:text-brand-400 transition-colors">Terms of Service</a></li>
-          <li><a href="/refund.html" class="text-gray-400 hover:text-brand-400 transition-colors">Refund Policy</a></li>
-          <li><a href="/delete-account.html" class="text-gray-400 hover:text-brand-400 transition-colors">Delete Account</a></li>
+          <li><a href="privacy.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_privacy">Privacy Policy</a></li>
+          <li><a href="terms.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_terms">Terms of Service</a></li>
+          <li><a href="refund.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_refund">Refund Policy</a></li>
+          <li><a href="delete-account.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_delete">Delete Account</a></li>
         </ul>
       </div>
 
       <!-- Support -->
       <div class="lg:col-span-2">
-        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4">Support</h3>
+        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4" data-i18n="footer_support">Support</h3>
         <ul class="space-y-2.5 text-sm">
-          <li><a href="/contact.html" class="text-gray-400 hover:text-brand-400 transition-colors">Contact Support</a></li>
+          <li><a href="contact.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_contact">Contact Support</a></li>
         </ul>
       </div>
 
       <!-- Social -->
       <div class="lg:col-span-3">
-        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4">Follow</h3>
+        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4" data-i18n="footer_follow">Follow</h3>
         <div class="flex items-center gap-2.5">
           <a href="https://www.tiktok.com/@datescan" target="_blank" rel="noopener noreferrer" aria-label="DateScan on TikTok" class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/10 bg-white/5 text-gray-400 hover:text-white hover:border-brand-500/50 hover:bg-brand-500/10 hover:shadow-[0_0_16px_rgba(236,72,153,0.25)] transition-all">
             <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.321 5.562a5.124 5.124 0 0 1-.443-.258 6.228 6.228 0 0 1-1.137-.966c-.849-.971-1.166-1.956-1.282-2.645h.004C16.369 1.104 16.41.5 16.41.5h-3.31v12.789c0 .171 0 .341-.007.508l-.001.064-.003.085v.007a3.535 3.535 0 0 1-1.78 2.801 3.474 3.474 0 0 1-1.724.454c-1.933 0-3.502-1.579-3.502-3.524s1.569-3.524 3.502-3.524c.366 0 .718.057 1.049.162l.004-3.37a6.844 6.844 0 0 0-5.283 1.524A6.842 6.842 0 0 0 3 13.304c0 1.599.503 3.123 1.456 4.4a6.838 6.838 0 0 0 5.475 2.78c3.78 0 6.844-3.064 6.844-6.844V8.168a9.533 9.533 0 0 0 5.565 1.781V6.642c-1.175 0-2.218-.391-3.019-1.08Z"/></svg>
@@ -327,7 +1163,7 @@
 
     <!-- Bottom strip -->
     <div class="border-t border-white/5 pt-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-      <p class="text-[11px] text-gray-600 italic leading-relaxed max-w-2xl">
+      <p class="text-[11px] text-gray-600 italic leading-relaxed max-w-2xl" data-i18n="footer_disclaimer">
         Disclaimer: DateScan is an AI-powered tool designed for entertainment and confidence-boosting purposes only. We do not guarantee dating success or specific social outcomes.
       </p>
       <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 shrink-0">
@@ -372,15 +1208,58 @@
           document.execCommand('copy');
         }
         var orig = copyBtn.textContent;
-        copyBtn.textContent = 'Copied!';
+        var copiedText = (window._privacyStrings && window._privacyStrings.copied_text) || 'Copied!';
+        copyBtn.textContent = copiedText;
         setTimeout(function () { copyBtn.textContent = orig; }, 1500);
       } catch (_) {
         idField.select();
       }
     });
   }
+
+  // ---- Update back button aria-label for i18n ----
+  var backBtn = document.querySelector('a[href="index.html"][aria-label]');
+  if (backBtn && window._privacyStrings && window._privacyStrings.back_aria) {
+    backBtn.setAttribute('aria-label', window._privacyStrings.back_aria);
+  }
 })();
 </script>
+
+<!-- ── Haptic Feedback: vibration on interactive element press ── -->
+<script>
+(function(){
+  // Vibration API — works on Android/mobile, silently ignored on desktop/iOS
+  if (!navigator.vibrate && !navigator.webkitVibrate) return;
+  var vibrate = navigator.vibrate || navigator.webkitVibrate;
+
+  // Respect reduced-motion preference
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  function hapticTap(ms) {
+    try { vibrate.call(navigator, ms); } catch(e) {}
+  }
+
+  document.addEventListener('pointerdown', function(e) {
+    var el = e.target.closest(
+      'button, a, [role="button"], input[type="submit"], input[type="button"], input[type="checkbox"], label.checkbox-row, .btn-danger, [data-haptic]'
+    );
+    if (!el) return;
+    // Skip disabled elements
+    if (el.disabled || el.getAttribute('aria-disabled') === 'true') return;
+
+    // Intensity tiers
+    if (el.closest('.btn-danger') || el.matches('[data-haptic="heavy"]')) {
+      hapticTap(25);          // destructive / important actions
+    } else if (el.matches('a[href]') && !el.matches('[role="button"]')) {
+      hapticTap(5);           // light tap for plain links
+    } else {
+      hapticTap(10);          // standard tap for buttons / controls
+    }
+  }, { passive: true });
+})();
+</script>
+
+
 
 </body>
 </html>

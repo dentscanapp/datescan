@@ -9,6 +9,23 @@
 <link rel="canonical" href="https://datescan.app/contact.html" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='40' y2='40' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%23ec4899'/%3E%3Cstop offset='1' stop-color='%239333ea'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M10 5 H5 V10' stroke='url(%23bg)' stroke-width='2' fill='none'/%3E%3Cpath d='M30 5 H35 V10' stroke='url(%23bg)' stroke-width='2' fill='none'/%3E%3Cpath d='M10 35 H5 V30' stroke='url(%23bg)' stroke-width='2' fill='none'/%3E%3Cpath d='M30 35 H35 V30' stroke='url(%23bg)' stroke-width='2' fill='none'/%3E%3Cpath d='M20 13.5C20 13.5 16 9 11.5 9C7.5 9 5 12.5 5 16.5C5 22 13 28 20 32C27 28 35 22 35 16.5C35 12.5 32.5 9 28.5 9C24 9 20 13.5 20 13.5Z' fill='url(%23bg)' fill-opacity='0.15' stroke='url(%23bg)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='4' y1='20' x2='36' y2='20' stroke='%23f472b6' stroke-width='1.5' stroke-dasharray='2 2' opacity='0.8'/%3E%3C/svg%3E">
+<script>
+// ── EARLY lang detection (runs BEFORE any external script) ──
+(function(){
+  var supported=['en','hu','de'];var lang=null;var _h='';
+  try{_h=decodeURIComponent(window.location.href||'');}catch(e){_h=window.location.href||'';}
+  try{var p=new URLSearchParams(window.location.search);var v=p.get('lang');if(v&&supported.indexOf(v)!==-1)lang=v;}catch(e){}
+  if(!lang){try{var m=_h.match(/[?&]lang=([a-z]{2})(?:&|#|$)/i);if(m&&supported.indexOf(m[1])!==-1)lang=m[1];}catch(e){}}
+  if(!lang){try{var h=window.location.hash||'';if(!h&&_h.indexOf('#')!==-1)h=_h.substring(_h.indexOf('#'));var hm=h.match(/[#&]lang=([a-z]{2})/i);if(hm&&supported.indexOf(hm[1])!==-1)lang=hm[1];}catch(e){}}
+  if(!lang){try{var cm=document.cookie.match(/(?:^|;\s*)datescan_lang=([a-z]{2})/i);if(cm&&supported.indexOf(cm[1])!==-1)lang=cm[1];}catch(e){}}
+  if(!lang){try{var nl=localStorage.getItem('datescan.nav_lang');if(nl&&supported.indexOf(nl)!==-1)lang=nl;}catch(e){}}
+  if(!lang){try{var sl=localStorage.getItem('datescan.lang');if(sl&&sl.indexOf('auto:')===0)sl=sl.substring(5);if(sl&&supported.indexOf(sl)!==-1)lang=sl;}catch(e){}}
+  if(!lang){try{var nls=navigator.languages&&navigator.languages.length?Array.prototype.slice.call(navigator.languages):[navigator.language||navigator.userLanguage||''];for(var i=0;i<nls.length;i++){var pp=(nls[i]||'').split('-')[0].toLowerCase();if(pp==='hu'){lang='hu';break;}if(pp==='de'){lang='de';break;}}}catch(e){}}
+  if(lang)window._earlyLang=lang;if(!lang)lang='en';
+  var titles={en:'Contact Support — DateScan',hu:'Kapcsolatfelvétel — DateScan',de:'Support kontaktieren — DateScan'};
+  document.title=titles[lang]||titles.en;document.documentElement.lang=lang;
+})();
+</script>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
 <script>
@@ -32,10 +49,706 @@
     radial-gradient(circle at 85% 90%, rgba(139,92,246,0.08) 0%, transparent 40%);
     pointer-events: none; z-index: 0; }
 </style>
+<script>
+// ── i18n for contact.html ──
+(function(){
+  var translations = {
+    en: {
+      page_title: 'Contact Support — DateScan',
+      meta_desc: "Get in touch with DateScan support. We're here to help with bugs, billing, and feedback.",
+      subtitle_tag: 'Personal Style Coach',
+      support_label: 'Support',
+      main_title: 'Contact Support',
+      main_subtitle: 'We read every message. Really.',
+      intro: "Need help? Found a bug? Want to tell us the score we gave you was harsh? Email us — we're a small team and we actually respond.",
+      email_label: 'Email us directly',
+      tap_hint: 'Tap to open your mail app',
+      fastest_label: 'Fastest route',
+      fastest_desc: 'Most issues are faster to resolve through one of these dedicated channels than a generic message:',
+      delete_data: 'Delete your data',
+      report_harmful: 'Report harmful AI content',
+      report_hint: 'with a screenshot',
+      refund_label: 'Refund',
+      refund_hint: 'handled by Google Play, see',
+      refund_policy: 'Refund Policy',
+      everything_else: 'Everything else',
+      response_time: 'Typical response time:',
+      business_days: '1–3 business days',
+      what_include: 'What to Include',
+      what_include_desc: 'To help us help you faster, please include:',
+      include_1: 'What you were trying to do',
+      include_1_ex: '— "I clicked Scan Outfit and..."',
+      include_2: 'What actually happened',
+      include_2_ex: '— error message, frozen screen, wrong result, etc.',
+      include_3: 'Your device and browser',
+      include_3_ex: '— e.g. "iPhone 15, Safari" or "Windows 11, Chrome 120"',
+      include_4: 'A screenshot',
+      include_4_ex: 'if the issue is visual',
+      include_5: 'Your purchase email',
+      include_5_ex: "if it's a billing question",
+      common_issues: 'Common Issues',
+      issue_cam_title: "\"My camera won't turn on\"",
+      issue_cam_desc: "Check that you've granted camera permission to datescan.app in your browser settings. On iOS, you may also need to go to <em>Settings → Safari → Camera</em> and set it to \"Ask\" or \"Allow\". Make sure no other app is currently using your camera. Try reloading the page.",
+      issue_weird_title: '"The scan gave me a weird result"',
+      issue_weird_desc: "Lighting matters a lot. Face a window or a bright lamp — avoid backlighting yourself with a window behind you. Keep your face centered and about arm's length from the camera. If you're wearing a dark outfit against a dark background, the outfit color detection may struggle.",
+      issue_pro_title: '"I lost my Pro access after clearing cookies"',
+      issue_pro_desc: "Pro access on DateScan is tied to your browser's local storage. If you cleared site data, restore your purchase from the in-app Settings → \"Restore purchases\" button, or email <a href=\"mailto:info@datescan.app?subject=Restore%20purchase\">info@datescan.app</a> with your Google Play order ID.",
+      issue_refund_title: '"I want a refund"',
+      issue_refund_desc: 'See our <a href="refund.html">Refund Policy</a> for details. Refunds on Google Play subscriptions are handled directly through your Play Store account within 48 hours of purchase.',
+      issue_feedback_title: '"I have feedback or a feature idea"',
+      issue_feedback_desc: "We love feedback. Seriously. Email us at <a href=\"mailto:info@datescan.app?subject=Feedback\">info@datescan.app</a>. If your idea makes it into the product, we'll let you know.",
+      issue_press_title: "\"I'm a journalist / creator / partner\"",
+      issue_press_desc: "Email <a href=\"mailto:info@datescan.app?subject=Press%20%2F%20Partnership\">info@datescan.app</a> with \"Press\" or \"Partnership\" in the subject and we'll route it to the right person.",
+      privacy_title: 'Privacy Requests & Data Deletion',
+      privacy_desc: 'To delete your data, you have two options:',
+      privacy_fast: 'Fastest — web form (no login required):',
+      privacy_fast_desc: "email us at <a href=\"mailto:info@datescan.app?subject=Delete%20my%20data\"><strong>info@datescan.app</strong></a> with \"Delete my data\" in the subject. We'll permanently delete your chat logs, moderation reports, and subscription records within 30 days.",
+      privacy_inapp: 'In-app wipe (local data only):',
+      privacy_inapp_desc: 'Open the Privacy panel inside the app and tap "Erase everything on this device".',
+      privacy_gdpr: 'For other GDPR/UK GDPR/CCPA requests (access, rectification, portability, objection), email <a href="mailto:info@datescan.app">info@datescan.app</a> with your request. See our <a href="privacy.html">Privacy Policy</a> for the full list of rights and how we handle them.',
+      harmful_title: 'Reporting Harmful AI Content',
+      harmful_desc: 'If the AI Style Coach gave you a response that is offensive, dangerous, sexual, or otherwise inappropriate, email <a href="mailto:info@datescan.app?subject=Report%20harmful%20AI%20content">info@datescan.app</a> with a screenshot of the message and a short description of what went wrong.',
+      harmful_urgent: 'If you believe any content on DateScan may involve a minor or constitute illegal activity, use the subject line <strong>"URGENT — Safety"</strong> so we can escalate it to the top of the queue.',
+      response_title: 'Response Times',
+      response_tech: 'Technical issues',
+      response_tech_time: '— usually within 1–2 business days',
+      response_billing: 'Billing and refunds',
+      response_billing_time: '— within 3 business days',
+      response_feature: 'Feature requests',
+      response_feature_time: '— we read all of them but may not reply individually',
+      response_press: 'Press inquiries',
+      response_press_time: '— within 1 business day',
+      closing: "We don't have a phone number or a live chat — yet. Email at <a href=\"mailto:info@datescan.app\">info@datescan.app</a> is the fastest way to reach us, and support is much faster when you include screenshots and a short description of what went wrong.",
+      impressum_title: 'Legal / Impressum',
+      impressum_operator: 'Operator:',
+      impressum_name: 'Petor Péter',
+      impressum_address: '2233 Ecser, Nádas Béla utca 10, Magyarország',
+      impressum_email_label: 'Email:',
+      impressum_email: 'info@datescan.app',
+      impressum_law: 'Applicable law: Hungary / European Union',
+      impressum_odr: 'EU Online Dispute Resolution:',
+      footer_desc: 'Your AI-powered wingman. Scan your outfit, get instant style and grooming feedback, and walk into your date with confidence.',
+      footer_ondevice: 'Camera scans run on-device',
+      footer_legal: 'Legal',
+      footer_privacy: 'Privacy Policy',
+      footer_terms: 'Terms of Service',
+      footer_refund: 'Refund Policy',
+      footer_delete: 'Delete Account',
+      footer_support: 'Support',
+      footer_contact: 'Contact Support',
+      footer_follow: 'Follow',
+      footer_copy: 'DateScan. All rights reserved.'
+    },
+    hu: {
+      page_title: 'Kapcsolat — DateScan',
+      meta_desc: 'Lépj kapcsolatba a DateScan ügyfélszolgálatával. Segítünk hibák, számlázás és visszajelzések ügyében.',
+      subtitle_tag: 'Személyes Stílusedző',
+      support_label: 'Támogatás',
+      main_title: 'Kapcsolatfelvétel',
+      main_subtitle: 'Minden üzenetet elolvasunk. Tényleg.',
+      intro: 'Segítség kell? Hibát találtál? Szeretnéd elmondani, hogy a pontszámunk túl szigorú volt? Írj emailt — kis csapat vagyunk, és tényleg válaszolunk.',
+      email_label: 'Írj nekünk közvetlenül',
+      tap_hint: 'Koppints a levelezőalkalmazás megnyitásához',
+      fastest_label: 'Leggyorsabb út',
+      fastest_desc: 'A legtöbb problémát ezekre a dedikált csatornákra gyorsabb megoldani, mint egy általános üzenettel:',
+      delete_data: 'Adataid törlése',
+      report_harmful: 'Káros AI tartalom bejelentése',
+      report_hint: 'képernyőfotóval',
+      refund_label: 'Visszatérítés',
+      refund_hint: 'a Google Play kezeli, lásd',
+      refund_policy: 'Visszatérítési szabályzat',
+      everything_else: 'Minden egyéb',
+      response_time: 'Tipikus válaszidő:',
+      business_days: '1–3 munkanap',
+      what_include: 'Mit adj meg',
+      what_include_desc: 'Hogy gyorsabban segíthessünk, kérjük, tüntesd fel:',
+      include_1: 'Mit próbáltál csinálni',
+      include_1_ex: '— „Koppintottam a Szkennelés gombra és..."',
+      include_2: 'Mi történt valójában',
+      include_2_ex: '— hibaüzenet, befagyott képernyő, rossz eredmény stb.',
+      include_3: 'Eszközöd és böngésződ',
+      include_3_ex: '— pl. „iPhone 15, Safari" vagy „Windows 11, Chrome 120"',
+      include_4: 'Képernyőfotó',
+      include_4_ex: 'ha vizuális a probléma',
+      include_5: 'Vásárlási emailed',
+      include_5_ex: 'ha számlázási kérdésről van szó',
+      common_issues: 'Gyakori problémák',
+      issue_cam_title: '"Nem kapcsol be a kamerám"',
+      issue_cam_desc: 'Ellenőrizd, hogy megadtad-e a kameraengedélyt a datescan.app számára a böngésző beállításaiban. IOS-en esetleg a <em>Beállítások → Safari → Kamera</em> menüben „Kérdezzen" vagy „Engedélyezés" értékre kell állítani. Győződj meg róla, hogy más alkalmazás nem használja a kamerát. Próbáld újratölteni az oldalt.',
+      issue_weird_title: '"Furcsa eredményt adott a szkennelés"',
+      issue_weird_desc: 'A fényviszonyok nagyon számítanak. Fordulj egy ablak vagy egy erős lámpa felé — kerüld, hogy ablak legyen mögötted. Tartsd az arcodat középen, karnyújtásnyira a kamerától. Ha sötét öltözéket viselsz sötét háttér előtt, a színfelismerés nehézségekbe ütközhet.',
+      issue_pro_title: '"Elvesztettem a Pro hozzáférésemet a cookie-k törlése után"',
+      issue_pro_desc: 'A Pro hozzáférés a böngésző helyi tárhelyéhez kötött. Ha törölted az oldaladatokat, állítsd vissza a vásárlásodat az alkalmazáson belüli Beállítások → „Vásárlások visszaállítása" gombbal, vagy írj a <a href="mailto:info@datescan.app?subject=Restore%20purchase">info@datescan.app</a> címre a Google Play rendelésed azonosítójával.',
+      issue_refund_title: '"Visszatérítést szeretnék"',
+      issue_refund_desc: 'Részletekért lásd a <a href="refund.html">Visszatérítési szabályzatot</a>. A Google Play előfizetések visszatérítését a Play Store fiókodon keresztül intézheted a vásárlástól számított 48 órán belül.',
+      issue_feedback_title: '"Visszajelzésem vagy ötletem van"',
+      issue_feedback_desc: 'Imádjuk a visszajelzést. Komolyan. Írj a <a href="mailto:info@datescan.app?subject=Feedback">info@datescan.app</a> címre. Ha az ötleted bekerül a termékbe, értesítünk.',
+      issue_press_title: '"Újságíró / tartalomkészítő / partner vagyok"',
+      issue_press_desc: 'Írj a <a href="mailto:info@datescan.app?subject=Press%20%2F%20Partnership">info@datescan.app</a> címre „Sajtó" vagy „Partnerség" tárgymegjelöléssel, és továbbítjuk a megfelelő személynek.',
+      privacy_title: 'Adatvédelmi kérelmek és adattörlés',
+      privacy_desc: 'Adataid törléséhez két lehetőséged van:',
+      privacy_fast: 'Leggyorsabb — webes űrlap (nem kell bejelentkezni):',
+      privacy_fast_desc: 'írj a <a href="mailto:info@datescan.app?subject=Adatok%20törlése"><strong>info@datescan.app</strong></a> címre „Adatok törlése" tárgymegjelöléssel. A csevegeket, moderációs jelentéseket és előfizetési adatokat 30 napon belül véglegesen töröljük.',
+      privacy_inapp: 'Alkalmazáson belüli törlés (csak helyi adatok):',
+      privacy_inapp_desc: 'Nyisd meg az Adatvédelem panelt az alkalmazásban, és koppints a „Minden törlése ezen az eszközön" gombra.',
+      privacy_gdpr: 'Egyéb GDPR/UK GDPR/CCPA kérelmek (hozzáférés, helyesbítés, hordozhatóság, kifogás) esetén írj a <a href="mailto:info@datescan.app">info@datescan.app</a> címre a kérelmeddel. A jogok teljes listáját és kezelésüket lásd az <a href="privacy.html">Adatvédelmi tájékoztatóban</a>.',
+      harmful_title: 'Káros AI tartalom bejelentése',
+      harmful_desc: 'Ha az AI Stílusedző olyan választ adott, amely sértő, veszélyes, szexuális vagy más módon nem megfelelő, írj a <a href="mailto:info@datescan.app?subject=Report%20harmful%20AI%20content">info@datescan.app</a> címre az üzenet képernyőfotójával és egy rövid leírással arról, mi volt a probléma.',
+      harmful_urgent: 'Ha úgy gondolod, hogy bármilyen tartalom a DateScanen kiskorút érinthet vagy illegális tevékenységet képez, használd a <strong>„SÜRGŐS — Biztonság"</strong> tárgymegjelölést, hogy a lehető leggyorsabban kezeljük.',
+      response_title: 'Válaszidők',
+      response_tech: 'Technikai problémák',
+      response_tech_time: '— általában 1–2 munkanapon belül',
+      response_billing: 'Számlázás és visszatérítés',
+      response_billing_time: '— 3 munkanapon belül',
+      response_feature: 'Funkciókérések',
+      response_feature_time: '— mindet elolvassuk, de nem biztos, hogy egyenként válaszolunk',
+      response_press: 'Sajtó megkeresések',
+      response_press_time: '— 1 munkanapon belül',
+      closing: 'Jelenleg nincs telefonszámunk vagy élő chatünk. Az email a <a href="mailto:info@datescan.app">info@datescan.app</a> címen a leggyorsabb módja a kapcsolatfelvételnek, és a támogatás sokkal gyorsabb, ha csatolsz képernyőfotókat és egy rövid leírást a problémáról.',
+      impressum_title: 'Jogi / Impresszum',
+      impressum_operator: 'Üzemeltető:',
+      impressum_name: 'Petor Péter',
+      impressum_address: '2233 Ecser, Nádas Béla utca 10, Magyarország',
+      impressum_email_label: 'Email:',
+      impressum_email: 'info@datescan.app',
+      impressum_law: 'Irányadó jog: Magyarország / Európai Unió',
+      impressum_odr: 'EU Online Vitarendezés:',
+      footer_desc: 'Az AI-alapú szárnysegéded. Szkenneld az öltözéked, kapj azonnali stílus- és ápoltsági visszajelzést, és magabiztosan indulj a randira.',
+      footer_ondevice: 'A kameraszkennelés az eszközödön fut',
+      footer_legal: 'Jogi',
+      footer_privacy: 'Adatvédelmi tájékoztató',
+      footer_terms: 'Felhasználási feltételek',
+      footer_refund: 'Visszatérítési szabályzat',
+      footer_delete: 'Fiók törlése',
+      footer_support: 'Támogatás',
+      footer_contact: 'Kapcsolatfelvétel',
+      footer_follow: 'Kövess',
+      footer_copy: 'DateScan. Minden jog fenntartva.'
+    },
+    de: {
+      page_title: 'Support kontaktieren — DateScan',
+      meta_desc: 'Kontaktiere den DateScan-Support. Wir helfen bei Fehlern, Abrechnung und Feedback.',
+      subtitle_tag: 'Persönlicher Style-Coach',
+      support_label: 'Support',
+      main_title: 'Support kontaktieren',
+      main_subtitle: 'Wir lesen jede Nachricht. Versprochen.',
+      intro: 'Brauchst du Hilfe? Einen Fehler gefunden? Willst du uns sagen, dass unsere Bewertung zu hart war? Schreib uns — wir sind ein kleines Team und antworten tatsächlich.',
+      email_label: 'Schreib uns direkt',
+      tap_hint: 'Tippe, um deine Mail-App zu öffnen',
+      fastest_label: 'Schnellster Weg',
+      fastest_desc: 'Die meisten Probleme lassen sich über diese direkten Kanäle schneller lösen als mit einer allgemeinen Nachricht:',
+      delete_data: 'Deine Daten löschen',
+      report_harmful: 'Schädlichen KI-Inhalt melden',
+      report_hint: 'mit einem Screenshot',
+      refund_label: 'Erstattung',
+      refund_hint: 'wird von Google Play bearbeitet, siehe',
+      refund_policy: 'Erstattungsrichtlinie',
+      everything_else: 'Alles andere',
+      response_time: 'Typische Antwortzeit:',
+      business_days: '1–3 Werktage',
+      what_include: 'Was du angeben solltest',
+      what_include_desc: 'Damit wir dir schneller helfen können, bitte angeben:',
+      include_1: 'Was du versucht hast zu tun',
+      include_1_ex: '— „Ich habe auf Outfit scannen geklickt und..."',
+      include_2: 'Was eigentlich passiert ist',
+      include_2_ex: '— Fehlermeldung, eingefrorener Bildschirm, falsches Ergebnis usw.',
+      include_3: 'Dein Gerät und Browser',
+      include_3_ex: '— z.B. „iPhone 15, Safari" oder „Windows 11, Chrome 120"',
+      include_4: 'Ein Screenshot',
+      include_4_ex: 'wenn das Problem visuell ist',
+      include_5: 'Deine Kauf-E-Mail',
+      include_5_ex: 'bei Abrechnungsfragen',
+      common_issues: 'Häufige Probleme',
+      issue_cam_title: '"Meine Kamera geht nicht an"',
+      issue_cam_desc: 'Prüfe, ob du datescan.app die Kameraberechtigung in deinen Browser-Einstellungen erteilt hast. Unter iOS musst du möglicherweise auch unter <em>Einstellungen → Safari → Kamera</em> die Option „Fragen" oder „Erlauben" wählen. Stelle sicher, dass keine andere App die Kamera gerade verwendet. Versuche, die Seite neu zu laden.',
+      issue_weird_title: '"Der Scan liefert seltsame Ergebnisse"',
+      issue_weird_desc: 'Die Beleuchtung ist sehr wichtig. Stelle dich einem Fenster oder einer hellen Lampe — vermeide Gegenlicht mit einem Fenster hinter dir. Halte dein Gesicht zentriert und etwa eine Armlänge von der Kamera entfernt. Wenn du ein dunkles Outfit vor dunklem Hintergrund trägst, kann die Farberkennung Schwierigkeiten haben.',
+      issue_pro_title: '"Ich habe meinen Pro-Zugang nach dem Löschen von Cookies verloren"',
+      issue_pro_desc: 'Der Pro-Zugang ist an den lokalen Speicher deines Browsers gebunden. Wenn du die Seitendaten gelöscht hast, stelle deinen Kauf über die In-App-Schaltfläche Einstellungen → „Käufe wiederherstellen" wieder her, oder schreibe an <a href="mailto:info@datescan.app?subject=Restore%20purchase">info@datescan.app</a> mit deiner Google Play Bestell-ID.',
+      issue_refund_title: '"Ich möchte eine Erstattung"',
+      issue_refund_desc: 'Details findest du in unserer <a href="refund.html">Erstattungsrichtlinie</a>. Erstattungen für Google Play Abos werden direkt über deinen Play Store Account innerhalb von 48 Stunden nach Kauf abgewickelt.',
+      issue_feedback_title: '"Ich habe Feedback oder eine Feature-Idee"',
+      issue_feedback_desc: 'Wir lieben Feedback. Ernsthaft. Schreib uns an <a href="mailto:info@datescan.app?subject=Feedback">info@datescan.app</a>. Wenn deine Idee ins Produkt aufgenommen wird, geben wir dir Bescheid.',
+      issue_press_title: '"Ich bin Journalist / Creator / Partner"',
+      issue_press_desc: 'Schreib an <a href="mailto:info@datescan.app?subject=Press%20%2F%20Partnership">info@datescan.app</a> mit „Presse" oder „Partnerschaft" im Betreff und wir leiten es an die richtige Person weiter.',
+      privacy_title: 'Datenschutzanfragen & Datenlöschung',
+      privacy_desc: 'Du hast zwei Möglichkeiten, deine Daten zu löschen:',
+      privacy_fast: 'Am schnellsten — Web-Formular (kein Login nötig):',
+      privacy_fast_desc: 'schreib an <a href="mailto:info@datescan.app?subject=Daten%20löschen"><strong>info@datescan.app</strong></a> mit dem Betreff „Daten löschen". Wir löschen deine Chat-Protokolle, Moderationsberichte und Abo-Daten innerhalb von 30 Tagen dauerhaft.',
+      privacy_inapp: 'In-App-Löschung (nur lokale Daten):',
+      privacy_inapp_desc: 'Öffne das Datenschutz-Panel in der App und tippe auf „Alles auf diesem Gerät löschen".',
+      privacy_gdpr: 'Für andere GDPR/UK GDPR/CCPA-Anfragen (Auskunft, Berichtigung, Portabilität, Widerspruch) schreib an <a href="mailto:info@datescan.app">info@datescan.app</a> mit deiner Anfrage. Die vollständige Liste deiner Rechte findest du in unserer <a href="privacy.html">Datenschutzerklärung</a>.',
+      harmful_title: 'Schädlichen KI-Inhalt melden',
+      harmful_desc: 'Wenn der KI-Style-Coach eine Antwort gegeben hat, die beleidigend, gefährlich, sexueller oder anderweitig unangemessen ist, schreibe an <a href="mailto:info@datescan.app?subject=Report%20harmful%20AI%20content">info@datescan.app</a> mit einem Screenshot der Nachricht und einer kurzen Beschreibung des Problems.',
+      harmful_urgent: 'Wenn du glaubst, dass Inhalte auf DateScan einen Minderjährigen betreffen könnten oder eine illegale Tätigkeit darstellen, verwende den Betreff <strong>„DRINGEND — Sicherheit"</strong>, damit wir es vorrangig bearbeiten.',
+      response_title: 'Antwortzeiten',
+      response_tech: 'Technische Probleme',
+      response_tech_time: '— in der Regel innerhalb von 1–2 Werktagen',
+      response_billing: 'Abrechnung & Erstattungen',
+      response_billing_time: '— innerhalb von 3 Werktagen',
+      response_feature: 'Feature-Wünsche',
+      response_feature_time: '— wir lesen alle, antworten aber evtl. nicht einzeln',
+      response_press: 'Presse-Anfragen',
+      response_press_time: '— innerhalb von 1 Werktag',
+      closing: 'Wir haben noch keine Telefonnummer oder einen Live-Chat. E-Mail an <a href="mailto:info@datescan.app">info@datescan.app</a> ist der schnellste Weg, uns zu erreichen, und der Support ist viel schneller, wenn du Screenshots und eine kurze Problembeschreibung beifügst.',
+      impressum_title: 'Rechtliches / Impressum',
+      impressum_operator: 'Betreiber:',
+      impressum_name: 'Petor Péter',
+      impressum_address: '2233 Ecser, Nádas Béla utca 10, Magyarország',
+      impressum_email_label: 'E-Mail:',
+      impressum_email: 'info@datescan.app',
+      impressum_law: 'Anwendbares Recht: Ungarn / Europäische Union',
+      impressum_odr: 'EU-Online-Streitbeilegung:',
+      footer_desc: 'Dein KI-gestützter Wingman. Scanne dein Outfit, erhalte sofortiges Stil- und Pflege-Feedback und geh selbstbewusst zum Date.',
+      footer_ondevice: 'Kamera-Scans laufen auf dem Gerät',
+      footer_legal: 'Rechtliches',
+      footer_privacy: 'Datenschutzerklärung',
+      footer_terms: 'Nutzungsbedingungen',
+      footer_refund: 'Erstattungsrichtlinie',
+      footer_delete: 'Account löschen',
+      footer_support: 'Support',
+      footer_contact: 'Support kontaktieren',
+      footer_follow: 'Folgen',
+      footer_copy: 'DateScan. Alle Rechte vorbehalten.'
+    }
+  };
+
+  // Detect language: earlyLang > URL param > href regex > hash > cookie > nav_lang > localStorage > navigator > fallback
+  var supported = ['en','hu','de'];
+  var lang = null;
+  // 0. Check early detection result (highest priority)
+  if (window._earlyLang && supported.indexOf(window._earlyLang) !== -1) {
+    lang = window._earlyLang;
+  }
+  // 1. Check URL parameter first (?lang=en / ?lang=de / ?lang=hu)
+  if (!lang) {
+    try {
+      var urlParams = new URLSearchParams(window.location.search);
+      var urlLang = urlParams.get('lang');
+      if (urlLang && supported.indexOf(urlLang) !== -1) {
+        lang = urlLang;
+      }
+    } catch(e) {}
+  }
+  // 1b. Always try href regex — critical for file:// and some TWA/WebView environments
+  if (!lang) {
+    try {
+      var hrefMatch = window.location.href.match(/[?&]lang=([a-z]{2})(?:&|#|$)/i);
+      if (hrefMatch && supported.indexOf(hrefMatch[1]) !== -1) {
+        lang = hrefMatch[1];
+      }
+    } catch(e) {}
+  }
+  // 1c. Check hash fragment for lang param (#lang=en or &lang=en in hash)
+  if (!lang) {
+    try {
+      var hash = window.location.hash || '';
+      if (!hash && window.location.href.indexOf('#') !== -1) {
+        hash = window.location.href.substring(window.location.href.indexOf('#'));
+      }
+      var hashMatch = hash.match(/[#&]lang=([a-z]{2})/i);
+      if (hashMatch && supported.indexOf(hashMatch[1]) !== -1) {
+        lang = hashMatch[1];
+      }
+    } catch(e) {}
+  }
+  // 1d. Check cookie
+  if (!lang) {
+    try {
+      var cookieMatch = document.cookie.match(/(?:^|;\s*)datescan_lang=([a-z]{2})/i);
+      if (cookieMatch && supported.indexOf(cookieMatch[1]) !== -1) {
+        lang = cookieMatch[1];
+      }
+    } catch(e) {}
+  }
+  // 1e. Check nav_lang localStorage
+  if (!lang) {
+    try {
+      var navLang = localStorage.getItem('datescan.nav_lang');
+      if (navLang && supported.indexOf(navLang) !== -1) {
+        lang = navLang;
+      }
+    } catch(e) {}
+  }
+  // 2. Check localStorage
+  if (!lang) {
+    try {
+      var stored = localStorage.getItem('datescan.lang');
+      if (stored && stored.indexOf('auto:') === 0) {
+        var autoLang = stored.substring(5);
+        if (supported.indexOf(autoLang) !== -1) {
+          lang = autoLang;
+        }
+      } else if (stored && supported.indexOf(stored) !== -1) {
+        lang = stored;
+      }
+    } catch(e) {}
+  }
+  // 3. Detect from browser/navigator
+  if (!lang) {
+    try {
+      var navLangs = navigator.languages && navigator.languages.length
+        ? Array.prototype.slice.call(navigator.languages)
+        : [navigator.language || navigator.userLanguage || ''];
+      for (var i = 0; i < navLangs.length; i++) {
+        var p = (navLangs[i] || '').split('-')[0].toLowerCase();
+        if (p === 'hu') { lang = 'hu'; break; }
+        if (p === 'de') { lang = 'de'; break; }
+      }
+    } catch(e) {}
+  }
+  // 4. Final fallback
+  if (!lang) lang = 'en';
+
+  var strings = translations[lang] || translations.en;
+  document.documentElement.lang = lang;
+  document.title = strings.page_title;
+  var metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc) metaDesc.setAttribute('content', strings.meta_desc);
+
+  // Helper to set text by data-i18n key
+  function applyI18n() {
+    document.querySelectorAll('[data-i18n]').forEach(function(el) {
+      var key = el.getAttribute('data-i18n');
+      if (strings[key] !== undefined) el.textContent = strings[key];
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+      var key = el.getAttribute('data-i18n-html');
+      if (strings[key] !== undefined) el.innerHTML = strings[key];
+    });
+  }
+
+  // Update all subpage links in this page to include ?lang=XX
+  function updateSubpageLinks() {
+    var subpages = ['privacy.html','contact.html','terms.html','refund.html','delete-account.html'];
+    document.querySelectorAll('a[href]').forEach(function(a) {
+      var href = a.getAttribute('href') || '';
+      for (var i = 0; i < subpages.length; i++) {
+        if (href.indexOf(subpages[i]) !== -1) {
+          var base = href;
+          var hash = '';
+          var hashIdx = href.indexOf('#');
+          if (hashIdx !== -1) { hash = href.substring(hashIdx); base = href.substring(0, hashIdx); }
+          var qIdx = base.indexOf('?');
+          if (qIdx !== -1) {
+            var params = base.substring(qIdx + 1).split('&').filter(function(p) { return p.indexOf('lang=') !== 0; });
+            base = base.substring(0, qIdx) + (params.length ? '?' + params.join('&') : '');
+          }
+          var sep = base.indexOf('?') !== -1 ? '&' : '?';
+          a.setAttribute('href', base + sep + 'lang=' + lang + hash);
+          break;
+        }
+      }
+    });
+    // Also update "Back to app" links to preserve language
+    document.querySelectorAll('a[href*="index.html"]').forEach(function(a) {
+      var href = a.getAttribute('href') || '';
+      if (href.indexOf('lang=') === -1) {
+        var sep = href.indexOf('?') !== -1 ? '&' : '?';
+        a.setAttribute('href', href + sep + 'lang=' + lang);
+      }
+    });
+  }
+
+  // Expose for later use
+  window._contactLang = lang;
+  window._contactStrings = strings;
+  window._contactApplyI18n = applyI18n;
+
+  // Apply on DOMContentLoaded with aggressive retries
+  var _initDone = false;
+  function init() {
+    if (_initDone) return;
+    _initDone = true;
+    applyI18n();
+    updateSubpageLinks();
+  }
+  if (document.readyState !== 'loading') { init(); }
+  document.addEventListener('DOMContentLoaded', init);
+  window.addEventListener('load', function() {
+    if (!_initDone) init();
+    applyI18n(); updateSubpageLinks();
+  });
+  setTimeout(function() { applyI18n(); updateSubpageLinks(); }, 50);
+  setTimeout(function() { applyI18n(); updateSubpageLinks(); }, 200);
+  setTimeout(function() { applyI18n(); updateSubpageLinks(); }, 500);
+  setTimeout(function() { applyI18n(); updateSubpageLinks(); }, 1500);
+})();
+</script>
+
+<!-- ============================================================
+     DateScan — LOVE-AT-FIRST-SIGHT visual layer
+     Pure cosmetic overrides. Zero layout / markup changes.
+     Loads last in <head> so cascade wins over Tailwind CDN + local
+     styles. Remove this single <style id="ds-love-layer"> block to revert.
+     ============================================================ -->
+<style id="ds-love-layer">
+  /* ---------- design tokens ---------- */
+  :root{
+    --love-coral:#ff7eb3; --love-rose:#ff5a87; --love-pink:#ec4899;
+    --love-magenta:#d946ef; --love-violet:#a855f7; --love-deep-violet:#7c3aed;
+    --love-ink:#0a0712; --love-ink-2:#140a22;
+    --love-radius-sm:14px; --love-radius-md:20px;
+    --love-radius-lg:28px; --love-radius-xl:36px;
+    --love-shadow-2:0 1px 0 rgba(255,255,255,0.07) inset, 0 10px 30px -10px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.35);
+    --love-shadow-3:0 1px 0 rgba(255,255,255,0.08) inset, 0 24px 60px -20px rgba(124,58,237,0.35), 0 12px 30px -12px rgba(236,72,153,0.25);
+    --love-shadow-cta:0 8px 24px -6px rgba(236,72,153,0.55), 0 4px 12px -4px rgba(168,85,247,0.45), 0 1px 0 rgba(255,255,255,0.18) inset;
+  }
+
+  /* ---------- typography ---------- */
+  html, body{
+    font-family:'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    font-feature-settings:'ss01' on, 'cv11' on, 'calt' on;
+    letter-spacing:-0.005em;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  h1, h2, h3, .font-serif{ letter-spacing:-0.022em; }
+  .font-serif{ font-feature-settings:'lnum' on, 'ss02' on; }
+
+  /* ---------- sunset canvas ---------- */
+  body{
+    background-color:var(--love-ink) !important;
+    background-image:
+      radial-gradient(ellipse 90% 60% at 18% -8%, rgba(255,126,179,0.22) 0%, rgba(255,126,179,0) 55%),
+      radial-gradient(ellipse 80% 55% at 110% 8%, rgba(168,85,247,0.22) 0%, rgba(168,85,247,0) 55%),
+      radial-gradient(ellipse 100% 70% at 50% 120%, rgba(124,58,237,0.28) 0%, rgba(124,58,237,0) 60%),
+      linear-gradient(180deg,#0c0714 0%,#0a0712 55%,#080510 100%) !important;
+    background-attachment:fixed;
+    position:relative;
+  }
+  /* film grain */
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    opacity:0.05; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  /* ambient aurora — injected for pages without one */
+  body::after{
+    content:""; position:fixed; top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    width:140vw; height:140vh; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(circle at 15% 25%, rgba(255,90,135,0.16) 0%, transparent 42%),
+      radial-gradient(circle at 85% 30%, rgba(168,85,247,0.16) 0%, transparent 42%),
+      radial-gradient(circle at 50% 90%, rgba(236,72,153,0.14) 0%, transparent 45%),
+      radial-gradient(circle at 75% 75%, rgba(124,58,237,0.12) 0%, transparent 45%);
+    filter:blur(40px) saturate(1.1);
+    animation:love-aurora 22s ease-in-out infinite alternate;
+  }
+  @keyframes love-aurora{
+    0%{ transform:translate(-50%,-50%) scale(1) rotate(0); }
+    50%{ transform:translate(-48%,-52%) scale(1.05) rotate(2deg); }
+    100%{ transform:translate(-52%,-48%) scale(0.98) rotate(-2deg); }
+  }
+  /* lift actual content above the aurora */
+  body > *:not(style):not(script){ position:relative; z-index:1; }
+
+  /* ---------- glass surfaces ---------- */
+  .bg-white\/5, .bg-white\/\[0\.03\]{
+    background:linear-gradient(180deg,rgba(255,255,255,0.06) 0%,rgba(255,255,255,0.025) 100%) !important;
+    -webkit-backdrop-filter:blur(14px) saturate(140%); backdrop-filter:blur(14px) saturate(140%);
+  }
+  .bg-white\/10{
+    background:linear-gradient(180deg,rgba(255,255,255,0.10) 0%,rgba(255,255,255,0.05) 100%) !important;
+    -webkit-backdrop-filter:blur(18px) saturate(150%); backdrop-filter:blur(18px) saturate(150%);
+  }
+  .bg-white\/20{
+    background:linear-gradient(180deg,rgba(255,255,255,0.18) 0%,rgba(255,255,255,0.10) 100%) !important;
+    -webkit-backdrop-filter:blur(22px) saturate(160%); backdrop-filter:blur(22px) saturate(160%);
+  }
+  .bg-dark-950\/80, .bg-dark-950\/95,
+  .bg-\[\#09090b\], .bg-\[\#09090b\]\/95, .bg-\[\#0f0f14\]\/95,
+  .bg-black\/60, .bg-black\/70, .bg-black\/80, .bg-black\/85, .bg-black\/90{
+    background:linear-gradient(180deg,rgba(20,10,34,0.82) 0%,rgba(10,7,18,0.92) 100%) !important;
+    -webkit-backdrop-filter:blur(24px) saturate(160%); backdrop-filter:blur(24px) saturate(160%);
+  }
+  .bg-black\/30, .bg-black\/40, .bg-black\/50{
+    background:linear-gradient(180deg,rgba(20,10,34,0.55) 0%,rgba(10,7,18,0.70) 100%) !important;
+    -webkit-backdrop-filter:blur(16px) saturate(140%); backdrop-filter:blur(16px) saturate(140%);
+  }
+
+  /* ---------- radii ---------- */
+  .rounded-xl{ border-radius:var(--love-radius-sm) !important; }
+  .rounded-2xl{ border-radius:var(--love-radius-md) !important; }
+  .rounded-3xl, .rounded-\[24px\], .rounded-\[28px\]{ border-radius:var(--love-radius-lg) !important; }
+  .rounded-\[32px\]{ border-radius:var(--love-radius-xl) !important; }
+
+  .rounded-2xl.border, .rounded-3xl.border,
+  .rounded-\[24px\].border, .rounded-\[28px\].border{ box-shadow:var(--love-shadow-2); }
+  .rounded-2xl.shadow-2xl, .rounded-3xl.shadow-2xl,
+  .shadow-2xl.border{ box-shadow:var(--love-shadow-3) !important; }
+
+  /* ---------- borders ---------- */
+  .border-white\/5{ border-color:rgba(255,255,255,0.07) !important; }
+  .border-white\/10{ border-color:rgba(255,255,255,0.12) !important; }
+  .border-white\/15{ border-color:rgba(255,255,255,0.16) !important; }
+  .border-white\/20{ border-color:rgba(255,255,255,0.22) !important; }
+
+  /* ---------- brand gradient → sunset ---------- */
+  .from-brand-500.to-purple-500,
+  .from-brand-400.via-pink-400.to-purple-400,
+  .from-brand-500.via-\[\#db2777\].to-purple-500,
+  .from-\[\#ec4899\].to-\[\#9333ea\],
+  .from-pink-500.to-purple-500,
+  .from-pink-500.to-purple-600{
+    background-image:linear-gradient(135deg,#ff7eb3 0%,#ff5a87 30%,#ec4899 55%,#a855f7 85%,#7c3aed 100%) !important;
+  }
+
+  /* ---------- CTA buttons ---------- */
+  button.bg-gradient-to-tr.from-brand-500.to-purple-500,
+  button.bg-gradient-to-r.from-brand-500.to-purple-500,
+  a.bg-gradient-to-tr.from-brand-500.to-purple-500,
+  a.bg-gradient-to-r.from-brand-500.to-purple-500,
+  a.bg-gradient-to-tr.from-pink-500.to-purple-500,
+  a.bg-gradient-to-r.from-pink-500.to-purple-500,
+  button.bg-brand-500, a.bg-brand-500,
+  .bg-gradient-to-tr.from-brand-500.to-purple-500.shadow-lg,
+  .bg-gradient-to-r.from-brand-500.to-purple-500.shadow-lg{
+    position:relative;
+    box-shadow:var(--love-shadow-cta) !important;
+    transition:transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s ease, filter .25s ease !important;
+    letter-spacing:0.005em;
+  }
+  button.bg-gradient-to-tr.from-brand-500.to-purple-500:hover,
+  button.bg-gradient-to-r.from-brand-500.to-purple-500:hover,
+  a.bg-gradient-to-tr.from-brand-500.to-purple-500:hover,
+  a.bg-gradient-to-r.from-brand-500.to-purple-500:hover,
+  a.bg-gradient-to-tr.from-pink-500.to-purple-500:hover,
+  a.bg-gradient-to-r.from-pink-500.to-purple-500:hover,
+  button.bg-brand-500:hover, a.bg-brand-500:hover{
+    filter:brightness(1.06) saturate(1.05);
+    box-shadow:
+      0 14px 34px -8px rgba(236,72,153,0.65),
+      0 6px 18px -4px rgba(168,85,247,0.55),
+      0 1px 0 rgba(255,255,255,0.22) inset !important;
+  }
+  button.bg-gradient-to-tr.from-brand-500.to-purple-500:active,
+  button.bg-gradient-to-r.from-brand-500.to-purple-500:active,
+  a.bg-gradient-to-tr.from-brand-500.to-purple-500:active,
+  a.bg-gradient-to-r.from-brand-500.to-purple-500:active{
+    transform:translateY(1px) scale(0.985);
+  }
+  @keyframes love-pulse-glow{
+    0%,100%{ box-shadow:var(--love-shadow-cta); }
+    50%{ box-shadow:
+      0 10px 30px -6px rgba(236,72,153,0.70),
+      0 4px 14px -4px rgba(168,85,247,0.55),
+      0 0 0 6px rgba(236,72,153,0.08),
+      0 1px 0 rgba(255,255,255,0.20) inset; }
+  }
+
+  /* ---------- chips / pills ---------- */
+  .bg-brand-500\/10, .bg-brand-500\/15{
+    background:linear-gradient(135deg,rgba(255,126,179,0.14),rgba(168,85,247,0.10)) !important;
+    border-color:rgba(244,114,182,0.24);
+  }
+  .bg-brand-500\/20{ background:linear-gradient(135deg,rgba(255,126,179,0.22),rgba(168,85,247,0.16)) !important; }
+  .bg-brand-500\/30{ background:linear-gradient(135deg,rgba(255,126,179,0.30),rgba(168,85,247,0.22)) !important; }
+  .bg-purple-500\/10{ background:linear-gradient(135deg,rgba(168,85,247,0.14),rgba(124,58,237,0.10)) !important; }
+  .bg-purple-500\/20{ background:linear-gradient(135deg,rgba(168,85,247,0.22),rgba(124,58,237,0.16)) !important; }
+  .bg-emerald-500\/10{ background:linear-gradient(135deg,rgba(52,211,153,0.14),rgba(16,185,129,0.08)) !important; }
+  .bg-emerald-500\/20{ background:linear-gradient(135deg,rgba(52,211,153,0.26),rgba(16,185,129,0.16)) !important; }
+  .bg-amber-500\/10{ background:linear-gradient(135deg,rgba(251,191,36,0.14),rgba(249,115,22,0.08)) !important; }
+  .bg-red-500\/10{ background:linear-gradient(135deg,rgba(251,113,133,0.14),rgba(239,68,68,0.08)) !important; }
+  .bg-red-500\/15{ background:linear-gradient(135deg,rgba(251,113,133,0.20),rgba(239,68,68,0.12)) !important; }
+
+  /* ---------- text gradients ---------- */
+  .bg-clip-text.bg-gradient-to-r.from-brand-500.to-purple-500,
+  .bg-clip-text.bg-gradient-to-tr.from-brand-500.to-purple-500,
+  .bg-clip-text.bg-gradient-to-br.from-brand-500.to-purple-500,
+  .bg-clip-text.from-pink-500.to-purple-500,
+  .bg-clip-text.from-pink-400.to-purple-400{
+    background-image:linear-gradient(135deg,#ff9ec7 0%,#ff6a88 30%,#ec4899 55%,#c084fc 85%,#a855f7 100%) !important;
+  }
+
+  /* ---------- inputs ---------- */
+  input, textarea, select{
+    transition:border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+  }
+  input:focus, textarea:focus, select:focus{
+    box-shadow:
+      0 0 0 4px rgba(236,72,153,0.14),
+      0 0 0 1px rgba(236,72,153,0.55) inset;
+    outline:none !important;
+  }
+
+  /* ---------- focus visible ---------- */
+  :focus-visible{
+    outline:none;
+    box-shadow:
+      0 0 0 2px rgba(10,7,18,1),
+      0 0 0 4px rgba(236,72,153,0.55) !important;
+    border-radius:inherit;
+  }
+  button:focus-visible, a:focus-visible{ outline:none; }
+
+  /* ---------- nav blur ---------- */
+  nav[class*="fixed"], nav[class*="sticky"],
+  [role="navigation"][class*="fixed"], [role="navigation"][class*="sticky"],
+  .fixed.bottom-0[class*="bg-"]{
+    -webkit-backdrop-filter:blur(28px) saturate(170%);
+    backdrop-filter:blur(28px) saturate(170%);
+    border-top-color:rgba(255,255,255,0.08) !important;
+  }
+
+  /* ---------- micro-interactions: card lift ---------- */
+  a.rounded-2xl, a.rounded-3xl,
+  button.rounded-2xl, button.rounded-3xl,
+  [role="button"].rounded-2xl, [role="button"].rounded-3xl{
+    transition:transform .28s cubic-bezier(.2,.8,.2,1),
+               box-shadow .28s ease, border-color .28s ease, background-color .28s ease;
+  }
+  a.rounded-2xl:hover, a.rounded-3xl:hover,
+  button.rounded-2xl:hover, button.rounded-3xl:hover{ transform:translateY(-2px); }
+  a.rounded-2xl:active, a.rounded-3xl:active,
+  button.rounded-2xl:active, button.rounded-3xl:active{ transform:translateY(0) scale(0.99); }
+
+  /* ---------- shimmer on brand gradient cards ---------- */
+  .from-brand-500.to-purple-500.rounded-2xl,
+  .from-brand-500.to-purple-500.rounded-3xl{ position:relative; overflow:hidden; }
+  .from-brand-500.to-purple-500.rounded-2xl::after,
+  .from-brand-500.to-purple-500.rounded-3xl::after{
+    content:""; position:absolute; top:0; left:-60%;
+    width:60%; height:100%;
+    background:linear-gradient(100deg,transparent 0%,rgba(255,255,255,0.16) 50%,transparent 100%);
+    transform:skewX(-18deg); pointer-events:none;
+    animation:love-shimmer 5.5s ease-in-out 1s infinite;
+  }
+  @keyframes love-shimmer{
+    0%{ left:-60%; } 55%{ left:120%; } 100%{ left:120%; }
+  }
+
+  /* ---------- text color warm-up for dark surfaces ---------- */
+  .text-gray-400{ color:#b8a8c4 !important; }
+  .text-gray-500{ color:#94839f !important; }
+
+  /* ---------- selection + scrollbar ---------- */
+  ::selection{ background:rgba(236,72,153,0.32); color:#fff; }
+  @media (min-width:1024px){
+    *::-webkit-scrollbar-thumb{
+      background-image:linear-gradient(180deg,rgba(236,72,153,0.55),rgba(168,85,247,0.55)) !important;
+    }
+  }
+
+  /* ---------- safety: keep media pristine ---------- */
+  video, canvas, img{
+    backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
+  }
+
+  /* ---------- reduced motion ---------- */
+  @media (prefers-reduced-motion:reduce){
+    body::after{ animation:none !important; }
+    .from-brand-500.to-purple-500.rounded-2xl::after,
+    .from-brand-500.to-purple-500.rounded-3xl::after{ animation:none !important; display:none; }
+    a.rounded-2xl:hover, a.rounded-3xl:hover,
+    button.rounded-2xl:hover, button.rounded-3xl:hover{ transform:none; }
+  }
+</style>
 </head>
 <body class="antialiased">
 <div class="ambient-glow"></div>
-<a href="/index.html" aria-label="Back to app" class="lg:hidden fixed top-10 right-6 z-30 w-11 h-11 flex items-center justify-center rounded-full border border-white/10 bg-[#0f0f14]/80 backdrop-blur-md text-gray-300 hover:text-white hover:border-brand-500/50 hover:bg-brand-500/10 hover:shadow-[0_0_16px_rgba(236,72,153,0.25)] active:scale-95 transition-all" style="top: calc(env(safe-area-inset-top, 0px) + 2.5rem);">
+<a href="index.html?desktop=1" aria-label="Back to app" class="fixed top-10 right-6 z-30 w-11 h-11 flex items-center justify-center rounded-full border border-white/10 bg-[#0f0f14]/80 backdrop-blur-md text-gray-300 hover:text-white hover:border-brand-500/50 hover:bg-brand-500/10 hover:shadow-[0_0_16px_rgba(236,72,153,0.25)] active:scale-95 transition-all" style="top: calc(env(safe-area-inset-top, 0px) + 2.5rem);">
   <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
     <path d="M15 18l-6-6 6-6"/>
   </svg>
@@ -43,7 +756,7 @@
 
 
 <header class="relative z-10 max-w-3xl mx-auto px-6 pt-10 pb-8">
-  <a href="/" class="inline-flex items-center gap-3 group">
+  <a href="index.html?desktop=1" class="inline-flex items-center gap-3 group">
     <div class="w-12 h-12 flex items-center justify-center shrink-0">
       <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-[0_0_8px_rgba(236,72,153,0.4)]">
         <defs>
@@ -62,93 +775,105 @@
     </div>
     <div class="flex flex-col">
       <h1 class="font-bold text-xl md:text-2xl tracking-tight leading-none text-white group-hover:text-brand-400 transition-colors">DateScan<span class="text-brand-500">.</span></h1>
-      <span class="text-[10px] text-gray-400 font-medium uppercase tracking-widest mt-1">Personal Style Coach</span>
+      <span class="text-[10px] text-gray-400 font-medium uppercase tracking-widest mt-1" data-i18n="subtitle_tag">Personal Style Coach</span>
     </div>
   </a>
 </header>
 
 <main class="relative z-10 max-w-3xl mx-auto px-6 pb-20">
   <div class="mb-10 pb-8 border-b border-white/10">
-    <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-3">Support</div>
-    <h1 class="font-serif text-4xl sm:text-5xl font-medium text-white mb-3">Contact Support</h1>
-    <p class="text-sm text-gray-500">We read every message. Really.</p>
+    <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-3" data-i18n="support_label">Support</div>
+    <h1 class="font-serif text-4xl sm:text-5xl font-medium text-white mb-3" data-i18n="main_title">Contact Support</h1>
+    <p class="text-sm text-gray-500" data-i18n="main_subtitle">We read every message. Really.</p>
   </div>
 
   <article class="prose-custom">
-    <p>Need help? Found a bug? Want to tell us the score we gave you was harsh? Email us — we're a small team and we actually respond.</p>
+    <p data-i18n="intro">Need help? Found a bug? Want to tell us the score we gave you was harsh? Email us — we're a small team and we actually respond.</p>
 
     <div class="my-8 p-6 rounded-2xl border border-brand-500/40 bg-gradient-to-br from-brand-500/15 to-purple-500/10 text-center">
-      <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-3">Email us directly</div>
+      <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-3" data-i18n="email_label">Email us directly</div>
       <a href="mailto:info@datescan.app" class="inline-flex items-center gap-3 px-5 py-3 rounded-xl border border-brand-500/40 bg-black/30 hover:bg-brand-500/10 hover:border-brand-400 transition group no-underline">
         <svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
         <span class="font-mono text-lg sm:text-xl font-semibold text-white group-hover:text-brand-400 transition-colors no-underline">info@datescan.app</span>
       </a>
-      <p class="text-xs text-gray-500 mt-3 mb-0">Tap to open your mail app</p>
+      <p class="text-xs text-gray-500 mt-3 mb-0" data-i18n="tap_hint">Tap to open your mail app</p>
     </div>
 
     <div class="my-8 p-6 rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/10 to-purple-500/5">
-      <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-2">Fastest route</div>
-      <p class="text-sm text-gray-300 mt-0 mb-3">Most issues are faster to resolve through one of these dedicated channels than a generic message:</p>
+      <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-2" data-i18n="fastest_label">Fastest route</div>
+      <p class="text-sm text-gray-300 mt-0 mb-3" data-i18n="fastest_desc">Most issues are faster to resolve through one of these dedicated channels than a generic message:</p>
       <ul class="text-sm text-gray-300 space-y-2 mb-0 pl-0 list-none">
-        <li>🗑️ <strong class="text-white">Delete your data</strong> — <a href="/delete-account.html">datescan.app/delete-account.html</a></li>
-        <li>🚨 <strong class="text-white">Report harmful AI content</strong> — email <a href="mailto:info@datescan.app?subject=Report%20harmful%20AI%20content">info@datescan.app</a> with a screenshot</li>
-        <li>💳 <strong class="text-white">Refund</strong> — handled by Google Play, see <a href="/refund.html">Refund Policy</a></li>
-        <li>💬 <strong class="text-white">Everything else</strong> — email <a href="mailto:info@datescan.app">info@datescan.app</a></li>
+        <li>🗑️ <strong class="text-white" data-i18n="delete_data">Delete your data</strong> — email <a href="mailto:info@datescan.app?subject=Delete%20my%20data">info@datescan.app</a></li>
+        <li>🚨 <strong class="text-white" data-i18n="report_harmful">Report harmful AI content</strong> — email <a href="mailto:info@datescan.app?subject=Report%20harmful%20AI%20content">info@datescan.app</a> <span data-i18n="report_hint">with a screenshot</span></li>
+        <li>💳 <strong class="text-white" data-i18n="refund_label">Refund</strong> — <span data-i18n="refund_hint">handled by Google Play, see</span> <a href="refund.html" data-i18n="refund_policy">Refund Policy</a></li>
+        <li>💬 <strong class="text-white" data-i18n="everything_else">Everything else</strong> — email <a href="mailto:info@datescan.app">info@datescan.app</a></li>
       </ul>
-      <p class="text-xs text-gray-500 mt-4 mb-0">Typical response time: <strong class="text-gray-300">1–3 business days</strong></p>
+      <p class="text-xs text-gray-500 mt-4 mb-0"><span data-i18n="response_time">Typical response time:</span> <strong class="text-gray-300" data-i18n="business_days">1–3 business days</strong></p>
     </div>
 
-    <h2>What to Include</h2>
-    <p>To help us help you faster, please include:</p>
+    <h2 data-i18n="what_include">What to Include</h2>
+    <p data-i18n="what_include_desc">To help us help you faster, please include:</p>
     <ul>
-      <li><strong>What you were trying to do</strong> — "I clicked Scan Outfit and..."</li>
-      <li><strong>What actually happened</strong> — error message, frozen screen, wrong result, etc.</li>
-      <li><strong>Your device and browser</strong> — e.g. "iPhone 15, Safari" or "Windows 11, Chrome 120"</li>
-      <li><strong>A screenshot</strong> if the issue is visual</li>
-      <li><strong>Your purchase email</strong> if it's a billing question</li>
+      <li><strong data-i18n="include_1">What you were trying to do</strong> <span data-i18n="include_1_ex">— "I clicked Scan Outfit and..."</span></li>
+      <li><strong data-i18n="include_2">What actually happened</strong> <span data-i18n="include_2_ex">— error message, frozen screen, wrong result, etc.</span></li>
+      <li><strong data-i18n="include_3">Your device and browser</strong> <span data-i18n="include_3_ex">— e.g. "iPhone 15, Safari" or "Windows 11, Chrome 120"</span></li>
+      <li><strong data-i18n="include_4">A screenshot</strong> <span data-i18n="include_4_ex">if the issue is visual</span></li>
+      <li><strong data-i18n="include_5">Your purchase email</strong> <span data-i18n="include_5_ex">if it's a billing question</span></li>
     </ul>
 
-    <h2>Common Issues</h2>
+    <h2 data-i18n="common_issues">Common Issues</h2>
 
-    <h3>"My camera won't turn on"</h3>
-    <p>Check that you've granted camera permission to datescan.app in your browser settings. On iOS, you may also need to go to <em>Settings → Safari → Camera</em> and set it to "Ask" or "Allow". Make sure no other app is currently using your camera. Try reloading the page.</p>
+    <h3 data-i18n="issue_cam_title">"My camera won't turn on"</h3>
+    <p data-i18n-html="issue_cam_desc">Check that you've granted camera permission to datescan.app in your browser settings. On iOS, you may also need to go to <em>Settings → Safari → Camera</em> and set it to "Ask" or "Allow". Make sure no other app is currently using your camera. Try reloading the page.</p>
 
-    <h3>"The scan gave me a weird result"</h3>
-    <p>Lighting matters a lot. Face a window or a bright lamp — avoid backlighting yourself with a window behind you. Keep your face centered and about arm's length from the camera. If you're wearing a dark outfit against a dark background, the outfit color detection may struggle.</p>
+    <h3 data-i18n="issue_weird_title">"The scan gave me a weird result"</h3>
+    <p data-i18n="issue_weird_desc">Lighting matters a lot. Face a window or a bright lamp — avoid backlighting yourself with a window behind you. Keep your face centered and about arm's length from the camera. If you're wearing a dark outfit against a dark background, the outfit color detection may struggle.</p>
 
-    <h3>"I lost my Pro access after clearing cookies"</h3>
-    <p>Pro access on DateScan is tied to your browser's local storage. If you cleared site data, restore your purchase from the in-app Settings → "Restore purchases" button, or email <a href="mailto:info@datescan.app?subject=Restore%20purchase">info@datescan.app</a> with your Google Play order ID.</p>
+    <h3 data-i18n="issue_pro_title">"I lost my Pro access after clearing cookies"</h3>
+    <p data-i18n-html="issue_pro_desc">Pro access on DateScan is tied to your browser's local storage. If you cleared site data, restore your purchase from the in-app Settings → "Restore purchases" button, or email <a href="mailto:info@datescan.app?subject=Restore%20purchase">info@datescan.app</a> with your Google Play order ID.</p>
 
-    <h3>"I want a refund"</h3>
-    <p>See our <a href="/refund.html">Refund Policy</a> for details. Refunds on Google Play subscriptions are handled directly through your Play Store account within 48 hours of purchase.</p>
+    <h3 data-i18n="issue_refund_title">"I want a refund"</h3>
+    <p data-i18n-html="issue_refund_desc">See our <a href="refund.html">Refund Policy</a> for details. Refunds on Google Play subscriptions are handled directly through your Play Store account within 48 hours of purchase.</p>
 
-    <h3>"I have feedback or a feature idea"</h3>
-    <p>We love feedback. Seriously. Email us at <a href="mailto:info@datescan.app?subject=Feedback">info@datescan.app</a>. If your idea makes it into the product, we'll let you know.</p>
+    <h3 data-i18n="issue_feedback_title">"I have feedback or a feature idea"</h3>
+    <p data-i18n-html="issue_feedback_desc">We love feedback. Seriously. Email us at <a href="mailto:info@datescan.app?subject=Feedback">info@datescan.app</a>. If your idea makes it into the product, we'll let you know.</p>
 
-    <h3>"I'm a journalist / creator / partner"</h3>
-    <p>Email <a href="mailto:info@datescan.app?subject=Press%20%2F%20Partnership">info@datescan.app</a> with "Press" or "Partnership" in the subject and we'll route it to the right person.</p>
+    <h3 data-i18n="issue_press_title">"I'm a journalist / creator / partner"</h3>
+    <p data-i18n-html="issue_press_desc">Email <a href="mailto:info@datescan.app?subject=Press%20%2F%20Partnership">info@datescan.app</a> with "Press" or "Partnership" in the subject and we'll route it to the right person.</p>
 
-    <h2>Privacy Requests &amp; Data Deletion</h2>
-    <p>To delete your data, you have two options:</p>
+    <h2 data-i18n="privacy_title">Privacy Requests &amp; Data Deletion</h2>
+    <p data-i18n="privacy_desc">To delete your data, you have two options:</p>
     <ul>
-      <li><strong>Fastest — web form (no login required):</strong> visit <a href="/delete-account.html"><strong>datescan.app/delete-account.html</strong></a> and submit the form. We'll permanently delete your chat logs, moderation reports, and subscription records within 30 days.</li>
-      <li><strong>In-app wipe (local data only):</strong> Open the Privacy panel inside the app and tap "Erase everything on this device".</li>
+      <li><strong data-i18n="privacy_fast">Fastest — web form (no login required):</strong> <span data-i18n-html="privacy_fast_desc">email us at <a href="mailto:info@datescan.app?subject=Delete%20my%20data"><strong>info@datescan.app</strong></a> with "Delete my data" in the subject. We'll permanently delete your chat logs, moderation reports, and subscription records within 30 days.</span></li>
+      <li><strong data-i18n="privacy_inapp">In-app wipe (local data only):</strong> <span data-i18n="privacy_inapp_desc">Open the Privacy panel inside the app and tap "Erase everything on this device".</span></li>
     </ul>
-    <p>For other GDPR/UK GDPR/CCPA requests (access, rectification, portability, objection), use the same deletion form and specify your request in the "Reason" field. See our <a href="/privacy.html">Privacy Policy</a> for the full list of rights and how we handle them.</p>
+    <p data-i18n-html="privacy_gdpr">For other GDPR/UK GDPR/CCPA requests (access, rectification, portability, objection), email <a href="mailto:info@datescan.app">info@datescan.app</a> with your request. See our <a href="privacy.html">Privacy Policy</a> for the full list of rights and how we handle them.</p>
 
-    <h2>Reporting Harmful AI Content</h2>
-    <p>If the AI Style Coach gave you a response that is offensive, dangerous, sexual, or otherwise inappropriate, email <a href="mailto:info@datescan.app?subject=Report%20harmful%20AI%20content">info@datescan.app</a> with a screenshot of the message and a short description of what went wrong.</p>
-    <p>If you believe any content on DateScan may involve a minor or constitute illegal activity, use the subject line <strong>"URGENT — Safety"</strong> so we can escalate it to the top of the queue.</p>
+    <h2 data-i18n="harmful_title">Reporting Harmful AI Content</h2>
+    <p data-i18n-html="harmful_desc">If the AI Style Coach gave you a response that is offensive, dangerous, sexual, or otherwise inappropriate, email <a href="mailto:info@datescan.app?subject=Report%20harmful%20AI%20content">info@datescan.app</a> with a screenshot of the message and a short description of what went wrong.</p>
+    <p data-i18n-html="harmful_urgent">If you believe any content on DateScan may involve a minor or constitute illegal activity, use the subject line <strong>"URGENT — Safety"</strong> so we can escalate it to the top of the queue.</p>
 
-    <h2>Response Times</h2>
+    <h2 data-i18n="response_title">Response Times</h2>
     <ul>
-      <li><strong>Technical issues</strong> — usually within 1–2 business days</li>
-      <li><strong>Billing and refunds</strong> — within 3 business days</li>
-      <li><strong>Feature requests</strong> — we read all of them but may not reply individually</li>
-      <li><strong>Press inquiries</strong> — within 1 business day</li>
+      <li><strong data-i18n="response_tech">Technical issues</strong> <span data-i18n="response_tech_time">— usually within 1–2 business days</span></li>
+      <li><strong data-i18n="response_billing">Billing and refunds</strong> <span data-i18n="response_billing_time">— within 3 business days</span></li>
+      <li><strong data-i18n="response_feature">Feature requests</strong> <span data-i18n="response_feature_time">— we read all of them but may not reply individually</span></li>
+      <li><strong data-i18n="response_press">Press inquiries</strong> <span data-i18n="response_press_time">— within 1 business day</span></li>
     </ul>
 
-    <p class="mt-8 text-sm text-gray-500 italic">We don't have a phone number or a live chat — yet. Email at <a href="mailto:info@datescan.app">info@datescan.app</a> is the fastest way to reach us, and support is much faster when you include screenshots and a short description of what went wrong.</p>
+    <p class="mt-8 text-sm text-gray-500 italic" data-i18n-html="closing">We don't have a phone number or a live chat — yet. Email at <a href="mailto:info@datescan.app">info@datescan.app</a> is the fastest way to reach us, and support is much faster when you include screenshots and a short description of what went wrong.</p>
+
+    <!-- Impressum / Legal identification (Ekertv. 4.§, e-Commerce Dir. Art. 5) -->
+    <section class="mt-12 pt-8 border-t border-white/10">
+      <h2 data-i18n="impressum_title">Legal / Impressum</h2>
+      <div class="text-sm text-gray-400 space-y-1.5">
+        <p><strong class="text-white" data-i18n="impressum_operator">Operator:</strong> <span class="ds-n"></span></p>
+        <p><span class="ds-a"></span>, <span class="ds-c">Hungary</span></p>
+        <p><strong class="text-white" data-i18n="impressum_email_label">Email:</strong> <a href="mailto:info@datescan.app" class="text-brand-400 hover:text-brand-500 underline" data-i18n="impressum_email">info@datescan.app</a></p>
+        <p data-i18n="impressum_law">Applicable law: Hungary / European Union</p>
+        <p><span data-i18n="impressum_odr">EU Online Dispute Resolution:</span> <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener" class="text-brand-400 hover:text-brand-500 underline">ec.europa.eu/consumers/odr</a></p>
+      </div>
+    </section>
   </article>
 </main>
 
@@ -161,7 +886,7 @@
 
       <!-- Brand column -->
       <div class="col-span-2 lg:col-span-5">
-        <a href="/" class="inline-flex items-center gap-3 group mb-4">
+        <a href="index.html?desktop=1" class="inline-flex items-center gap-3 group mb-4">
           <div class="w-11 h-11 flex items-center justify-center shrink-0">
             <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-[0_0_8px_rgba(236,72,153,0.4)]">
               <defs>
@@ -180,40 +905,40 @@
           </div>
           <div class="flex flex-col">
             <span class="font-bold text-xl tracking-tight leading-none text-white group-hover:text-brand-400 transition-colors">DateScan<span class="text-brand-500">.</span></span>
-            <span class="text-[10px] text-gray-500 font-medium uppercase tracking-widest mt-1.5">Personal Style Coach</span>
+            <span class="text-[10px] text-gray-500 font-medium uppercase tracking-widest mt-1.5" data-i18n="subtitle_tag">Personal Style Coach</span>
           </div>
         </a>
-        <p class="text-sm text-gray-400 leading-relaxed max-w-sm mb-5">
+        <p class="text-sm text-gray-400 leading-relaxed max-w-sm mb-5" data-i18n="footer_desc">
           Your AI-powered wingman. Scan your outfit, get instant style and grooming feedback, and walk into your date with confidence.
         </p>
         <div class="inline-flex items-center gap-2 text-[10px] text-gray-500 px-3 py-1.5 rounded-full border border-white/10 bg-white/5">
           <svg class="w-3 h-3 text-brand-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-          <span>Camera scans run on-device</span>
+          <span data-i18n="footer_ondevice">Camera scans run on-device</span>
         </div>
       </div>
 
       <!-- Legal -->
       <div class="lg:col-span-2 lg:col-start-7">
-        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4">Legal</h3>
+        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4" data-i18n="footer_legal">Legal</h3>
         <ul class="space-y-2.5 text-sm">
-          <li><a href="/privacy.html" class="text-gray-400 hover:text-brand-400 transition-colors">Privacy Policy</a></li>
-          <li><a href="/terms.html" class="text-gray-400 hover:text-brand-400 transition-colors">Terms of Service</a></li>
-          <li><a href="/refund.html" class="text-gray-400 hover:text-brand-400 transition-colors">Refund Policy</a></li>
-          <li><a href="/delete-account.html" class="text-gray-400 hover:text-brand-400 transition-colors">Delete Account</a></li>
+          <li><a href="privacy.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_privacy">Privacy Policy</a></li>
+          <li><a href="terms.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_terms">Terms of Service</a></li>
+          <li><a href="refund.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_refund">Refund Policy</a></li>
+          <li><a href="delete-account.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_delete">Delete Account</a></li>
         </ul>
       </div>
 
       <!-- Support -->
       <div class="lg:col-span-2">
-        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4">Support</h3>
+        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4" data-i18n="footer_support">Support</h3>
         <ul class="space-y-2.5 text-sm">
-          <li><a href="/contact.html" class="text-gray-400 hover:text-brand-400 transition-colors">Contact Support</a></li>
+          <li><a href="contact.html" class="text-gray-400 hover:text-brand-400 transition-colors" data-i18n="footer_contact">Contact Support</a></li>
         </ul>
       </div>
 
       <!-- Social -->
       <div class="lg:col-span-3">
-        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4">Follow</h3>
+        <h3 class="text-[11px] font-bold text-white tracking-widest uppercase mb-4" data-i18n="footer_follow">Follow</h3>
         <div class="flex items-center gap-2.5">
           <a href="https://www.tiktok.com/@datescan" target="_blank" rel="noopener noreferrer" aria-label="DateScan on TikTok" class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/10 bg-white/5 text-gray-400 hover:text-white hover:border-brand-500/50 hover:bg-brand-500/10 hover:shadow-[0_0_16px_rgba(236,72,153,0.25)] transition-all">
             <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.321 5.562a5.124 5.124 0 0 1-.443-.258 6.228 6.228 0 0 1-1.137-.966c-.849-.971-1.166-1.956-1.282-2.645h.004C16.369 1.104 16.41.5 16.41.5h-3.31v12.789c0 .171 0 .341-.007.508l-.001.064-.003.085v.007a3.535 3.535 0 0 1-1.78 2.801 3.474 3.474 0 0 1-1.724.454c-1.933 0-3.502-1.579-3.502-3.524s1.569-3.524 3.502-3.524c.366 0 .718.057 1.049.162l.004-3.37a6.844 6.844 0 0 0-5.283 1.524A6.842 6.842 0 0 0 3 13.304c0 1.599.503 3.123 1.456 4.4a6.838 6.838 0 0 0 5.475 2.78c3.78 0 6.844-3.064 6.844-6.844V8.168a9.533 9.533 0 0 0 5.565 1.781V6.642c-1.175 0-2.218-.391-3.019-1.08Z"/></svg>
@@ -232,4 +957,68 @@
     </div>
 
     <!-- Bottom strip -->
-    <div class="border-t border-white/5 pt-6 flex flex-col lg:flex-row lg:items-c
+    <div class="border-t border-white/5 pt-6 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+      <p class="text-xs text-gray-600">&copy; 2025 <span data-i18n="footer_copy">DateScan. All rights reserved.</span></p>
+      <p class="text-xs text-gray-600">info@datescan.app</p>
+    </div>
+  </div>
+</footer>
+<!-- ── Haptic Feedback: vibration on interactive element press ── -->
+<script>
+(function(){
+  // Vibration API — works on Android/mobile, silently ignored on desktop/iOS
+  if (!navigator.vibrate && !navigator.webkitVibrate) return;
+  var vibrate = navigator.vibrate || navigator.webkitVibrate;
+
+  // Respect reduced-motion preference
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  function hapticTap(ms) {
+    try { vibrate.call(navigator, ms); } catch(e) {}
+  }
+
+  document.addEventListener('pointerdown', function(e) {
+    var el = e.target.closest(
+      'button, a, [role="button"], input[type="submit"], input[type="button"], input[type="checkbox"], label.checkbox-row, .btn-danger, [data-haptic]'
+    );
+    if (!el) return;
+    // Skip disabled elements
+    if (el.disabled || el.getAttribute('aria-disabled') === 'true') return;
+
+    // Intensity tiers
+    if (el.closest('.btn-danger') || el.matches('[data-haptic="heavy"]')) {
+      hapticTap(25);          // destructive / important actions
+    } else if (el.matches('a[href]') && !el.matches('[role="button"]')) {
+      hapticTap(5);           // light tap for plain links
+    } else {
+      hapticTap(10);          // standard tap for buttons / controls
+    }
+  }, { passive: true });
+})();
+</script>
+
+
+<!-- ── Anti-scrape: operator identity assembled client-side ── -->
+<script>
+(function(){
+  function _f(){
+    document.querySelectorAll('.ds-n').forEach(function(el){
+      el.textContent="Pet"+"or"+" P\u00e9"+"ter";
+    });
+    document.querySelectorAll('.ds-a').forEach(function(el){
+      el.textContent="22"+"33 Ec"+"ser, N\u00e1d"+"as B\u00e9"+"la ut"+"ca 1"+"0";
+    });
+    // Country adapts to page language
+    var lang = document.documentElement.lang || 'en';
+    var country = {en:'Hungary', hu:'Magyarország', de:'Ungarn'}[lang] || 'Hungary';
+    document.querySelectorAll('.ds-c').forEach(function(el){
+      el.textContent = country;
+    });
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',_f);}else{_f();}
+  // Re-run after i18n applies (i18n may clear elements)
+  setTimeout(_f, 200);
+})();
+</script>
+</body>
+</html>
