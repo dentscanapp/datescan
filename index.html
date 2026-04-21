@@ -20611,6 +20611,55 @@ async function handlePayment(plan) {
     try {
       const service = await window.getDigitalGoodsService("https://play.google.com/billing");
 
+      // ── Recovery: check for existing unacknowledged purchases ──
+      // Google Play will reject a new purchase with "already own this"
+      // if a previous purchase was never acknowledged (e.g. verify
+      // call failed, app crashed, network dropped).  We check first
+      // and verify/acknowledge any orphaned tokens.
+      try {
+        const existing = await service.listPurchases();
+        console.log("[DateScan] existing purchases:", existing);
+        if (existing && existing.length > 0) {
+          for (const purchase of existing) {
+            const token = purchase.purchaseToken;
+            if (!token) continue;
+            console.log("[DateScan] recovering unacknowledged purchase:", purchase.itemId, token);
+            showVerifyingOverlay();
+            setVerifyingMessage(typeof window.t === 'function' ? window.t('verifying_gpay') : 'Verifying your Google Play purchase…', false, 'verifying_gpay');
+
+            const userId = getOrCreateUserId();
+            try {
+              const vRes = await fetch(`${WORKER_BASE_URL}/verify`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  purchaseToken: token,
+                  sku: purchase.itemId || productId,
+                  plan: plan,
+                  userId: userId
+                })
+              });
+              const vResult = await vRes.json();
+              console.log("[DateScan] recovery /verify:", vResult);
+              if (vResult && vResult.success) {
+                setProUser();
+                localStorage.setItem("datescan.proPlan", plan);
+                try { updateUsageBadge(); } catch(e) {}
+                setVerifyingMessage(typeof window.t === 'function' ? window.t('payment_confirmed_welcome') : '✓ Payment confirmed! Welcome to Pro.', false, 'payment_confirmed_welcome');
+                window.dsPrivacy?.showToast?.(typeof window.t === 'function' ? window.t('payment_confirmed_welcome') : '🎉 Welcome to Pro!', 3000);
+                setTimeout(() => { hideVerifyingOverlay(); location.reload(); }, 1500);
+                return; // recovered — no need for new purchase
+              }
+            } catch(re) {
+              console.warn("[DateScan] recovery verify failed:", re);
+            }
+            hideVerifyingOverlay();
+          }
+        }
+      } catch(lpe) {
+        console.warn("[DateScan] listPurchases not available:", lpe);
+      }
+
       const paymentMethods = [{
         supportedMethods: "https://play.google.com/billing",
         data: { sku: productId }
