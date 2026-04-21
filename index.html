@@ -3254,6 +3254,65 @@ if (window.__DS_IS_ANDROID_APP) {
   .smart-shop-loading {
     animation: smartShopPulse 1.5s ease-in-out infinite;
   }
+
+  /* ===== Color Harmony Analyzer ===== */
+  .ch-color-dot {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    border: 2px solid rgba(255,255,255,0.1);
+    cursor: pointer;
+    transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+    flex-shrink: 0;
+  }
+  .ch-color-dot:hover {
+    transform: scale(1.15);
+    border-color: rgba(255,255,255,0.3);
+  }
+  .ch-color-dot.is-selected {
+    border-color: #60a5fa;
+    box-shadow: 0 0 12px 2px rgba(96,165,250,0.35);
+    transform: scale(1.1);
+  }
+  .ch-selected-swatch {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    border: 2px solid rgba(255,255,255,0.15);
+    position: relative;
+    flex-shrink: 0;
+  }
+  .ch-selected-swatch .ch-remove {
+    position: absolute; top: -6px; right: -6px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: rgba(239,68,68,0.9);
+    color: #fff;
+    font-size: 9px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    border: 1px solid rgba(0,0,0,0.3);
+    line-height: 1;
+  }
+  .ch-match-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 0.75rem;
+    padding: 0.6rem;
+    display: flex; align-items: center; gap: 0.6rem;
+    transition: border-color 0.2s;
+  }
+  .ch-match-card:hover {
+    border-color: rgba(96,165,250,0.3);
+  }
+  .ch-match-thumb {
+    width: 44px; height: 44px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.05);
+  }
+  .ch-score-ring {
+    width: 100%; height: 100%;
+  }
 </style>
 
 <!-- ===== AGE GATE (18+) ===== -->
@@ -4511,6 +4570,10 @@ if (window.__DS_IS_ANDROID_APP) {
                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                <span data-i18n="closet_smart_shop">Shopping List</span>
             </button>
+            <button id="colorHarmonyBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-500/30 text-blue-300 hover:from-blue-500/30 hover:to-cyan-500/30 active:scale-[0.98] transition" title="Color Harmony Analyzer — check if your colors match">
+               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 2a10 10 0 0 0 0 20 10 10 0 0 0 0-20z" stroke-dasharray="3 3"/></svg>
+               <span data-i18n="closet_color_harmony">Colors</span>
+            </button>
             <button id="closetUploadBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-[0.98] transition">
                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/><circle cx="9" cy="10" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.814.014L6 21"/><path d="M19 2v6"/><path d="M22 5h-6"/></svg>
                <span data-i18n="closet_add_item">Add Item</span>
@@ -4855,6 +4918,73 @@ if (window.__DS_IS_ANDROID_APP) {
             <svg class="w-6 h-6 text-brand-400" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           </div>
           <p class="text-sm text-gray-400" data-i18n="smart_shop_brands_lock_desc">Unlock brand recommendations tailored to your style profile with PRO.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== COLOR HARMONY ANALYZER MODAL ===== -->
+  <div id="colorHarmonyModal" class="hidden fixed inset-0 z-[115] bg-black/85 backdrop-blur-md flex items-center justify-center p-4" style="z-index:120">
+    <div class="premium-glass rounded-3xl border border-blue-500/20 max-w-lg w-full p-6 sm:p-7 relative max-h-[92vh] overflow-y-auto">
+      <button id="colorHarmonyClose" type="button" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition" aria-label="Close">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-500/20 to-cyan-500/20 border border-blue-500/30 flex items-center justify-center mb-4 mx-auto">
+        <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 2a10 10 0 0 0 0 20 10 10 0 0 0 0-20z" stroke-dasharray="3 3"/></svg>
+      </div>
+      <h3 class="font-serif text-2xl font-semibold text-white text-center mb-1" data-i18n="color_harmony_title">Color Harmony Analyzer</h3>
+      <p data-i18n="color_harmony_subtitle" class="text-sm text-gray-400 text-center mb-5 leading-relaxed">Check if your clothing colors work together and find matching pieces.</p>
+
+      <!-- Color pick area — select from closet or pick custom -->
+      <div class="mb-5">
+        <div class="text-[10px] uppercase tracking-widest text-blue-400 font-bold mb-2" data-i18n="color_harmony_pick_header">Pick Colors to Compare</div>
+        <div id="colorHarmonyPickGrid" class="flex flex-wrap gap-2 mb-3">
+          <!-- Dynamically populated color dots from closet -->
+        </div>
+        <button id="colorHarmonyClearPick" type="button" class="text-[11px] font-bold text-gray-400 hover:text-white transition" data-i18n="color_harmony_clear">Clear selection</button>
+      </div>
+
+      <!-- Selected colors display -->
+      <div class="mb-5">
+        <div class="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-2" data-i18n="color_harmony_selected">Selected Colors</div>
+        <div id="colorHarmonySelected" class="flex gap-2 items-center min-h-[40px]">
+          <span class="text-xs text-gray-500 italic" data-i18n="color_harmony_none_selected">No colors selected yet</span>
+        </div>
+      </div>
+
+      <!-- Harmony Score -->
+      <div id="colorHarmonyResult" class="hidden mb-5">
+        <div class="flex items-center justify-between mb-2">
+          <div class="text-[10px] uppercase tracking-widest text-blue-400 font-bold" data-i18n="color_harmony_score_label">Harmony Score</div>
+          <div id="colorHarmonyScoreValue" class="text-lg font-bold text-white">0%</div>
+        </div>
+        <div class="w-full h-2.5 rounded-full bg-white/10 overflow-hidden mb-3">
+          <div id="colorHarmonyScoreBar" class="h-full rounded-full transition-all duration-700 ease-out" style="width:0%"></div>
+        </div>
+        <div id="colorHarmonyScheme" class="text-xs font-bold text-gray-300 mb-3"></div>
+
+        <!-- Color wheel visualization -->
+        <div class="flex justify-center mb-4">
+          <svg id="colorHarmonyWheel" viewBox="0 0 200 200" class="w-48 h-48"></svg>
+        </div>
+      </div>
+
+      <!-- "What matches?" suggestions -->
+      <div id="colorHarmonyMatches" class="hidden">
+        <div class="text-[10px] uppercase tracking-widest text-blue-400 font-bold mb-2" data-i18n="color_harmony_matches_header">Matches From Your Closet</div>
+        <div id="colorHarmonyMatchesGrid" class="grid grid-cols-2 gap-2">
+          <!-- Dynamically populated -->
+        </div>
+        <div id="colorHarmonyMatchesEmpty" class="hidden text-center py-4">
+          <p class="text-xs text-gray-500" data-i18n="color_harmony_no_matches">No matching items found in your closet.</p>
+        </div>
+      </div>
+
+      <!-- PRO hint -->
+      <div class="mt-5 pt-4 border-t border-white/5">
+        <div class="flex items-center gap-2 text-[11px] text-gray-500">
+          <span class="px-1.5 py-0.5 rounded text-[8px] font-bold bg-gradient-to-r from-brand-500 to-purple-500 text-white uppercase tracking-wider">PRO</span>
+          <span data-i18n="color_harmony_pro_hint">Full palette analysis & colorblind mode available with PRO</span>
         </div>
       </div>
     </div>
@@ -9917,7 +10047,35 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       smart_shop_brand_nastygal: 'Bold retro fashion',
       smart_shop_brand_arcteryx: 'Technical outdoor performance',
       smart_shop_brand_stone: 'Innovative fabric research',
-      smart_shop_brand_salomon: 'Trail-to-street footwear'
+      smart_shop_brand_salomon: 'Trail-to-street footwear',
+
+      // Color Harmony Analyzer
+      closet_color_harmony: 'Colors',
+      color_harmony_title: 'Color Harmony Analyzer',
+      color_harmony_subtitle: 'Check if your clothing colors work together and find matching pieces.',
+      color_harmony_pick_header: 'Pick Colors to Compare',
+      color_harmony_clear: 'Clear selection',
+      color_harmony_selected: 'Selected Colors',
+      color_harmony_none_selected: 'No colors selected yet',
+      color_harmony_score_label: 'Harmony Score',
+      color_harmony_pick_two: 'Pick at least 2 colors',
+      color_harmony_scheme: 'Color Scheme',
+      color_harmony_single: 'Single color',
+      color_harmony_mono: 'Monochromatic',
+      color_harmony_complementary: 'Complementary',
+      color_harmony_analogous: 'Analogous',
+      color_harmony_split: 'Split-Complementary',
+      color_harmony_triadic: 'Triadic',
+      color_harmony_neutral: 'Neutral / Achromatic',
+      color_harmony_free: 'Free combination',
+      color_harmony_matches_header: 'Matches From Your Closet',
+      color_harmony_no_matches: 'No matching items found in your closet.',
+      color_harmony_great_match: 'Great match',
+      color_harmony_good_match: 'Good match',
+      color_harmony_ok_match: 'Possible match',
+      color_harmony_item: 'Item',
+      color_harmony_max_colors: 'Maximum 5 colors can be compared at once',
+      color_harmony_pro_hint: 'Full palette analysis & colorblind mode available with PRO'
     },
     hu: {
       nav_closet: 'Szekrény',
@@ -11584,7 +11742,35 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       smart_shop_brand_nastygal: 'Merész retro divat',
       smart_shop_brand_arcteryx: 'Technikai outdoor teljesítmény',
       smart_shop_brand_stone: 'Innovatív anyagkutatás',
-      smart_shop_brand_salomon: 'Terep-utcai lábbeli'
+      smart_shop_brand_salomon: 'Terep-utcai lábbeli',
+
+      // Color Harmony Analyzer
+      closet_color_harmony: 'Színek',
+      color_harmony_title: 'Színharmonia Elemző',
+      color_harmony_subtitle: 'Ellenőrizd, hogy a ruháid színei összeillenek-e, és találj passzoló darabokat.',
+      color_harmony_pick_header: 'Válassz színeket az összehasonlításhoz',
+      color_harmony_clear: 'Kijelölés törlése',
+      color_harmony_selected: 'Kiválasztott színek',
+      color_harmony_none_selected: 'Még nincs szín kiválasztva',
+      color_harmony_score_label: 'Harmonia pontszám',
+      color_harmony_pick_two: 'Válassz legalább 2 színt',
+      color_harmony_scheme: 'Színséma',
+      color_harmony_single: 'Egy szín',
+      color_harmony_mono: 'Monokróm',
+      color_harmony_complementary: 'Komplementer',
+      color_harmony_analogous: 'Analóg',
+      color_harmony_split: 'Osztott-komplementer',
+      color_harmony_triadic: 'Triád',
+      color_harmony_neutral: 'Semleges / Akromatikus',
+      color_harmony_free: 'Szabad kombináció',
+      color_harmony_matches_header: 'Passzoló darabok a szekrényből',
+      color_harmony_no_matches: 'Nem található passzoló darab a szekrényedben.',
+      color_harmony_great_match: 'Kiváló egyezés',
+      color_harmony_good_match: 'Jó egyezés',
+      color_harmony_ok_match: 'Lehetséges egyezés',
+      color_harmony_item: 'Darab',
+      color_harmony_max_colors: 'Egyszerre legfeljebb 5 szín hasonlítható össze',
+      color_harmony_pro_hint: 'Teljes paletta elemzés és színvak mód elérhető PRO-val'
     },
     de: {
       nav_closet: 'Schrank',
@@ -13251,7 +13437,35 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       smart_shop_brand_nastygal: 'Mutige Retro-Mode',
       smart_shop_brand_arcteryx: 'Technische Outdoor-Performance',
       smart_shop_brand_stone: 'Innovative Stoffforschung',
-      smart_shop_brand_salomon: 'Trail-to-Street-Schuhwerk'
+      smart_shop_brand_salomon: 'Trail-to-Street-Schuhwerk',
+
+      // Color Harmony Analyzer
+      closet_color_harmony: 'Farben',
+      color_harmony_title: 'Farbharmonie-Analyse',
+      color_harmony_subtitle: 'Prüfe, ob deine Kleidungsfarben zusammenpassen und finde passende Stücke.',
+      color_harmony_pick_header: 'Wähle Farben zum Vergleichen',
+      color_harmony_clear: 'Auswahl löschen',
+      color_harmony_selected: 'Ausgewählte Farben',
+      color_harmony_none_selected: 'Noch keine Farben ausgewählt',
+      color_harmony_score_label: 'Harmonie-Score',
+      color_harmony_pick_two: 'Wähle mindestens 2 Farben',
+      color_harmony_scheme: 'Farbschema',
+      color_harmony_single: 'Einzelne Farbe',
+      color_harmony_mono: 'Monochromatisch',
+      color_harmony_complementary: 'Komplementär',
+      color_harmony_analogous: 'Analog',
+      color_harmony_split: 'Geteilt-Komplementär',
+      color_harmony_triadic: 'Triadisch',
+      color_harmony_neutral: 'Neutral / Achromatisch',
+      color_harmony_free: 'Freie Kombination',
+      color_harmony_matches_header: 'Passende Stücke aus deinem Schrank',
+      color_harmony_no_matches: 'Keine passenden Stücke in deinem Schrank gefunden.',
+      color_harmony_great_match: 'Hervorragende Übereinstimmung',
+      color_harmony_good_match: 'Gute Übereinstimmung',
+      color_harmony_ok_match: 'Mögliche Übereinstimmung',
+      color_harmony_item: 'Stück',
+      color_harmony_max_colors: 'Maximal 5 Farben können gleichzeitig verglichen werden',
+      color_harmony_pro_hint: 'Vollständige Palettenanalyse und Farbblindmodus mit PRO verfügbar'
     },
   };
 
@@ -16544,6 +16758,561 @@ window.saveCurrentOutfit = function() {
     renderBudgetTab();
     renderBrandsTab();
   };
+})();
+
+// ============================================================
+// COLOR HARMONY ANALYZER — compares clothing colors, calculates
+// harmony score, suggests matching items from the closet.
+// Uses HSL color space for perceptual accuracy.
+// ============================================================
+(function () {
+  var t = function(k, v) { return typeof window.t === 'function' ? window.t(k, v) : k; };
+
+  // --- Color data from the app ---
+  var COLOR_MAP = {
+    black:    { hex: '#1a1a1a', nameKey: 'color_black' },
+    white:    { hex: '#f5f5f5', nameKey: 'color_white' },
+    navy:     { hex: '#1e3a5f', nameKey: 'color_navy' },
+    charcoal: { hex: '#36454f', nameKey: 'color_charcoal' },
+    olive:    { hex: '#556b2f', nameKey: 'color_olive' },
+    burgundy: { hex: '#800020', nameKey: 'color_burgundy' },
+    camel:    { hex: '#c19a6b', nameKey: 'color_camel' },
+    beige:    { hex: '#d4c5a9', nameKey: 'color_beige' },
+    denim:    { hex: '#4a6fa5', nameKey: 'color_denim' },
+    forest:   { hex: '#228b22', nameKey: 'color_forest' },
+    rust:     { hex: '#b7410e', nameKey: 'color_rust' },
+    slate:    { hex: '#708090', nameKey: 'color_slate' },
+    cream:    { hex: '#fffdd0', nameKey: 'color_cream' },
+    red:      { hex: '#c41e3a', nameKey: 'color_red' },
+    teal:     { hex: '#008080', nameKey: 'color_teal' },
+    gray:     { hex: '#808080', nameKey: 'color_gray' },
+    brown:    { hex: '#8B4513', nameKey: 'color_brown' },
+    blue:     { hex: '#3b82f6', nameKey: 'color_blue' },
+    green:    { hex: '#22c55e', nameKey: 'color_green' },
+    yellow:   { hex: '#eab308', nameKey: 'color_yellow' },
+    purple:   { hex: '#a855f7', nameKey: 'color_purple' },
+    orange:   { hex: '#f97316', nameKey: 'color_orange' },
+    pink:     { hex: '#ec4899', nameKey: 'color_pink' }
+  };
+
+  // --- HSL conversion utilities ---
+  function hexToRgb(hex) {
+    hex = hex.replace('#', '');
+    if (hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+    var r = parseInt(hex.substring(0,2), 16) / 255;
+    var g = parseInt(hex.substring(2,4), 16) / 255;
+    var b = parseInt(hex.substring(4,6), 16) / 255;
+    return [r, g, b];
+  }
+
+  function rgbToHsl(r, g, b) {
+    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    var h, s, l = (max + min) / 2;
+    if (max === min) {
+      h = s = 0;
+    } else {
+      var d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+        case g: h = ((b - r) / d + 2) / 6; break;
+        case b: h = ((r - g) / d + 4) / 6; break;
+      }
+    }
+    return [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)];
+  }
+
+  function hexToHsl(hex) {
+    var rgb = hexToRgb(hex);
+    return rgbToHsl(rgb[0], rgb[1], rgb[2]);
+  }
+
+  // --- Harmony calculations ---
+  // Calculate the angular distance between two hues (0-180)
+  function hueDistance(h1, h2) {
+    var d = Math.abs(h1 - h2);
+    return d > 180 ? 360 - d : d;
+  }
+
+  // Determine the best matching color scheme for a set of hues
+  function detectScheme(hues) {
+    if (hues.length < 2) return { type: 'single', score: 50, label: t('color_harmony_single') };
+
+    // Check each pair for harmony types
+    var bestType = 'free';
+    var bestScore = 0;
+    var bestLabel = t('color_harmony_free');
+
+    // Monochromatic: all hues within 15°
+    var monoRange = hues.length > 1 ? Math.max.apply(null, hues) - Math.min.apply(null, hues) : 0;
+    if (hues.length > 1) {
+      var adjustedRange = monoRange;
+      if (adjustedRange > 180) adjustedRange = 360 - adjustedRange;
+      if (adjustedRange <= 30) {
+        var score = 85 + Math.round((30 - adjustedRange) / 30 * 15);
+        if (score > bestScore) { bestScore = score; bestType = 'monochromatic'; bestLabel = t('color_harmony_mono'); }
+      }
+    }
+
+    // Check pairs
+    for (var i = 0; i < hues.length; i++) {
+      for (var j = i + 1; j < hues.length; j++) {
+        var dist = hueDistance(hues[i], hues[j]);
+
+        // Complementary: ~180° apart (±25°)
+        if (dist >= 155 && dist <= 205) {
+          var score = 90 - Math.abs(dist - 180) / 25 * 15;
+          if (score > bestScore) { bestScore = Math.round(score); bestType = 'complementary'; bestLabel = t('color_harmony_complementary'); }
+        }
+        // Analogous: 15-45° apart
+        else if (dist >= 15 && dist <= 45) {
+          var score = 80 - Math.abs(dist - 30) / 15 * 10;
+          if (score > bestScore) { bestScore = Math.round(score); bestType = 'analogous'; bestLabel = t('color_harmony_analogous'); }
+        }
+        // Split-complementary: ~150° or ~210°
+        else if ((dist >= 130 && dist <= 170) || (dist >= 190 && dist <= 230)) {
+          var score = 75;
+          if (score > bestScore) { bestScore = score; bestType = 'split_complementary'; bestLabel = t('color_harmony_split'); }
+        }
+        // Triadic: ~120° apart
+        else if (dist >= 100 && dist <= 140) {
+          var score = 82 - Math.abs(dist - 120) / 20 * 12;
+          if (score > bestScore) { bestScore = Math.round(score); bestType = 'triadic'; bestLabel = t('color_harmony_triadic'); }
+        }
+      }
+    }
+
+    // For 3+ colors, check for triadic triangle
+    if (hues.length >= 3) {
+      var sorted = hues.slice().sort(function(a,b){return a-b;});
+      var gaps = [];
+      for (var i = 1; i < sorted.length; i++) gaps.push(sorted[i] - sorted[i-1]);
+      gaps.push((360 - sorted[sorted.length-1]) + sorted[0]);
+      var maxGap = Math.max.apply(null, gaps);
+      var minGap = Math.min.apply(null, gaps);
+      if (maxGap - minGap < 40 && hues.length === 3) {
+        var avgGap = 360 / 3;
+        var score = 88 - (maxGap - minGap) / 40 * 10;
+        if (score > bestScore) { bestScore = Math.round(score); bestType = 'triadic'; bestLabel = t('color_harmony_triadic'); }
+      }
+    }
+
+    // Neutral/achromatic bonus: if most colors are low saturation
+    if (bestScore === 0) {
+      bestScore = 55;
+      bestType = 'free';
+      bestLabel = t('color_harmony_free');
+    }
+
+    return { type: bestType, score: Math.min(99, bestScore), label: bestLabel };
+  }
+
+  // Calculate harmony for a set of colors (full scoring with saturation/lightness)
+  function calculateHarmony(selectedColors) {
+    if (selectedColors.length < 2) return { score: 0, scheme: t('color_harmony_pick_two'), type: 'none' };
+
+    var hslData = selectedColors.map(function(c) { return hexToHsl(c.hex); });
+    var hues = hslData.map(function(h) { return h[0]; });
+    var sats = hslData.map(function(h) { return h[1]; });
+    var lights = hslData.map(function(h) { return h[2]; });
+
+    var schemeResult = detectScheme(hues);
+    var baseScore = schemeResult.score;
+
+    // Adjust for saturation harmony
+    var avgSat = sats.reduce(function(a,b){return a+b;},0) / sats.length;
+    var satVariance = sats.reduce(function(a,b){return a + Math.pow(b - avgSat, 2);},0) / sats.length;
+    var satPenalty = Math.min(10, satVariance / 200 * 10);
+
+    // Adjust for lightness harmony
+    var avgLight = lights.reduce(function(a,b){return a+b;},0) / lights.length;
+    var lightVariance = lights.reduce(function(a,b){return a + Math.pow(b - avgLight, 2);},0) / lights.length;
+    var lightPenalty = Math.min(10, lightVariance / 300 * 10);
+
+    // Achromatic bonus: if all colors are low-saturation neutrals, they always go together
+    var allNeutral = sats.every(function(s) { return s < 15; });
+    if (allNeutral) {
+      baseScore = 92;
+      schemeResult.label = t('color_harmony_neutral');
+      schemeResult.type = 'neutral';
+      satPenalty = 0;
+      lightPenalty = 0;
+    }
+
+    // High contrast bonus for complementary
+    if (schemeResult.type === 'complementary') {
+      var lightDiff = Math.abs(lights[0] - lights[1]);
+      if (lightDiff > 20) baseScore = Math.min(99, baseScore + 3);
+    }
+
+    var finalScore = Math.max(10, Math.round(baseScore - satPenalty - lightPenalty));
+
+    return {
+      score: finalScore,
+      scheme: schemeResult.label,
+      type: schemeResult.type,
+      hues: hues,
+      hslData: hslData
+    };
+  }
+
+  // Find matching items from closet for a given color
+  function findMatchingItems(hex, excludeIds) {
+    var targetHsl = hexToHsl(hex);
+    var targetHue = targetHsl[0];
+    var targetSat = targetHsl[1];
+    var targetLight = targetHsl[2];
+    var isNeutral = targetSat < 15;
+
+    var allItems = (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits : [];
+    var matches = [];
+
+    allItems.forEach(function(item) {
+      if (excludeIds && excludeIds.indexOf(item.id) !== -1) return;
+      var itemHex = item.colorHex || '#888';
+      var itemHsl = hexToHsl(itemHex);
+      var itemHue = itemHsl[0];
+      var itemSat = itemHsl[1];
+      var itemLight = itemHsl[2];
+      var itemIsNeutral = itemSat < 15;
+
+      var score = 0;
+
+      // Neutral items match everything
+      if (isNeutral && itemIsNeutral) { score = 75; }
+      else if (isNeutral || itemIsNeutral) { score = 70; }
+      else {
+        // Hue-based scoring
+        var dist = hueDistance(targetHue, itemHue);
+        if (dist <= 30) score = 80;       // Analogous
+        else if (dist >= 150 && dist <= 210) score = 85; // Complementary
+        else if (dist >= 100 && dist <= 140) score = 70; // Triadic
+        else if (dist >= 40 && dist <= 70) score = 55;   // Some contrast
+        else score = 30;                                    // Clashing
+      }
+
+      // Lightness bonus
+      var lightDiff = Math.abs(targetLight - itemLight);
+      if (lightDiff > 20 && lightDiff < 60) score += 5;
+
+      if (score >= 50) {
+        matches.push({ item: item, matchScore: score, colorHex: itemHex, colorName: item.color || '' });
+      }
+    });
+
+    matches.sort(function(a,b) { return b.matchScore - a.matchScore; });
+    return matches.slice(0, 8);
+  }
+
+  // --- Build the color wheel SVG ---
+  function buildColorWheel(selectedHslData, schemeType) {
+    var svg = document.getElementById('colorHarmonyWheel');
+    if (!svg) return;
+
+    var cx = 100, cy = 100, outerR = 88, innerR = 60;
+    var segments = 36;
+    var html = '';
+
+    // Draw color wheel segments
+    for (var i = 0; i < segments; i++) {
+      var angle = (i / segments) * 360;
+      var nextAngle = ((i + 1) / segments) * 360;
+      var rad = angle * Math.PI / 180;
+      var nextRad = nextAngle * Math.PI / 180;
+
+      var x1 = cx + outerR * Math.cos(rad);
+      var y1 = cy + outerR * Math.sin(rad);
+      var x2 = cx + outerR * Math.cos(nextRad);
+      var y2 = cy + outerR * Math.sin(nextRad);
+      var x3 = cx + innerR * Math.cos(nextRad);
+      var y3 = cy + innerR * Math.sin(nextRad);
+      var x4 = cx + innerR * Math.cos(rad);
+      var y4 = cy + innerR * Math.sin(rad);
+
+      var hue = Math.round(angle);
+      html += '<polygon points="' + x1 + ',' + y1 + ' ' + x2 + ',' + y2 + ' ' + x3 + ',' + y3 + ' ' + x4 + ',' + y4 + '" fill="hsl(' + hue + ',75%,55%)" stroke="rgba(0,0,0,0.1)" stroke-width="0.5"/>';
+    }
+
+    // Center circle
+    html += '<circle cx="' + cx + '" cy="' + cy + '" r="' + (innerR - 4) + '" fill="rgba(9,9,11,0.9)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>';
+
+    // Draw selected color markers and connection lines
+    if (selectedHslData && selectedHslData.length >= 2) {
+      var markerR = outerR + 6;
+      var points = [];
+
+      selectedHslData.forEach(function(hsl, idx) {
+        var hue = hsl[0];
+        var rad = (hue - 90) * Math.PI / 180;
+        var px = cx + markerR * Math.cos(rad);
+        var py = cy + markerR * Math.sin(rad);
+        points.push({ x: px, y: py, hue: hue });
+
+        // Draw marker line from center to edge
+        var lineR = outerR - 2;
+        var lx = cx + lineR * Math.cos(rad);
+        var ly = cy + lineR * Math.sin(rad);
+        html += '<line x1="' + cx + '" y1="' + cy + '" x2="' + lx + '" y2="' + ly + '" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-dasharray="3 2"/>';
+
+        // Draw marker dot
+        html += '<circle cx="' + px + '" cy="' + py + '" r="7" fill="hsl(' + hue + ',' + hsl[1] + '%,' + hsl[2] + '%)" stroke="white" stroke-width="2.5"/>';
+      });
+
+      // Draw connecting lines between selected colors
+      if (points.length >= 2) {
+        for (var i = 0; i < points.length; i++) {
+          var next = (i + 1) % points.length;
+          html += '<line x1="' + points[i].x + '" y1="' + points[i].y + '" x2="' + points[next].x + '" y2="' + points[next].y + '" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>';
+        }
+
+        // Fill the polygon if 3+ colors
+        if (points.length >= 3) {
+          var polyPoints = points.map(function(p) { return p.x + ',' + p.y; }).join(' ');
+          html += '<polygon points="' + polyPoints + '" fill="rgba(255,255,255,0.06)" stroke="none"/>';
+        }
+      }
+    } else if (selectedHslData && selectedHslData.length === 1) {
+      var hsl = selectedHslData[0];
+      var rad = (hsl[0] - 90) * Math.PI / 180;
+      var lx = cx + (outerR - 2) * Math.cos(rad);
+      var ly = cy + (outerR - 2) * Math.sin(rad);
+      var px = cx + (outerR + 6) * Math.cos(rad);
+      var py = cy + (outerR + 6) * Math.sin(rad);
+      html += '<line x1="' + cx + '" y1="' + cy + '" x2="' + lx + '" y2="' + ly + '" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-dasharray="3 2"/>';
+      html += '<circle cx="' + px + '" cy="' + py + '" r="7" fill="hsl(' + hsl[0] + ',' + hsl[1] + '%,' + hsl[2] + '%)" stroke="white" stroke-width="2.5"/>';
+    }
+
+    svg.innerHTML = html;
+  }
+
+  // --- State ---
+  var selectedColors = []; // { hex, colorId, name }
+
+  // --- DOM ---
+  var modal = document.getElementById('colorHarmonyModal');
+  var openBtn = document.getElementById('colorHarmonyBtn');
+  var closeBtn = document.getElementById('colorHarmonyClose');
+
+  if (!modal || !openBtn) return;
+
+  // Move modal to <body>
+  if (modal.parentElement !== document.body) {
+    document.body.appendChild(modal);
+  }
+
+  // --- Build the color picker grid from closet colors ---
+  function buildColorPicker() {
+    var grid = document.getElementById('colorHarmonyPickGrid');
+    if (!grid) return;
+
+    // Gather unique colors from the closet
+    var allItems = (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits : [];
+    var seenHex = {};
+    var uniqueColors = [];
+
+    allItems.forEach(function(item) {
+      var hex = item.colorHex || '#888';
+      var id = item.colorId || '';
+      var name = item.color || '';
+      var key = hex.toLowerCase();
+      if (!seenHex[key]) {
+        seenHex[key] = true;
+        // Try to find the colorId in COLOR_MAP
+        if (!id) {
+          var found = Object.keys(COLOR_MAP).find(function(k) {
+            return COLOR_MAP[k].hex.toLowerCase() === key;
+          });
+          if (found) id = found;
+        }
+        uniqueColors.push({ hex: hex, colorId: id, name: name });
+      }
+    });
+
+    // If closet is empty, show the full palette
+    if (uniqueColors.length === 0) {
+      Object.keys(COLOR_MAP).forEach(function(id) {
+        uniqueColors.push({ hex: COLOR_MAP[id].hex, colorId: id, name: t(COLOR_MAP[id].nameKey) });
+      });
+    }
+
+    var html = '';
+    uniqueColors.forEach(function(c) {
+      var isSelected = selectedColors.some(function(s) { return s.hex.toLowerCase() === c.hex.toLowerCase(); });
+      html += '<button type="button" class="ch-color-dot' + (isSelected ? ' is-selected' : '') + '" data-ch-hex="' + c.hex + '" data-ch-id="' + (c.colorId || '') + '" data-ch-name="' + (c.name || '') + '" style="background:' + c.hex + '" title="' + (c.name || c.hex) + '"></button>';
+    });
+    grid.innerHTML = html;
+  }
+
+  // --- Render selected colors ---
+  function renderSelected() {
+    var container = document.getElementById('colorHarmonySelected');
+    if (!container) return;
+
+    if (selectedColors.length === 0) {
+      container.innerHTML = '<span class="text-xs text-gray-500 italic">' + t('color_harmony_none_selected') + '</span>';
+      return;
+    }
+
+    var html = '';
+    selectedColors.forEach(function(c, idx) {
+      html += '<div class="ch-selected-swatch" style="background:' + c.hex + '" title="' + c.name + '">';
+      html += '<span class="ch-remove" data-ch-idx="' + idx + '">&times;</span>';
+      html += '</div>';
+      if (idx < selectedColors.length - 1) {
+        html += '<svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>';
+      }
+    });
+    container.innerHTML = html;
+
+    // Attach remove handlers
+    container.querySelectorAll('.ch-remove').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var idx = parseInt(this.dataset.chIdx, 10);
+        if (!isNaN(idx) && idx >= 0 && idx < selectedColors.length) {
+          selectedColors.splice(idx, 1);
+          renderAll();
+        }
+      });
+    });
+  }
+
+  // --- Render harmony result ---
+  function renderResult() {
+    var resultEl = document.getElementById('colorHarmonyResult');
+    var matchesEl = document.getElementById('colorHarmonyMatches');
+    if (!resultEl) return;
+
+    if (selectedColors.length < 2) {
+      resultEl.classList.add('hidden');
+      if (matchesEl) matchesEl.classList.add('hidden');
+      buildColorWheel(selectedColors.map(function(c) { return hexToHsl(c.hex); }));
+      return;
+    }
+
+    resultEl.classList.remove('hidden');
+
+    var harmony = calculateHarmony(selectedColors);
+    var score = harmony.score;
+
+    // Score display
+    var scoreVal = document.getElementById('colorHarmonyScoreValue');
+    var scoreBar = document.getElementById('colorHarmonyScoreBar');
+    var schemeEl = document.getElementById('colorHarmonyScheme');
+
+    if (scoreVal) scoreVal.textContent = score + '%';
+    if (scoreBar) {
+      scoreBar.style.width = score + '%';
+      var barColor = score >= 80 ? '#34d399' : score >= 60 ? '#fbbf24' : score >= 40 ? '#fb923c' : '#f87171';
+      scoreBar.style.backgroundColor = barColor;
+    }
+    if (schemeEl) schemeEl.textContent = harmony.scheme;
+
+    // Color wheel
+    buildColorWheel(harmony.hslData, harmony.type);
+
+    // Matching items from closet
+    if (matchesEl) {
+      var selectedIds = selectedColors.map(function(c) { return c.id; }).filter(Boolean);
+      var allMatches = [];
+
+      selectedColors.forEach(function(c) {
+        var matches = findMatchingItems(c.hex, selectedIds);
+        matches.forEach(function(m) {
+          if (!allMatches.some(function(am) { return am.item.id === m.item.id; })) {
+            allMatches.push(m);
+          }
+        });
+      });
+
+      allMatches.sort(function(a,b) { return b.matchScore - a.matchScore; });
+      allMatches = allMatches.slice(0, 6);
+
+      var matchesGrid = document.getElementById('colorHarmonyMatchesGrid');
+      var matchesEmpty = document.getElementById('colorHarmonyMatchesEmpty');
+
+      if (allMatches.length > 0) {
+        matchesEl.classList.remove('hidden');
+        if (matchesEmpty) matchesEmpty.classList.add('hidden');
+        if (matchesGrid) {
+          var html = '';
+          allMatches.forEach(function(m) {
+            var imgSrc = m.item.image || '';
+            var itemName = m.item.color || m.item.type || t('color_harmony_item');
+            var matchLabel = m.matchScore >= 80 ? t('color_harmony_great_match') : m.matchScore >= 60 ? t('color_harmony_good_match') : t('color_harmony_ok_match');
+            html += '<div class="ch-match-card">';
+            if (imgSrc) {
+              html += '<img src="' + imgSrc + '" class="ch-match-thumb" alt="" />';
+            } else {
+              html += '<div class="ch-match-thumb" style="background:' + (m.item.colorHex || '#888') + '"></div>';
+            }
+            html += '<div class="flex-1 min-w-0">';
+            html += '<div class="text-xs font-bold text-white truncate">' + itemName + '</div>';
+            html += '<div class="text-[10px] text-gray-400">' + matchLabel + '</div>';
+            html += '</div>';
+            html += '<div style="width:14px;height:14px;border-radius:4px;background:' + (m.item.colorHex || '#888') + ';flex-shrink:0;border:1px solid rgba(255,255,255,0.15)"></div>';
+            html += '</div>';
+          });
+          matchesGrid.innerHTML = html;
+        }
+      } else {
+        matchesEl.classList.remove('hidden');
+        if (matchesGrid) matchesGrid.innerHTML = '';
+        if (matchesEmpty) matchesEmpty.classList.remove('hidden');
+      }
+    }
+  }
+
+  // --- Render all ---
+  function renderAll() {
+    buildColorPicker();
+    renderSelected();
+    renderResult();
+  }
+
+  // --- Event: color dot click ---
+  document.getElementById('colorHarmonyPickGrid')?.addEventListener('click', function(e) {
+    var dot = e.target.closest('.ch-color-dot');
+    if (!dot) return;
+    var hex = dot.dataset.chHex;
+    var id = dot.dataset.chId;
+    var name = dot.dataset.chName;
+
+    // Toggle selection
+    var idx = -1;
+    for (var i = 0; i < selectedColors.length; i++) {
+      if (selectedColors[i].hex.toLowerCase() === hex.toLowerCase()) { idx = i; break; }
+    }
+    if (idx >= 0) {
+      selectedColors.splice(idx, 1);
+    } else {
+      if (selectedColors.length >= 5) {
+        if (typeof showToast === 'function') showToast(t('color_harmony_max_colors'));
+        return;
+      }
+      selectedColors.push({ hex: hex, colorId: id, name: name || hex });
+    }
+    renderAll();
+  });
+
+  // --- Event: clear selection ---
+  document.getElementById('colorHarmonyClearPick')?.addEventListener('click', function() {
+    selectedColors = [];
+    renderAll();
+  });
+
+  // --- Open/Close ---
+  openBtn.addEventListener('click', function() {
+    if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+    selectedColors = [];
+    renderAll();
+    modal.classList.remove('hidden');
+  });
+
+  closeBtn.addEventListener('click', function() { modal.classList.add('hidden'); });
+  modal.addEventListener('click', function(e) { if (e.target === modal) modal.classList.add('hidden'); });
+
+  // Expose for external refresh
+  window.refreshColorHarmony = renderAll;
 })();
 
 // ============================================================
