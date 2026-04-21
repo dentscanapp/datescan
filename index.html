@@ -13154,64 +13154,68 @@ document.title = window.t('page_title');
   var grid = document.getElementById('langSelectorGrid');
   if (!grid) return;
   var langs = window.getSupportedLangs();
-  var current = window.getLang();
 
-  langs.forEach(function(l) {
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.setAttribute('data-lang', l.code);
-    btn.className = 'py-2 px-1 rounded-lg text-center text-xs font-bold transition-all ' +
-      (l.code === current
-        ? 'bg-brand-500/20 text-brand-300 border border-brand-500/40'
-        : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10 hover:text-white');
-    btn.innerHTML = '<span class="block text-[10px] font-bold uppercase">' + _esc(l.code.toUpperCase()) + '</span><span class="block text-[9px] mt-0.5 font-normal">' + _esc(l.name) + '</span>';
-    if (l.code === current) {
-      btn.innerHTML += '<span class="block text-brand-400 text-[8px] mt-0.5">&#10003;</span>';
-    }
-    btn.addEventListener('click', function() {
-      window.setLang(l.code);
-      // Rebuild grid
-      initLangSelectorGrid();
-      // Also update the top nav selector
-      var label = document.getElementById('langSelectorLabel');
-      if (label) label.textContent = l.code.toUpperCase();
-      // Rebuild top nav dropdown
-      var dropdown = document.getElementById('langSelectorDropdown');
-      if (dropdown) {
-        dropdown.innerHTML = '';
-        var langs2 = window.getSupportedLangs();
-        var c2 = window.getLang();
-        langs2.forEach(function(l2) {
-          var item = document.createElement('button');
-          item.type = 'button';
-          item.setAttribute('role', 'option');
-          item.setAttribute('data-lang', l2.code);
-          item.className = 'w-full flex items-center gap-2.5 px-3 py-2 text-left text-sm transition-colors ' +
-            (l2.code === c2 ? 'bg-brand-500/20 text-brand-300 font-semibold' : 'text-gray-300 hover:bg-white/10 hover:text-white');
-          item.innerHTML = '<span class="text-xs font-bold uppercase w-7 shrink-0">' + _esc(l2.code.toUpperCase()) + '</span><span>' + _esc(l2.name) + '</span>';
-          if (l2.code === c2) {
-            item.innerHTML += '<svg class="w-4 h-4 ml-auto text-brand-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>';
-          }
-          item.addEventListener('click', function(e) {
-            e.stopPropagation();
-            window.setLang(l2.code);
-            if (label) label.textContent = l2.code.toUpperCase();
-            dropdown.classList.add('hidden');
-            // Remove body.lang-open
-            document.body.classList.remove('lang-open');
-            initLangSelectorGrid();
-          });
-          dropdown.appendChild(item);
-        });
-      }
-    });
-    grid.appendChild(btn);
-  });
-
-  // Listen for langchange to refresh
-  window.addEventListener('langchange', function() {
+  function renderGrid() {
+    var current = window.getLang();
     grid.innerHTML = '';
-    initLangSelectorGrid();
+    langs.forEach(function(l) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.setAttribute('data-lang', l.code);
+      btn.className = 'py-2 px-1 rounded-lg text-center text-xs font-bold transition-all ' +
+        (l.code === current
+          ? 'bg-brand-500/20 text-brand-300 border border-brand-500/40'
+          : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10 hover:text-white');
+      btn.innerHTML = '<span class="block text-[10px] font-bold uppercase">' + _esc(l.code.toUpperCase()) + '</span><span class="block text-[9px] mt-0.5 font-normal">' + _esc(l.name) + '</span>';
+      if (l.code === current) {
+        btn.innerHTML += '<span class="block text-brand-400 text-[8px] mt-0.5">&#10003;</span>';
+      }
+      btn.addEventListener('click', function() {
+        window.setLang(l.code);
+        // setLang() dispatches 'langchange' which triggers renderGrid() via the listener below.
+        // No need to call renderGrid() again here — that was the duplication bug.
+        // Update the top nav selector label
+        var label = document.getElementById('langSelectorLabel');
+        if (label) label.textContent = l.code.toUpperCase();
+        // Rebuild top nav dropdown
+        var dropdown = document.getElementById('langSelectorDropdown');
+        if (dropdown) {
+          dropdown.innerHTML = '';
+          var langs2 = window.getSupportedLangs();
+          var c2 = window.getLang();
+          langs2.forEach(function(l2) {
+            var item = document.createElement('button');
+            item.type = 'button';
+            item.setAttribute('role', 'option');
+            item.setAttribute('data-lang', l2.code);
+            item.className = 'w-full flex items-center gap-2.5 px-3 py-2 text-left text-sm transition-colors ' +
+              (l2.code === c2 ? 'bg-brand-500/20 text-brand-300 font-semibold' : 'text-gray-300 hover:bg-white/10 hover:text-white');
+            item.innerHTML = '<span class="text-xs font-bold uppercase w-7 shrink-0">' + _esc(l2.code.toUpperCase()) + '</span><span>' + _esc(l2.name) + '</span>';
+            if (l2.code === c2) {
+              item.innerHTML += '<svg class="w-4 h-4 ml-auto text-brand-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>';
+            }
+            item.addEventListener('click', function(e) {
+              e.stopPropagation();
+              window.setLang(l2.code);
+              if (label) label.textContent = l2.code.toUpperCase();
+              dropdown.classList.add('hidden');
+              document.body.classList.remove('lang-open');
+              // langchange listener will rebuild the grid — no manual call needed
+            });
+            dropdown.appendChild(item);
+          });
+        }
+      });
+      grid.appendChild(btn);
+    });
+  }
+
+  // Initial render
+  renderGrid();
+
+  // Listen for langchange to refresh — registered ONLY ONCE
+  window.addEventListener('langchange', function() {
+    renderGrid();
   });
 })();
 
