@@ -2707,6 +2707,27 @@ window._dsLog = function() { if (window.__DS_DEBUG) console.log.apply(console, a
     .drop-shadow-\[0_0_8px_rgba\(236\2c 72\2c 153\2c 0\.4\)\] {
       filter: none !important;
     }
+    /* Kill decorative blur orbs — they force GPU compositing layers and
+       cause severe jank on mid-range Android devices. These are all
+       position:absolute pointer-events:none elements used only for
+       ambient glow decoration. */
+    .blur-\[40px\],
+    .blur-\[50px\],
+    .blur-\[60px\],
+    .blur-\[120px\],
+    .blur-2xl,
+    .blur-3xl {
+      display: none !important;
+    }
+    /* Disable mix-blend-screen on mobile (forces compositing) */
+    .mix-blend-screen,
+    .mix-blend-overlay {
+      mix-blend-mode: normal !important;
+    }
+    /* Stop animate-pulse in results (constant repaints) */
+    #resultsCol .animate-pulse {
+      animation: none !important;
+    }
   }
 </style>
 </head>
@@ -3227,6 +3248,18 @@ if (window.__DS_IS_ANDROID_APP) {
     <p class="dsc-fineprint" data-i18n-html="cam_consent_fineprint">
       See our <a href="privacy.html" data-i18n="privacy_policy">Privacy Policy</a> and <a href="terms.html" data-i18n="terms_of_service">Terms of Service</a> for full details.
     </p>
+
+    <!-- Inline PWA Install Banner — web only, hidden for Android app -->
+    <div id="pwa-inline-banner" class="gumroad-only" style="display:none; margin-top:14px; padding:12px 14px; border-radius:16px; background:linear-gradient(135deg, rgba(236,72,153,0.08) 0%, rgba(168,85,247,0.08) 100%); border:1px solid rgba(236,72,153,0.2); cursor:pointer;" role="button" tabindex="0" aria-label="Install DateScan">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <img src="/icon-192.png" alt="DateScan" width="40" height="40" style="border-radius:10px; flex-shrink:0;" />
+        <div style="flex:1; min-width:0;">
+          <div style="font-weight:700; font-size:0.82rem; color:#fff; margin-bottom:2px;" data-i18n="pwa_inline_title">Install DateScan App</div>
+          <div style="font-size:0.7rem; color:#94839f; line-height:1.35;" data-i18n="pwa_inline_desc">Add to your home screen for quick access</div>
+        </div>
+        <div style="flex-shrink:0; background:linear-gradient(135deg, #ec4899, #a855f7); color:#fff; border:none; border-radius:10px; padding:7px 14px; font-weight:600; font-size:0.78rem; font-family:inherit; white-space:nowrap;" data-i18n="pwa_install_btn">Install</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -6663,7 +6696,13 @@ function _readPointsState() {
         (now - raw.firstAt) >= POINTS_RESET_MS) {
       // Preserve bonus points across daily resets so they aren't lost.
       const bonusCarry = (raw.bonus && raw.bonus > 0) ? raw.bonus : 0;
-      return { remaining: DAILY_POINTS + bonusCarry, firstAt: 0, bonus: 0 };
+      const refilled = { remaining: DAILY_POINTS + bonusCarry, firstAt: 0, bonus: 0 };
+      // Persist the refilled state so we don't keep re-computing from
+      // stale localStorage values on every read.  Without this write,
+      // `bonus` in storage stays non-zero even though we just folded it
+      // into `remaining`, causing addBonusPoints to see a phantom bonus.
+      try { localStorage.setItem(POINTS_KEY, JSON.stringify(refilled)); } catch(e) {}
+      return refilled;
     }
     return {
       remaining: Math.max(0, raw.remaining),
@@ -6857,8 +6896,9 @@ function recordScanStreak() {
     }
   }
 
-  // Auto-complete daily challenge
-  completeDailyChallenge();
+  // Daily challenge is NOT auto-completed on scan — it should
+  // only complete when the user fulfils the actual challenge criteria.
+  // completeDailyChallenge();
 
   // Update UI
   updateMissionBadge();
@@ -8856,6 +8896,8 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       pwa_install_desc: 'Install DateScan for faster access and offline support.',
       pwa_install_btn: 'Install',
       pwa_install_ios: 'Tap the Share button ⬆ then "Add to Home Screen"',
+      pwa_inline_title: 'Install DateScan App',
+      pwa_inline_desc: 'Add to your home screen for quick access',
       color_white: 'Light / White',
       color_gray: 'Gray',
       color_blue: 'Blue',
@@ -10441,6 +10483,8 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       pwa_install_desc: 'Telepítsd a DateScan-t gyorsabb hozzáférésért és offline támogatásért.',
       pwa_install_btn: 'Telepítés',
       pwa_install_ios: 'Koppints a Megosztás gombra ⬆ majd „Hozzáadás a kezdőképernyőhöz"',
+      pwa_inline_title: 'DateScan alkalmazás telepítése',
+      pwa_inline_desc: 'Telepítsd a kezdőképernyőre a gyors eléréshez',
       color_white: 'Világos / Fehér',
       color_gray: 'Szürke',
       color_blue: 'Kék',
@@ -12025,6 +12069,8 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       pwa_install_desc: 'Installiere DateScan für schnelleren Zugriff und Offline-Unterstützung.',
       pwa_install_btn: 'Installieren',
       pwa_install_ios: 'Tippe auf „Teilen" ⬆ und dann „Zum Home-Bildschirm"',
+      pwa_inline_title: 'DateScan App installieren',
+      pwa_inline_desc: 'Zum Startbildschirm hinzufügen für schnellen Zugriff',
       color_white: 'Hell / Weiß',
       color_gray: 'Grau',
       color_blue: 'Blau',
@@ -16713,6 +16759,17 @@ async function initCamera() {
 
     store.set({ cameraReady: true });
     window._dsLog('[camera] initCamera: done');
+
+    // ── Background preload: start downloading the MediaPipe model ──
+    // The user typically spends a few seconds positioning themselves
+    // after the camera opens. Use that time to download the ~20MB
+    // face landmarker model so the first scan starts instantly.
+    if (!store.get().aiReady) {
+      initFaceLandmarker().catch(function(e) {
+        console.warn('[camera] background model preload failed (will retry on scan):', e);
+      });
+    }
+
     // ── First-scan contextual hint ──
     showContextualHint('scan', 'scanBtn');
   } catch (e) {
@@ -16985,6 +17042,44 @@ function setupPwaInstall() {
       showBanner();
     }
   });
+
+  // ── Inline PWA banner (inside camera consent dialog) ──
+  var inlineBanner = document.getElementById('pwa-inline-banner');
+  if (inlineBanner && !window.__DS_IS_ANDROID_APP) {
+    var pwaInstalled = false;
+    try {
+      pwaInstalled = window.matchMedia('(display-mode: standalone)').matches || localStorage.getItem('pwa_installed') === '1';
+    } catch(e) {}
+
+    if (!pwaInstalled) {
+      inlineBanner.style.display = 'block';
+
+      inlineBanner.addEventListener('click', function() {
+        // Chrome/Edge deferred prompt
+        if (window._deferredInstallPrompt) {
+          window._deferredInstallPrompt.prompt();
+          window._deferredInstallPrompt.userChoice.then(function(r) {
+            if (r.outcome === 'accepted') {
+              inlineBanner.style.display = 'none';
+              try { localStorage.setItem('pwa_installed', '1'); } catch(e) {}
+            }
+            window._deferredInstallPrompt = null;
+          }).catch(function() { window._deferredInstallPrompt = null; });
+          return;
+        }
+        // iOS Safari
+        if (/iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream) {
+          var iosMsg = typeof window.t === 'function' ? window.t('pwa_install_ios') : 'Tap the Share button ⬆ then "Add to Home Screen"';
+          if (window.dsPrivacy && window.dsPrivacy.showToast) {
+            window.dsPrivacy.showToast(iosMsg, 5000);
+          } else { alert(iosMsg); }
+          return;
+        }
+        // Fallback: Play Store
+        window.open('https://play.google.com/store/apps/details?id=app.datescan', '_blank');
+      });
+    }
+  }
 }
 
 // --- OFFLINE / ONLINE STATE ---
@@ -18165,7 +18260,7 @@ function analyzeFaceDistance(lm) {
   if (!top || !bottom) return null;
   const h = Math.abs(bottom.y - top.y);
   if (h < 0.22) return { category:"env", tone:"warn", icon:"📏", title:t("fb_too_far_title"), text:t("fb_too_far_text"), action:t("fb_too_far_action"), _titleKey:"fb_too_far_title", _textKey:"fb_too_far_text", _actionKey:"fb_too_far_action" };
-  if (h > 0.64) return { category:"env", tone:"warn", icon:"📏", title:t("fb_too_close_title"), text:t("fb_too_close_text"), action:t("fb_too_close_action"), _titleKey:"fb_too_close_title", _textKey:"fb_too_close_text", _actionKey:"fb_too_close_action" };
+  if (h > 0.82) return { category:"env", tone:"warn", icon:"📏", title:t("fb_too_close_title"), text:t("fb_too_close_text"), action:t("fb_too_close_action"), _titleKey:"fb_too_close_title", _textKey:"fb_too_close_text", _actionKey:"fb_too_close_action" };
   return null;
 }
 
@@ -19656,8 +19751,11 @@ function showResultsLayout() {
     setTimeout(() => resCol.scrollIntoView({ behavior: "smooth", block: "start" }), 300);
   }
 
-  // ── First-result contextual hint ──
-  showContextualHint('result', 'resultsCol');
+  // ── First-result contextual hint — only on successful scans ──
+  const s = store.get();
+  if (s.lastColor) {
+    showContextualHint('result', 'resultsCol');
+  }
 }
 
 async function runScan() {
@@ -21123,6 +21221,11 @@ window.addEventListener('pagehide', stopCameraTracks);
         .then(function(r) { return r.json(); })
         .then(function(data) {
           if (data && data.bonus && data.bonus > 0) {
+            // Dedup: skip if this exact reward batch was already applied
+            var rewardKey = 'datescan.lastRewardId';
+            var rewardId = data.rewardId || ('r_' + data.bonus + '_' + (data.ts || Math.floor(Date.now() / 86400000)));
+            if (localStorage.getItem(rewardKey) === rewardId) return;
+
             if (typeof addBonusPoints === 'function') {
               addBonusPoints(data.bonus);
             }
@@ -21131,6 +21234,18 @@ window.addEventListener('pagehide', stopCameraTracks);
             if (window.dsPrivacy && window.dsPrivacy.showToast) {
               window.dsPrivacy.showToast(t('referral_bonus_toast'), 3500);
             }
+
+            // Mark as claimed locally so we don't double-award
+            try { localStorage.setItem(rewardKey, rewardId); } catch(e) {}
+
+            // Acknowledge to backend so it stops returning this bonus
+            try {
+              fetch(API_BASE + '/api/claim-reward', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: userId, rewardId: rewardId }),
+              }).catch(function() {});
+            } catch(e) {}
           }
         })
         .catch(function() {
