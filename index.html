@@ -3313,6 +3313,117 @@ if (window.__DS_IS_ANDROID_APP) {
   .ch-score-ring {
     width: 100%; height: 100%;
   }
+
+  /* ===== TRIP PACKING PLANNER ===== */
+  .trip-weather-day {
+    min-width: 56px;
+    padding: 0.5rem 0.4rem;
+    border-radius: 0.75rem;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    text-align: center;
+    flex-shrink: 0;
+    transition: border-color 0.2s;
+  }
+  .trip-weather-day.rain { border-color: rgba(59,130,246,0.35); background: rgba(59,130,246,0.06); }
+  .trip-weather-day.cold { border-color: rgba(147,51,234,0.35); background: rgba(147,51,234,0.06); }
+  .trip-weather-day.warm { border-color: rgba(251,191,36,0.35); background: rgba(251,191,36,0.06); }
+  .trip-weather-day .tw-icon { font-size: 1.1rem; line-height: 1; margin-bottom: 2px; }
+  .trip-weather-day .tw-temp { font-size: 0.75rem; font-weight: 700; color: #fff; }
+  .trip-weather-day .tw-label { font-size: 0.55rem; color: rgba(156,163,175,0.8); text-transform: uppercase; letter-spacing: 0.05em; }
+  .trip-weather-day .tw-rain { font-size: 0.55rem; color: rgba(96,165,250,0.8); }
+
+  .trip-pack-category {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    transition: border-color 0.2s;
+  }
+  .trip-pack-category:hover {
+    border-color: rgba(14,165,233,0.3);
+  }
+  .trip-pack-item {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.35rem 0;
+  }
+  .trip-pack-check {
+    width: 18px; height: 18px;
+    border-radius: 5px;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.03);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .trip-pack-check.checked {
+    background: rgba(14,165,233,0.25);
+    border-color: rgba(14,165,233,0.5);
+  }
+  .trip-pack-check.checked svg { opacity: 1; }
+  .trip-pack-check svg { opacity: 0; width: 12px; height: 12px; color: #7dd3fc; }
+  .trip-pack-item-name { font-size: 0.75rem; color: #d1d5db; flex: 1; }
+  .trip-pack-item-name.packed { text-decoration: line-through; color: rgba(156,163,175,0.5); }
+  .trip-pack-count { font-size: 0.65rem; color: rgba(156,163,175,0.6); font-weight: 600; }
+
+  .trip-daily-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    transition: border-color 0.2s;
+  }
+  .trip-daily-card:hover { border-color: rgba(14,165,233,0.3); }
+  .trip-daily-day {
+    font-size: 0.7rem; font-weight: 700; color: #7dd3fc;
+    margin-bottom: 0.4rem;
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+  .trip-daily-items {
+    display: flex; gap: 0.4rem; flex-wrap: wrap;
+  }
+  .trip-daily-chip {
+    display: flex; align-items: center; gap: 0.3rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.65rem; color: #d1d5db;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .trip-daily-chip:hover { border-color: rgba(14,165,233,0.3); background: rgba(14,165,233,0.08); }
+  .trip-daily-chip .chip-thumb {
+    width: 18px; height: 18px; border-radius: 4px; object-fit: cover; flex-shrink: 0;
+    background: rgba(255,255,255,0.05);
+  }
+  .trip-daily-chip .chip-color {
+    width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .trip-missing-item {
+    background: rgba(239,68,68,0.06);
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .trip-missing-item .missing-icon {
+    font-size: 1.3rem; flex-shrink: 0;
+  }
+  .trip-missing-item .missing-text { font-size: 0.75rem; color: #fca5a5; }
+  .trip-missing-item .missing-sub { font-size: 0.65rem; color: rgba(252,165,165,0.6); margin-top: 2px; }
+
+  .trip-occasion-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    transition: border-color 0.2s;
+  }
+  .trip-occasion-card:hover { border-color: rgba(168,85,247,0.3); }
 </style>
 
 <!-- ===== AGE GATE (18+) ===== -->
@@ -4574,6 +4685,10 @@ if (window.__DS_IS_ANDROID_APP) {
                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 2a10 10 0 0 0 0 20 10 10 0 0 0 0-20z" stroke-dasharray="3 3"/></svg>
                <span data-i18n="closet_color_harmony">Colors</span>
             </button>
+            <button id="tripPackingBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-gradient-to-r from-sky-500/20 to-indigo-500/20 border border-sky-500/30 text-sky-300 hover:from-sky-500/30 hover:to-indigo-500/30 active:scale-[0.98] transition" title="Trip Packing Planner — smart packing based on weather and your closet">
+               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+               <span data-i18n="closet_trip_packing">Trip Pack</span>
+            </button>
             <button id="closetUploadBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-[0.98] transition">
                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/><circle cx="9" cy="10" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.814.014L6 21"/><path d="M19 2v6"/><path d="M22 5h-6"/></svg>
                <span data-i18n="closet_add_item">Add Item</span>
@@ -4985,6 +5100,123 @@ if (window.__DS_IS_ANDROID_APP) {
         <div class="flex items-center gap-2 text-[11px] text-gray-500">
           <span class="px-1.5 py-0.5 rounded text-[8px] font-bold bg-gradient-to-r from-brand-500 to-purple-500 text-white uppercase tracking-wider">PRO</span>
           <span data-i18n="color_harmony_pro_hint">Full palette analysis & colorblind mode available with PRO</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TRIP PACKING PLANNER MODAL ===== -->
+  <div id="tripPackingModal" class="hidden fixed inset-0 z-[115] bg-black/85 backdrop-blur-md flex items-center justify-center p-4" style="z-index:120">
+    <div class="premium-glass rounded-3xl border border-sky-500/20 max-w-lg w-full p-6 sm:p-7 relative max-h-[92vh] overflow-y-auto">
+      <button id="tripPackingClose" type="button" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition" aria-label="Close">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-sky-500/20 to-indigo-500/20 border border-sky-500/30 flex items-center justify-center mb-4 mx-auto">
+        <svg class="w-7 h-7 text-sky-300" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+      </div>
+      <h3 class="font-serif text-2xl font-semibold text-white text-center mb-1" data-i18n="trip_title">Trip Packing Planner</h3>
+      <p data-i18n="trip_subtitle" class="text-sm text-gray-400 text-center mb-5 leading-relaxed">Smart packing based on weather forecast and your closet.</p>
+
+      <!-- Trip input form -->
+      <div id="tripInputForm" class="mb-5">
+        <div class="flex gap-2 mb-3">
+          <div class="flex-1">
+            <label class="text-[10px] uppercase tracking-widest text-sky-400 font-bold mb-1.5 block" data-i18n="trip_destination_label">Destination</label>
+            <input id="tripDestination" type="text" class="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/30 transition" data-i18n-placeholder="trip_destination_placeholder" placeholder="City name..." autocomplete="off" />
+          </div>
+          <div class="w-24">
+            <label class="text-[10px] uppercase tracking-widest text-sky-400 font-bold mb-1.5 block" data-i18n="trip_days_label">Days</label>
+            <input id="tripDays" type="number" min="1" max="16" value="3" class="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm text-center focus:outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/30 transition" />
+          </div>
+        </div>
+        <button id="tripGenerateBtn" type="button" class="w-full py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-sky-500/20 to-indigo-500/20 border border-sky-500/30 text-sky-300 hover:from-sky-500/30 hover:to-indigo-500/30 active:scale-[0.98] transition flex items-center justify-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+          <span data-i18n="trip_generate_btn">Generate Packing List</span>
+        </button>
+        <div id="tripLoading" class="hidden text-center py-4">
+          <div class="w-5 h-5 rounded-full border-2 border-sky-400 border-t-transparent animate-spin mx-auto mb-2"></div>
+          <p class="text-xs text-gray-400" data-i18n="trip_loading">Fetching weather & building packing list...</p>
+        </div>
+        <div id="tripError" class="hidden rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-300 leading-relaxed mt-3"></div>
+      </div>
+
+      <!-- Weather summary -->
+      <div id="tripWeather" class="hidden mb-5">
+        <div class="text-[10px] uppercase tracking-widest text-sky-400 font-bold mb-2 flex items-center gap-2">
+          <span data-i18n="trip_weather_header">Weather Forecast</span>
+          <span id="tripWeatherLoc" class="text-gray-400 font-normal normal-case tracking-normal"></span>
+        </div>
+        <div id="tripWeatherGrid" class="flex gap-1.5 overflow-x-auto pb-2">
+          <!-- Dynamically populated day cards -->
+        </div>
+      </div>
+
+      <!-- Tab navigation -->
+      <div id="tripTabsBar" class="hidden flex gap-1 mb-5 bg-white/5 rounded-xl p-1">
+        <button data-trip-tab="packing" class="trip-tab flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-colors bg-sky-500/20 text-sky-300 border border-sky-500/30" data-i18n="trip_tab_packing">Packing</button>
+        <button data-trip-tab="daily" class="trip-tab flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-colors bg-white/5 text-gray-400 border border-transparent hover:bg-white/10" data-i18n="trip_tab_daily">Daily</button>
+        <button data-trip-tab="missing" class="trip-tab flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-colors bg-white/5 text-gray-400 border border-transparent hover:bg-white/10" data-i18n="trip_tab_missing">Missing</button>
+        <button data-trip-tab="occasions" class="trip-tab flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-colors bg-white/5 text-gray-400 border border-transparent hover:bg-white/10" data-i18n="trip_tab_occasions">Occasions</button>
+      </div>
+
+      <!-- Packing List Tab -->
+      <div id="tripPackingPanel" class="trip-panel">
+        <div class="text-[10px] uppercase tracking-widest text-sky-400 font-bold mb-3" data-i18n="trip_packing_header">Packing List</div>
+        <div id="tripPackingGrid" class="space-y-2">
+          <!-- Dynamically populated -->
+        </div>
+        <div id="tripPackingEmpty" class="hidden text-center py-6">
+          <div class="text-4xl mb-2">🧳</div>
+          <p class="text-sm text-gray-400" data-i18n="trip_packing_empty">Enter your destination and days to get started.</p>
+        </div>
+      </div>
+
+      <!-- Daily Planner Tab -->
+      <div id="tripDailyPanel" class="trip-panel hidden">
+        <div class="text-[10px] uppercase tracking-widest text-sky-400 font-bold mb-3" data-i18n="trip_daily_header">Daily Outfit Planner</div>
+        <div id="tripDailyGrid" class="space-y-3">
+          <!-- Dynamically populated -->
+        </div>
+        <div id="tripDailyEmpty" class="hidden text-center py-6">
+          <div class="text-4xl mb-2">📅</div>
+          <p class="text-sm text-gray-400" data-i18n="trip_daily_empty">Generate a packing list first to plan daily outfits.</p>
+        </div>
+      </div>
+
+      <!-- Missing Items Tab -->
+      <div id="tripMissingPanel" class="trip-panel hidden">
+        <div class="text-[10px] uppercase tracking-widest text-sky-400 font-bold mb-3" data-i18n="trip_missing_header">Missing Items</div>
+        <div id="tripMissingGrid" class="space-y-2.5">
+          <!-- Dynamically populated -->
+        </div>
+        <div id="tripMissingNone" class="hidden text-center py-6">
+          <div class="text-4xl mb-2">✅</div>
+          <p class="text-sm text-gray-400" data-i18n="trip_missing_none">Your closet has everything you need for this trip!</p>
+        </div>
+      </div>
+
+      <!-- Occasions Tab (PRO) -->
+      <div id="tripOccasionsPanel" class="trip-panel hidden">
+        <div class="text-[10px] uppercase tracking-widest text-sky-400 font-bold mb-3 flex items-center gap-2">
+          <span data-i18n="trip_occasions_header">Occasion Planner</span>
+          <span class="px-1.5 py-0.5 rounded text-[8px] font-bold bg-gradient-to-r from-brand-500 to-purple-500 text-white uppercase tracking-wider">PRO</span>
+        </div>
+        <div id="tripOccasionsPro" class="space-y-3">
+          <!-- Dynamically populated for PRO users -->
+        </div>
+        <div id="tripOccasionsLocked" class="text-center py-8">
+          <div class="w-12 h-12 rounded-xl bg-brand-500/15 border border-brand-500/30 flex items-center justify-center mx-auto mb-3">
+            <svg class="w-6 h-6 text-brand-400" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <p class="text-sm text-gray-400" data-i18n="trip_occasions_lock_desc">Unlock occasion-based packing (business, casual, fancy dinner) for each trip day with PRO.</p>
+        </div>
+      </div>
+
+      <!-- PRO hint -->
+      <div class="mt-5 pt-4 border-t border-white/5">
+        <div class="flex items-center gap-2 text-[11px] text-gray-500">
+          <span class="px-1.5 py-0.5 rounded text-[8px] font-bold bg-gradient-to-r from-brand-500 to-purple-500 text-white uppercase tracking-wider">PRO</span>
+          <span data-i18n="trip_pro_hint">Occasion-based packing (business + casual + fancy) available with PRO</span>
         </div>
       </div>
     </div>
@@ -10075,7 +10307,44 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       color_harmony_ok_match: 'Possible match',
       color_harmony_item: 'Item',
       color_harmony_max_colors: 'Maximum 5 colors can be compared at once',
-      color_harmony_pro_hint: 'Full palette analysis & colorblind mode available with PRO'
+      color_harmony_pro_hint: 'Full palette analysis & colorblind mode available with PRO',
+
+      // Trip Packing Planner
+      closet_trip_packing: 'Trip Pack',
+      trip_title: 'Trip Packing Planner',
+      trip_subtitle: 'Smart packing based on weather forecast and your closet.',
+      trip_destination_label: 'Destination',
+      trip_destination_placeholder: 'City name...',
+      trip_days_label: 'Days',
+      trip_generate_btn: 'Generate Packing List',
+      trip_loading: 'Fetching weather & building packing list...',
+      trip_weather_header: 'Weather Forecast',
+      trip_tab_packing: 'Packing',
+      trip_tab_daily: 'Daily',
+      trip_tab_missing: 'Missing',
+      trip_tab_occasions: 'Occasions',
+      trip_packing_header: 'Packing List',
+      trip_packing_empty: 'Enter your destination and days to get started.',
+      trip_daily_header: 'Daily Outfit Planner',
+      trip_daily_empty: 'Generate a packing list first to plan daily outfits.',
+      trip_missing_header: 'Missing Items',
+      trip_missing_none: 'Your closet has everything you need for this trip!',
+      trip_occasions_header: 'Occasion Planner',
+      trip_occasions_lock_desc: 'Unlock occasion-based packing (business, casual, fancy dinner) for each trip day with PRO.',
+      trip_pro_hint: 'Occasion-based packing (business + casual + fancy) available with PRO',
+      trip_day: 'Day {n}',
+      trip_no_items_for_day: 'No items available for this day',
+      trip_needed_more: 'more needed',
+      trip_missing_item: '{n}× {type} missing from your closet',
+      trip_missing_no_warm_coat: 'No warm coat for {temp}',
+      trip_missing_rain_jacket: 'No rain jacket for rainy days',
+      trip_missing_umbrella: 'Bring an umbrella — rain expected',
+      trip_error_no_city: 'Please enter a destination city',
+      trip_error_city_not_found: 'City not found. Try a different name.',
+      trip_error_generic: 'Could not generate packing list. Please try again.',
+      trip_occ_business: 'Business',
+      trip_occ_casual: 'Casual',
+      trip_occ_fancy: 'Fancy Dinner'
     },
     hu: {
       nav_closet: 'Szekrény',
@@ -11770,7 +12039,44 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       color_harmony_ok_match: 'Lehetséges egyezés',
       color_harmony_item: 'Darab',
       color_harmony_max_colors: 'Egyszerre legfeljebb 5 szín hasonlítható össze',
-      color_harmony_pro_hint: 'Teljes paletta elemzés és színvak mód elérhető PRO-val'
+      color_harmony_pro_hint: 'Teljes paletta elemzés és színvak mód elérhető PRO-val',
+
+      // Utazás Csomagoló
+      closet_trip_packing: 'Utazás',
+      trip_title: 'Utazás Csomagoló',
+      trip_subtitle: 'Okos csomagolás az időjárás-előrejelzés és a szekrényed alapján.',
+      trip_destination_label: 'Úti cél',
+      trip_destination_placeholder: 'Város neve...',
+      trip_days_label: 'Napok',
+      trip_generate_btn: 'Csomaglista készítése',
+      trip_loading: 'Időjárás lekérdezése és csomaglista készítése...',
+      trip_weather_header: 'Időjárás előrejelzés',
+      trip_tab_packing: 'Csomag',
+      trip_tab_daily: 'Napi',
+      trip_tab_missing: 'Hiány',
+      trip_tab_occasions: 'Alkalmak',
+      trip_packing_header: 'Csomaglista',
+      trip_packing_empty: 'Add meg az úti célt és a napok számát a kezdéshez.',
+      trip_daily_header: 'Napi Öltözék Tervező',
+      trip_daily_empty: 'Először készíts csomaglistát a napi tervezéshez.',
+      trip_missing_header: 'Hiányzó Darabok',
+      trip_missing_none: 'A szekrényedben minden megvan ehhez az utazáshoz!',
+      trip_occasions_header: 'Alkalm Tervező',
+      trip_occasions_lock_desc: 'Nyisd fel a PRO-t az alkalom alapú csomagoláshoz (üzleti, casual, elegáns vacsora) minden utazási napra.',
+      trip_pro_hint: 'Alkalom alapú csomagolás (üzleti + casual + elegáns) elérhető PRO-val',
+      trip_day: '{n}. nap',
+      trip_no_items_for_day: 'Nincs elérhető darab erre a napra',
+      trip_needed_more: 'további szükséges',
+      trip_missing_item: '{n}× {type} hiányzik a szekrényedből',
+      trip_missing_no_warm_coat: 'Nincs meleg kabátod {temp}hoz',
+      trip_missing_rain_jacket: 'Nincs esőkabátod az esős napokra',
+      trip_missing_umbrella: 'Hozz esernyőt — eső várható',
+      trip_error_no_city: 'Kérjük, adj meg egy úti célt',
+      trip_error_city_not_found: 'Város nem található. Próbálj más nevet.',
+      trip_error_generic: 'Nem sikerült csomaglistát készíteni. Kérjük, próbáld újra.',
+      trip_occ_business: 'Üzleti',
+      trip_occ_casual: 'Casual',
+      trip_occ_fancy: 'Elegáns Vacsora'
     },
     de: {
       nav_closet: 'Schrank',
@@ -13465,7 +13771,44 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       color_harmony_ok_match: 'Mögliche Übereinstimmung',
       color_harmony_item: 'Stück',
       color_harmony_max_colors: 'Maximal 5 Farben können gleichzeitig verglichen werden',
-      color_harmony_pro_hint: 'Vollständige Palettenanalyse und Farbblindmodus mit PRO verfügbar'
+      color_harmony_pro_hint: 'Vollständige Palettenanalyse und Farbblindmodus mit PRO verfügbar',
+
+      // Reise Packplaner
+      closet_trip_packing: 'Reise',
+      trip_title: 'Reise Packplaner',
+      trip_subtitle: 'Intelligentes Packen basierend auf Wettervorhersage und deinem Schrank.',
+      trip_destination_label: 'Reiseziel',
+      trip_destination_placeholder: 'Stadtname...',
+      trip_days_label: 'Tage',
+      trip_generate_btn: 'Packliste erstellen',
+      trip_loading: 'Wetter wird abgerufen & Packliste erstellt...',
+      trip_weather_header: 'Wettervorhersage',
+      trip_tab_packing: 'Packen',
+      trip_tab_daily: 'Täglich',
+      trip_tab_missing: 'Fehlt',
+      trip_tab_occasions: 'Anlässe',
+      trip_packing_header: 'Packliste',
+      trip_packing_empty: 'Gib dein Reiseziel und die Tage ein, um loszulegen.',
+      trip_daily_header: 'Tägliche Outfit-Planung',
+      trip_daily_empty: 'Erstelle zuerst eine Packliste für die tägliche Planung.',
+      trip_missing_header: 'Fehlende Teile',
+      trip_missing_none: 'Dein Schrank hat alles, was du für diese Reise brauchst!',
+      trip_occasions_header: 'Anlass-Planung',
+      trip_occasions_lock_desc: 'Schalte anlassbasiertes Packen (Business, Casual, Dinner) für jeden Reisetag mit PRO frei.',
+      trip_pro_hint: 'Anlassbasiertes Packen (Business + Casual + festlich) mit PRO verfügbar',
+      trip_day: 'Tag {n}',
+      trip_no_items_for_day: 'Keine Teile für diesen Tag verfügbar',
+      trip_needed_more: 'weitere benötigt',
+      trip_missing_item: '{n}× {type} fehlt in deinem Schrank',
+      trip_missing_no_warm_coat: 'Kein warmer Mantel für {temp}',
+      trip_missing_rain_jacket: 'Keine Regenjacke für Regentage',
+      trip_missing_umbrella: 'Nimm einen Regenschirm mit — Regen erwartet',
+      trip_error_no_city: 'Bitte gib ein Reiseziel ein',
+      trip_error_city_not_found: 'Stadt nicht gefunden. Versuche einen anderen Namen.',
+      trip_error_generic: 'Packliste konnte nicht erstellt werden. Bitte versuche es erneut.',
+      trip_occ_business: 'Business',
+      trip_occ_casual: 'Casual',
+      trip_occ_fancy: 'Edles Dinner'
     },
   };
 
@@ -17313,6 +17656,712 @@ window.saveCurrentOutfit = function() {
 
   // Expose for external refresh
   window.refreshColorHarmony = renderAll;
+})();
+
+// ============================================================
+// TRIP PACKING PLANNER — smart packing list based on weather
+// forecast and the user's digital closet. Uses Open-Meteo API
+// for geocoding + weather. Generates packing suggestions, daily
+// outfit planner, and missing item warnings.
+// ============================================================
+(function initTripPacking() {
+  'use strict';
+
+  var _t = (typeof window.t === 'function') ? window.t : function(k) { return k; };
+
+  // --- Constants ---
+  var TYPE_MAP = {
+    shirt:     { emoji: '👕', key: 'type_shirt' },
+    pants:     { emoji: '👖', key: 'type_pants' },
+    jacket:    { emoji: '🧥', key: 'type_jacket' },
+    dress:     { emoji: '👗', key: 'type_dress' },
+    shoes:     { emoji: '👟', key: 'type_shoes' },
+    accessory: { emoji: '👜', key: 'type_accessory' }
+  };
+
+  // Weather-based clothing rules
+  var WEATHER_RULES = {
+    freezing:  { maxTemp: 0,   need: ['jacket','shirt','pants','shoes'], layer: 3 },
+    cold:      { maxTemp: 8,   need: ['jacket','shirt','pants','shoes'], layer: 2 },
+    cool:      { maxTemp: 15,  need: ['jacket','shirt','pants','shoes'], layer: 1 },
+    mild:      { maxTemp: 20,  need: ['shirt','pants','shoes'],          layer: 1 },
+    warm:      { maxTemp: 26,  need: ['shirt','pants','shoes'],          layer: 0 },
+    hot:       { maxTemp: 99,  need: ['shirt','pants','shoes'],          layer: 0 }
+  };
+
+  var RAIN_THRESHOLD = 40; // precipitation_probability %
+
+  var OCCASIONS = [
+    { id: 'business', emoji: '💼', labelKey: 'trip_occ_business', needs: { shirt: 1, pants: 1, jacket: 1, shoes: 1 } },
+    { id: 'casual',   emoji: '☕', labelKey: 'trip_occ_casual',  needs: { shirt: 1, pants: 1, shoes: 1 } },
+    { id: 'fancy',    emoji: '🍷', labelKey: 'trip_occ_fancy',   needs: { dress: 1, shoes: 1, accessory: 1 } }
+  ];
+
+  // --- State ---
+  var tripData = null;      // { destination, days, lat, lon, weather, packingList, dailyPlan, missingItems }
+  var packedItems = {};     // { itemId: true }
+  var activeTab = 'packing';
+
+  // --- DOM ---
+  var modal = document.getElementById('tripPackingModal');
+  var openBtn = document.getElementById('tripPackingBtn');
+  var closeBtn = document.getElementById('tripPackingClose');
+
+  if (!modal || !openBtn) return;
+
+  // Move modal to <body>
+  if (modal.parentElement !== document.body) {
+    document.body.appendChild(modal);
+  }
+
+  // --- Weather helpers ---
+  function getWeatherCategory(minTemp, maxRain) {
+    var cats = Object.keys(WEATHER_RULES);
+    for (var i = 0; i < cats.length; i++) {
+      if (minTemp <= WEATHER_RULES[cats[i]].maxTemp) return cats[i];
+    }
+    return 'hot';
+  }
+
+  function getWeatherIcon(maxTemp, maxRain, maxWind) {
+    if (maxRain >= 70) return '🌧️';
+    if (maxRain >= 40) return '🌦️';
+    if (maxTemp <= 0) return '🥶';
+    if (maxTemp <= 8) return '❄️';
+    if (maxTemp <= 15) return '🧥';
+    if (maxWind >= 30) return '💨';
+    if (maxTemp >= 30) return '🔥';
+    if (maxTemp >= 24) return '☀️';
+    return '⛅';
+  }
+
+  // --- Geocoding (Open-Meteo) ---
+  async function geocodeCity(cityName) {
+    var url = 'https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(cityName) + '&count=5&language=en&format=json';
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function() { controller.abort(); }, 8000);
+    try {
+      var res = await fetch(url, { mode: 'cors', signal: controller.signal });
+      if (!res.ok) throw new Error('Geocoding error ' + res.status);
+      var data = await res.json();
+      if (!data.results || data.results.length === 0) throw new Error(_t('trip_error_city_not_found'));
+      var r = data.results[0];
+      return { lat: r.latitude, lon: r.longitude, name: r.name + (r.country ? ', ' + r.country : '') };
+    } finally {
+      clearTimeout(timeoutId);
+    }
+  }
+
+  // --- Weather forecast (Open-Meteo, up to 16 days) ---
+  async function fetchTripWeather(lat, lon, days) {
+    var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat.toFixed(2) + '&longitude=' + lon.toFixed(2) +
+      '&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max,weathercode&timezone=auto&forecast_days=' + Math.min(days, 16);
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function() { controller.abort(); }, 10000);
+    try {
+      var res = await fetch(url, { mode: 'cors', signal: controller.signal });
+      if (!res.ok) throw new Error('Weather API error ' + res.status);
+      return await res.json();
+    } finally {
+      clearTimeout(timeoutId);
+    }
+  }
+
+  // --- Closet helpers ---
+  function getClosetItems() {
+    return (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits : [];
+  }
+
+  function getItemsByType(type) {
+    return getClosetItems().filter(function(item) { return item.type === type; });
+  }
+
+  function typeLabel(type) {
+    var m = TYPE_MAP[type];
+    return m ? m.emoji + ' ' + _t(m.key) : type;
+  }
+
+  // --- Packing algorithm ---
+  function buildPackingList(weather, days) {
+    var daily = weather.daily || {};
+    var maxTemps = daily.temperature_2m_max || [];
+    var minTemps = daily.temperature_2m_min || [];
+    var rainProbs = daily.precipitation_probability_max || [];
+    var windSpeeds = daily.wind_speed_10m_max || [];
+
+    // Determine overall trip weather
+    var overallMinTemp = 99, overallMaxRain = 0, overallMaxWind = 0;
+    var hasRain = false;
+    var dayWeathers = [];
+
+    for (var d = 0; d < days; d++) {
+      var minT = d < minTemps.length ? Math.round(minTemps[d]) : 15;
+      var maxT = d < maxTemps.length ? Math.round(maxTemps[d]) : 20;
+      var rain = d < rainProbs.length ? Math.round(rainProbs[d]) : 0;
+      var wind = d < windSpeeds.length ? Math.round(windSpeeds[d]) : 10;
+
+      if (minT < overallMinTemp) overallMinTemp = minT;
+      if (rain > overallMaxRain) overallMaxRain = rain;
+      if (wind > overallMaxWind) overallMaxWind = wind;
+      if (rain >= RAIN_THRESHOLD) hasRain = true;
+
+      var cat = getWeatherCategory(minT, rain);
+      dayWeathers.push({ day: d, minTemp: minT, maxTemp: maxT, rain: rain, wind: wind, category: cat });
+    }
+
+    var mainCat = getWeatherCategory(overallMinTemp, overallMaxRain);
+    var rule = WEATHER_RULES[mainCat];
+
+    // Build required categories with counts
+    var required = {};
+    rule.need.forEach(function(type) {
+      var baseCount = Math.min(days, type === 'shoes' ? 2 : (type === 'accessory' ? 1 : Math.ceil(days / 2)));
+      if (rule.layer >= 2 && type === 'jacket') baseCount = Math.max(baseCount, Math.ceil(days / 3));
+      if (hasRain && type === 'jacket') baseCount = Math.max(baseCount, 1);
+      required[type] = baseCount;
+    });
+
+    // Add dress option if weather is warm+
+    if (mainCat === 'warm' || mainCat === 'hot') {
+      if (!required.dress) required.dress = Math.ceil(days / 3);
+    }
+
+    // Match with closet items
+    var packingList = [];
+    var usedItems = {};
+
+    Object.keys(required).forEach(function(type) {
+      var count = required[type];
+      var closetItems = getItemsByType(type);
+      var available = closetItems.filter(function(item) { return !usedItems[item.id]; });
+
+      var items = [];
+      for (var i = 0; i < Math.min(count, available.length); i++) {
+        items.push(available[i]);
+        usedItems[available[i].id] = true;
+      }
+
+      packingList.push({
+        type: type,
+        needed: count,
+        have: items.length,
+        items: items,
+        category: mainCat
+      });
+    });
+
+    return { packingList: packingList, dayWeathers: dayWeathers, hasRain: hasRain, mainCategory: mainCat, overallMinTemp: overallMinTemp, overallMaxRain: overallMaxRain, overallMaxWind: overallMaxWind };
+  }
+
+  // --- Daily outfit planner ---
+  function buildDailyPlan(packingResult, days) {
+    var plan = [];
+    var packingList = packingResult.packingList;
+    var dayWeathers = packingResult.dayWeathers;
+
+    // Collect all packed items by type
+    var byType = {};
+    packingList.forEach(function(cat) {
+      byType[cat.type] = cat.items.slice();
+    });
+
+    for (var d = 0; d < days; d++) {
+      var dw = d < dayWeathers.length ? dayWeathers[d] : dayWeathers[dayWeathers.length - 1] || { category: 'mild', minTemp: 15, maxTemp: 20, rain: 0, wind: 10 };
+      var catRule = WEATHER_RULES[dw.category] || WEATHER_RULES.mild;
+
+      var outfit = [];
+      catRule.need.forEach(function(type) {
+        if (byType[type] && byType[type].length > 0) {
+          // Rotate items so different days get different items
+          var idx = d % byType[type].length;
+          var item = byType[type][idx];
+          // Avoid using the same item twice in a row if possible
+          var used = outfit.map(function(o) { return o.id; });
+          if (outfit.length > 0 && byType[type].length > 1) {
+            for (var t = 0; t < byType[type].length; t++) {
+              if (used.indexOf(byType[type][t].id) === -1) {
+                item = byType[type][t];
+                break;
+              }
+            }
+          }
+          outfit.push(item);
+        }
+      });
+
+      plan.push({
+        day: d,
+        weather: dw,
+        outfit: outfit
+      });
+    }
+
+    return plan;
+  }
+
+  // --- Missing items detection ---
+  function findMissingItems(packingResult) {
+    var missing = [];
+    var packingList = packingResult.packingList;
+    var mainCat = packingResult.mainCategory;
+
+    packingList.forEach(function(cat) {
+      if (cat.have < cat.needed) {
+        var deficit = cat.needed - cat.have;
+        var tempNote = '';
+        if (mainCat === 'freezing' || mainCat === 'cold') {
+          if (cat.type === 'jacket') tempNote = _t('trip_missing_no_warm_coat').replace('{temp}', packingResult.overallMinTemp + '°C');
+        }
+        if (packingResult.hasRain && cat.type === 'jacket') {
+          tempNote = _t('trip_missing_rain_jacket');
+        }
+        missing.push({
+          type: cat.type,
+          needed: cat.needed,
+          have: cat.have,
+          deficit: deficit,
+          note: tempNote
+        });
+      }
+    });
+
+    // Extra warnings
+    if (packingResult.overallMaxRain >= RAIN_THRESHOLD) {
+      var hasUmbrella = getClosetItems().some(function(item) {
+        return (item.type === 'accessory') && (item.color || '').toLowerCase().indexOf('umbrella') >= 0;
+      });
+      if (!hasUmbrella && !missing.some(function(m) { return m.type === 'accessory'; })) {
+        missing.push({
+          type: 'accessory',
+          needed: 1,
+          have: 0,
+          deficit: 1,
+          note: _t('trip_missing_umbrella')
+        });
+      }
+    }
+
+    return missing;
+  }
+
+  // --- Occasion planner (PRO) ---
+  function buildOccasionPlan(days) {
+    var plan = [];
+    var allItems = getClosetItems();
+    var byType = {};
+    allItems.forEach(function(item) {
+      if (!byType[item.type]) byType[item.type] = [];
+      byType[item.type].push(item);
+    });
+
+    OCCASIONS.forEach(function(occ) {
+      var dayPlans = [];
+      for (var d = 0; d < Math.min(days, 3); d++) {
+        var outfit = [];
+        Object.keys(occ.needs).forEach(function(type) {
+          var items = byType[type] || [];
+          if (items.length > 0) {
+            outfit.push(items[d % items.length]);
+          }
+        });
+        dayPlans.push({ day: d, outfit: outfit });
+      }
+      plan.push({ occasion: occ, dayPlans: dayPlans });
+    });
+
+    return plan;
+  }
+
+  // --- Render functions ---
+  function renderWeather(packingResult, locName) {
+    var weatherEl = document.getElementById('tripWeather');
+    var locEl = document.getElementById('tripWeatherLoc');
+    var gridEl = document.getElementById('tripWeatherGrid');
+    if (!weatherEl || !gridEl) return;
+
+    weatherEl.classList.remove('hidden');
+    if (locEl) locEl.textContent = '· ' + locName;
+
+    var html = '';
+    var dayWeathers = packingResult.dayWeathers;
+    var now = new Date();
+
+    dayWeathers.forEach(function(dw, idx) {
+      var date = new Date(now);
+      date.setDate(date.getDate() + idx);
+      var dayName = date.toLocaleDateString(typeof window.t === 'function' ? (window.currentLang || 'en') : 'en', { weekday: 'short' });
+
+      var icon = getWeatherIcon(dw.minTemp, dw.rain, dw.wind);
+      var cls = dw.rain >= RAIN_THRESHOLD ? ' rain' : (dw.minTemp <= 5 ? ' cold' : (dw.maxTemp >= 28 ? ' warm' : ''));
+
+      html += '<div class="trip-weather-day' + cls + '">';
+      html += '<div class="tw-label">' + dayName + '</div>';
+      html += '<div class="tw-icon">' + icon + '</div>';
+      html += '<div class="tw-temp">' + dw.maxTemp + '°</div>';
+      if (dw.rain > 0) html += '<div class="tw-rain">' + dw.rain + '%</div>';
+      html += '</div>';
+    });
+
+    gridEl.innerHTML = html;
+  }
+
+  function renderPackingList(packingList) {
+    var gridEl = document.getElementById('tripPackingGrid');
+    var emptyEl = document.getElementById('tripPackingEmpty');
+    if (!gridEl) return;
+
+    if (!packingList || packingList.length === 0) {
+      gridEl.innerHTML = '';
+      if (emptyEl) emptyEl.classList.remove('hidden');
+      return;
+    }
+
+    if (emptyEl) emptyEl.classList.add('hidden');
+
+    var html = '';
+    packingList.forEach(function(cat) {
+      html += '<div class="trip-pack-category">';
+      html += '<div class="flex items-center justify-between mb-2">';
+      html += '<div class="text-xs font-bold text-white flex items-center gap-1.5">' + typeLabel(cat.type) + '</div>';
+      html += '<div class="trip-pack-count">' + cat.have + '/' + cat.needed + '</div>';
+      html += '</div>';
+
+      cat.items.forEach(function(item) {
+        var isPacked = !!packedItems[item.id];
+        html += '<div class="trip-pack-item">';
+        html += '<div class="trip-pack-check' + (isPacked ? ' checked' : '') + '" data-pack-id="' + item.id + '">';
+        html += '<svg fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>';
+        html += '</div>';
+
+        var imgSrc = item.image || '';
+        var itemName = item.color ? _t(item.colorId || item.color) : typeLabel(cat.type);
+        if (imgSrc) {
+          html += '<img src="' + imgSrc + '" class="chip-thumb" alt="" />';
+        } else {
+          html += '<div class="chip-color" style="background:' + (item.colorHex || '#888') + '"></div>';
+        }
+        html += '<span class="trip-pack-item-name' + (isPacked ? ' packed' : '') + '">' + itemName + '</span>';
+        html += '</div>';
+      });
+
+      // Show deficit
+      if (cat.have < cat.needed) {
+        var deficit = cat.needed - cat.have;
+        html += '<div class="trip-pack-item">';
+        html += '<div class="trip-pack-check" style="border-color:rgba(239,68,68,0.4)"></div>';
+        html += '<span class="trip-pack-item-name" style="color:rgba(252,165,165,0.6)">' + deficit + '× ' + _t('trip_needed_more') + '</span>';
+        html += '</div>';
+      }
+
+      html += '</div>';
+    });
+
+    gridEl.innerHTML = html;
+
+    // Attach check handlers
+    gridEl.querySelectorAll('.trip-pack-check[data-pack-id]').forEach(function(el) {
+      el.addEventListener('click', function() {
+        var id = this.dataset.packId;
+        packedItems[id] = !packedItems[id];
+        renderPackingList(tripData.packingList);
+      });
+    });
+  }
+
+  function renderDailyPlan(dailyPlan) {
+    var gridEl = document.getElementById('tripDailyGrid');
+    var emptyEl = document.getElementById('tripDailyEmpty');
+    if (!gridEl) return;
+
+    if (!dailyPlan || dailyPlan.length === 0) {
+      gridEl.innerHTML = '';
+      if (emptyEl) emptyEl.classList.remove('hidden');
+      return;
+    }
+
+    if (emptyEl) emptyEl.classList.add('hidden');
+
+    var now = new Date();
+    var html = '';
+
+    dailyPlan.forEach(function(day) {
+      var date = new Date(now);
+      date.setDate(date.getDate() + day.day);
+      var dateStr = date.toLocaleDateString(typeof window.t === 'function' ? (window.currentLang || 'en') : 'en', { weekday: 'short', month: 'short', day: 'numeric' });
+      var icon = getWeatherIcon(day.weather.minTemp, day.weather.rain, day.weather.wind);
+
+      html += '<div class="trip-daily-card">';
+      html += '<div class="trip-daily-day">';
+      html += '<span>' + _t('trip_day').replace('{n}', day.day + 1) + '</span>';
+      html += '<span style="color:rgba(156,163,175,0.6);font-weight:400;font-size:0.6rem">' + dateStr + '</span>';
+      html += '<span class="ml-auto">' + icon + ' ' + day.weather.maxTemp + '°</span>';
+      html += '</div>';
+
+      html += '<div class="trip-daily-items">';
+      day.outfit.forEach(function(item) {
+        var imgSrc = item.image || '';
+        var itemName = item.color ? _t(item.colorId || item.color) : (TYPE_MAP[item.type] ? _t(TYPE_MAP[item.type].key) : item.type);
+
+        html += '<div class="trip-daily-chip">';
+        if (imgSrc) {
+          html += '<img src="' + imgSrc + '" class="chip-thumb" alt="" />';
+        } else {
+          html += '<div class="chip-color" style="background:' + (item.colorHex || '#888') + '"></div>';
+        }
+        html += '<span>' + itemName + '</span>';
+        html += '</div>';
+      });
+
+      if (day.outfit.length === 0) {
+        html += '<span class="text-[10px] text-gray-500 italic">' + _t('trip_no_items_for_day') + '</span>';
+      }
+      html += '</div>';
+      html += '</div>';
+    });
+
+    gridEl.innerHTML = html;
+  }
+
+  function renderMissingItems(missingItems) {
+    var gridEl = document.getElementById('tripMissingGrid');
+    var noneEl = document.getElementById('tripMissingNone');
+    if (!gridEl) return;
+
+    if (!missingItems || missingItems.length === 0) {
+      gridEl.innerHTML = '';
+      if (noneEl) noneEl.classList.remove('hidden');
+      return;
+    }
+
+    if (noneEl) noneEl.classList.add('hidden');
+
+    var html = '';
+    missingItems.forEach(function(m) {
+      var icon = TYPE_MAP[m.type] ? TYPE_MAP[m.type].emoji : '⚠️';
+      html += '<div class="trip-missing-item">';
+      html += '<div class="missing-icon">' + icon + '</div>';
+      html += '<div>';
+      html += '<div class="missing-text">' + _t('trip_missing_item').replace('{type}', typeLabel(m.type)).replace('{n}', m.deficit) + '</div>';
+      if (m.note) html += '<div class="missing-sub">' + m.note + '</div>';
+      html += '</div>';
+      html += '</div>';
+    });
+
+    gridEl.innerHTML = html;
+  }
+
+  function renderOccasions(days) {
+    var proEl = document.getElementById('tripOccasionsPro');
+    var lockedEl = document.getElementById('tripOccasionsLocked');
+    if (!proEl || !lockedEl) return;
+
+    var isPro = (typeof isProUser === 'function' && isProUser()) || (typeof window.__DS_IS_PRO !== 'undefined' && window.__DS_IS_PRO);
+
+    if (!isPro) {
+      proEl.innerHTML = '';
+      proEl.classList.add('hidden');
+      lockedEl.classList.remove('hidden');
+      return;
+    }
+
+    lockedEl.classList.add('hidden');
+    proEl.classList.remove('hidden');
+
+    var occasionPlan = buildOccasionPlan(days);
+    var html = '';
+
+    occasionPlan.forEach(function(op) {
+      var occ = op.occasion;
+      html += '<div class="trip-occasion-card">';
+      html += '<div class="text-xs font-bold text-white mb-2 flex items-center gap-1.5">';
+      html += '<span>' + occ.emoji + '</span>';
+      html += '<span>' + _t(occ.labelKey) + '</span>';
+      html += '</div>';
+
+      op.dayPlans.forEach(function(dp) {
+        html += '<div class="flex items-center gap-2 mb-1.5">';
+        html += '<span class="text-[10px] text-gray-400 font-bold w-12">' + _t('trip_day').replace('{n}', dp.day + 1) + '</span>';
+        html += '<div class="flex gap-1 flex-wrap">';
+        dp.outfit.forEach(function(item) {
+          var imgSrc = item.image || '';
+          var name = item.color ? _t(item.colorId || item.color) : (TYPE_MAP[item.type] ? _t(TYPE_MAP[item.type].key) : item.type);
+          html += '<div class="trip-daily-chip">';
+          if (imgSrc) {
+            html += '<img src="' + imgSrc + '" class="chip-thumb" alt="" />';
+          } else {
+            html += '<div class="chip-color" style="background:' + (item.colorHex || '#888') + '"></div>';
+          }
+          html += '<span>' + name + '</span>';
+          html += '</div>';
+        });
+        html += '</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+    });
+
+    proEl.innerHTML = html;
+  }
+
+  // --- Tab switching ---
+  function switchTab(tab) {
+    activeTab = tab;
+    var tabs = document.querySelectorAll('.trip-tab');
+    tabs.forEach(function(btn) {
+      if (btn.dataset.tripTab === tab) {
+        btn.className = 'trip-tab flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-colors bg-sky-500/20 text-sky-300 border border-sky-500/30';
+      } else {
+        btn.className = 'trip-tab flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-colors bg-white/5 text-gray-400 border border-transparent hover:bg-white/10';
+      }
+    });
+
+    var panels = { packing: 'tripPackingPanel', daily: 'tripDailyPanel', missing: 'tripMissingPanel', occasions: 'tripOccasionsPanel' };
+    Object.keys(panels).forEach(function(k) {
+      var el = document.getElementById(panels[k]);
+      if (el) el.classList.toggle('hidden', k !== tab);
+    });
+  }
+
+  // --- Main generate flow ---
+  async function generatePackingList() {
+    var destInput = document.getElementById('tripDestination');
+    var daysInput = document.getElementById('tripDays');
+    var loadingEl = document.getElementById('tripLoading');
+    var errorEl = document.getElementById('tripError');
+    var tabsBar = document.getElementById('tripTabsBar');
+
+    var destination = destInput ? destInput.value.trim() : '';
+    var days = daysInput ? parseInt(daysInput.value, 10) : 3;
+
+    if (!destination) {
+      if (errorEl) { errorEl.classList.remove('hidden'); errorEl.textContent = _t('trip_error_no_city'); }
+      return;
+    }
+    if (isNaN(days) || days < 1) days = 1;
+    if (days > 16) days = 16;
+
+    // Show loading
+    if (loadingEl) loadingEl.classList.remove('hidden');
+    if (errorEl) errorEl.classList.add('hidden');
+
+    try {
+      // 1. Geocode
+      var geo = await geocodeCity(destination);
+
+      // 2. Fetch weather
+      var weather = await fetchTripWeather(geo.lat, geo.lon, days);
+
+      // 3. Build packing list
+      var packingResult = buildPackingList(weather, days);
+
+      // 4. Build daily plan
+      var dailyPlan = buildDailyPlan(packingResult, days);
+
+      // 5. Find missing items
+      var missingItems = findMissingItems(packingResult);
+
+      // Save state
+      tripData = {
+        destination: destination,
+        days: days,
+        lat: geo.lat,
+        lon: geo.lon,
+        locName: geo.name,
+        weather: weather,
+        packingList: packingResult.packingList,
+        dailyPlan: dailyPlan,
+        missingItems: missingItems,
+        packingResult: packingResult
+      };
+
+      // Render everything
+      renderWeather(packingResult, geo.name);
+      renderPackingList(packingResult.packingList);
+      renderDailyPlan(dailyPlan);
+      renderMissingItems(missingItems);
+      renderOccasions(days);
+
+      // Show tabs
+      if (tabsBar) tabsBar.classList.remove('hidden');
+      switchTab('packing');
+
+    } catch (err) {
+      if (errorEl) {
+        errorEl.classList.remove('hidden');
+        errorEl.textContent = err.message || _t('trip_error_generic');
+      }
+    } finally {
+      if (loadingEl) loadingEl.classList.add('hidden');
+    }
+  }
+
+  // --- Event listeners ---
+  var tabsBar = document.getElementById('tripTabsBar');
+  if (tabsBar) {
+    tabsBar.addEventListener('click', function(e) {
+      var btn = e.target.closest('.trip-tab');
+      if (btn && btn.dataset.tripTab) switchTab(btn.dataset.tripTab);
+    });
+  }
+
+  var generateBtn = document.getElementById('tripGenerateBtn');
+  if (generateBtn) {
+    generateBtn.addEventListener('click', function() {
+      if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+      generatePackingList();
+    });
+  }
+
+  // Enter key on destination input
+  var destInput = document.getElementById('tripDestination');
+  if (destInput) {
+    destInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        generatePackingList();
+      }
+    });
+  }
+
+  // Open/close modal
+  openBtn.addEventListener('click', function() {
+    if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+    // Reset state
+    tripData = null;
+    packedItems = {};
+    activeTab = 'packing';
+
+    var tabsBar = document.getElementById('tripTabsBar');
+    if (tabsBar) tabsBar.classList.add('hidden');
+    var weatherEl = document.getElementById('tripWeather');
+    if (weatherEl) weatherEl.classList.add('hidden');
+    var errorEl = document.getElementById('tripError');
+    if (errorEl) errorEl.classList.add('hidden');
+
+    var packingGrid = document.getElementById('tripPackingGrid');
+    if (packingGrid) packingGrid.innerHTML = '';
+    var dailyGrid = document.getElementById('tripDailyGrid');
+    if (dailyGrid) dailyGrid.innerHTML = '';
+    var missingGrid = document.getElementById('tripMissingGrid');
+    if (missingGrid) missingGrid.innerHTML = '';
+
+    switchTab('packing');
+    modal.classList.remove('hidden');
+  });
+
+  closeBtn.addEventListener('click', function() { modal.classList.add('hidden'); });
+  modal.addEventListener('click', function(e) { if (e.target === modal) modal.classList.add('hidden'); });
+
+  // Expose for external refresh
+  window.refreshTripPacking = function() {
+    if (tripData) {
+      renderPackingList(tripData.packingList);
+      renderDailyPlan(tripData.dailyPlan);
+      renderMissingItems(tripData.missingItems);
+      renderOccasions(tripData.days);
+    }
+  };
 })();
 
 // ============================================================
