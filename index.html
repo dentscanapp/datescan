@@ -3110,12 +3110,11 @@ if (window.__DS_IS_ANDROID_APP) {
   #pwa-install-banner .pwa-icon {
     width: 48px; height: 48px; flex-shrink: 0;
     border-radius: 14px;
-    background: linear-gradient(135deg, #ec4899 0%, #a855f7 100%);
-    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
     box-shadow: 0 4px 12px rgba(236,72,153,0.30);
   }
-  #pwa-install-banner .pwa-icon svg {
-    width: 24px; height: 24px; fill: #fff;
+  #pwa-install-banner .pwa-icon img {
+    width: 100%; height: 100%; object-fit: cover;
   }
   #pwa-install-banner .pwa-text {
     flex: 1; min-width: 0;
@@ -8856,7 +8855,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       pwa_install_title: 'Add to Home Screen',
       pwa_install_desc: 'Install DateScan for faster access and offline support.',
       pwa_install_btn: 'Install',
-      color_black: 'Dark / Black',
+      pwa_install_ios: 'Tap the Share button ⬆ then "Add to Home Screen"',
       color_white: 'Light / White',
       color_gray: 'Gray',
       color_blue: 'Blue',
@@ -10441,7 +10440,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       pwa_install_title: 'Hozzáadás a kezdőképernyőhöz',
       pwa_install_desc: 'Telepítsd a DateScan-t gyorsabb hozzáférésért és offline támogatásért.',
       pwa_install_btn: 'Telepítés',
-      color_black: 'Sötét / Fekete',
+      pwa_install_ios: 'Koppints a Megosztás gombra ⬆ majd „Hozzáadás a kezdőképernyőhöz"',
       color_white: 'Világos / Fehér',
       color_gray: 'Szürke',
       color_blue: 'Kék',
@@ -12025,7 +12024,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       pwa_install_title: 'Zum Startbildschirm hinzufügen',
       pwa_install_desc: 'Installiere DateScan für schnelleren Zugriff und Offline-Unterstützung.',
       pwa_install_btn: 'Installieren',
-      color_black: 'Dunkel / Schwarz',
+      pwa_install_ios: 'Tippe auf „Teilen" ⬆ und dann „Zum Home-Bildschirm"',
       color_white: 'Hell / Weiß',
       color_gray: 'Grau',
       color_blue: 'Blau',
@@ -16903,19 +16902,28 @@ function setupPwaInstall() {
   // PWA install banner — ONLY shown to web users (not Android app).
   // Android TWA users already have the native app, so the .gumroad-only
   // CSS class hides this entire element when body.platform-android is set.
-  // Additionally, we never call .prompt() for Android app users as a safety net.
 
   var banner = document.getElementById('pwa-install-banner');
   var installBtn = document.getElementById('pwa-install-btn');
   if (!banner || !installBtn) return;
 
+  // Never show in Android app
+  if (window.__DS_IS_ANDROID_APP) return;
+
+  // Already running as installed PWA → skip
+  try {
+    if (window.matchMedia('(display-mode: standalone)').matches || localStorage.getItem('pwa_installed') === '1') return;
+  } catch(e) {}
+
   // If user previously dismissed the banner, respect that for this session
   var dismissed = false;
   try { dismissed = sessionStorage.getItem('pwa_banner_dismissed') === '1'; } catch(e) {}
 
+  var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+
   function showBanner() {
     if (dismissed) return;
-    if (window.__DS_IS_ANDROID_APP) return; // extra safety: never show in Android app
+    if (window.__DS_IS_ANDROID_APP) return;
     banner.classList.add('visible');
   }
 
@@ -16933,45 +16941,50 @@ function setupPwaInstall() {
     });
   }
 
-  // Install button — trigger the deferred prompt
+  // Install button
   installBtn.addEventListener('click', function() {
-    if (!window._deferredInstallPrompt) return;
-    if (window.__DS_IS_ANDROID_APP) return; // never prompt in Android app
+    if (window.__DS_IS_ANDROID_APP) return;
 
-    window._deferredInstallPrompt.prompt();
-    window._deferredInstallPrompt.userChoice.then(function(choiceResult) {
-      if (choiceResult.outcome === 'accepted') {
-        // User installed — hide banner permanently
-        hideBanner();
-        try { localStorage.setItem('pwa_installed', '1'); } catch(e) {}
+    // Case 1: Chrome/Edge deferred prompt available
+    if (window._deferredInstallPrompt) {
+      window._deferredInstallPrompt.prompt();
+      window._deferredInstallPrompt.userChoice.then(function(choiceResult) {
+        if (choiceResult.outcome === 'accepted') {
+          hideBanner();
+          try { localStorage.setItem('pwa_installed', '1'); } catch(e) {}
+        }
+        window._deferredInstallPrompt = null;
+      }).catch(function() {
+        window._deferredInstallPrompt = null;
+      });
+      return;
+    }
+
+    // Case 2: iOS Safari — show manual instructions
+    if (isIOS) {
+      var msg = typeof window.t === 'function' ? window.t('pwa_install_ios') : 'Tap the Share button ⬆ then "Add to Home Screen"';
+      if (window.dsPrivacy && window.dsPrivacy.showToast) {
+        window.dsPrivacy.showToast(msg, 5000);
+      } else {
+        alert(msg);
       }
-      // Clear the deferred prompt regardless
-      window._deferredInstallPrompt = null;
-    }).catch(function() {
-      window._deferredInstallPrompt = null;
-    });
+      return;
+    }
+
+    // Case 3: Other browsers — open Play Store
+    window.location.href = 'https://play.google.com/store/apps/details?id=app.datescan';
   });
 
-  // If the deferred prompt is already available (beforeinstallprompt already fired),
-  // show the banner immediately. Otherwise listen for the custom event.
-  if (window._deferredInstallPrompt && !dismissed && !window.__DS_IS_ANDROID_APP) {
-    showBanner();
-  }
+  // Show banner after short delay for ALL web visitors
+  // (beforeinstallprompt may or may not fire)
+  setTimeout(showBanner, 2000);
 
+  // If the deferred prompt fires later, banner is already visible
   window.addEventListener('pwa-installable', function() {
     if (!dismissed && !window.__DS_IS_ANDROID_APP) {
-      // Small delay to avoid jarring appearance alongside other UI
-      setTimeout(showBanner, 1500);
+      showBanner();
     }
   });
-
-  // If user already installed the PWA, don't show the banner
-  try {
-    if (window.matchMedia('(display-mode: standalone)').matches || localStorage.getItem('pwa_installed') === '1') {
-      hideBanner();
-      dismissed = true;
-    }
-  } catch(e) {}
 }
 
 // --- OFFLINE / ONLINE STATE ---
@@ -26799,7 +26812,7 @@ applyOfflineState(!navigator.onLine);
   <div class="pwa-card" style="position:relative;">
     <button class="pwa-close" aria-label="Close">&times;</button>
     <div class="pwa-icon">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14v-4H8l5-7v4h3l-5 7z"/></svg>
+      <img src="/icon-192.png" alt="DateScan" width="48" height="48" />
     </div>
     <div class="pwa-text">
       <div class="pwa-title" data-i18n="pwa_install_title">Add to Home Screen</div>
