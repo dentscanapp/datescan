@@ -279,7 +279,12 @@
       <a href="#privacy" class="hover:text-white transition">Privacy</a>
       <a href="#faq" class="hover:text-white transition">FAQ</a>
     </nav>
-    <a href="https://play.google.com/store/apps/details?id=app.datescan.twa" target="_blank" rel="noopener noreferrer" class="btn-primary text-xs sm:text-sm font-bold px-4 sm:px-5 py-2.5 rounded-full">Get the app →</a>
+    <!-- Mobile: compact icon-only button -->
+    <a href="https://play.google.com/store/apps/details?id=app.datescan.twa" target="_blank" rel="noopener noreferrer" class="sm:hidden flex items-center justify-center w-9 h-9 rounded-full bg-white/5 border border-white/12 text-white hover:bg-white/10 transition" aria-label="Get the app">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    </a>
+    <!-- Desktop: full text button -->
+    <a href="https://play.google.com/store/apps/details?id=app.datescan.twa" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex btn-primary text-xs sm:text-sm font-bold px-4 sm:px-5 py-2.5 rounded-full">Get the app →</a>
   </div>
 </header>
 
