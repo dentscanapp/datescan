@@ -3424,6 +3424,182 @@ if (window.__DS_IS_ANDROID_APP) {
     transition: border-color 0.2s;
   }
   .trip-occasion-card:hover { border-color: rgba(168,85,247,0.3); }
+
+  /* ===== GARMENT CARE TRACKER ===== */
+  .care-item-row {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 0.75rem;
+    padding: 0.7rem 0.75rem;
+    display: flex; align-items: center; gap: 0.6rem;
+    transition: border-color 0.2s;
+  }
+  .care-item-row:hover { border-color: rgba(251,113,133,0.3); }
+  .care-item-thumb {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.05);
+  }
+  .care-item-color {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem;
+  }
+  .care-item-info { flex: 1; min-width: 0; }
+  .care-item-name { font-size: 0.75rem; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .care-item-sub { font-size: 0.65rem; color: rgba(156,163,175,0.8); margin-top: 1px; }
+  .care-item-badge {
+    padding: 0.15rem 0.45rem;
+    border-radius: 0.375rem;
+    font-size: 0.6rem;
+    font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .care-badge-fresh { background: rgba(16,185,129,0.15); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.25); }
+  .care-badge-recent { background: rgba(59,130,246,0.15); color: #93c5fd; border: 1px solid rgba(59,130,246,0.25); }
+  .care-badge-awhile { background: rgba(251,191,36,0.15); color: #fcd34d; border: 1px solid rgba(251,191,36,0.25); }
+  .care-badge-long { background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.25); }
+  .care-badge-never { background: rgba(156,163,175,0.1); color: rgba(156,163,175,0.6); border: 1px solid rgba(156,163,175,0.15); }
+
+  .care-freq-bar-bg {
+    height: 6px; border-radius: 3px;
+    background: rgba(255,255,255,0.06);
+    overflow: hidden; flex: 1;
+  }
+  .care-freq-bar-fill {
+    height: 100%; border-radius: 3px;
+    transition: width 0.5s ease-out;
+  }
+
+  .care-clean-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    display: flex; align-items: center; gap: 0.6rem;
+    transition: border-color 0.2s;
+  }
+  .care-clean-card.needs-wash { border-color: rgba(251,191,36,0.3); background: rgba(251,191,36,0.04); }
+  .care-clean-card.overdue-wash { border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.04); }
+  .care-clean-btn {
+    padding: 0.25rem 0.55rem;
+    border-radius: 0.375rem;
+    font-size: 0.6rem;
+    font-weight: 700;
+    background: rgba(16,185,129,0.15);
+    color: #6ee7b7;
+    border: 1px solid rgba(16,185,129,0.25);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .care-clean-btn:hover { background: rgba(16,185,129,0.25); }
+
+  .care-mark-worn-btn {
+    padding: 0.25rem 0.55rem;
+    border-radius: 0.375rem;
+    font-size: 0.6rem;
+    font-weight: 700;
+    background: rgba(251,113,133,0.15);
+    color: #fda4af;
+    border: 1px solid rgba(251,113,133,0.25);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .care-mark-worn-btn:hover { background: rgba(251,113,133,0.25); }
+
+  /* --- Care Label Decoder --- */
+  .care-decoder-zone {
+    border: 2px dashed rgba(59,130,246,0.25);
+    border-radius: 1rem;
+    background: rgba(59,130,246,0.04);
+    padding: 1.25rem 1rem;
+    text-align: center;
+    transition: all 0.25s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .care-decoder-zone:hover { border-color: rgba(59,130,246,0.45); background: rgba(59,130,246,0.07); }
+  .care-decoder-zone.has-image { border-style: solid; border-color: rgba(59,130,246,0.35); cursor: default; padding: 0; }
+  .care-decoder-preview {
+    width: 100%; max-height: 220px; object-fit: contain;
+    border-radius: 0.75rem; display: block; margin: 0 auto;
+  }
+  .care-decoder-btn {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 0.45rem 0.9rem; border-radius: 0.5rem;
+    font-size: 0.7rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; border: none;
+  }
+  .care-decoder-btn-camera {
+    background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(99,102,241,0.2));
+    color: #93c5fd; border: 1px solid rgba(59,130,246,0.3);
+  }
+  .care-decoder-btn-camera:hover { background: linear-gradient(135deg, rgba(59,130,246,0.3), rgba(99,102,241,0.3)); }
+  .care-decoder-btn-upload {
+    background: rgba(255,255,255,0.06); color: #d1d5db;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .care-decoder-btn-upload:hover { background: rgba(255,255,255,0.1); }
+  .care-decoder-btn-analyze {
+    background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(20,184,166,0.2));
+    color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3);
+  }
+  .care-decoder-btn-analyze:hover { background: linear-gradient(135deg, rgba(16,185,129,0.3), rgba(20,184,166,0.3)); }
+  .care-decoder-btn-analyze:disabled { opacity: 0.4; cursor: not-allowed; }
+  .care-decoder-loading {
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    padding: 1.25rem; text-align: center;
+  }
+  .care-decoder-spinner {
+    width: 28px; height: 28px; border: 3px solid rgba(59,130,246,0.15);
+    border-top-color: #3b82f6; border-radius: 50%;
+    animation: care-spin 0.8s linear infinite;
+  }
+  @keyframes care-spin { to { transform: rotate(360deg); } }
+  .care-decoder-result {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 0.75rem; padding: 0.75rem; text-align: left;
+  }
+  .care-decoder-symbol-row {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.45rem 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .care-decoder-symbol-row:last-child { border-bottom: none; }
+  .care-decoder-symbol-icon {
+    width: 28px; height: 28px; border-radius: 6px;
+    background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; flex-shrink: 0;
+  }
+  .care-decoder-symbol-meaning {
+    font-size: 0.7rem; color: #e5e7eb; flex: 1; min-width: 0;
+  }
+  .care-decoder-symbol-category {
+    font-size: 0.55rem; color: rgba(156,163,175,0.7); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .care-decoder-summary {
+    background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.15);
+    border-radius: 0.5rem; padding: 0.55rem 0.7rem; margin-top: 0.5rem;
+    font-size: 0.65rem; color: #6ee7b7; line-height: 1.5;
+  }
+  .care-decoder-error {
+    background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15);
+    border-radius: 0.5rem; padding: 0.55rem 0.7rem; margin-top: 0.5rem;
+    font-size: 0.65rem; color: #fca5a5; line-height: 1.5;
+  }
+
 </style>
 
 <!-- ===== AGE GATE (18+) ===== -->
@@ -4689,6 +4865,10 @@ if (window.__DS_IS_ANDROID_APP) {
                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
                <span data-i18n="closet_trip_packing">Trip Pack</span>
             </button>
+            <button id="garmentCareBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-gradient-to-r from-rose-500/20 to-pink-500/20 border border-rose-500/30 text-rose-300 hover:from-rose-500/30 hover:to-pink-500/30 active:scale-[0.98] transition" title="Garment Care Tracker — when did you last wear it, cleaning reminders">
+               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+               <span data-i18n="closet_garment_care">Care</span>
+            </button>
             <button id="closetUploadBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-[0.98] transition">
                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/><circle cx="9" cy="10" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.814.014L6 21"/><path d="M19 2v6"/><path d="M22 5h-6"/></svg>
                <span data-i18n="closet_add_item">Add Item</span>
@@ -5217,6 +5397,108 @@ if (window.__DS_IS_ANDROID_APP) {
         <div class="flex items-center gap-2 text-[11px] text-gray-500">
           <span class="px-1.5 py-0.5 rounded text-[8px] font-bold bg-gradient-to-r from-brand-500 to-purple-500 text-white uppercase tracking-wider">PRO</span>
           <span data-i18n="trip_pro_hint">Occasion-based packing (business + casual + fancy) available with PRO</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== GARMENT CARE TRACKER MODAL ===== -->
+  <div id="garmentCareModal" class="hidden fixed inset-0 z-[115] bg-black/85 backdrop-blur-md flex items-center justify-center p-4" style="z-index:120">
+    <div class="premium-glass rounded-3xl border border-rose-500/20 max-w-lg w-full p-6 sm:p-7 relative max-h-[92vh] overflow-y-auto">
+      <button id="garmentCareClose" type="button" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition" aria-label="Close">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-rose-500/20 to-pink-500/20 border border-rose-500/30 flex items-center justify-center mb-4 mx-auto">
+        <svg class="w-7 h-7 text-rose-300" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <h3 class="font-serif text-2xl font-semibold text-white text-center mb-1" data-i18n="care_title">Garment Care Tracker</h3>
+      <p data-i18n="care_subtitle" class="text-sm text-gray-400 text-center mb-5 leading-relaxed">Track when you last wore each item, cleaning reminders, and garment health.</p>
+
+      <!-- Tab navigation -->
+      <div class="flex gap-1 mb-5 bg-white/5 rounded-xl p-1" id="careTabs">
+        <button data-care-tab="lastworn" class="care-tab flex-1 py-2 px-2 rounded-lg text-[11px] font-bold transition-colors bg-rose-500/20 text-rose-300 border border-rose-500/30" data-i18n="care_tab_lastworn">Last Worn</button>
+        <button data-care-tab="frequency" class="care-tab flex-1 py-2 px-2 rounded-lg text-[11px] font-bold transition-colors bg-white/5 text-gray-400 border border-transparent hover:bg-white/10" data-i18n="care_tab_frequency">Frequency</button>
+        <button data-care-tab="cleaning" class="care-tab flex-1 py-2 px-2 rounded-lg text-[11px] font-bold transition-colors bg-white/5 text-gray-400 border border-transparent hover:bg-white/10" data-i18n="care_tab_cleaning">Cleaning</button>
+        <button data-care-tab="pro" class="care-tab flex-1 py-2 px-2 rounded-lg text-[11px] font-bold transition-colors bg-white/5 text-gray-400 border border-transparent hover:bg-white/10" data-i18n="care_tab_pro">PRO</button>
+      </div>
+
+      <!-- Last Worn Tab -->
+      <div id="careLastWornPanel" class="care-panel">
+        <div class="text-[10px] uppercase tracking-widest text-rose-400 font-bold mb-3" data-i18n="care_lastworn_header">When Did You Last Wear It?</div>
+        <div id="careLastWornGrid" class="space-y-2">
+          <!-- Dynamically populated -->
+        </div>
+        <div id="careLastWornEmpty" class="hidden text-center py-8">
+          <div class="text-4xl mb-2">👕</div>
+          <p class="text-sm text-gray-400" data-i18n="care_empty_closet">Add items to your closet to start tracking wear history.</p>
+        </div>
+      </div>
+
+      <!-- Frequency Tab -->
+      <div id="careFrequencyPanel" class="care-panel hidden">
+        <div class="text-[10px] uppercase tracking-widest text-rose-400 font-bold mb-3" data-i18n="care_frequency_header">Wear Frequency</div>
+        <div id="careFrequencyGrid" class="space-y-2">
+          <!-- Dynamically populated -->
+        </div>
+        <div id="careFrequencyEmpty" class="hidden text-center py-8">
+          <div class="text-4xl mb-2">📊</div>
+          <p class="text-sm text-gray-400" data-i18n="care_empty_closet">Add items to your closet to start tracking wear history.</p>
+        </div>
+      </div>
+
+      <!-- Cleaning Tab -->
+      <div id="careCleaningPanel" class="care-panel hidden">
+        <div class="text-[10px] uppercase tracking-widest text-rose-400 font-bold mb-3" data-i18n="care_cleaning_header">Cleaning Reminders</div>
+        <div id="careCleaningGrid" class="space-y-2.5">
+          <!-- Dynamically populated -->
+        </div>
+        <div id="careCleaningAllClean" class="hidden text-center py-8">
+          <div class="text-4xl mb-2">✨</div>
+          <p class="text-sm text-gray-400" data-i18n="care_all_clean">All items are clean — nothing needs washing right now!</p>
+        </div>
+        <div id="careCleaningEmpty" class="hidden text-center py-8">
+          <div class="text-4xl mb-2">🧹</div>
+          <p class="text-sm text-gray-400" data-i18n="care_empty_closet">Add items to your closet to start tracking wear history.</p>
+        </div>
+      </div>
+
+      <!-- PRO Tab (Heatmap + Label Decoder + Depreciation) -->
+      <div id="careProPanel" class="care-panel hidden">
+        <div class="text-[10px] uppercase tracking-widest text-rose-400 font-bold mb-3 flex items-center gap-2">
+          <span data-i18n="care_pro_header">Advanced Care</span>
+          <span class="px-1.5 py-0.5 rounded text-[8px] font-bold bg-gradient-to-r from-brand-500 to-purple-500 text-white uppercase tracking-wider">PRO</span>
+        </div>
+        <div id="careProContent" class="space-y-4">
+          <!-- Dynamically populated for PRO users -->
+        </div>
+        <div id="careProLocked" class="text-center py-8">
+          <div class="w-12 h-12 rounded-xl bg-brand-500/15 border border-brand-500/30 flex items-center justify-center mx-auto mb-3">
+            <svg class="w-6 h-6 text-brand-400" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <p class="text-sm text-gray-400 mb-4" data-i18n="care_pro_lock_desc">Unlock wear heatmap calendar, care label decoder, and depreciation tracker with PRO.</p>
+          <!-- PRO feature previews -->
+          <div class="space-y-2.5 text-left max-w-xs mx-auto">
+            <div class="flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+              <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-sm">🗓️</div>
+              <div><div class="text-xs font-bold text-white" data-i18n="care_pro_heatmap_title">Heatmap Calendar</div><div class="text-[10px] text-gray-500" data-i18n="care_pro_heatmap_desc">Visual wear pattern over the year</div></div>
+            </div>
+            <div class="flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+              <div class="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-sm">🏷️</div>
+              <div><div class="text-xs font-bold text-white" data-i18n="care_pro_label_title">Care Label Decoder</div><div class="text-[10px] text-gray-500" data-i18n="care_pro_label_desc">Scan a label, AI explains care symbols</div></div>
+            </div>
+            <div class="flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+              <div class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-sm">💰</div>
+              <div><div class="text-xs font-bold text-white" data-i18n="care_pro_value_title">Depreciation Tracker</div><div class="text-[10px] text-gray-500" data-i18n="care_pro_value_desc">Track how much your items are worth now</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRO hint footer -->
+      <div class="mt-5 pt-4 border-t border-white/5">
+        <div class="flex items-center gap-2 text-[11px] text-gray-500">
+          <span class="px-1.5 py-0.5 rounded text-[8px] font-bold bg-gradient-to-r from-brand-500 to-purple-500 text-white uppercase tracking-wider">PRO</span>
+          <span data-i18n="care_pro_hint">Heatmap calendar, care label decoder & depreciation tracker available with PRO</span>
         </div>
       </div>
     </div>
@@ -10344,7 +10626,64 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       trip_error_generic: 'Could not generate packing list. Please try again.',
       trip_occ_business: 'Business',
       trip_occ_casual: 'Casual',
-      trip_occ_fancy: 'Fancy Dinner'
+      trip_occ_fancy: 'Fancy Dinner',
+
+      // Garment Care Tracker
+      closet_garment_care: 'Care',
+      care_title: 'Garment Care Tracker',
+      care_subtitle: 'Track when you last wore each item, cleaning reminders, and garment health.',
+      care_tab_lastworn: 'Last Worn',
+      care_tab_frequency: 'Frequency',
+      care_tab_cleaning: 'Cleaning',
+      care_tab_pro: 'PRO',
+      care_lastworn_header: 'When Did You Last Wear It?',
+      care_frequency_header: 'Wear Frequency',
+      care_cleaning_header: 'Cleaning Reminders',
+      care_pro_header: 'Advanced Care',
+      care_empty_closet: 'Add items to your closet to start tracking wear history.',
+      care_all_clean: 'All items are clean — nothing needs washing right now!',
+      care_never_worn: 'Never worn',
+      care_today: 'Today',
+      care_yesterday: 'Yesterday',
+      care_days_ago: '{n}d ago',
+      care_never: 'Never',
+      care_fresh: 'Fresh',
+      care_recent: 'Recent',
+      care_awhile: 'Awhile',
+      care_long_ago: 'Long ago',
+      care_wear_btn: 'Wear',
+      care_marked_worn: 'Marked as worn today!',
+      care_worn_times: '{n}× worn',
+      care_mark_clean: 'Clean',
+      care_marked_clean: 'Marked as cleaned!',
+      care_needs_clean: 'Not cleaned for {days} days',
+      care_overdue_clean: 'Overdue! {days} days since last clean',
+      care_worn_since_clean: 'Worn {n}× since last clean',
+      care_pro_lock_desc: 'Unlock wear heatmap calendar, care label decoder, and depreciation tracker with PRO.',
+      care_pro_hint: 'Heatmap calendar, care label decoder & depreciation tracker available with PRO',
+      care_pro_heatmap_title: 'Heatmap Calendar',
+      care_pro_heatmap_desc: 'Visual wear pattern over the year',
+      care_pro_label_title: 'Care Label Decoder',
+      care_pro_label_desc: 'Scan a label, AI explains care symbols',
+      care_pro_label_coming: 'Point your camera at a care label to decode symbols',
+      care_decoder_placeholder: 'Take a photo or upload an image of a care label',
+      care_decoder_camera: 'Camera',
+      care_decoder_upload: 'Upload',
+      care_decoder_retake: 'Retake',
+      care_decoder_analyze: 'Decode Symbols',
+      care_decoder_capture: 'Capture',
+      care_decoder_cancel: 'Cancel',
+      care_decoder_analyzing: 'AI is analyzing care symbols...',
+      care_decoder_prompt: 'Please decode all the care symbols on this clothing care label and explain what each one means.',
+      care_decoder_found: '{n} symbols found',
+      care_decoder_no_symbols: 'No care symbols could be identified. Make sure the label is clearly visible and well-lit.',
+      care_decoder_error: 'Could not analyze the image. Please check your connection and try again.',
+      care_decoder_no_camera: 'Camera not available. Please upload an image instead.',
+      care_pro_value_title: 'Depreciation Tracker',
+      care_pro_value_desc: 'Track how much your items are worth now',
+      care_less: 'Less',
+      care_more: 'More',
+      care_age_days: '{n}d old'
     },
     hu: {
       nav_closet: 'Szekrény',
@@ -12076,7 +12415,64 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       trip_error_generic: 'Nem sikerült csomaglistát készíteni. Kérjük, próbáld újra.',
       trip_occ_business: 'Üzleti',
       trip_occ_casual: 'Casual',
-      trip_occ_fancy: 'Elegáns Vacsora'
+      trip_occ_fancy: 'Elegáns Vacsora',
+
+      // Ruházat Karbantartás
+      closet_garment_care: 'Karbantartás',
+      care_title: 'Ruházat Karbantartás',
+      care_subtitle: 'Nyomon követheted, mikor hordtad utoljára a darabokat, tisztítási emlékeztetők és ruhaállapot.',
+      care_tab_lastworn: 'Utoljára hordva',
+      care_tab_frequency: 'Gyakoriság',
+      care_tab_cleaning: 'Tisztítás',
+      care_tab_pro: 'PRO',
+      care_lastworn_header: 'Mikor hordtad utoljára?',
+      care_frequency_header: 'Viselési Gyakoriság',
+      care_cleaning_header: 'Tisztítási Emlékeztetők',
+      care_pro_header: 'Haladó Karbantartás',
+      care_empty_closet: 'Adj hozzá darabokat a szekrényedhez a nyomon követéshez.',
+      care_all_clean: 'Minden darab tiszta — jelenleg nincs mosnivaló!',
+      care_never_worn: 'Soha nem hordtad',
+      care_today: 'Ma',
+      care_yesterday: 'Tegnap',
+      care_days_ago: '{n} napja',
+      care_never: 'Soha',
+      care_fresh: 'Friss',
+      care_recent: 'Nemrég',
+      care_awhile: 'Egy ideje',
+      care_long_ago: 'Régen',
+      care_wear_btn: 'Hordva',
+      care_marked_worn: 'Ma hordvaként jelölve!',
+      care_worn_times: '{n}× hordva',
+      care_mark_clean: 'Tiszta',
+      care_marked_clean: 'Tisztaként jelölve!',
+      care_needs_clean: '{days} napja nem tisztítva',
+      care_overdue_clean: 'Lejárt! {days} napja nem tisztítva',
+      care_worn_since_clean: '{n}× hordva az utolsó tisztítás óta',
+      care_pro_lock_desc: 'Nyisd fel a PRO-t a viselési hőtérkép, gondozási címke dekódoló és értékcsökkenés követő funkciókhoz.',
+      care_pro_hint: 'Hőtérkép naptár, címke dekódoló és értékcsökkenés követő elérhető PRO-val',
+      care_pro_heatmap_title: 'Hőtérkép Naptár',
+      care_pro_heatmap_desc: 'Vizuális viselési minta az év során',
+      care_pro_label_title: 'Gondozási Címke Dekódoló',
+      care_pro_label_desc: 'Fényképezz egy címkét, az AI elmagyarázza a szimbólumokat',
+      care_pro_label_coming: 'Irányítsd a kamerát egy gondozási címkére a dekódoláshoz',
+      care_decoder_placeholder: 'Fényképezz vagy tölts fel egy gondozási címkét',
+      care_decoder_camera: 'Kamera',
+      care_decoder_upload: 'Feltöltés',
+      care_decoder_retake: 'Újra',
+      care_decoder_analyze: 'Szimbólumok dekódolása',
+      care_decoder_capture: 'Fotózás',
+      care_decoder_cancel: 'Mégse',
+      care_decoder_analyzing: 'Az AI elemzi a gondozási szimbólumokat...',
+      care_decoder_prompt: 'Kérlek dekódold az összes gondozási szimbólumot ezen a ruha címkén és magyarázd el, mit jelent mindegyik.',
+      care_decoder_found: '{n} szimbólum találva',
+      care_decoder_no_symbols: 'Nem sikerült azonosítani gondozási szimbólumokat. Győződj meg róla, hogy a címke jól látható és megvilágított.',
+      care_decoder_error: 'Nem sikerült elemezni a képet. Ellenőrizd a kapcsolatot és próbáld újra.',
+      care_decoder_no_camera: 'A kamera nem elérhető. Kérlek tölts fel egy képet helyette.',
+      care_pro_value_title: 'Értékcsökkenés Követő',
+      care_pro_value_desc: 'Kövesd nyomon, mennyit érnek a darabjaid most',
+      care_less: 'Kevesebb',
+      care_more: 'Több',
+      care_age_days: '{n} napos'
     },
     de: {
       nav_closet: 'Schrank',
@@ -13808,7 +14204,64 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       trip_error_generic: 'Packliste konnte nicht erstellt werden. Bitte versuche es erneut.',
       trip_occ_business: 'Business',
       trip_occ_casual: 'Casual',
-      trip_occ_fancy: 'Edles Dinner'
+      trip_occ_fancy: 'Edles Dinner',
+
+      // Kleidungspflege-Tracker
+      closet_garment_care: 'Pflege',
+      care_title: 'Kleidungspflege-Tracker',
+      care_subtitle: 'Verfolge, wann du jedes Teil zuletzt getragen hast, Reinigungserinnerungen und Kleidungszustand.',
+      care_tab_lastworn: 'Zuletzt getragen',
+      care_tab_frequency: 'Häufigkeit',
+      care_tab_cleaning: 'Reinigung',
+      care_tab_pro: 'PRO',
+      care_lastworn_header: 'Wann zuletzt getragen?',
+      care_frequency_header: 'Tragehäufigkeit',
+      care_cleaning_header: 'Reinigungserinnerungen',
+      care_pro_header: 'Erweiterte Pflege',
+      care_empty_closet: 'Füge Teile zu deinem Schrank hinzu, um die Nutzung zu verfolgen.',
+      care_all_clean: 'Alles sauber — nichts muss gewaschen werden!',
+      care_never_worn: 'Nie getragen',
+      care_today: 'Heute',
+      care_yesterday: 'Gestern',
+      care_days_ago: 'vor {n}T',
+      care_never: 'Nie',
+      care_fresh: 'Frisch',
+      care_recent: 'Kürzlich',
+      care_awhile: 'Eine Weile',
+      care_long_ago: 'Lange her',
+      care_wear_btn: 'Getragen',
+      care_marked_worn: 'Als heute getragen markiert!',
+      care_worn_times: '{n}× getragen',
+      care_mark_clean: 'Sauber',
+      care_marked_clean: 'Als gereinigt markiert!',
+      care_needs_clean: 'Seit {days} Tagen nicht gereinigt',
+      care_overdue_clean: 'Überfällig! {days} Tage seit letzter Reinigung',
+      care_worn_since_clean: '{n}× getragen seit letzter Reinigung',
+      care_pro_lock_desc: 'Schalte Wärmebild-Kalender, Pflegelabel-Dekodierer und Wertverlust-Tracker mit PRO frei.',
+      care_pro_hint: 'Wärmebild-Kalender, Label-Dekodierer & Wertverlust-Tracker mit PRO verfügbar',
+      care_pro_heatmap_title: 'Wärmebild-Kalender',
+      care_pro_heatmap_desc: 'Visuelles Tragemuster über das Jahr',
+      care_pro_label_title: 'Pflegelabel-Dekodierer',
+      care_pro_label_desc: 'Scanne ein Label, KI erklärt Pflegesymbole',
+      care_pro_label_coming: 'Richte die Kamera auf ein Pflegelabel zum Dekodieren',
+      care_decoder_placeholder: 'Fotografiere oder lade ein Pflegelabel hoch',
+      care_decoder_camera: 'Kamera',
+      care_decoder_upload: 'Hochladen',
+      care_decoder_retake: 'Neu aufnehmen',
+      care_decoder_analyze: 'Symbole dekodieren',
+      care_decoder_capture: 'Aufnehmen',
+      care_decoder_cancel: 'Abbrechen',
+      care_decoder_analyzing: 'KI analysiert die Pflegesymbole...',
+      care_decoder_prompt: 'Bitte dekodiere alle Pflegesymbole auf diesem Kleidungsetikett und erkläre, was jedes bedeutet.',
+      care_decoder_found: '{n} Symbole gefunden',
+      care_decoder_no_symbols: 'Keine Pflegesymbole erkannt. Stelle sicher, dass das Etikett gut sichtbar und beleuchtet ist.',
+      care_decoder_error: 'Bild konnte nicht analysiert werden. Überprüfe deine Verbindung und versuche es erneut.',
+      care_decoder_no_camera: 'Kamera nicht verfügbar. Bitte lade stattdessen ein Bild hoch.',
+      care_pro_value_title: 'Wertverlust-Tracker',
+      care_pro_value_desc: 'Verfolge, wie viel deine Teile jetzt wert sind',
+      care_less: 'Weniger',
+      care_more: 'Mehr',
+      care_age_days: '{n}T alt'
     },
   };
 
@@ -18362,6 +18815,799 @@ window.saveCurrentOutfit = function() {
       renderOccasions(tripData.days);
     }
   };
+})();
+
+// ============================================================
+// GARMENT CARE TRACKER — tracks when items were last worn,
+// wear frequency, cleaning reminders. PRO: heatmap, label
+// decoder, depreciation tracker.
+// ============================================================
+(function initGarmentCare() {
+  'use strict';
+
+  var _t = (typeof window.t === 'function') ? window.t : function(k) { return k; };
+
+  // --- Constants ---
+  var CARE_STORAGE_KEY = 'datescan.garmentCare';
+  var CLEAN_INTERVAL_DAYS = 30;  // Remind to clean after 30 days
+  var TYPE_MAP = {
+    shirt:     { emoji: '👕', key: 'type_shirt' },
+    pants:     { emoji: '👖', key: 'type_pants' },
+    jacket:    { emoji: '🧥', key: 'type_jacket' },
+    dress:     { emoji: '👗', key: 'type_dress' },
+    shoes:     { emoji: '👟', key: 'type_shoes' },
+    accessory: { emoji: '👜', key: 'type_accessory' }
+  };
+
+  // --- Storage for wear/clean events ---
+  function loadCareData() {
+    try {
+      var raw = localStorage.getItem(CARE_STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch(e) { return {}; }
+  }
+  function saveCareData(data) {
+    try { localStorage.setItem(CARE_STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
+  }
+
+  // Record a "worn" event
+  function recordWorn(itemId) {
+    var data = loadCareData();
+    if (!data[itemId]) data[itemId] = { wornDates: [], lastCleaned: null };
+    data[itemId].wornDates.push(Date.now());
+    saveCareData(data);
+  }
+
+  // Record a "cleaned" event
+  function recordCleaned(itemId) {
+    var data = loadCareData();
+    if (!data[itemId]) data[itemId] = { wornDates: [], lastCleaned: null };
+    data[itemId].lastCleaned = Date.now();
+    // Reset worn count since cleaning
+    data[itemId].wornDates = data[itemId].wornDates.filter(function(ts) { return ts > data[itemId].lastCleaned; });
+    saveCareData(data);
+  }
+
+  function getCareDataForItem(itemId) {
+    var data = loadCareData();
+    return data[itemId] || { wornDates: [], lastCleaned: null };
+  }
+
+  // --- Closet helpers ---
+  function getClosetItems() {
+    return (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits : [];
+  }
+
+  function typeLabel(type) {
+    var m = TYPE_MAP[type];
+    return m ? m.emoji + ' ' + _t(m.key) : (type || '');
+  }
+
+  // --- Time helpers ---
+  function daysAgo(ts) {
+    if (!ts) return null;
+    return Math.floor((Date.now() - ts) / 86400000);
+  }
+
+  function formatDaysAgo(days) {
+    if (days === null || days === undefined) return _t('care_never_worn');
+    if (days === 0) return _t('care_today');
+    if (days === 1) return _t('care_yesterday');
+    return _t('care_days_ago').replace('{n}', days);
+  }
+
+  function getFreshnessBadge(days) {
+    if (days === null) return { cls: 'care-badge-never', text: _t('care_never') };
+    if (days <= 1) return { cls: 'care-badge-fresh', text: _t('care_fresh') };
+    if (days <= 7) return { cls: 'care-badge-recent', text: _t('care_recent') };
+    if (days <= 21) return { cls: 'care-badge-awhile', text: _t('care_awhile') };
+    return { cls: 'care-badge-long', text: _t('care_long_ago') };
+  }
+
+  // --- State ---
+  var activeTab = 'lastworn';
+
+  // --- DOM ---
+  var modal = document.getElementById('garmentCareModal');
+  var openBtn = document.getElementById('garmentCareBtn');
+  var closeBtn = document.getElementById('garmentCareClose');
+
+  if (!modal || !openBtn) return;
+
+  // Move modal to <body>
+  if (modal.parentElement !== document.body) {
+    document.body.appendChild(modal);
+  }
+
+  // --- Render: Last Worn ---
+  function renderLastWorn() {
+    var grid = document.getElementById('careLastWornGrid');
+    var empty = document.getElementById('careLastWornEmpty');
+    if (!grid) return;
+
+    var items = getClosetItems();
+    if (items.length === 0) {
+      grid.innerHTML = '';
+      if (empty) empty.classList.remove('hidden');
+      return;
+    }
+    if (empty) empty.classList.add('hidden');
+
+    // Sort by last worn (null = never = last)
+    var withCare = items.map(function(item) {
+      var care = getCareDataForItem(item.id);
+      var lastWornTs = care.wornDates && care.wornDates.length > 0 ? care.wornDates[care.wornDates.length - 1] : (item.date || null);
+      var days = daysAgo(lastWornTs);
+      return { item: item, care: care, lastWornTs: lastWornTs, days: days };
+    });
+
+    withCare.sort(function(a, b) {
+      if (a.days === null && b.days === null) return 0;
+      if (a.days === null) return 1;
+      if (b.days === null) return -1;
+      return b.days - a.days; // longest ago first
+    });
+
+    var html = '';
+    withCare.forEach(function(entry) {
+      var item = entry.item;
+      var badge = getFreshnessBadge(entry.days);
+      var imgSrc = item.image || '';
+      var itemName = item.color ? _t(item.colorId || item.color) : typeLabel(item.type);
+
+      html += '<div class="care-item-row">';
+      if (imgSrc) {
+        html += '<img src="' + imgSrc + '" class="care-item-thumb" alt="" />';
+      } else {
+        html += '<div class="care-item-color" style="background:' + (item.colorHex || '#888') + '">' + (TYPE_MAP[item.type] ? TYPE_MAP[item.type].emoji : '') + '</div>';
+      }
+      html += '<div class="care-item-info">';
+      html += '<div class="care-item-name">' + itemName + '</div>';
+      html += '<div class="care-item-sub">' + typeLabel(item.type) + '</div>';
+      html += '</div>';
+      html += '<span class="care-item-badge ' + badge.cls + '">' + badge.text + '</span>';
+      html += '<div class="care-item-sub" style="min-width:60px;text-align:right">' + formatDaysAgo(entry.days) + '</div>';
+      html += '<button class="care-mark-worn-btn" data-care-worn="' + item.id + '">' + _t('care_wear_btn') + '</button>';
+      html += '</div>';
+    });
+
+    grid.innerHTML = html;
+
+    // Attach "Mark Worn" handlers
+    grid.querySelectorAll('[data-care-worn]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        recordWorn(this.dataset.careWorn);
+        renderAll();
+        if (typeof showToast === 'function') showToast(_t('care_marked_worn'));
+      });
+    });
+  }
+
+  // --- Render: Frequency ---
+  function renderFrequency() {
+    var grid = document.getElementById('careFrequencyGrid');
+    var empty = document.getElementById('careFrequencyEmpty');
+    if (!grid) return;
+
+    var items = getClosetItems();
+    if (items.length === 0) {
+      grid.innerHTML = '';
+      if (empty) empty.classList.remove('hidden');
+      return;
+    }
+    if (empty) empty.classList.add('hidden');
+
+    // Calculate wear counts
+    var withFreq = items.map(function(item) {
+      var care = getCareDataForItem(item.id);
+      var wornCount = care.wornDates ? care.wornDates.length : 0;
+      // If never explicitly tracked but item has a date, count it as worn at least once (when saved)
+      if (wornCount === 0 && item.date) wornCount = 1;
+      return { item: item, care: care, wornCount: wornCount };
+    });
+
+    // Find max for bar chart scaling
+    var maxWorn = 1;
+    withFreq.forEach(function(e) { if (e.wornCount > maxWorn) maxWorn = e.wornCount; });
+
+    // Sort by frequency (most worn first)
+    withFreq.sort(function(a, b) { return b.wornCount - a.wornCount; });
+
+    var html = '';
+    withFreq.forEach(function(entry) {
+      var item = entry.item;
+      var pct = Math.max(5, Math.round((entry.wornCount / maxWorn) * 100));
+      var barColor = entry.wornCount >= maxWorn * 0.7 ? 'rgba(16,185,129,0.6)'
+                   : entry.wornCount >= maxWorn * 0.3 ? 'rgba(59,130,246,0.5)'
+                   : 'rgba(156,163,175,0.3)';
+      var imgSrc = item.image || '';
+      var itemName = item.color ? _t(item.colorId || item.color) : typeLabel(item.type);
+
+      html += '<div class="care-item-row" style="flex-wrap:wrap">';
+      if (imgSrc) {
+        html += '<img src="' + imgSrc + '" class="care-item-thumb" alt="" />';
+      } else {
+        html += '<div class="care-item-color" style="background:' + (item.colorHex || '#888') + '">' + (TYPE_MAP[item.type] ? TYPE_MAP[item.type].emoji : '') + '</div>';
+      }
+      html += '<div class="care-item-info">';
+      html += '<div class="care-item-name">' + itemName + '</div>';
+      html += '<div class="care-item-sub">' + typeLabel(item.type) + ' · ' + _t('care_worn_times').replace('{n}', entry.wornCount) + '</div>';
+      html += '</div>';
+      html += '</div>';
+      html += '<div class="care-freq-bar-bg" style="width:100%;margin-top:4px">';
+      html += '<div class="care-freq-bar-fill" style="width:' + pct + '%;background:' + barColor + '"></div>';
+      html += '</div>';
+    });
+
+    grid.innerHTML = html;
+  }
+
+  // --- Render: Cleaning ---
+  function renderCleaning() {
+    var grid = document.getElementById('careCleaningGrid');
+    var allClean = document.getElementById('careCleaningAllClean');
+    var empty = document.getElementById('careCleaningEmpty');
+    if (!grid) return;
+
+    var items = getClosetItems();
+    if (items.length === 0) {
+      grid.innerHTML = '';
+      if (allClean) allClean.classList.add('hidden');
+      if (empty) empty.classList.remove('hidden');
+      return;
+    }
+    if (empty) empty.classList.add('hidden');
+
+    // Calculate cleaning status
+    var withClean = items.map(function(item) {
+      var care = getCareDataForItem(item.id);
+      var lastCleanedTs = care.lastCleaned;
+      var cleanDays = daysAgo(lastCleanedTs);
+      // If never cleaned, use item creation date
+      if (cleanDays === null && item.date) cleanDays = daysAgo(item.date);
+
+      var wornSinceClean = care.wornDates ? care.wornDates.filter(function(ts) {
+        return !lastCleanedTs || ts > lastCleanedTs;
+      }).length : 0;
+
+      var needsClean = cleanDays !== null && cleanDays >= CLEAN_INTERVAL_DAYS;
+      var overdue = cleanDays !== null && cleanDays >= CLEAN_INTERVAL_DAYS * 1.5;
+
+      return {
+        item: item,
+        care: care,
+        cleanDays: cleanDays,
+        wornSinceClean: wornSinceClean,
+        needsClean: needsClean,
+        overdue: overdue
+      };
+    });
+
+    // Sort: overdue first, then needs clean, then by days since clean descending
+    withClean.sort(function(a, b) {
+      if (a.overdue && !b.overdue) return -1;
+      if (!a.overdue && b.overdue) return 1;
+      if (a.needsClean && !b.needsClean) return -1;
+      if (!a.needsClean && b.needsClean) return 1;
+      return (b.cleanDays || 0) - (a.cleanDays || 0);
+    });
+
+    // Filter only items that need cleaning or have been worn since last clean
+    var needsAttention = withClean.filter(function(e) { return e.needsClean || e.wornSinceClean > 0; });
+
+    if (needsAttention.length === 0) {
+      grid.innerHTML = '';
+      if (allClean) allClean.classList.remove('hidden');
+      return;
+    }
+    if (allClean) allClean.classList.add('hidden');
+
+    var html = '';
+    needsAttention.forEach(function(entry) {
+      var item = entry.item;
+      var imgSrc = item.image || '';
+      var itemName = item.color ? _t(item.colorId || item.color) : typeLabel(item.type);
+
+      var statusCls = entry.overdue ? 'overdue-wash' : (entry.needsClean ? 'needs-wash' : '');
+      var statusText = '';
+      if (entry.overdue) {
+        statusText = _t('care_overdue_clean').replace('{days}', entry.cleanDays);
+      } else if (entry.needsClean) {
+        statusText = _t('care_needs_clean').replace('{days}', entry.cleanDays);
+      } else if (entry.wornSinceClean > 0) {
+        statusText = _t('care_worn_since_clean').replace('{n}', entry.wornSinceClean);
+      }
+
+      html += '<div class="care-clean-card ' + statusCls + '">';
+      if (imgSrc) {
+        html += '<img src="' + imgSrc + '" class="care-item-thumb" alt="" />';
+      } else {
+        html += '<div class="care-item-color" style="background:' + (item.colorHex || '#888') + '">' + (TYPE_MAP[item.type] ? TYPE_MAP[item.type].emoji : '') + '</div>';
+      }
+      html += '<div class="care-item-info">';
+      html += '<div class="care-item-name">' + itemName + '</div>';
+      html += '<div class="care-item-sub">' + statusText + '</div>';
+      html += '</div>';
+      if (entry.needsClean || entry.overdue) {
+        html += '<button class="care-clean-btn" data-care-clean="' + item.id + '">' + _t('care_mark_clean') + '</button>';
+      }
+      html += '</div>';
+    });
+
+    grid.innerHTML = html;
+
+    // Attach "Mark Clean" handlers
+    grid.querySelectorAll('[data-care-clean]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        recordCleaned(this.dataset.careClean);
+        renderCleaning();
+        if (typeof showToast === 'function') showToast(_t('care_marked_clean'));
+      });
+    });
+  }
+
+  // --- Render: PRO Tab ---
+  function renderProTab() {
+    var proEl = document.getElementById('careProContent');
+    var lockedEl = document.getElementById('careProLocked');
+    if (!proEl || !lockedEl) return;
+
+    var isPro = (typeof isProUser === 'function' && isProUser()) || (typeof window.__DS_IS_PRO !== 'undefined' && window.__DS_IS_PRO);
+
+    if (!isPro) {
+      proEl.innerHTML = '';
+      proEl.classList.add('hidden');
+      lockedEl.classList.remove('hidden');
+      return;
+    }
+
+    lockedEl.classList.add('hidden');
+    proEl.classList.remove('hidden');
+
+    var items = getClosetItems();
+    var html = '';
+
+    // --- Heatmap Calendar ---
+    html += '<div class="care-pro-section">';
+    html += '<div class="text-xs font-bold text-white mb-2 flex items-center gap-1.5">🗓️ <span>' + _t('care_pro_heatmap_title') + '</span></div>';
+    html += '<div class="text-[10px] text-gray-400 mb-3">' + _t('care_pro_heatmap_desc') + '</div>';
+
+    // Build a simple 7×52 grid (week view, last 6 months)
+    var careData = loadCareData();
+    var now = new Date();
+    var sixMonthsAgo = new Date(now);
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+    var startTs = sixMonthsAgo.getTime();
+
+    // Collect all worn dates across all items
+    var allWornDates = {};
+    Object.keys(careData).forEach(function(itemId) {
+      (careData[itemId].wornDates || []).forEach(function(ts) {
+        if (ts >= startTs) {
+          var key = new Date(ts).toISOString().slice(0, 10);
+          allWornDates[key] = (allWornDates[key] || 0) + 1;
+        }
+      });
+    });
+
+    var maxDaily = 1;
+    Object.keys(allWornDates).forEach(function(k) { if (allWornDates[k] > maxDaily) maxDaily = allWornDates[k]; });
+
+    html += '<div style="display:flex;gap:2px;flex-wrap:wrap">';
+    var d = new Date(sixMonthsAgo);
+    while (d <= now) {
+      var key = d.toISOString().slice(0, 10);
+      var count = allWornDates[key] || 0;
+      var opacity = count === 0 ? 0.05 : Math.max(0.15, count / maxDaily);
+      var color = count === 0 ? 'rgba(251,113,133,' + opacity + ')' : 'rgba(251,113,133,' + opacity + ')';
+      html += '<div style="width:8px;height:8px;border-radius:2px;background:' + color + '" title="' + key + ': ' + count + '"></div>';
+      d.setDate(d.getDate() + 1);
+    }
+    html += '</div>';
+
+    // Legend
+    html += '<div style="display:flex;align-items:center;gap:4px;margin-top:6px">';
+    html += '<span class="text-[9px] text-gray-500">' + _t('care_less') + '</span>';
+    html += '<div style="width:8px;height:8px;border-radius:2px;background:rgba(251,113,133,0.05)"></div>';
+    html += '<div style="width:8px;height:8px;border-radius:2px;background:rgba(251,113,133,0.2)"></div>';
+    html += '<div style="width:8px;height:8px;border-radius:2px;background:rgba(251,113,133,0.45)"></div>';
+    html += '<div style="width:8px;height:8px;border-radius:2px;background:rgba(251,113,133,0.8)"></div>';
+    html += '<span class="text-[9px] text-gray-500">' + _t('care_more') + '</span>';
+    html += '</div>';
+    html += '</div>';
+
+    // --- Care Label Decoder ---
+    html += '<div class="care-pro-section" style="margin-top:1rem">';
+    html += '<div class="text-xs font-bold text-white mb-2 flex items-center gap-1.5">🏷️ <span>' + _t('care_pro_label_title') + '</span></div>';
+    html += '<div class="text-[10px] text-gray-400 mb-3">' + _t('care_pro_label_desc') + '</div>';
+    // Drop zone / image preview
+    html += '<div id="careDecoderZone" class="care-decoder-zone">';
+    html += '<div class="text-2xl mb-1.5">📸</div>';
+    html += '<p class="text-[11px] text-gray-400 mb-3">' + _t('care_decoder_placeholder') + '</p>';
+    html += '<div class="flex items-center justify-center gap-2 flex-wrap">';
+    html += '<button id="careDecoderCameraBtn" class="care-decoder-btn care-decoder-btn-camera">📷 ' + _t('care_decoder_camera') + '</button>';
+    html += '<button id="careDecoderUploadBtn" class="care-decoder-btn care-decoder-btn-upload">📁 ' + _t('care_decoder_upload') + '</button>';
+    html += '</div>';
+    html += '</div>';
+    // Hidden file input
+    html += '<input type="file" id="careDecoderFileInput" accept="image/*" style="display:none" />';
+    // Hidden camera video + capture canvas
+    html += '<video id="careDecoderVideo" autoplay playsinline webkit-playsinline muted style="display:none"></video>';
+    html += '<canvas id="careDecoderCanvas" style="display:none"></canvas>';
+    // Analyze button (shown after image captured)
+    html += '<div id="careDecoderActions" class="hidden" style="margin-top:0.5rem;display:flex;align-items:center;justify-content:center;gap:0.5rem;flex-wrap:wrap">';
+    html += '<button id="careDecoderRetakeBtn" class="care-decoder-btn care-decoder-btn-upload">🔄 ' + _t('care_decoder_retake') + '</button>';
+    html += '<button id="careDecoderAnalyzeBtn" class="care-decoder-btn care-decoder-btn-analyze">🧠 ' + _t('care_decoder_analyze') + '</button>';
+    html += '</div>';
+    // Loading state
+    html += '<div id="careDecoderLoading" class="care-decoder-loading hidden">';
+    html += '<div class="care-decoder-spinner"></div>';
+    html += '<p class="text-xs text-gray-400">' + _t('care_decoder_analyzing') + '</p>';
+    html += '</div>';
+    // Results container
+    html += '<div id="careDecoderResults" class="hidden" style="margin-top:0.75rem"></div>';
+    html += '</div>';
+
+    // --- Depreciation Tracker ---
+    html += '<div class="care-pro-section" style="margin-top:1rem">';
+    html += '<div class="text-xs font-bold text-white mb-2 flex items-center gap-1.5">💰 <span>' + _t('care_pro_value_title') + '</span></div>';
+    html += '<div class="text-[10px] text-gray-400 mb-3">' + _t('care_pro_value_desc') + '</div>';
+
+    if (items.length > 0) {
+      html += '<div class="space-y-2">';
+      // Show top 5 items with estimated depreciation
+      var withDep = items.slice(0, 5).map(function(item) {
+        var care = getCareDataForItem(item.id);
+        var wearCount = care.wornDates ? care.wornDates.length : 0;
+        var ageDays = item.date ? daysAgo(item.date) : 0;
+        // Simple depreciation: 20% per year, minus 2% per wear
+        var annualDep = 0.20;
+        var wearDep = 0.02 * wearCount;
+        var totalDep = Math.min(0.90, (ageDays / 365) * annualDep + wearDep);
+        var currentVal = Math.round((1 - totalDep) * 100);
+        return { item: item, currentVal: currentVal, wearCount: wearCount, ageDays: ageDays };
+      });
+
+      withDep.forEach(function(entry) {
+        var imgSrc = entry.item.image || '';
+        var itemName = entry.item.color ? _t(entry.item.colorId || entry.item.color) : typeLabel(entry.item.type);
+        var valColor = entry.currentVal >= 70 ? '#6ee7b7' : entry.currentVal >= 40 ? '#fcd34d' : '#fca5a5';
+        var valLabel = entry.currentVal + '%';
+
+        html += '<div class="care-item-row">';
+        if (imgSrc) {
+          html += '<img src="' + imgSrc + '" class="care-item-thumb" alt="" />';
+        } else {
+          html += '<div class="care-item-color" style="background:' + (entry.item.colorHex || '#888') + '">' + (TYPE_MAP[entry.item.type] ? TYPE_MAP[entry.item.type].emoji : '') + '</div>';
+        }
+        html += '<div class="care-item-info">';
+        html += '<div class="care-item-name">' + itemName + '</div>';
+        html += '<div class="care-item-sub">' + _t('care_worn_times').replace('{n}', entry.wearCount) + ' · ' + _t('care_age_days').replace('{n}', entry.ageDays || 0) + '</div>';
+        html += '</div>';
+        html += '<span class="care-item-badge" style="background:' + valColor + '22;color:' + valColor + ';border:1px solid ' + valColor + '44">' + valLabel + '</span>';
+        html += '</div>';
+      });
+      html += '</div>';
+    } else {
+      html += '<div class="text-center py-4"><p class="text-xs text-gray-500">' + _t('care_empty_closet') + '</p></div>';
+    }
+    html += '</div>';
+
+    proEl.innerHTML = html;
+  }
+
+  // --- Tab switching ---
+  function switchTab(tab) {
+    activeTab = tab;
+    var tabs = document.querySelectorAll('.care-tab');
+    tabs.forEach(function(btn) {
+      if (btn.dataset.careTab === tab) {
+        btn.className = 'care-tab flex-1 py-2 px-2 rounded-lg text-[11px] font-bold transition-colors bg-rose-500/20 text-rose-300 border border-rose-500/30';
+      } else {
+        btn.className = 'care-tab flex-1 py-2 px-2 rounded-lg text-[11px] font-bold transition-colors bg-white/5 text-gray-400 border border-transparent hover:bg-white/10';
+      }
+    });
+
+    var panels = { lastworn: 'careLastWornPanel', frequency: 'careFrequencyPanel', cleaning: 'careCleaningPanel', pro: 'careProPanel' };
+    Object.keys(panels).forEach(function(k) {
+      var el = document.getElementById(panels[k]);
+      if (el) el.classList.toggle('hidden', k !== tab);
+    });
+  }
+
+  // --- Render all ---
+  function renderAll() {
+    renderLastWorn();
+    renderFrequency();
+    renderCleaning();
+    renderProTab();
+  }
+
+  // --- Event listeners ---
+  var tabsEl = document.getElementById('careTabs');
+  if (tabsEl) {
+    tabsEl.addEventListener('click', function(e) {
+      var btn = e.target.closest('.care-tab');
+      if (btn && btn.dataset.careTab) switchTab(btn.dataset.careTab);
+    });
+  }
+
+  openBtn.addEventListener('click', function() {
+    if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+    renderAll();
+    switchTab('lastworn');
+    modal.classList.remove('hidden');
+  });
+
+  closeBtn.addEventListener('click', function() { modal.classList.add('hidden'); });
+  modal.addEventListener('click', function(e) { if (e.target === modal) modal.classList.add('hidden'); });
+
+  // ===== CARE LABEL DECODER — Camera + VLM AI =====
+  var _decoderImage = null; // base64 data URL of captured/uploaded image
+  var _decoderStream = null; // MediaStream reference for cleanup
+
+  function _decoderCleanup() {
+    if (_decoderStream) {
+      _decoderStream.getTracks().forEach(function(t) { t.stop(); });
+      _decoderStream = null;
+    }
+    var vid = document.getElementById('careDecoderVideo');
+    if (vid) { vid.srcObject = null; vid.style.display = 'none'; }
+  }
+
+  function _decoderShowImage(dataUrl) {
+    _decoderImage = dataUrl;
+    var zone = document.getElementById('careDecoderZone');
+    var actions = document.getElementById('careDecoderActions');
+    if (!zone || !actions) return;
+    zone.classList.add('has-image');
+    zone.innerHTML = '<img src="' + dataUrl + '" class="care-decoder-preview" alt="Care label" />';
+    actions.classList.remove('hidden');
+    actions.style.display = 'flex';
+    // Hide results & loading from previous analysis
+    var res = document.getElementById('careDecoderResults');
+    var ld = document.getElementById('careDecoderLoading');
+    if (res) { res.classList.add('hidden'); res.innerHTML = ''; }
+    if (ld) ld.classList.add('hidden');
+  }
+
+  function _decoderReset() {
+    _decoderImage = null;
+    _decoderCleanup();
+    var zone = document.getElementById('careDecoderZone');
+    var actions = document.getElementById('careDecoderActions');
+    var res = document.getElementById('careDecoderResults');
+    var ld = document.getElementById('careDecoderLoading');
+    if (zone) {
+      zone.classList.remove('has-image');
+      zone.innerHTML = '<div class="text-2xl mb-1.5">📸</div>' +
+        '<p class="text-[11px] text-gray-400 mb-3">' + _t('care_decoder_placeholder') + '</p>' +
+        '<div class="flex items-center justify-center gap-2 flex-wrap">' +
+        '<button id="careDecoderCameraBtn" class="care-decoder-btn care-decoder-btn-camera">📷 ' + _t('care_decoder_camera') + '</button>' +
+        '<button id="careDecoderUploadBtn" class="care-decoder-btn care-decoder-btn-upload">📁 ' + _t('care_decoder_upload') + '</button>' +
+        '</div>';
+      _bindDecoderButtons();
+    }
+    if (actions) { actions.classList.add('hidden'); actions.style.display = 'none'; }
+    if (res) { res.classList.add('hidden'); res.innerHTML = ''; }
+    if (ld) ld.classList.add('hidden');
+  }
+
+  function _bindDecoderButtons() {
+    var camBtn = document.getElementById('careDecoderCameraBtn');
+    var upBtn = document.getElementById('careDecoderUploadBtn');
+    var fileIn = document.getElementById('careDecoderFileInput');
+    if (camBtn) {
+      camBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        _openDecoderCamera();
+      });
+    }
+    if (upBtn) {
+      upBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (fileIn) fileIn.click();
+      });
+    }
+    if (fileIn) {
+      fileIn.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function(ev) { _decoderShowImage(ev.target.result); };
+          reader.readAsDataURL(this.files[0]);
+          this.value = '';
+        }
+      });
+    }
+  }
+
+  function _openDecoderCamera() {
+    var vid = document.getElementById('careDecoderVideo');
+    var canvas = document.getElementById('careDecoderCanvas');
+    if (!vid || !canvas) return;
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert(_t('care_decoder_no_camera'));
+      return;
+    }
+    navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } },
+      audio: false
+    }).then(function(stream) {
+      _decoderStream = stream;
+      vid.srcObject = stream;
+      vid.style.display = 'block';
+      vid.play();
+
+      // Create a floating capture overlay
+      var overlay = document.createElement('div');
+      overlay.id = 'careDecoderOverlay';
+      overlay.style.cssText = 'position:fixed;inset:0;z-index:130;background:rgba(0,0,0,0.92);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;';
+      overlay.innerHTML = '<div style="position:relative;width:100%;max-width:400px;">' +
+        '<video id="careDecoderLiveVideo" autoplay playsinline webkit-playsinline muted style="width:100%;border-radius:1rem;border:2px solid rgba(59,130,246,0.3);"></video>' +
+        '<div style="margin-top:1rem;display:flex;gap:0.5rem;justify-content:center;">' +
+        '<button id="careDecoderCaptureBtn" class="care-decoder-btn care-decoder-btn-analyze" style="font-size:0.8rem;padding:0.6rem 1.2rem;">📸 ' + _t('care_decoder_capture') + '</button>' +
+        '<button id="careDecoderCancelBtn" class="care-decoder-btn care-decoder-btn-upload" style="font-size:0.8rem;padding:0.6rem 1.2rem;">✕ ' + _t('care_decoder_cancel') + '</button>' +
+        '</div></div>';
+      document.body.appendChild(overlay);
+
+      var liveVid = document.getElementById('careDecoderLiveVideo');
+      if (liveVid) { liveVid.srcObject = stream; liveVid.play(); }
+
+      document.getElementById('careDecoderCaptureBtn').addEventListener('click', function() {
+        var lv = document.getElementById('careDecoderLiveVideo');
+        if (!lv || !lv.videoWidth) return;
+        canvas.width = lv.videoWidth;
+        canvas.height = lv.videoHeight;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(lv, 0, 0);
+        var dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        _decoderCleanup();
+        overlay.remove();
+        _decoderShowImage(dataUrl);
+      });
+
+      document.getElementById('careDecoderCancelBtn').addEventListener('click', function() {
+        _decoderCleanup();
+        overlay.remove();
+      });
+    }).catch(function(err) {
+      console.warn('[care-decoder] Camera error:', err);
+      alert(_t('care_decoder_no_camera'));
+    });
+  }
+
+  async function _decoderAnalyze() {
+    if (!_decoderImage) return;
+    var analyzeBtn = document.getElementById('careDecoderAnalyzeBtn');
+    var loading = document.getElementById('careDecoderLoading');
+    var results = document.getElementById('careDecoderResults');
+    if (analyzeBtn) analyzeBtn.disabled = true;
+    if (loading) loading.classList.remove('hidden');
+    if (results) { results.classList.add('hidden'); results.innerHTML = ''; }
+
+    var WORKER_URL = 'https://api.datescan.app';
+    var MODEL = 'zai-org/glm-4.5v';
+    var lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
+
+    var systemPrompt = 'You are a care label symbol decoder. The user will send you a photo of a clothing care label. ' +
+      'Identify ALL care symbols visible in the image and explain what each one means. ' +
+      'Respond in ' + ({'en':'English','hu':'Hungarian','de':'German'}[lang] || 'English') + '. ' +
+      'IMPORTANT: You MUST respond with ONLY a valid JSON array, no markdown, no explanation outside the JSON. ' +
+      'Each element must have: {"icon": "<emoji>", "category": "<WASHING|BLEACHING|DRYING|IRONING|DRY_CLEANING|WARNING>", "meaning": "<brief explanation in user language>"}. ' +
+      'After the array, add a "summary" field as a separate object: {"summary": "<overall care advice in user language, 1-2 sentences>"}. ' +
+      'Wrap the entire response as: {"symbols": [...], "summary": "..."}. ' +
+      'If you cannot identify any care symbols, respond with: {"symbols": [], "summary": "<explanation in user language>"}';
+
+    var userContent = [
+      { type: 'text', text: _t('care_decoder_prompt') },
+      { type: 'image_url', image_url: { url: _decoderImage } }
+    ];
+
+    try {
+      var controller = new AbortController();
+      var timeout = setTimeout(function() { controller.abort(); }, 30000);
+
+      var res = await fetch(WORKER_URL + '/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: MODEL,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userContent }
+          ]
+        }),
+        signal: controller.signal
+      });
+      clearTimeout(timeout);
+
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      var data = await res.json();
+      var reply = data.reply || data.content || data.message ||
+                  (data.choices && data.choices[0] && (data.choices[0].message?.content || data.choices[0].text)) || '';
+
+      _renderDecoderResults(reply);
+    } catch (err) {
+      console.warn('[care-decoder] Analysis error:', err);
+      if (results) {
+        results.classList.remove('hidden');
+        results.innerHTML = '<div class="care-decoder-error">' + _t('care_decoder_error') + '</div>';
+      }
+    } finally {
+      if (loading) loading.classList.add('hidden');
+      if (analyzeBtn) analyzeBtn.disabled = false;
+    }
+  }
+
+  function _renderDecoderResults(reply) {
+    var results = document.getElementById('careDecoderResults');
+    if (!results) return;
+    results.classList.remove('hidden');
+
+    // Try to parse JSON from the reply
+    var parsed = null;
+    try {
+      // Strip markdown code fences if present
+      var cleaned = reply.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
+      parsed = JSON.parse(cleaned);
+    } catch (e) {
+      // Try to find JSON object in the reply
+      var match = reply.match(/\{[\s\S]*\}/);
+      if (match) {
+        try { parsed = JSON.parse(match[0]); } catch (e2) { parsed = null; }
+      }
+    }
+
+    if (!parsed || !parsed.symbols || !Array.isArray(parsed.symbols) || parsed.symbols.length === 0) {
+      var noSymbolsMsg = (parsed && parsed.summary) ? parsed.summary : _t('care_decoder_no_symbols');
+      results.innerHTML = '<div class="care-decoder-result">' +
+        '<div class="text-center py-3"><div class="text-xl mb-1.5">🤷</div>' +
+        '<p class="text-xs text-gray-400">' + noSymbolsMsg + '</p></div></div>';
+      return;
+    }
+
+    var html = '<div class="care-decoder-result">';
+    html += '<div class="text-[10px] uppercase tracking-widest text-blue-400 font-bold mb-2">' + _t('care_decoder_found').replace('{n}', parsed.symbols.length) + '</div>';
+
+    parsed.symbols.forEach(function(s) {
+      var cat = (s.category || '').toUpperCase();
+      var catEmoji = { WASHING: '🧺', BLEACHING: '🧴', DRYING: '🌬️', IRONING: '🔥', DRY_CLEANING: '👔', WARNING: '⚠️' }[cat] || '🏷️';
+      html += '<div class="care-decoder-symbol-row">';
+      html += '<div class="care-decoder-symbol-icon">' + (s.icon || catEmoji) + '</div>';
+      html += '<div class="care-decoder-symbol-meaning">';
+      html += '<div class="care-decoder-symbol-category">' + cat + '</div>';
+      html += '<div>' + (s.meaning || '') + '</div>';
+      html += '</div>';
+      html += '</div>';
+    });
+
+    if (parsed.summary) {
+      html += '<div class="care-decoder-summary">💡 ' + parsed.summary + '</div>';
+    }
+    html += '</div>';
+
+    results.innerHTML = html;
+  }
+
+  // Bind decoder buttons after renderProTab populates the DOM
+  var _origRenderProTab = renderProTab;
+  renderProTab = function() {
+    _origRenderProTab();
+    _decoderImage = null;
+    _decoderCleanup();
+
+    _bindDecoderButtons();
+
+    var retakeBtn = document.getElementById('careDecoderRetakeBtn');
+    var analyzeBtnEl = document.getElementById('careDecoderAnalyzeBtn');
+    if (retakeBtn) retakeBtn.addEventListener('click', function() { _decoderReset(); });
+    if (analyzeBtnEl) analyzeBtnEl.addEventListener('click', function() { _decoderAnalyze(); });
+  };
+
+  // Expose for external refresh
+  window.refreshGarmentCare = renderAll;
+  // Expose recordWorn so other modules (e.g. daily scan) can record wear
+  window.recordItemWorn = recordWorn;
 })();
 
 // ============================================================
