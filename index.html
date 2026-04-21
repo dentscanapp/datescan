@@ -8931,6 +8931,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       pwa_install_ios: 'Tap the Share button ⬆ then "Add to Home Screen"',
       pwa_inline_title: 'Install DateScan App',
       pwa_inline_desc: 'Add to your home screen for quick access',
+      color_black: 'Black',
       color_white: 'Light / White',
       color_gray: 'Gray',
       color_blue: 'Blue',
@@ -10522,6 +10523,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       pwa_install_ios: 'Koppints a Megosztás gombra ⬆ majd „Hozzáadás a kezdőképernyőhöz"',
       pwa_inline_title: 'DateScan alkalmazás telepítése',
       pwa_inline_desc: 'Telepítsd a kezdőképernyőre a gyors eléréshez',
+      color_black: 'Fekete',
       color_white: 'Világos / Fehér',
       color_gray: 'Szürke',
       color_blue: 'Kék',
@@ -12112,6 +12114,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       pwa_install_ios: 'Tippe auf „Teilen" ⬆ und dann „Zum Home-Bildschirm"',
       pwa_inline_title: 'DateScan App installieren',
       pwa_inline_desc: 'Zum Startbildschirm hinzufügen für schnellen Zugriff',
+      color_black: 'Schwarz',
       color_white: 'Hell / Weiß',
       color_gray: 'Grau',
       color_blue: 'Blau',
@@ -22387,14 +22390,23 @@ applyOfflineState(!navigator.onLine);
     attachBox.innerHTML = '';
     pendingAttachments.forEach((att, idx) => {
       const chip = document.createElement('div');
-      chip.className = 'relative w-20 h-20 rounded-xl overflow-hidden border-2 border-brand-500/60 bg-black/40 shadow-[0_0_12px_rgba(236,72,153,0.25)]';
-      chip.innerHTML =
-        '<img src="' + _esc(att.url) + '" class="w-full h-full object-cover" />' +
-        '<button type="button" data-idx="' + idx + '" class="absolute top-0.5 right-0.5 w-6 h-6 rounded-full bg-black/80 text-white text-xs flex items-center justify-center hover:bg-red-500 transition font-bold">✕</button>';
-      chip.querySelector('button').addEventListener('click', () => {
+      chip.className = 'relative rounded-xl overflow-hidden border-2 border-brand-500/60 bg-black/40 shadow-[0_0_12px_rgba(236,72,153,0.25)]';
+      chip.style.cssText = 'width:5rem;height:5rem;';
+      var chipImg = document.createElement('img');
+      chipImg.src = att.url;
+      chipImg.className = 'object-cover';
+      chipImg.style.cssText = 'width:100%;height:100%;display:block;max-width:none;';
+      chip.appendChild(chipImg);
+      var removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.dataset.idx = idx;
+      removeBtn.className = 'absolute top-0.5 right-0.5 w-6 h-6 rounded-full bg-black/80 text-white text-xs flex items-center justify-center hover:bg-red-500 transition font-bold';
+      removeBtn.textContent = '✕';
+      removeBtn.addEventListener('click', () => {
         pendingAttachments.splice(idx, 1);
         renderAttachments();
       });
+      chip.appendChild(removeBtn);
       attachBox.appendChild(chip);
     });
     // Add attachment count label
@@ -22428,7 +22440,7 @@ applyOfflineState(!navigator.onLine);
     avatar.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>';
 
     var bubble = document.createElement('div');
-    bubble.className = 'rounded-2xl px-3 py-2.5 text-sm max-w-[85%] bg-brand-500/15 border border-brand-500/25 border-dashed text-white rounded-tr-sm';
+    bubble.className = 'rounded-2xl px-3 py-2.5 text-sm max-w-[85%] bg-brand-500/20 border border-brand-500/40 text-white rounded-tr-sm';
 
     // Image thumbnails (larger than the chip preview above the input)
     var imgRow = document.createElement('div');
@@ -22436,7 +22448,19 @@ applyOfflineState(!navigator.onLine);
     pendingAttachments.forEach(function(att) {
       var img = document.createElement('img');
       img.src = att.url;
-      img.className = 'w-28 h-28 object-cover rounded-lg border border-brand-500/40';
+      img.className = 'object-cover rounded-lg border border-brand-500/40';
+      // Use inline styles to guarantee dimensions — Tailwind base CSS
+      // has `img { max-width: 100%; height: auto }` which can override
+      // utility classes in some browsers, making the preview invisible.
+      img.style.cssText = 'width:7rem;height:7rem;display:block;max-width:none;';
+      img.onerror = function() {
+        // If the image fails to load, show a placeholder
+        this.style.display = 'none';
+        var placeholder = document.createElement('div');
+        placeholder.className = 'w-28 h-28 rounded-lg border border-brand-500/40 bg-brand-500/10 flex items-center justify-center text-brand-400 text-2xl';
+        placeholder.textContent = '🖼';
+        this.parentNode.insertBefore(placeholder, this);
+      };
       imgRow.appendChild(img);
     });
     bubble.appendChild(imgRow);
@@ -23204,45 +23228,43 @@ applyOfflineState(!navigator.onLine);
         return;
       }
 
-      const closet = window.userCloset;
-      const outfits = (closet && Array.isArray(closet.outfits)) ? closet.outfits : [];
+      var closet = window.userCloset;
+      var outfits = (closet && Array.isArray(closet.outfits)) ? closet.outfits : [];
 
       // If outfits are still loading from IndexedDB (race condition on first visit),
-      // try again after a short delay so the user sees the picker once data arrives.
+      // wait and retry with exponential backoff so the user sees the picker once data arrives.
       if (outfits.length === 0 && closet && closet._loading) {
         _pickerGrid.innerHTML = '<div class="col-span-full text-center text-gray-400 py-10 text-sm">' + (t('closet_empty_picker') || 'Loading closet…') + '</div>';
         _picker.classList.remove('hidden');
-        // Retry after closet data has loaded
-        setTimeout(function() { openClosetPicker(); }, 800);
+        // Retry with progressive backoff (800ms, 1600ms, 2400ms…)
+        if (!window._closetPickerRetries) window._closetPickerRetries = 0;
+        window._closetPickerRetries++;
+        if (window._closetPickerRetries <= 5) {
+          setTimeout(function() { openClosetPicker(); }, 800 * window._closetPickerRetries);
+        }
+        return;
+      }
+      window._closetPickerRetries = 0;
+
+      // If outfits is empty but _loading is false, try reading IndexedDB directly
+      // as a fallback — the in-memory cache may have gone stale.
+      if (outfits.length === 0 && window.closetDB && typeof window.closetDB.getAll === 'function') {
+        window.closetDB.getAll().then(function(dbOutfits) {
+          if (dbOutfits && dbOutfits.length > 0) {
+            // Refresh the in-memory cache
+            if (window.userCloset) window.userCloset.outfits = dbOutfits;
+            renderClosetPickerItems(_picker, _pickerGrid, dbOutfits);
+          } else {
+            renderClosetPickerItems(_picker, _pickerGrid, []);
+          }
+        }).catch(function(err) {
+          console.error('[chat] closetDB.getAll fallback failed:', err);
+          renderClosetPickerItems(_picker, _pickerGrid, []);
+        });
         return;
       }
 
-      if (outfits.length === 0) {
-        _pickerGrid.innerHTML = '<div class="col-span-full text-center text-gray-400 py-10 text-sm">' + (t('closet_empty_picker') || 'No items yet') + '</div>';
-      } else {
-        _pickerGrid.innerHTML = '';
-        outfits.forEach(o => {
-          const card = document.createElement('button');
-          card.type = 'button';
-          card.className = 'relative aspect-[3/4] rounded-xl overflow-hidden border border-white/10 hover:border-brand-500/60 transition group';
-          card.innerHTML =
-            '<img src="' + _esc(o.image) + '" class="w-full h-full object-cover" />' +
-            '<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-2">' +
-              '<span class="text-[10px] text-white font-bold uppercase">' + t('occasion_' + (o.occasion || 'casual')) + ' · ' + _esc(o.score || '-') + '/100</span>' +
-            '</div>';
-          card.addEventListener('click', async () => {
-            _picker.classList.add('hidden');
-            try {
-              const compressed = await compressImage(o.image);
-              pendingAttachments.push({ url: compressed, source: 'closet', meta: o });
-              renderAttachments();
-              input.focus();
-            } catch(e) { console.error('[chat] closet pick compress error:', e); }
-          });
-          _pickerGrid.appendChild(card);
-        });
-      }
-      _picker.classList.remove('hidden');
+      renderClosetPickerItems(_picker, _pickerGrid, outfits);
     } catch(err) {
       console.error('[chat] openClosetPicker error:', err);
       // Fallback: try to show the picker even if rendering failed
@@ -23251,6 +23273,46 @@ applyOfflineState(!navigator.onLine);
         if (fbPicker) fbPicker.classList.remove('hidden');
       } catch(e2) {}
     }
+  }
+
+  function renderClosetPickerItems(_picker, _pickerGrid, outfits) {
+    if (outfits.length === 0) {
+      _pickerGrid.innerHTML = '<div class="col-span-full text-center text-gray-400 py-10 text-sm">' + (t('closet_empty_picker') || 'No items yet') + '</div>';
+    } else {
+      _pickerGrid.innerHTML = '';
+      outfits.forEach(function(o) {
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'relative aspect-[3/4] rounded-xl overflow-hidden border border-white/10 hover:border-brand-500/60 transition group';
+        var cardImg = document.createElement('img');
+        cardImg.src = o.image || '';
+        cardImg.className = 'object-cover';
+        cardImg.style.cssText = 'width:100%;height:100%;display:block;max-width:none;';
+        cardImg.onerror = function() {
+          this.style.display = 'none';
+          var ph = document.createElement('div');
+          ph.className = 'w-full h-full bg-white/5 flex items-center justify-center text-gray-500 text-2xl';
+          ph.textContent = '👕';
+          this.parentNode.insertBefore(ph, this);
+        };
+        card.appendChild(cardImg);
+        var overlay = document.createElement('div');
+        overlay.className = 'absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-2';
+        overlay.innerHTML = '<span class="text-[10px] text-white font-bold uppercase">' + t('occasion_' + (o.occasion || 'casual')) + ' · ' + _esc(o.score || '-') + '/100</span>';
+        card.appendChild(overlay);
+        card.addEventListener('click', async () => {
+          _picker.classList.add('hidden');
+          try {
+            const compressed = await compressImage(o.image);
+            pendingAttachments.push({ url: compressed, source: 'closet', meta: o });
+            renderAttachments();
+            input.focus();
+          } catch(e) { console.error('[chat] closet pick compress error:', e); }
+        });
+        _pickerGrid.appendChild(card);
+      });
+    }
+    _picker.classList.remove('hidden');
   }
 
   closetBtn?.addEventListener('click', () => {
