@@ -761,6 +761,24 @@ window._dsLog = function() { if (window.__DS_DEBUG) console.log.apply(console, a
     cursor: not-allowed;
     box-shadow: none;
   }
+  /* Upload button indicator — shows a pink dot when an image is attached */
+  .chat-input-bar .chat-icon-btn.has-attachment {
+    background: rgba(236, 72, 153, 0.2);
+    color: rgb(244, 114, 182);
+    box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.35);
+    position: relative;
+  }
+  .chat-input-bar .chat-icon-btn.has-attachment::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ec4899;
+    box-shadow: 0 0 6px rgba(236, 72, 153, 0.6);
+  }
   /* Missing Tailwind classes that aren't in the compiled bundle */
   .bg-transparent { background-color: transparent !important; }
   .border-none { border: none !important; }
@@ -4814,7 +4832,7 @@ if (window.__DS_IS_ANDROID_APP) {
         </div>
 
         <!-- Attachment preview -->
-        <div id="coachChatAttachments" class="relative z-10 flex gap-2 flex-wrap mb-3 hidden"></div>
+        <div id="coachChatAttachments" class="relative z-10 flex gap-2 items-center flex-wrap mb-3 p-2.5 rounded-2xl bg-brand-500/10 border border-brand-500/20 hidden"></div>
 
         <!-- Style Memory Panel — hidden by default, toggled by memoryToggleBtn -->
         <div id="memoryPanel" class="relative z-10 hidden mb-4 rounded-2xl border border-purple-500/20 bg-purple-500/5 p-4 transition-all duration-300">
@@ -8010,7 +8028,7 @@ $("logoBtn").addEventListener("click", () => {
 
 // ===== IndexedDB-backed Closet (via idb) =====
 // In-memory mirror so existing sync reads (length checks, render, etc.) keep working.
-let userCloset = { outfits: [] };
+let userCloset = { outfits: [], _loading: true };
 // Expose on window so classic <script> blocks (e.g. the chat IIFE) can read
 // the same live mirror — module-scope `let` is otherwise invisible to them.
 window.userCloset = userCloset;
@@ -13782,6 +13800,7 @@ async function closetInit() {
     }
 
     userCloset.outfits = await closetDB.getAll();
+    userCloset._loading = false;
     if (typeof window.renderCloset === 'function') {
       window.renderCloset();
     }
@@ -13791,6 +13810,7 @@ async function closetInit() {
     if (typeof updateUsageBadge === 'function') updateUsageBadge();
   } catch (e) {
     console.error('Closet init failed:', e);
+    userCloset._loading = false;
   }
 }
 // Kick off the load (non-blocking)
@@ -22359,22 +22379,31 @@ applyOfflineState(!navigator.onLine);
       attachBox.classList.add('hidden');
       attachBox.innerHTML = '';
       renderChatAttachmentPreview();
+      // Remove attachment indicator from upload button
+      if (uploadBtn) uploadBtn.classList.remove('has-attachment');
       return;
     }
     attachBox.classList.remove('hidden');
     attachBox.innerHTML = '';
     pendingAttachments.forEach((att, idx) => {
       const chip = document.createElement('div');
-      chip.className = 'relative w-16 h-16 rounded-xl overflow-hidden border border-brand-500/40 bg-black/40';
+      chip.className = 'relative w-20 h-20 rounded-xl overflow-hidden border-2 border-brand-500/60 bg-black/40 shadow-[0_0_12px_rgba(236,72,153,0.25)]';
       chip.innerHTML =
         '<img src="' + _esc(att.url) + '" class="w-full h-full object-cover" />' +
-        '<button type="button" data-idx="' + idx + '" class="absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-black/80 text-white text-xs flex items-center justify-center hover:bg-red-500 transition">✕</button>';
+        '<button type="button" data-idx="' + idx + '" class="absolute top-0.5 right-0.5 w-6 h-6 rounded-full bg-black/80 text-white text-xs flex items-center justify-center hover:bg-red-500 transition font-bold">✕</button>';
       chip.querySelector('button').addEventListener('click', () => {
         pendingAttachments.splice(idx, 1);
         renderAttachments();
       });
       attachBox.appendChild(chip);
     });
+    // Add attachment count label
+    var countLabel = document.createElement('div');
+    countLabel.className = 'text-[10px] text-brand-400 font-semibold self-center ml-1';
+    countLabel.textContent = pendingAttachments.length + ' ' + (t('chat_image_preview_label') || 'attached');
+    attachBox.appendChild(countLabel);
+    // Add visual indicator on the upload button so the user knows an image is attached
+    if (uploadBtn) uploadBtn.classList.add('has-attachment');
     // Also show a larger preview inside the chat messages area
     renderChatAttachmentPreview();
   }
@@ -22392,7 +22421,7 @@ applyOfflineState(!navigator.onLine);
     if (pendingAttachments.length === 0) return;
 
     var wrap = document.createElement('div');
-    wrap.className = 'flex gap-2.5 flex-row-reverse opacity-70';
+    wrap.className = 'flex gap-2.5 flex-row-reverse';
 
     var avatar = document.createElement('div');
     avatar.className = 'shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white bg-white/10 border border-white/10';
@@ -22423,7 +22452,12 @@ applyOfflineState(!navigator.onLine);
 
     messagesEl.appendChild(wrap);
     _chatAttachPreviewEl = wrap;
-    scrollDown();
+    // Use requestAnimationFrame to ensure the DOM has updated before scrolling.
+    // Without this, scrollDown() may fire before the browser recalculates
+    // scrollHeight, leaving the preview below the visible area.
+    requestAnimationFrame(function() {
+      scrollDown();
+    });
   }
 
   // Bridge for Outfit Builder to send composite outfit image + prompt to chat
@@ -23162,34 +23196,61 @@ applyOfflineState(!navigator.onLine);
     // Read through window.userCloset — the chat IIFE lives in a classic
     // script while userCloset is declared in the module script, so the
     // bare name isn't in scope here.
-    const closet = window.userCloset;
-    const outfits = (closet && Array.isArray(closet.outfits)) ? closet.outfits : [];
-    if (outfits.length === 0) {
-      pickerGrid.innerHTML = '<div class="col-span-full text-center text-gray-400 py-10 text-sm">' + t('closet_empty_picker') + '</div>';
-    } else {
-      pickerGrid.innerHTML = '';
-      outfits.forEach(o => {
-        const card = document.createElement('button');
-        card.type = 'button';
-        card.className = 'relative aspect-[3/4] rounded-xl overflow-hidden border border-white/10 hover:border-brand-500/60 transition group';
-        card.innerHTML =
-          '<img src="' + _esc(o.image) + '" class="w-full h-full object-cover" />' +
-          '<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-2">' +
-            '<span class="text-[10px] text-white font-bold uppercase">' + t('occasion_' + (o.occasion || 'casual')) + ' · ' + _esc(o.score || '-') + '/100</span>' +
-          '</div>';
-        card.addEventListener('click', async () => {
-          picker.classList.add('hidden');
-          try {
-            const compressed = await compressImage(o.image);
-            pendingAttachments.push({ url: compressed, source: 'closet', meta: o });
-            renderAttachments();
-            input.focus();
-          } catch(e) { console.error(e); }
+    try {
+      var _picker = document.getElementById('coachClosetPicker');
+      var _pickerGrid = document.getElementById('coachClosetPickerGrid');
+      if (!_picker || !_pickerGrid) {
+        console.error('[chat] closet picker elements not found');
+        return;
+      }
+
+      const closet = window.userCloset;
+      const outfits = (closet && Array.isArray(closet.outfits)) ? closet.outfits : [];
+
+      // If outfits are still loading from IndexedDB (race condition on first visit),
+      // try again after a short delay so the user sees the picker once data arrives.
+      if (outfits.length === 0 && closet && closet._loading) {
+        _pickerGrid.innerHTML = '<div class="col-span-full text-center text-gray-400 py-10 text-sm">' + (t('closet_empty_picker') || 'Loading closet…') + '</div>';
+        _picker.classList.remove('hidden');
+        // Retry after closet data has loaded
+        setTimeout(function() { openClosetPicker(); }, 800);
+        return;
+      }
+
+      if (outfits.length === 0) {
+        _pickerGrid.innerHTML = '<div class="col-span-full text-center text-gray-400 py-10 text-sm">' + (t('closet_empty_picker') || 'No items yet') + '</div>';
+      } else {
+        _pickerGrid.innerHTML = '';
+        outfits.forEach(o => {
+          const card = document.createElement('button');
+          card.type = 'button';
+          card.className = 'relative aspect-[3/4] rounded-xl overflow-hidden border border-white/10 hover:border-brand-500/60 transition group';
+          card.innerHTML =
+            '<img src="' + _esc(o.image) + '" class="w-full h-full object-cover" />' +
+            '<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-2">' +
+              '<span class="text-[10px] text-white font-bold uppercase">' + t('occasion_' + (o.occasion || 'casual')) + ' · ' + _esc(o.score || '-') + '/100</span>' +
+            '</div>';
+          card.addEventListener('click', async () => {
+            _picker.classList.add('hidden');
+            try {
+              const compressed = await compressImage(o.image);
+              pendingAttachments.push({ url: compressed, source: 'closet', meta: o });
+              renderAttachments();
+              input.focus();
+            } catch(e) { console.error('[chat] closet pick compress error:', e); }
+          });
+          _pickerGrid.appendChild(card);
         });
-        pickerGrid.appendChild(card);
-      });
+      }
+      _picker.classList.remove('hidden');
+    } catch(err) {
+      console.error('[chat] openClosetPicker error:', err);
+      // Fallback: try to show the picker even if rendering failed
+      try {
+        var fbPicker = document.getElementById('coachClosetPicker');
+        if (fbPicker) fbPicker.classList.remove('hidden');
+      } catch(e2) {}
     }
-    picker.classList.remove('hidden');
   }
 
   closetBtn?.addEventListener('click', () => {
@@ -23206,7 +23267,9 @@ applyOfflineState(!navigator.onLine);
     // First time: show consent modal, then open closet picker
     window.DateScanConsent.requireUpload().then(() => {
       openClosetPicker();
-    }).catch(() => {});
+    }).catch((err) => {
+      console.warn('[chat] upload consent declined or failed:', err);
+    });
   });
   pickerClose?.addEventListener('click', () => picker.classList.add('hidden'));
   picker?.addEventListener('click', e => { if (e.target === picker) picker.classList.add('hidden'); });
