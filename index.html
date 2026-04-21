@@ -13819,6 +13819,21 @@ async function closetInit() {
 // Kick off the load (non-blocking)
 closetInit();
 
+// ── Move modal overlays to <body> so they aren't trapped in <main>'s
+// z-20 stacking context.  The header (z-110) and bottom nav (z-80)
+// are direct children of <body>; modals nested inside <main> render
+// below them regardless of their own z-index.  Moving them to <body>
+// ensures position:fixed + z-index works correctly.
+(function _promoteModals() {
+  var _modalIds = ['closetUploadConsent', 'closetCategoryModal', 'duelModal'];
+  _modalIds.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el && el.parentElement !== document.body) {
+      document.body.appendChild(el);
+    }
+  });
+})();
+
 function generateThumbnail(dataUrl, callback) {
     const img = new Image();
     img.onload = () => {
@@ -14789,15 +14804,19 @@ window.saveCurrentOutfit = function() {
     consentChk.checked = false;
     consentOk.disabled = true;
     consentEl.classList.remove('hidden');
-    // JS fallback: hide bottom nav (for WebViews without CSS :has())
+    // JS fallback: hide header + bottom nav (for WebViews without CSS :has())
     var _bv = document.getElementById('mobileBottomNav');
     if (_bv) _bv.style.display = 'none';
+    var _hdr = document.querySelector('header');
+    if (_hdr) { _hdr.style.visibility = 'hidden'; _hdr.style.pointerEvents = 'none'; }
   }
   function closeConsent() {
     consentEl.classList.add('hidden');
-    // Restore bottom nav
+    // Restore bottom nav + header
     var _bv2 = document.getElementById('mobileBottomNav');
     if (_bv2) _bv2.style.display = '';
+    var _hdr2 = document.querySelector('header');
+    if (_hdr2) { _hdr2.style.visibility = ''; _hdr2.style.pointerEvents = ''; }
   }
   function openCategory(imgData) {
     pendingImage = imgData;
@@ -14806,12 +14825,22 @@ window.saveCurrentOutfit = function() {
     catOpts.forEach(o => o.classList.remove('is-selected'));
     catSave.disabled = true;
     catEl.classList.remove('hidden');
+    // Hide header + bottom nav while category picker is open
+    var _bv = document.getElementById('mobileBottomNav');
+    if (_bv) _bv.style.display = 'none';
+    var _hdr = document.querySelector('header');
+    if (_hdr) { _hdr.style.visibility = 'hidden'; _hdr.style.pointerEvents = 'none'; }
   }
   function closeCategory() {
     catEl.classList.add('hidden');
     pendingImage = null;
     pendingType  = null;
     fileInput.value = '';
+    // Restore header + bottom nav
+    var _bv2 = document.getElementById('mobileBottomNav');
+    if (_bv2) _bv2.style.display = '';
+    var _hdr2 = document.querySelector('header');
+    if (_hdr2) { _hdr2.style.visibility = ''; _hdr2.style.pointerEvents = ''; }
   }
 
   // Consent gate + file picker
@@ -26391,17 +26420,21 @@ applyOfflineState(!navigator.onLine);
     modal.classList.remove('hidden');
     modal.classList.add('flex');
     document.body.style.overflow = 'hidden';
-    // JS fallback: hide bottom nav (for WebViews without CSS :has())
+    // JS fallback: hide header + bottom nav (for WebViews without CSS :has())
     var _bv = document.getElementById('mobileBottomNav');
     if (_bv) _bv.style.display = 'none';
+    var _hdr = document.querySelector('header');
+    if (_hdr) { _hdr.style.visibility = 'hidden'; _hdr.style.pointerEvents = 'none'; }
   }
   function close() {
     modal.classList.add('hidden');
     modal.classList.remove('flex');
     document.body.style.overflow = '';
-    // Restore bottom nav
+    // Restore bottom nav + header
     var _bv2 = document.getElementById('mobileBottomNav');
     if (_bv2) _bv2.style.display = '';
+    var _hdr2 = document.querySelector('header');
+    if (_hdr2) { _hdr2.style.visibility = ''; _hdr2.style.pointerEvents = ''; }
   }
   openBtn && openBtn.addEventListener('click', () => {
     try { if (typeof triggerHaptic === 'function') triggerHaptic('tap'); } catch (_) {}
@@ -26454,9 +26487,11 @@ applyOfflineState(!navigator.onLine);
     consentChk.checked = false;
     consentOk.disabled = true;
     consentEl.classList.remove('hidden');
-    // JS fallback: hide bottom nav (for WebViews without CSS :has())
+    // JS fallback: hide header + bottom nav (for WebViews without CSS :has())
     var _nav = document.getElementById('mobileBottomNav');
     if (_nav) _nav.style.display = 'none';
+    var _hdr = document.querySelector('header');
+    if (_hdr) { _hdr.style.visibility = 'hidden'; _hdr.style.pointerEvents = 'none'; }
 
     // Capture-phase handlers so they run BEFORE the closet IIFE's
     // bubble-phase handlers on the same buttons, and stop them.
@@ -26466,18 +26501,22 @@ applyOfflineState(!navigator.onLine);
       try { localStorage.setItem(DUEL_CONSENT_KEY, 'true'); } catch (_) {}
       cleanup();
       consentEl.classList.add('hidden');
-      // Restore bottom nav
+      // Restore bottom nav + header
       var _nav2 = document.getElementById('mobileBottomNav');
       if (_nav2) _nav2.style.display = '';
+      var _hdr2 = document.querySelector('header');
+      if (_hdr2) { _hdr2.style.visibility = ''; _hdr2.style.pointerEvents = ''; }
       cb();
     }
     function onCancel(e) {
       e.stopImmediatePropagation();
       cleanup();
       consentEl.classList.add('hidden');
-      // Restore bottom nav
+      // Restore bottom nav + header
       var _nav3 = document.getElementById('mobileBottomNav');
       if (_nav3) _nav3.style.display = '';
+      var _hdr3 = document.querySelector('header');
+      if (_hdr3) { _hdr3.style.visibility = ''; _hdr3.style.pointerEvents = ''; }
     }
     function onChk() {
       consentOk.disabled = !consentChk.checked;
