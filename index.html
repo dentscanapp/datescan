@@ -4712,6 +4712,32 @@ if (window.__DS_IS_ANDROID_APP) {
   </div>
 
   <!-- ===== STYLE PROFILE MODAL ===== -->
+
+  <!-- Closet Item Preview Modal — full-screen image viewer for closet items -->
+  <div id="closetItemPreview" class="hidden fixed inset-0 z-[120] bg-black/90 backdrop-blur-md flex items-center justify-center p-4" style="z-index:9998">
+    <button id="closetItemPreviewClose" type="button" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/70 border border-white/20 text-white flex items-center justify-center hover:bg-white/20 transition z-10" aria-label="Close">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <div class="max-w-lg w-full max-h-[85vh] flex flex-col">
+      <div class="aspect-[3/4] rounded-2xl overflow-hidden border border-white/10 bg-black relative flex-shrink-0">
+        <img id="closetItemPreviewImg" src="" alt="Preview" class="w-full h-full object-contain" />
+      </div>
+      <div id="closetItemPreviewInfo" class="mt-3 text-center">
+        <div id="closetItemPreviewScore" class="text-sm font-bold text-white"></div>
+        <div id="closetItemPreviewOccasion" class="text-xs text-gray-400 mt-1"></div>
+      </div>
+      <div class="flex gap-2 mt-3">
+        <button id="closetItemPreviewSendToChat" type="button" class="flex-1 py-2.5 rounded-xl bg-brand-500/20 border border-brand-500/40 text-brand-300 text-sm font-bold flex items-center justify-center gap-2 hover:bg-brand-500/30 active:scale-[0.98] transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+          <span data-i18n="closet_send_to_chat">Send to Chat</span>
+        </button>
+        <button id="closetItemPreviewDelete" type="button" class="px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-bold flex items-center justify-center gap-2 hover:bg-red-500/20 active:scale-[0.98] transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div id="styleProfileModal" class="hidden fixed inset-0 z-[115] bg-black/85 backdrop-blur-md flex items-center justify-center p-4" style="z-index:120">
     <div class="premium-glass rounded-3xl border border-purple-500/20 max-w-lg w-full p-6 sm:p-7 relative max-h-[90vh] overflow-y-auto">
       <button id="styleProfileClose" type="button" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition" aria-label="Close">
@@ -7633,13 +7659,15 @@ function updatePointsBadge() {
   const s = _readPointsState();
   const hasBonus = (s.bonus || 0) > 0;
   // Show e.g. "5 PTS" or "8 PTS" with bonus indicator, plus reset hint in title.
-  badge.innerHTML = `<span class="font-bold text-white tabular-nums">${_esc(pts)}</span><span class="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-1">${t('nav_pts')}</span>${hasBonus ? '<span class="text-[9px] font-bold text-green-400 ml-1.5">+' + _esc(s.bonus) + '</span>' : ''}`;
+  // When points are 0, show the number in red/amber so it's clearly visible.
+  const ptsColor = pts === 0 ? 'text-amber-400' : 'text-white';
+  badge.innerHTML = `<span class="font-bold ${ptsColor} tabular-nums">${_esc(pts)}</span><span class="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-1">${t('nav_pts')}</span>${hasBonus ? '<span class="text-[9px] font-bold text-green-400 ml-1.5">+' + _esc(s.bonus) + '</span>' : ''}`;
   badge.classList.remove('bg-brand-500/10', 'border-brand-500/30');
-  badge.classList.add('bg-white/5', 'border-white/10');
+  badge.classList.remove('text-gray-400');
   if (pts === 0) {
-    badge.classList.add('text-gray-400');
+    badge.classList.add('bg-amber-500/10', 'border-amber-500/30');
   } else {
-    badge.classList.remove('text-gray-400');
+    badge.classList.add('bg-white/5', 'border-white/10');
   }
   const resetHint = formatPointsResetShort();
   const bonusHint = hasBonus ? ` (+${s.bonus} bonus)` : '';
@@ -8120,6 +8148,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       chat_apply: 'Apply',
       chat_applied: 'Applied',
       chat_report: 'Report',
+      chat_image_safety: "I couldn't process that image. Try a clearer photo of your outfit, or describe what you're wearing and I'll help!",
       chat_fallback_reply: "Hmm, I didn't catch that. Try again?",
       typing_hint_reading: 'Reading your message…',
       typing_hint_photo: 'Looking at your photo…',
@@ -8512,6 +8541,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       closet_built_outfit_badge: 'Built Outfit',
       closet_delete: 'Delete',
       closet_share: 'Share',
+      closet_send_to_chat: 'Send to Chat',
       closet_no_items: 'No items uploaded yet. Tap Add Item above to start.',
       closet_onboard_step1: 'Upload your clothes',
       closet_onboard_step1_desc: 'Take a photo or pick from your gallery! Our system instantly identifies your clothing items.',
@@ -9720,7 +9750,8 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       chat_apply: 'Alkalmaz',
       chat_applied: 'Alkalmazva',
       chat_report: 'Jelentés',
-      chat_fallback_reply: 'Hm, ezt nem sikerült elkapnom. Próbáld újra?',
+      chat_image_safety: 'Nem sikerült feldolgoznom ezt a képet. Próbálj egy tisztább fotót az öltözékedről, vagy írd le, mit viselsz, és segítek!',
+      chat_fallback_reply: 'Hm, ezt nem sikerült elkapnem. Próbáld újra?',
       typing_hint_reading: 'Üzeneted olvasom…',
       typing_hint_photo: 'Fényképedet nézem…',
       typing_hint_color: 'Színharmoniát fontolgatok…',
@@ -10099,6 +10130,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       closet_built_outfit_badge: 'Összeállított öltözék',
       closet_delete: 'Törlés',
       closet_share: 'Megosztás',
+      closet_send_to_chat: 'Küldés chatbe',
       closet_no_items: 'Még nincs feltöltött tárgy. Koppints a Hozzáadás gombra.',
       closet_onboard_step1: 'Töltsd fel a ruháid',
       closet_onboard_step1_desc: 'Fotózz vagy válassz a galériából! Rendszerünk azonnal azonosítja a ruhadarabjaidat.',
@@ -11306,6 +11338,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       chat_apply: 'Anwenden',
       chat_applied: 'Angewendet',
       chat_report: 'Melden',
+      chat_image_safety: 'Ich konnte dieses Bild nicht verarbeiten. Versuche ein klareres Foto deines Outfits oder beschreibe, was du trägst!',
       chat_fallback_reply: 'Entschuldigung, das habe ich nicht verstanden. Kannst du es anders formulieren?',
       typing_hint_reading: 'Lese deine Nachricht...',
       typing_hint_photo: 'Schaue mir dein Foto an...',
@@ -11685,6 +11718,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       closet_built_outfit_badge: 'Zusammengestelltes Outfit',
       closet_delete: 'Löschen',
       closet_share: 'Teilen',
+      closet_send_to_chat: 'An Chat senden',
       closet_no_items: 'Noch keine Teile hochgeladen. Tippe auf Hinzufügen.',
       closet_onboard_step1: 'Lade deine Kleidung hoch',
       closet_onboard_step1_desc: 'Fotografiere oder wähle aus der Galerie! Unser System erkennt deine Kleidungsstücke sofort.',
@@ -14178,7 +14212,7 @@ window.renderCloset = function(filter = 'all', append = false) {
         }
         const scanTagRow = scanTagPills.length ? `<div class="flex flex-wrap gap-1 mt-1.5">${scanTagPills.join('')}</div>` : '';
         return `
-        <div class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-default relative">
+        <div class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-pointer relative" data-action="preview-outfit" data-outfit-id="${_esc(outfit.id)}">
             <div class="aspect-[3/4] bg-black relative">
                 <img src="${_esc(outfit.image)}" class="w-full h-full object-cover opacity-90 transition-opacity" alt="" data-i18n-aria="alt_saved_item" loading="lazy" />
                 ${typeBadge}
@@ -14217,14 +14251,24 @@ window.renderCloset = function(filter = 'all', append = false) {
     }
 
     // Delegate click handlers for data-action buttons (replaces inline onclick)
+    grid.querySelectorAll('[data-action="preview-outfit"]').forEach(function(card) {
+      card.addEventListener('click', function(e) {
+        // Don't open preview if a button inside the card was clicked
+        if (e.target.closest('[data-action="delete-outfit"], [data-action="share-outfit"], [data-action="edit-builder"], [data-action="share-item"], [data-action="delete-item"]')) return;
+        var allOutfits = (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits : [];
+        var o = allOutfits.find(function(x) { return x.id === card.dataset.outfitId; });
+        if (o) window.openClosetItemPreview(o);
+      });
+    });
     grid.querySelectorAll('[data-action="edit-builder"]').forEach(function(btn) {
-      btn.addEventListener('click', function() { window.editBuilderOutfit(btn.dataset.outfitId); });
+      btn.addEventListener('click', function(e) { e.stopPropagation(); window.editBuilderOutfit(btn.dataset.outfitId); });
     });
     grid.querySelectorAll('[data-action="delete-outfit"]').forEach(function(btn) {
-      btn.addEventListener('click', function() { window.triggerDeleteOutfit(btn.dataset.outfitId); });
+      btn.addEventListener('click', function(e) { e.stopPropagation(); window.triggerDeleteOutfit(btn.dataset.outfitId); });
     });
     grid.querySelectorAll('[data-action="share-outfit"]').forEach(function(btn) {
-      btn.addEventListener('click', function() {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
         var allOutfits = (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits : [];
         var o = allOutfits.find(function(x) { return x.id === btn.dataset.outfitId; });
         window.openShareModal(Number(btn.dataset.outfitScore) || 0, o ? o.image : '');
@@ -14300,7 +14344,7 @@ window.renderClosetItems = function(typeFilter = 'all', append = false) {
         const tagRow = tagPills.length ? `<div class="flex flex-wrap gap-1 mt-1.5">${tagPills.join('')}</div>` : '';
 
         return `
-        <div class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-default relative">
+        <div class="premium-glass rounded-2xl overflow-hidden border border-white/10 flex flex-col hover:border-brand-500/40 transition-colors group cursor-pointer relative" data-action="preview-outfit" data-outfit-id="${_esc(item.id)}">
             <div class="aspect-[3/4] bg-black relative">
                 <img src="${_esc(item.image)}" class="w-full h-full object-cover opacity-90 transition-opacity" alt="" data-i18n-aria="alt_saved_item" loading="lazy" />
                 <div class="absolute top-2 left-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-white border border-white/10 z-10">${TYPE_LABELS[item.type] || t('closet_item_label')}</div>
@@ -14331,11 +14375,20 @@ window.renderClosetItems = function(typeFilter = 'all', append = false) {
     }
 
     // Delegate click handlers for data-action buttons (replaces inline onclick)
+    grid.querySelectorAll('[data-action="preview-outfit"]').forEach(function(card) {
+      card.addEventListener('click', function(e) {
+        if (e.target.closest('[data-action="delete-outfit"], [data-action="share-item"], [data-action="delete-item"]')) return;
+        var allOutfits = (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits : [];
+        var o = allOutfits.find(function(x) { return x.id === card.dataset.outfitId; });
+        if (o) window.openClosetItemPreview(o);
+      });
+    });
     grid.querySelectorAll('[data-action="delete-outfit"]').forEach(function(btn) {
-      btn.addEventListener('click', function() { window.triggerDeleteOutfit(btn.dataset.outfitId); });
+      btn.addEventListener('click', function(e) { e.stopPropagation(); window.triggerDeleteOutfit(btn.dataset.outfitId); });
     });
     grid.querySelectorAll('[data-action="share-item"]').forEach(function(btn) {
-      btn.addEventListener('click', function() {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
         var allOutfits = (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits : [];
         var o = allOutfits.find(function(x) { return x.id === btn.dataset.outfitId; });
         window.openShareModal(null, o ? o.image : '');
@@ -16261,6 +16314,74 @@ async function generateShareCard(overrideScore, overrideImage) {
     drawRest();
   }
 }
+
+// Closet Item Preview — opens a full-screen modal to view an outfit/item
+// and optionally sends it to the AI Style Coach chat.
+window.openClosetItemPreview = function(outfit) {
+  if (!outfit) return;
+  triggerHaptic('tap');
+  var modal = document.getElementById('closetItemPreview');
+  var img = document.getElementById('closetItemPreviewImg');
+  var scoreEl = document.getElementById('closetItemPreviewScore');
+  var occasionEl = document.getElementById('closetItemPreviewOccasion');
+  var sendBtn = document.getElementById('closetItemPreviewSendToChat');
+  var deleteBtn = document.getElementById('closetItemPreviewDelete');
+  if (!modal || !img) return;
+
+  img.src = outfit.image || '';
+  if (scoreEl) {
+    scoreEl.textContent = outfit.score != null ? (outfit.score + '/100') : '';
+  }
+  if (occasionEl) {
+    var occ = t('occasion_' + (outfit.occasion || 'casual'));
+    var typeLabel = '';
+    if (outfit.type) {
+      var TYPE_MAP = { shirt: t('type_shirt'), pants: t('type_pants'), jacket: t('type_jacket'), dress: t('type_dress'), shoes: t('type_shoes'), accessory: t('type_accessory') };
+      typeLabel = TYPE_MAP[outfit.type] || '';
+    }
+    occasionEl.textContent = (typeLabel ? typeLabel + ' · ' : '') + occ;
+  }
+
+  // Remove old listeners by cloning buttons
+  if (sendBtn) {
+    var newSendBtn = sendBtn.cloneNode(true);
+    sendBtn.parentNode.replaceChild(newSendBtn, sendBtn);
+    newSendBtn.addEventListener('click', function() {
+      modal.classList.add('hidden');
+      // Navigate to chat and attach the image
+      if (typeof window._sendClosetItemToChat === 'function') {
+        window._sendClosetItemToChat(outfit);
+      } else {
+        // Fallback: switch to chat view and add attachment
+        var chatInput = document.querySelector('#coachChatForm input, #coachChatForm textarea');
+        var pending = window._chatPendingAttachments;
+        if (pending) {
+          pending.push({ url: outfit.image, source: 'closet', meta: outfit });
+          if (typeof window._chatRenderAttachments === 'function') window._chatRenderAttachments();
+        }
+        if (typeof window.toggleView === 'function') window.toggleView('chat');
+      }
+    });
+  }
+  if (deleteBtn) {
+    var newDeleteBtn = deleteBtn.cloneNode(true);
+    deleteBtn.parentNode.replaceChild(newDeleteBtn, deleteBtn);
+    newDeleteBtn.addEventListener('click', function() {
+      modal.classList.add('hidden');
+      if (typeof window.triggerDeleteOutfit === 'function') window.triggerDeleteOutfit(outfit.id);
+    });
+  }
+
+  modal.classList.remove('hidden');
+};
+
+// Close preview modal
+document.getElementById('closetItemPreviewClose')?.addEventListener('click', function() {
+  document.getElementById('closetItemPreview')?.classList.add('hidden');
+});
+document.getElementById('closetItemPreview')?.addEventListener('click', function(e) {
+  if (e.target === this) this.classList.add('hidden');
+});
 
 window.openShareModal = async function(score, image) {
   triggerHaptic('tap');
@@ -19652,7 +19773,7 @@ function renderWeatherOutfit(weather) {
 function _escapeHtml(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
-function _esc(s) { if (typeof s !== 'string') return String(s||''); return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function _esc(s) { if (typeof s !== 'string') return s === 0 ? '0' : String(s||''); return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function _escAttr(s) { return _escapeHtml(s); }
 
 window.renderWeatherOutfit = renderWeatherOutfit;
@@ -22361,6 +22482,30 @@ applyOfflineState(!navigator.onLine);
     }, 100);
   };
 
+  // Bridge for Closet preview modal to send an item image to chat
+  window._sendClosetItemToChat = function(outfit) {
+    if (!input || !form) return;
+    // Compress image before attaching (handles large base64 data URLs)
+    compressImage(outfit.image).then(function(compressed) {
+      pendingAttachments.push({ url: compressed, source: 'closet', meta: outfit });
+      renderAttachments();
+      input.focus();
+      // Switch to chat view if not already there
+      if (typeof window.toggleView === 'function') window.toggleView('chat');
+    }).catch(function(err) {
+      console.error('Failed to compress closet image for chat:', err);
+      // Fallback: attach uncompressed
+      pendingAttachments.push({ url: outfit.image, source: 'closet', meta: outfit });
+      renderAttachments();
+      input.focus();
+      if (typeof window.toggleView === 'function') window.toggleView('chat');
+    });
+  };
+
+  // Expose for external access (closet preview modal)
+  window._chatPendingAttachments = pendingAttachments;
+  window._chatRenderAttachments = renderAttachments;
+
   // Safely set the bubble's text content while preserving
   // the action bar (👍/👎 + Apply + Report) that lives at the
   // bottom of every assistant bubble. Using `bubble.textContent = …`
@@ -23255,9 +23400,14 @@ applyOfflineState(!navigator.onLine);
         throw Object.assign(new Error('HTTP ' + res.status + ' ' + errText), { status: res.status });
       }
       const data = await res.json();
-      const reply = data.reply || data.content || data.message ||
+      let reply = data.reply || data.content || data.message ||
                     (data.choices && data.choices[0] && (data.choices[0].message?.content || data.choices[0].text)) ||
                     '';
+      // Detect backend safety/content-moderation errors for images
+      // and replace with a user-friendly message instead of raw API text.
+      if (/safety\s*error|content\s*(is\s*)?not\s*permitted|content\s*violation|image\s*rejected|unsafe\s*content/i.test(reply)) {
+        reply = attachments.length > 0 ? t('chat_image_safety') : t('safety_sexual');
+      }
       stopTypingIndicator(thinking);
       thinking.classList.remove('animate-pulse');
       const finalReply = (reply || '').trim() || t('chat_fallback_reply');
