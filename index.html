@@ -2945,7 +2945,15 @@ if (window.__DS_IS_ANDROID_APP) {
   body:has(.ds-consent:not([hidden])) #mobileBottomNav,
   body:has(#closetUploadConsent:not(.hidden)) #mobileBottomNav,
   body:has(#duelModal:not(.hidden)) #mobileBottomNav,
-  body:has(#paywallModal:not(.hidden)) #mobileBottomNav {
+  body:has(#paywallModal:not(.hidden)) #mobileBottomNav,
+  body:has(#vibeCheckModal:not(.hidden)) #mobileBottomNav,
+  body:has(#smartShopModal:not(.hidden)) #mobileBottomNav,
+  body:has(#colorHarmonyModal:not(.hidden)) #mobileBottomNav,
+  body:has(#tripPackingModal:not(.hidden)) #mobileBottomNav,
+  body:has(#garmentCareModal:not(.hidden)) #mobileBottomNav,
+  body:has(#dateOutfitModal:not(.hidden)) #mobileBottomNav,
+  body:has(#weeklyPlannerModal:not(.hidden)) #mobileBottomNav,
+  body:has(#styleProfileModal:not(.hidden)) #mobileBottomNav {
     display: none !important;
   }
   /* Hide header (PNT / PRO / lang icons) when modals are open so
@@ -2955,7 +2963,23 @@ if (window.__DS_IS_ANDROID_APP) {
   body:has(#duelModal:not(.hidden)) > header,
   body:has(#duelModal:not(.hidden)) > #langSelectorDropdown,
   body:has(.ds-consent:not([hidden])) > header,
-  body:has(.ds-consent:not([hidden])) > #langSelectorDropdown {
+  body:has(.ds-consent:not([hidden])) > #langSelectorDropdown,
+  body:has(#vibeCheckModal:not(.hidden)) > header,
+  body:has(#vibeCheckModal:not(.hidden)) > #langSelectorDropdown,
+  body:has(#smartShopModal:not(.hidden)) > header,
+  body:has(#smartShopModal:not(.hidden)) > #langSelectorDropdown,
+  body:has(#colorHarmonyModal:not(.hidden)) > header,
+  body:has(#colorHarmonyModal:not(.hidden)) > #langSelectorDropdown,
+  body:has(#tripPackingModal:not(.hidden)) > header,
+  body:has(#tripPackingModal:not(.hidden)) > #langSelectorDropdown,
+  body:has(#garmentCareModal:not(.hidden)) > header,
+  body:has(#garmentCareModal:not(.hidden)) > #langSelectorDropdown,
+  body:has(#dateOutfitModal:not(.hidden)) > header,
+  body:has(#dateOutfitModal:not(.hidden)) > #langSelectorDropdown,
+  body:has(#weeklyPlannerModal:not(.hidden)) > header,
+  body:has(#weeklyPlannerModal:not(.hidden)) > #langSelectorDropdown,
+  body:has(#styleProfileModal:not(.hidden)) > header,
+  body:has(#styleProfileModal:not(.hidden)) > #langSelectorDropdown {
     visibility: hidden !important;
     pointer-events: none !important;
   }
@@ -3313,6 +3337,13 @@ if (window.__DS_IS_ANDROID_APP) {
   .ch-score-ring {
     width: 100%; height: 100%;
   }
+  /* Color Harmony PRO lock overlay */
+  #colorHarmonyWheelLock, #colorHarmonyMatchesLock {
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(4px);
+    border-radius: 0.75rem;
+    transition: opacity 0.3s;
+  }
 
   /* ===== TRIP PACKING PLANNER ===== */
   .trip-weather-day {
@@ -3558,9 +3589,10 @@ if (window.__DS_IS_ANDROID_APP) {
   .care-decoder-btn-analyze:hover { background: linear-gradient(135deg, rgba(16,185,129,0.3), rgba(20,184,166,0.3)); }
   .care-decoder-btn-analyze:disabled { opacity: 0.4; cursor: not-allowed; }
   .care-decoder-loading {
-    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    flex-direction: column; align-items: center; gap: 0.5rem;
     padding: 1.25rem; text-align: center;
   }
+  .care-decoder-loading:not(.hidden) { display: flex; }
   .care-decoder-spinner {
     width: 28px; height: 28px; border: 3px solid rgba(59,130,246,0.15);
     border-top-color: #3b82f6; border-radius: 50%;
@@ -3638,6 +3670,94 @@ if (window.__DS_IS_ANDROID_APP) {
     font-size: 0.75rem; color: #93c5fd;
   }
   .outfit-weather-row + .outfit-weather-row { margin-top: 0.25rem; }
+
+  /* ===== WEEKLY STYLE PLANNER ===== */
+  .wsp-day-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 0.75rem;
+    padding: 0.6rem 0.65rem;
+    min-height: 120px;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .wsp-day-card:hover { border-color: rgba(16,185,129,0.3); }
+  .wsp-day-card.wsp-today { border-color: rgba(16,185,129,0.4); background: rgba(16,185,129,0.04); }
+  .wsp-day-card.wsp-drag-over { border-color: rgba(236,72,153,0.6); background: rgba(236,72,153,0.06); box-shadow: 0 0 16px rgba(236,72,153,0.1); }
+  .wsp-day-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 0.4rem; gap: 0.35rem;
+  }
+  .wsp-day-name { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: #6ee7b7; }
+  .wsp-day-date { font-size: 0.55rem; color: rgba(156,163,175,0.6); }
+  .wsp-day-weather { font-size: 0.6rem; color: #93c5fd; display: flex; align-items: center; gap: 0.25rem; }
+  .wsp-day-occasion {
+    font-size: 0.5rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.05em; padding: 0.1rem 0.35rem; border-radius: 0.25rem;
+    flex-shrink: 0;
+  }
+  .wsp-occ-work { background: rgba(59,130,246,0.15); color: #93c5fd; border: 1px solid rgba(59,130,246,0.25); }
+  .wsp-occ-date { background: rgba(236,72,153,0.15); color: #f9a8d4; border: 1px solid rgba(236,72,153,0.25); }
+  .wsp-occ-weekend { background: rgba(168,85,247,0.15); color: #c4b5fd; border: 1px solid rgba(168,85,247,0.25); }
+  .wsp-occ-casual { background: rgba(16,185,129,0.15); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.25); }
+  .wsp-outfit-slot {
+    display: flex; align-items: center; gap: 0.4rem;
+    padding: 0.3rem 0.4rem; border-radius: 0.5rem;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+    font-size: 0.6rem; color: #d1d5db; cursor: grab;
+    transition: all 0.15s; margin-top: 0.25rem;
+  }
+  .wsp-outfit-slot:hover { border-color: rgba(16,185,129,0.25); background: rgba(16,185,129,0.05); }
+  .wsp-outfit-slot:active { cursor: grabbing; }
+  .wsp-outfit-slot .wsp-slot-emoji { font-size: 0.85rem; flex-shrink: 0; }
+  .wsp-outfit-slot .wsp-slot-name { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .wsp-outfit-slot .wsp-slot-remove {
+    width: 14px; height: 14px; border-radius: 3px; display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.05); color: rgba(156,163,175,0.5); cursor: pointer; transition: all 0.15s; flex-shrink: 0;
+    font-size: 0.5rem; border: none;
+  }
+  .wsp-outfit-slot .wsp-slot-remove:hover { background: rgba(239,68,68,0.15); color: #fca5a5; }
+  .wsp-day-empty {
+    font-size: 0.6rem; color: rgba(156,163,175,0.35); text-align: center; padding: 1rem 0;
+    border: 1.5px dashed rgba(255,255,255,0.08); border-radius: 0.5rem; margin-top: 0.3rem;
+  }
+  .wsp-generate-btn {
+    width: 100%; padding: 0.55rem; border-radius: 0.6rem;
+    font-size: 0.65rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    border: 1px solid rgba(16,185,129,0.3); background: rgba(16,185,129,0.12); color: #6ee7b7;
+    margin-top: 0.4rem;
+  }
+  .wsp-generate-btn:hover { background: rgba(16,185,129,0.2); }
+  .wsp-generate-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .wsp-closet-pool {
+    max-height: 160px; overflow-y: auto; padding: 0.5rem;
+    background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 0.75rem;
+  }
+  .wsp-pool-item {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    padding: 0.25rem 0.5rem; border-radius: 0.4rem;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+    font-size: 0.6rem; color: #d1d5db; cursor: grab;
+    transition: all 0.15s; margin: 0.15rem;
+  }
+  .wsp-pool-item:hover { border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.08); }
+  .wsp-pool-item:active { cursor: grabbing; opacity: 0.6; }
+  .wsp-pool-item .wsp-pool-emoji { font-size: 0.8rem; }
+  .wsp-pool-item .wsp-pool-name { max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .wsp-loading-overlay {
+    position: absolute; inset: 0; border-radius: 0.75rem;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(2px);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 0.4rem; z-index: 2;
+  }
+  .wsp-spinner {
+    width: 22px; height: 22px; border: 2.5px solid rgba(16,185,129,0.15);
+    border-top-color: #6ee7b7; border-radius: 50%;
+    animation: wsp-spin 0.7s linear infinite;
+  }
+  @keyframes wsp-spin { to { transform: rotate(360deg); } }
+  .wsp-loading-text { font-size: 0.6rem; color: rgba(255,255,255,0.7); }
 
 </style>
 
@@ -4158,7 +4278,7 @@ if (window.__DS_IS_ANDROID_APP) {
 
               <div id="flashOverlay" class="flash-overlay"></div>
 
-              <div id="errorOverlay" class="hidden absolute inset-0 z-50 flex flex-col items-center justify-center bg-dark-950/95 p-6 text-center">
+              <div id="errorOverlay" class="absolute inset-0 z-50 flex-col items-center justify-center bg-dark-950/95 p-6 text-center" style="display:none">
                 <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-brand-500/20 to-purple-500/10 border border-brand-500/30 flex items-center justify-center mb-4 shadow-lg shadow-brand-500/10">
                   <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -4446,7 +4566,7 @@ if (window.__DS_IS_ANDROID_APP) {
         </div>
 
         <!-- Results Section -->
-        <div id="resultsCol" class="hidden lg:col-span-7 flex flex-col gap-6 w-full opacity-0 translate-y-8 transition-all duration-700 ease-out lg:sticky lg:top-6 lg:pb-12">
+        <div id="resultsCol" class="lg:col-span-7 flex-col gap-6 w-full opacity-0 translate-y-8 transition-all duration-700 ease-out lg:sticky lg:top-6 lg:pb-12" style="display:none">
           
           <div class="premium-glass rounded-[32px] p-6 sm:p-8 relative overflow-hidden">
             <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-brand-500/20 mix-blend-screen filter blur-[40px] pointer-events-none"></div>
@@ -4644,7 +4764,7 @@ if (window.__DS_IS_ANDROID_APP) {
               </div>
 
               <!-- Camera / analysis error fallback -->
-              <div id="vai-cam-error" class="hidden absolute inset-0 z-20 flex flex-col items-center justify-center bg-[#09090b]/95 backdrop-blur-sm rounded-[28px] p-6 text-center">
+              <div id="vai-cam-error" class="absolute inset-0 z-20 flex-col items-center justify-center bg-[#09090b]/95 backdrop-blur-sm rounded-[28px] p-6 text-center" style="display:none">
                 <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-brand-500/20 to-purple-500/10 border border-brand-500/30 flex items-center justify-center mb-4 shadow-lg shadow-brand-500/10">
                   <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -4884,47 +5004,52 @@ if (window.__DS_IS_ANDROID_APP) {
             <h2 class="font-serif text-3xl md:text-4xl font-medium mb-2 leading-tight" data-i18n="closet_title">Digital Closet</h2>
             <p data-i18n="closet_subtitle" class="text-gray-400 text-sm font-medium">Your saved outfits and personal style archive. <span id="closetCountBadge" class="inline-flex items-center gap-1 ml-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-gray-300"></span></p>
          </div>
-         <div class="flex gap-2 w-full md:w-auto flex-wrap">
-            <button id="styleProfileBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-gradient-to-r from-purple-500/20 to-brand-500/20 border border-purple-500/30 text-purple-300 hover:from-purple-500/30 hover:to-brand-500/30 active:scale-[0.98] transition" title="Your personal style profile">
-               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+         <div class="flex gap-1.5 w-full md:w-auto flex-wrap">
+            <button id="styleProfileBtn" class="px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-gradient-to-r from-purple-500/20 to-brand-500/20 border border-purple-500/30 text-purple-300 hover:from-purple-500/30 hover:to-brand-500/30 active:scale-[0.98] transition" title="Your personal style profile">
+               <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                <span data-i18n="closet_style_profile">Style Profile</span>
             </button>
-            <button id="smartShopBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-amber-300 hover:from-amber-500/30 hover:to-orange-500/30 active:scale-[0.98] transition" title="Smart Shopping List — wardrobe gap analysis and suggestions">
-               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            <button id="smartShopBtn" class="px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-amber-300 hover:from-amber-500/30 hover:to-orange-500/30 active:scale-[0.98] transition" title="Smart Shopping List — wardrobe gap analysis and suggestions">
+               <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                <span data-i18n="closet_smart_shop">Shopping List</span>
             </button>
-            <button id="colorHarmonyBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-500/30 text-blue-300 hover:from-blue-500/30 hover:to-cyan-500/30 active:scale-[0.98] transition" title="Color Harmony Analyzer — check if your colors match">
-               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 2a10 10 0 0 0 0 20 10 10 0 0 0 0-20z" stroke-dasharray="3 3"/></svg>
+            <button id="colorHarmonyBtn" class="px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-500/30 text-blue-300 hover:from-blue-500/30 hover:to-cyan-500/30 active:scale-[0.98] transition" title="Color Harmony Analyzer — check if your colors match">
+               <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 2a10 10 0 0 0 0 20 10 10 0 0 0 0-20z" stroke-dasharray="3 3"/></svg>
                <span data-i18n="closet_color_harmony">Colors</span>
             </button>
-            <button id="tripPackingBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-gradient-to-r from-sky-500/20 to-indigo-500/20 border border-sky-500/30 text-sky-300 hover:from-sky-500/30 hover:to-indigo-500/30 active:scale-[0.98] transition" title="Trip Packing Planner — smart packing based on weather and your closet">
-               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+            <button id="tripPackingBtn" class="px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-gradient-to-r from-sky-500/20 to-indigo-500/20 border border-sky-500/30 text-sky-300 hover:from-sky-500/30 hover:to-indigo-500/30 active:scale-[0.98] transition" title="Trip Packing Planner — smart packing based on weather and your closet">
+               <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
                <span data-i18n="closet_trip_packing">Trip Pack</span>
             </button>
-            <button id="garmentCareBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-gradient-to-r from-rose-500/20 to-pink-500/20 border border-rose-500/30 text-rose-300 hover:from-rose-500/30 hover:to-pink-500/30 active:scale-[0.98] transition" title="Garment Care Tracker — when did you last wear it, cleaning reminders">
-               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+            <button id="garmentCareBtn" class="px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-gradient-to-r from-rose-500/20 to-pink-500/20 border border-rose-500/30 text-rose-300 hover:from-rose-500/30 hover:to-pink-500/30 active:scale-[0.98] transition" title="Garment Care Tracker — when did you last wear it, cleaning reminders">
+               <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
                <span data-i18n="closet_garment_care">Care</span>
             </button>
-            <button id="closetUploadBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-[0.98] transition">
-               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/><circle cx="9" cy="10" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.814.014L6 21"/><path d="M19 2v6"/><path d="M22 5h-6"/></svg>
+            <button id="weeklyPlannerBtn" class="px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 text-emerald-300 hover:from-emerald-500/30 hover:to-teal-500/30 active:scale-[0.98] transition relative" title="Weekly Style Planner — plan your outfits for the week ahead">
+               <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+               <span data-i18n="closet_weekly_planner">Weekly</span>
+               <span id="weeklyPlannerBadge" class="hidden absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400 border border-[#09090b]"></span>
+            </button>
+            <button id="closetUploadBtn" class="px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-[0.98] transition">
+               <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/><circle cx="9" cy="10" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.814.014L6 21"/><path d="M19 2v6"/><path d="M22 5h-6"/></svg>
                <span data-i18n="closet_add_item">Add Item</span>
             </button>
-            <button id="duelOpenBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-[0.98] transition" title="Compare two outfits head-to-head">
-               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4l6 0 0 6"/><path d="M10 20l-6 0 0-6"/><path d="M20 4l-9 9"/><path d="M4 20l6-6"/></svg>
+            <button id="duelOpenBtn" class="px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-[0.98] transition" title="Compare two outfits head-to-head">
+               <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4l6 0 0 6"/><path d="M10 20l-6 0 0-6"/><path d="M20 4l-9 9"/><path d="M4 20l6-6"/></svg>
                <span data-i18n="closet_ab_duel">A/B Duel</span>
             </button>
 
-            <button id="outfitBuilderBtn" class="px-4 py-2.5 rounded-xl text-sm font-bold flex gap-2 items-center justify-center flex-1 md:flex-none bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 text-emerald-300 hover:from-emerald-500/30 hover:to-teal-500/30 active:scale-[0.98] transition" title="Build an outfit from your closet items">
-               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            <button id="outfitBuilderBtn" class="px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 text-emerald-300 hover:from-emerald-500/30 hover:to-teal-500/30 active:scale-[0.98] transition" title="Build an outfit from your closet items">
+               <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
                <span data-i18n="closet_build_outfit">Build Outfit</span>
             </button>
-            <div class="flex gap-2 shrink-0 w-full">
-               <button id="closetExportBtn" class="flex-1 px-3 py-2.5 rounded-xl text-sm font-bold flex gap-1.5 items-center justify-center bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-[0.98] transition" title="Export closet backup">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <div class="flex gap-1.5 shrink-0 w-full">
+               <button id="closetExportBtn" class="flex-1 px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center md:px-3 md:py-2.5 md:rounded-xl md:text-sm bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-[0.98] transition" title="Export closet backup">
+                  <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                   <span data-i18n="closet_export">Export</span>
                </button>
-               <button id="closetImportBtn" class="flex-1 px-3 py-2.5 rounded-xl text-sm font-bold flex gap-1.5 items-center justify-center bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-[0.98] transition" title="Import closet backup">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+               <button id="closetImportBtn" class="flex-1 px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center md:px-3 md:py-2.5 md:rounded-xl md:text-sm bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-[0.98] transition" title="Import closet backup">
+                  <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                   <span data-i18n="closet_import">Import</span>
                </button>
             </div>
@@ -5294,26 +5419,67 @@ if (window.__DS_IS_ANDROID_APP) {
         </div>
         <div id="colorHarmonyScheme" class="text-xs font-bold text-gray-300 mb-3"></div>
 
-        <!-- Color wheel visualization -->
-        <div class="flex justify-center mb-4">
-          <svg id="colorHarmonyWheel" viewBox="0 0 200 200" class="w-48 h-48"></svg>
+        <!-- Color wheel visualization — PRO only -->
+        <div id="colorHarmonyWheelSection" class="relative mb-4">
+          <div class="flex justify-center">
+            <svg id="colorHarmonyWheel" viewBox="0 0 200 200" class="w-48 h-48"></svg>
+          </div>
+          <!-- PRO lock overlay for color wheel -->
+          <div id="colorHarmonyWheelLock" class="absolute inset-0 flex items-center justify-center rounded-xl" style="display:none">
+            <div class="text-center py-4">
+              <div class="text-lg mb-1">🔒</div>
+              <p class="text-[10px] text-gray-400 font-bold" data-i18n="color_harmony_wheel_lock">Color wheel — PRO</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- "What matches?" suggestions -->
+      <!-- "What matches?" suggestions — PRO only -->
       <div id="colorHarmonyMatches" class="hidden">
-        <div class="text-[10px] uppercase tracking-widest text-blue-400 font-bold mb-2" data-i18n="color_harmony_matches_header">Matches From Your Closet</div>
-        <div id="colorHarmonyMatchesGrid" class="grid grid-cols-2 gap-2">
-          <!-- Dynamically populated -->
-        </div>
-        <div id="colorHarmonyMatchesEmpty" class="hidden text-center py-4">
-          <p class="text-xs text-gray-500" data-i18n="color_harmony_no_matches">No matching items found in your closet.</p>
+        <div class="relative">
+          <div class="text-[10px] uppercase tracking-widest text-blue-400 font-bold mb-2" data-i18n="color_harmony_matches_header">Matches From Your Closet</div>
+          <div id="colorHarmonyMatchesGrid" class="grid grid-cols-2 gap-2">
+            <!-- Dynamically populated -->
+          </div>
+          <div id="colorHarmonyMatchesEmpty" class="hidden text-center py-4">
+            <p class="text-xs text-gray-500" data-i18n="color_harmony_no_matches">No matching items found in your closet.</p>
+          </div>
+          <!-- PRO lock overlay for matches -->
+          <div id="colorHarmonyMatchesLock" class="absolute inset-0 flex items-center justify-center rounded-xl bg-black/60 backdrop-blur-sm" style="display:none">
+            <div class="text-center py-4">
+              <div class="text-lg mb-1">🔒</div>
+              <p class="text-[10px] text-gray-400 font-bold" data-i18n="color_harmony_matches_lock">Closet matches — PRO</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- PRO hint -->
+      <!-- Free user: max 2 colors hint -->
+      <div id="colorHarmonyFreeHint" class="mb-4 py-2.5 px-3 rounded-xl bg-blue-500/5 border border-blue-500/15 text-center" style="display:none">
+        <p class="text-[11px] text-gray-400" data-i18n="color_harmony_free_limit">Pick 2 colors for free — PRO unlocks up to 5</p>
+      </div>
+
+      <!-- PRO feature previews -->
       <div class="mt-5 pt-4 border-t border-white/5">
-        <div class="flex items-center gap-2 text-[11px] text-gray-500">
+        <div class="space-y-2.5 text-left max-w-xs mx-auto" id="colorHarmonyProPreviews">
+          <div class="flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+            <div class="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-sm">🎡</div>
+            <div><div class="text-xs font-bold text-white" data-i18n="color_harmony_pro_wheel_title">Color Wheel</div><div class="text-[10px] text-gray-500" data-i18n="color_harmony_pro_wheel_desc">Visualize color relationships on the wheel</div></div>
+          </div>
+          <div class="flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-sm">👗</div>
+            <div><div class="text-xs font-bold text-white" data-i18n="color_harmony_pro_matches_title">Closet Matches</div><div class="text-[10px] text-gray-500" data-i18n="color_harmony_pro_matches_desc">Find matching items from your wardrobe</div></div>
+          </div>
+          <div class="flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+            <div class="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-sm">🎨</div>
+            <div><div class="text-xs font-bold text-white" data-i18n="color_harmony_pro_palette_title">Full Palette</div><div class="text-[10px] text-gray-500" data-i18n="color_harmony_pro_palette_desc">Compare up to 5 colors at once</div></div>
+          </div>
+          <div class="flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+            <div class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-sm">👁️</div>
+            <div><div class="text-xs font-bold text-white" data-i18n="color_harmony_pro_colorblind_title">Colorblind Mode</div><div class="text-[10px] text-gray-500" data-i18n="color_harmony_pro_colorblind_desc">See how your outfit looks with color vision deficiency</div></div>
+          </div>
+        </div>
+        <div class="flex items-center justify-center gap-2 text-[11px] text-gray-500 mt-3">
           <span class="px-1.5 py-0.5 rounded text-[8px] font-bold bg-gradient-to-r from-brand-500 to-purple-500 text-white uppercase tracking-wider">PRO</span>
           <span data-i18n="color_harmony_pro_hint">Full palette analysis & colorblind mode available with PRO</span>
         </div>
@@ -5368,7 +5534,7 @@ if (window.__DS_IS_ANDROID_APP) {
       </div>
 
       <!-- Tab navigation -->
-      <div id="tripTabsBar" class="hidden flex gap-1 mb-5 bg-white/5 rounded-xl p-1">
+      <div id="tripTabsBar" class="gap-1 mb-5 bg-white/5 rounded-xl p-1" style="display:none">
         <button data-trip-tab="packing" class="trip-tab flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-colors bg-sky-500/20 text-sky-300 border border-sky-500/30" data-i18n="trip_tab_packing">Packing</button>
         <button data-trip-tab="daily" class="trip-tab flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-colors bg-white/5 text-gray-400 border border-transparent hover:bg-white/10" data-i18n="trip_tab_daily">Daily</button>
         <button data-trip-tab="missing" class="trip-tab flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-colors bg-white/5 text-gray-400 border border-transparent hover:bg-white/10" data-i18n="trip_tab_missing">Missing</button>
@@ -5584,19 +5750,19 @@ if (window.__DS_IS_ANDROID_APP) {
       </button>
 
       <!-- Loading state -->
-      <div id="outfitLoading" class="hidden mt-5 flex flex-col items-center gap-2 py-6">
+      <div id="outfitLoading" class="mt-5 flex-col items-center gap-2 py-6" style="display:none">
         <div class="care-decoder-spinner" style="border-top-color: #ec4899;"></div>
         <p class="text-xs text-gray-400" data-i18n="outfit_loading">AI is picking your perfect outfit...</p>
       </div>
 
       <!-- Empty closet warning -->
-      <div id="outfitEmptyCloset" class="hidden mt-5 text-center py-6">
+      <div id="outfitEmptyCloset" class="mt-5 text-center py-6" style="display:none">
         <div class="text-3xl mb-2">👗</div>
         <p class="text-sm text-gray-400" data-i18n="outfit_empty_closet">Add items to your closet first, then I can suggest outfits!</p>
       </div>
 
       <!-- Results -->
-      <div id="outfitResults" class="hidden mt-5">
+      <div id="outfitResults" class="mt-5" style="display:none">
         <div class="text-[10px] uppercase tracking-widest text-pink-400 font-bold mb-3" data-i18n="outfit_result_header">Your Outfit</div>
         <div id="outfitResultItems" class="space-y-2.5 mb-4">
           <!-- Dynamically populated with closet item cards -->
@@ -5613,6 +5779,122 @@ if (window.__DS_IS_ANDROID_APP) {
             <span>💾</span>
             <span data-i18n="outfit_save">Save to Chat</span>
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== WEEKLY STYLE PLANNER MODAL ===== -->
+  <div id="weeklyPlannerModal" class="hidden fixed inset-0 z-[115] bg-black/85 backdrop-blur-md flex items-center justify-center p-4" style="z-index:120">
+    <div class="premium-glass rounded-3xl border border-emerald-500/20 max-w-2xl w-full p-5 sm:p-7 relative max-h-[92vh] overflow-y-auto">
+      <button id="weeklyPlannerClose" type="button" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition" aria-label="Close">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center mb-4 mx-auto">
+        <svg class="w-7 h-7 text-emerald-300" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </div>
+      <h3 class="font-serif text-2xl font-semibold text-white text-center mb-1" data-i18n="wsp_title">Weekly Style Planner</h3>
+      <p data-i18n="wsp_subtitle" class="text-sm text-gray-400 text-center mb-4 leading-relaxed">Plan your outfits for the week ahead based on weather and your schedule.</p>
+      <!-- Saved plan indicator -->
+      <div id="wspSavedIndicator" class="hidden text-center mb-3">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-bold text-emerald-300">
+          <span>💾</span>
+          <span data-i18n="wsp_saved_plan">Saved plan loaded</span>
+        </span>
+      </div>
+
+      <!-- PRO Lock -->
+      <div id="wspProLocked" class="text-center py-8">
+        <div class="w-12 h-12 rounded-xl bg-brand-500/15 border border-brand-500/30 flex items-center justify-center mx-auto mb-3">
+          <svg class="w-6 h-6 text-brand-400" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <p class="text-sm text-gray-400 mb-4" data-i18n="wsp_pro_lock_desc">Unlock weekly outfit planning with AI-generated suggestions and drag & drop calendar with PRO.</p>
+        <!-- PRO feature previews -->
+        <div class="space-y-2.5 text-left max-w-xs mx-auto">
+          <div class="flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-sm">📅</div>
+            <div><div class="text-xs font-bold text-white" data-i18n="wsp_pro_weekly_title">7-Day Calendar</div><div class="text-[10px] text-gray-500" data-i18n="wsp_pro_weekly_desc">See your whole week at a glance</div></div>
+          </div>
+          <div class="flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+            <div class="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-sm">🌤️</div>
+            <div><div class="text-xs font-bold text-white" data-i18n="wsp_pro_weather_title">Weather-Based</div><div class="text-[10px] text-gray-500" data-i18n="wsp_pro_weather_desc">Outfits matched to forecast</div></div>
+          </div>
+          <div class="flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+            <div class="w-8 h-8 rounded-lg bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-sm">🎯</div>
+            <div><div class="text-xs font-bold text-white" data-i18n="wsp_pro_ai_title">AI Suggestions</div><div class="text-[10px] text-gray-500" data-i18n="wsp_pro_ai_desc">Smart picks from your closet</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRO Content (hidden for free users) -->
+      <div id="wspProContent" class="hidden">
+        <!-- City / Weather row -->
+        <div class="flex gap-2 mb-4">
+          <div class="flex-1 relative">
+            <input id="wspCityInput" type="text" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50" data-i18n-placeholder="wsp_city_placeholder" placeholder="City for weather forecast">
+          </div>
+          <button id="wspMyLocationBtn" type="button" class="px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-300 text-xs font-bold hover:bg-white/10 transition flex items-center gap-1.5 shrink-0">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m-10-10h4m12 0h4"/></svg>
+            <span data-i18n="wsp_my_location">My Location</span>
+          </button>
+        </div>
+
+        <!-- Weather preview -->
+        <div id="wspWeatherPreview" class="items-center gap-3 mb-4 p-2.5 rounded-xl bg-sky-500/5 border border-sky-500/15" style="display:none">
+          <span id="wspWeatherIcon" class="text-2xl">🌤️</span>
+          <div class="flex-1">
+            <div class="flex items-center gap-2">
+              <span id="wspWeatherTemp" class="text-sm font-bold text-white">--°C</span>
+              <span id="wspWeatherRange" class="text-[11px] text-gray-400">--° / --°</span>
+            </div>
+            <div class="text-[10px] text-gray-400" id="wspWeatherCondition">--</div>
+          </div>
+          <div class="text-[10px] text-gray-400 flex flex-col items-end gap-0.5">
+            <span id="wspWeatherWind">-- km/h</span>
+            <span id="wspWeatherHumidity">--%</span>
+          </div>
+        </div>
+
+        <!-- 7-Day Calendar Grid -->
+        <div id="wspCalendarGrid" class="grid grid-cols-7 gap-1.5 sm:gap-2 mb-4">
+          <!-- Dynamically populated by JS -->
+        </div>
+
+        <!-- Closet pool (drag source) -->
+        <div class="mb-4">
+          <div class="flex items-center justify-between mb-2">
+            <div class="text-[10px] uppercase tracking-widest text-gray-400 font-bold" data-i18n="wsp_closet_pool">Drag items to days</div>
+            <button id="wspAiFillBtn" type="button" class="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-gradient-to-r from-emerald-500/15 to-teal-500/15 border border-emerald-500/25 text-emerald-300 hover:from-emerald-500/25 hover:to-teal-500/25 transition flex items-center gap-1">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              <span data-i18n="wsp_ai_fill">AI Fill All</span>
+            </button>
+          </div>
+          <div id="wspClosetPool" class="wsp-closet-pool">
+            <!-- Dynamically populated -->
+          </div>
+          <div id="wspPoolEmpty" class="hidden text-center py-3">
+            <div class="text-2xl mb-1">👕</div>
+            <p class="text-xs text-gray-400" data-i18n="wsp_empty_closet">Add items to your closet first to start planning!</p>
+          </div>
+        </div>
+
+        <!-- Save / Clear -->
+        <div class="flex gap-2">
+          <button id="wspClearBtn" type="button" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 transition">
+            <span data-i18n="wsp_clear">Clear Week</span>
+          </button>
+          <button id="wspSaveBtn" type="button" class="flex-1 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 text-emerald-300 hover:from-emerald-500/30 hover:to-teal-500/30 transition flex items-center justify-center gap-1.5">
+            <span>💾</span>
+            <span data-i18n="wsp_save">Save Plan</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- PRO hint footer -->
+      <div class="mt-4 pt-3 border-t border-white/5">
+        <div class="flex items-center gap-2 text-[11px] text-gray-500">
+          <span class="px-1.5 py-0.5 rounded text-[8px] font-bold bg-gradient-to-r from-brand-500 to-purple-500 text-white uppercase tracking-wider">PRO</span>
+          <span data-i18n="wsp_pro_hint">Weekly style planning with AI suggestions available with PRO</span>
         </div>
       </div>
     </div>
@@ -6121,7 +6403,7 @@ if (window.__DS_IS_ANDROID_APP) {
        pink gradient in screenshots 4 and 7. Putting the splash here
        makes <main> the only containing context and guarantees the
        splash covers the bottom nav. -->
-  <div id="loadingOverlay" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-center bg-gradient-to-br from-[#ec4899] via-[#db2777] to-[#9333ea]">
+  <div id="loadingOverlay" class="fixed inset-0 z-[100] flex-col items-center justify-center bg-gradient-to-br from-[#ec4899] via-[#db2777] to-[#9333ea]" style="display:none">
     <!-- Subtle radial highlight in the center, like Tinder's background sheen -->
     <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(circle at 50% 45%, rgba(255,255,255,0.18) 0%, transparent 55%);"></div>
 
@@ -10720,6 +11002,18 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       color_harmony_item: 'Item',
       color_harmony_max_colors: 'Maximum 5 colors can be compared at once',
       color_harmony_pro_hint: 'Full palette analysis & colorblind mode available with PRO',
+      color_harmony_wheel_lock: 'Color wheel — PRO',
+      color_harmony_matches_lock: 'Closet matches — PRO',
+      color_harmony_free_limit: 'Pick 2 colors for free — PRO unlocks up to 5',
+      color_harmony_free_limit_toast: 'Free users can compare 2 colors — upgrade to PRO for 5',
+      color_harmony_pro_wheel_title: 'Color Wheel',
+      color_harmony_pro_wheel_desc: 'Visualize color relationships on the wheel',
+      color_harmony_pro_matches_title: 'Closet Matches',
+      color_harmony_pro_matches_desc: 'Find matching items from your wardrobe',
+      color_harmony_pro_palette_title: 'Full Palette',
+      color_harmony_pro_palette_desc: 'Compare up to 5 colors at once',
+      color_harmony_pro_colorblind_title: 'Colorblind Mode',
+      color_harmony_pro_colorblind_desc: 'See how your outfit looks with color vision deficiency',
 
       // Trip Packing Planner
       closet_trip_packing: 'Trip Pack',
@@ -10843,7 +11137,41 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       outfit_role_outer: 'Outer layer',
       outfit_role_dress: 'Dress',
       outfit_role_shoes: 'Shoes',
-      outfit_role_accessory: 'Accessory'
+      outfit_role_accessory: 'Accessory',
+
+      // Weekly Style Planner
+      closet_weekly_planner: 'Weekly',
+      wsp_title: 'Weekly Style Planner',
+      wsp_subtitle: 'Plan your outfits for the week ahead based on weather and your schedule.',
+      wsp_pro_lock_desc: 'Unlock weekly outfit planning with AI-generated suggestions and drag & drop calendar with PRO.',
+      wsp_pro_weekly_title: '7-Day Calendar',
+      wsp_pro_weekly_desc: 'See your whole week at a glance',
+      wsp_pro_weather_title: 'Weather-Based',
+      wsp_pro_weather_desc: 'Outfits matched to forecast',
+      wsp_pro_ai_title: 'AI Suggestions',
+      wsp_pro_ai_desc: 'Smart picks from your closet',
+      wsp_city_placeholder: 'City for weather forecast',
+      wsp_my_location: 'My Location',
+      wsp_closet_pool: 'Drag items to days',
+      wsp_ai_fill: 'AI Fill All',
+      wsp_empty_closet: 'Add items to your closet first to start planning!',
+      wsp_clear: 'Clear Week',
+      wsp_save: 'Save Plan',
+      wsp_pro_hint: 'Weekly style planning with AI suggestions available with PRO',
+      wsp_day_mon: 'Mon', wsp_day_tue: 'Tue', wsp_day_wed: 'Wed', wsp_day_thu: 'Thu', wsp_day_fri: 'Fri', wsp_day_sat: 'Sat', wsp_day_sun: 'Sun',
+      wsp_occ_work: 'Work', wsp_occ_date: 'Date', wsp_occ_weekend: 'Weekend', wsp_occ_casual: 'Casual',
+      wsp_today: 'Today',
+      wsp_generating: 'AI is planning your week...',
+      wsp_generating_day: 'Planning {day}...',
+      wsp_saved: 'Weekly plan saved!',
+      wsp_saved_plan: 'Saved plan loaded',
+      wsp_cleared: 'Week cleared',
+      wsp_no_items: 'No items assigned',
+      wsp_drag_hint: 'Drag items from the pool below to any day',
+      wsp_ai_prompt: 'Based on the following closet items and weather forecast, suggest one complete outfit per day for the next 7 days. Consider: temperature, occasion (work on weekdays, casual on weekends), and style coherence. Return a JSON array with 7 objects, each having "day" (0-6, Monday=0), "items" (array of item IDs from the closet), and "reason" (short explanation).',
+      wsp_weather_fetch: 'Fetching weather...',
+      wsp_weather_error: 'Could not fetch weather. Using default suggestions.',
+      wsp_role_top: 'Top', wsp_role_bottom: 'Bottom', wsp_role_outer: 'Outer', wsp_role_dress: 'Dress', wsp_role_shoes: 'Shoes', wsp_role_accessory: 'Accessory'
     },
     hu: {
       nav_closet: 'Szekrény',
@@ -12541,6 +12869,18 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       color_harmony_item: 'Darab',
       color_harmony_max_colors: 'Egyszerre legfeljebb 5 szín hasonlítható össze',
       color_harmony_pro_hint: 'Teljes paletta elemzés és színvak mód elérhető PRO-val',
+      color_harmony_wheel_lock: 'Színkerék — PRO',
+      color_harmony_matches_lock: 'Szekrény-egyezések — PRO',
+      color_harmony_free_limit: 'Ingyenesen 2 színt választhatsz — PRO 5-ig feloldja',
+      color_harmony_free_limit_toast: 'Ingyenes felhasználók 2 színt hasonlíthatnak össze — PRO 5-ig',
+      color_harmony_pro_wheel_title: 'Színkerék',
+      color_harmony_pro_wheel_desc: 'Vizualizáld a színkapcsolatokat a körön',
+      color_harmony_pro_matches_title: 'Szekrény-egyezések',
+      color_harmony_pro_matches_desc: 'Találj passzoló darabokat a ruhatáradban',
+      color_harmony_pro_palette_title: 'Teljes Paletta',
+      color_harmony_pro_palette_desc: 'Összehasonlíts egyszerre 5 színt',
+      color_harmony_pro_colorblind_title: 'Színvak Mód',
+      color_harmony_pro_colorblind_desc: 'Lásd, hogyan néz ki a szett színlátás-hiánnyal',
 
       // Utazás Csomagoló
       closet_trip_packing: 'Utazás',
@@ -12664,7 +13004,41 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       outfit_role_outer: 'Kabát',
       outfit_role_dress: 'Ruha',
       outfit_role_shoes: 'Cipő',
-      outfit_role_accessory: 'Kiegészítő'
+      outfit_role_accessory: 'Kiegészítő',
+
+      // Weekly Style Planner
+      closet_weekly_planner: 'Heti',
+      wsp_title: 'Heti Stílus Terv',
+      wsp_subtitle: 'Tervezd meg a heti öltözékeidet az időjárás és a programjaid alapján.',
+      wsp_pro_lock_desc: 'Nyisd fel a PRO-t a heti öltözéktervezéshez AI javaslatokkal és fogd-és-vidd naptárral.',
+      wsp_pro_weekly_title: '7 Napos Naptár',
+      wsp_pro_weekly_desc: 'Lásd az egész heted egy pillantásra',
+      wsp_pro_weather_title: 'Időjárás-Alapú',
+      wsp_pro_weather_desc: 'Öltözékek az előrejelzéshez igazítva',
+      wsp_pro_ai_title: 'AI Javaslatok',
+      wsp_pro_ai_desc: 'Okos választások a szekrényedből',
+      wsp_city_placeholder: 'Város az időjárás előrejelzéshez',
+      wsp_my_location: 'Saját hely',
+      wsp_closet_pool: 'Húzd a darabokat a napokra',
+      wsp_ai_fill: 'AI Kitöltés',
+      wsp_empty_closet: 'Először adj hozzá ruhákat a szekrényedhez!',
+      wsp_clear: 'Hét Törlése',
+      wsp_save: 'Terv Mentése',
+      wsp_pro_hint: 'Heti stílustervezés AI javaslatokkal elérhető PRO-val',
+      wsp_day_mon: 'Hé', wsp_day_tue: 'Ke', wsp_day_wed: 'Sze', wsp_day_thu: 'Csü', wsp_day_fri: 'Pé', wsp_day_sat: 'Szo', wsp_day_sun: 'Vas',
+      wsp_occ_work: 'Munka', wsp_occ_date: 'Randi', wsp_occ_weekend: 'Hétvége', wsp_occ_casual: 'Köznap',
+      wsp_today: 'Ma',
+      wsp_generating: 'Az AI tervezi a hetedet...',
+      wsp_generating_day: '{day} tervezése...',
+      wsp_saved: 'Heti terv elmentve!',
+      wsp_saved_plan: 'Mentett terv betöltve',
+      wsp_cleared: 'Hét törölve',
+      wsp_no_items: 'Nincs darab hozzárendelve',
+      wsp_drag_hint: 'Húzd a darabokat a lenti készletből a napokra',
+      wsp_ai_prompt: 'A következő szekrénydarabok és időjárás előrejelzés alapján javasolj egy teljes öltözéket minden napra a következő 7 napban. Vedd figyelembe: hőmérséklet, alkalom (munka hétköznap, köznap hétvégén), és stílus összhang. Adj vissza egy JSON tömböt 7 objektummal, mindegyikben "day" (0-6, hétfő=0), "items" (szekrénydarab ID-k tömbje), és "reason" (rövid magyarázat).',
+      wsp_weather_fetch: 'Időjárás lekérdezése...',
+      wsp_weather_error: 'Nem sikerült lekérdezni az időjárást. Alapértelmezett javaslatok használata.',
+      wsp_role_top: 'Felső', wsp_role_bottom: 'Alsó', wsp_role_outer: 'Kabát', wsp_role_dress: 'Ruha', wsp_role_shoes: 'Cipő', wsp_role_accessory: 'Kiegészítő'
     },
     de: {
       nav_closet: 'Schrank',
@@ -14362,6 +14736,18 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       color_harmony_item: 'Stück',
       color_harmony_max_colors: 'Maximal 5 Farben können gleichzeitig verglichen werden',
       color_harmony_pro_hint: 'Vollständige Palettenanalyse und Farbblindmodus mit PRO verfügbar',
+      color_harmony_wheel_lock: 'Farbkreis — PRO',
+      color_harmony_matches_lock: 'Schrank-Treffer — PRO',
+      color_harmony_free_limit: 'Kostenlos 2 Farben wählen — PRO schaltet bis zu 5 frei',
+      color_harmony_free_limit_toast: 'Kostenlos 2 Farben vergleichbar — PRO auf bis zu 5',
+      color_harmony_pro_wheel_title: 'Farbkreis',
+      color_harmony_pro_wheel_desc: 'Farbbeziehungen auf dem Kreis visualisieren',
+      color_harmony_pro_matches_title: 'Schrank-Treffer',
+      color_harmony_pro_matches_desc: 'Passende Stücke aus deinem Kleiderschrank finden',
+      color_harmony_pro_palette_title: 'Volle Palette',
+      color_harmony_pro_palette_desc: 'Bis zu 5 Farben gleichzeitig vergleichen',
+      color_harmony_pro_colorblind_title: 'Farbenblind-Modus',
+      color_harmony_pro_colorblind_desc: 'Sehe, wie dein Outfit mit Farbsehstörung aussieht',
 
       // Reise Packplaner
       closet_trip_packing: 'Reise',
@@ -14485,7 +14871,41 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       outfit_role_outer: 'Jacke',
       outfit_role_dress: 'Kleid',
       outfit_role_shoes: 'Schuhe',
-      outfit_role_accessory: 'Accessoire'
+      outfit_role_accessory: 'Accessoire',
+
+      // Weekly Style Planner
+      closet_weekly_planner: 'Wöchentl.',
+      wsp_title: 'Wochenstilplaner',
+      wsp_subtitle: 'Plane deine Outfits für die Woche nach Wetter und Terminen.',
+      wsp_pro_lock_desc: 'Schalte den wöchentlichen Outfitplaner mit KI-Vorschlägen und Drag & Drop-Kalender mit PRO frei.',
+      wsp_pro_weekly_title: '7-Tage-Kalender',
+      wsp_pro_weekly_desc: 'Deine Woche auf einen Blick',
+      wsp_pro_weather_title: 'Wetterbasiert',
+      wsp_pro_weather_desc: 'Outfits passend zur Vorhersage',
+      wsp_pro_ai_title: 'KI-Vorschläge',
+      wsp_pro_ai_desc: 'Smarte Picks aus deinem Schrank',
+      wsp_city_placeholder: 'Stadt für Wettervorhersage',
+      wsp_my_location: 'Mein Standort',
+      wsp_closet_pool: 'Ziehe Items auf die Tage',
+      wsp_ai_fill: 'KI ausfüllen',
+      wsp_empty_closet: 'Füge zuerst Kleidung zu deinem Schrank hinzu!',
+      wsp_clear: 'Woche löschen',
+      wsp_save: 'Plan speichern',
+      wsp_pro_hint: 'Wochenstilplanung mit KI-Vorschlägen verfügbar mit PRO',
+      wsp_day_mon: 'Mo', wsp_day_tue: 'Di', wsp_day_wed: 'Mi', wsp_day_thu: 'Do', wsp_day_fri: 'Fr', wsp_day_sat: 'Sa', wsp_day_sun: 'So',
+      wsp_occ_work: 'Arbeit', wsp_occ_date: 'Date', wsp_occ_weekend: 'Wochenende', wsp_occ_casual: 'Lässig',
+      wsp_today: 'Heute',
+      wsp_generating: 'KI plant deine Woche...',
+      wsp_generating_day: 'Plane {day}...',
+      wsp_saved: 'Wochenplan gespeichert!',
+      wsp_saved_plan: 'Gespeicherter Plan geladen',
+      wsp_cleared: 'Woche gelöscht',
+      wsp_no_items: 'Keine Items zugewiesen',
+      wsp_drag_hint: 'Ziehe Items aus dem Pool unten auf die Tage',
+      wsp_ai_prompt: 'Schlage basierend auf den folgenden Schrankitems und Wettervorhersage ein komplettes Outfit pro Tag für die nächsten 7 Tage vor. Berücksichtige: Temperatur, Anlass (Arbeit unter der Woche, lässig am Wochenende) und Stilharmonie. Gib ein JSON-Array mit 7 Objekten zurück, jedes mit "day" (0-6, Montag=0), "items" (Array von Schrank-IDs) und "reason" (kurze Erklärung).',
+      wsp_weather_fetch: 'Wetter wird abgerufen...',
+      wsp_weather_error: 'Wetter konnte nicht abgerufen werden. Standardvorschläge werden verwendet.',
+      wsp_role_top: 'Oberteil', wsp_role_bottom: 'Unterteil', wsp_role_outer: 'Jacke', wsp_role_dress: 'Kleid', wsp_role_shoes: 'Schuhe', wsp_role_accessory: 'Accessoire'
     },
   };
 
@@ -18107,6 +18527,9 @@ window.saveCurrentOutfit = function() {
 
   // --- State ---
   var selectedColors = []; // { hex, colorId, name }
+  var _isPro = (typeof isProUser === 'function' && isProUser()) || (typeof window.__DS_IS_PRO !== 'undefined' && window.__DS_IS_PRO);
+  var _maxFreeColors = 2;
+  var _maxProColors = 5;
 
   // --- DOM ---
   var modal = document.getElementById('colorHarmonyModal');
@@ -18118,6 +18541,29 @@ window.saveCurrentOutfit = function() {
   // Move modal to <body>
   if (modal.parentElement !== document.body) {
     document.body.appendChild(modal);
+  }
+
+  // --- PRO gating: update lock overlays and previews ---
+  function updateProState() {
+    _isPro = (typeof isProUser === 'function' && isProUser()) || (typeof window.__DS_IS_PRO !== 'undefined' && window.__DS_IS_PRO);
+    var wheelLock = document.getElementById('colorHarmonyWheelLock');
+    var matchesLock = document.getElementById('colorHarmonyMatchesLock');
+    var freeHint = document.getElementById('colorHarmonyFreeHint');
+    var proPreviews = document.getElementById('colorHarmonyProPreviews');
+
+    if (_isPro) {
+      // PRO: unlock everything
+      if (wheelLock) wheelLock.style.display = 'none';
+      if (matchesLock) matchesLock.style.display = 'none';
+      if (freeHint) freeHint.style.display = 'none';
+      if (proPreviews) proPreviews.style.display = 'none';
+    } else {
+      // Free: show locks
+      if (wheelLock) wheelLock.style.display = 'flex';
+      if (matchesLock) matchesLock.style.display = 'flex';
+      if (freeHint) freeHint.style.display = '';
+      if (proPreviews) proPreviews.style.display = '';
+    }
   }
 
   // --- Build the color picker grid from closet colors ---
@@ -18205,7 +18651,7 @@ window.saveCurrentOutfit = function() {
     if (selectedColors.length < 2) {
       resultEl.classList.add('hidden');
       if (matchesEl) matchesEl.classList.add('hidden');
-      buildColorWheel(selectedColors.map(function(c) { return hexToHsl(c.hex); }));
+      if (_isPro) buildColorWheel(selectedColors.map(function(c) { return hexToHsl(c.hex); }));
       return;
     }
 
@@ -18227,63 +18673,79 @@ window.saveCurrentOutfit = function() {
     }
     if (schemeEl) schemeEl.textContent = harmony.scheme;
 
-    // Color wheel
-    buildColorWheel(harmony.hslData, harmony.type);
-
-    // Matching items from closet
-    if (matchesEl) {
-      var selectedIds = selectedColors.map(function(c) { return c.id; }).filter(Boolean);
-      var allMatches = [];
-
-      selectedColors.forEach(function(c) {
-        var matches = findMatchingItems(c.hex, selectedIds);
-        matches.forEach(function(m) {
-          if (!allMatches.some(function(am) { return am.item.id === m.item.id; })) {
-            allMatches.push(m);
-          }
-        });
-      });
-
-      allMatches.sort(function(a,b) { return b.matchScore - a.matchScore; });
-      allMatches = allMatches.slice(0, 6);
-
-      var matchesGrid = document.getElementById('colorHarmonyMatchesGrid');
-      var matchesEmpty = document.getElementById('colorHarmonyMatchesEmpty');
-
-      if (allMatches.length > 0) {
-        matchesEl.classList.remove('hidden');
-        if (matchesEmpty) matchesEmpty.classList.add('hidden');
-        if (matchesGrid) {
-          var html = '';
-          allMatches.forEach(function(m) {
-            var imgSrc = m.item.image || '';
-            var itemName = m.item.color || m.item.type || t('color_harmony_item');
-            var matchLabel = m.matchScore >= 80 ? t('color_harmony_great_match') : m.matchScore >= 60 ? t('color_harmony_good_match') : t('color_harmony_ok_match');
-            html += '<div class="ch-match-card">';
-            if (imgSrc) {
-              html += '<img src="' + imgSrc + '" class="ch-match-thumb" alt="" />';
-            } else {
-              html += '<div class="ch-match-thumb" style="background:' + (m.item.colorHex || '#888') + '"></div>';
-            }
-            html += '<div class="flex-1 min-w-0">';
-            html += '<div class="text-xs font-bold text-white truncate">' + itemName + '</div>';
-            html += '<div class="text-[10px] text-gray-400">' + matchLabel + '</div>';
-            html += '</div>';
-            html += '<div style="width:14px;height:14px;border-radius:4px;background:' + (m.item.colorHex || '#888') + ';flex-shrink:0;border:1px solid rgba(255,255,255,0.15)"></div>';
-            html += '</div>';
-          });
-          matchesGrid.innerHTML = html;
-        }
-      } else {
-        matchesEl.classList.remove('hidden');
-        if (matchesGrid) matchesGrid.innerHTML = '';
-        if (matchesEmpty) matchesEmpty.classList.remove('hidden');
-      }
+    // Color wheel — PRO only (free sees locked overlay)
+    if (_isPro) {
+      buildColorWheel(harmony.hslData, harmony.type);
+    } else {
+      // Clear the wheel for free users so lock overlay is clean
+      var wheelSvg = document.getElementById('colorHarmonyWheel');
+      if (wheelSvg) wheelSvg.innerHTML = '';
     }
+
+    // Matching items from closet — PRO only
+    if (matchesEl) {
+      if (!_isPro) {
+        // Show section with lock overlay (no real content)
+        matchesEl.classList.remove('hidden');
+        var matchesGrid = document.getElementById('colorHarmonyMatchesGrid');
+        if (matchesGrid) matchesGrid.innerHTML = '';
+        var matchesEmpty = document.getElementById('colorHarmonyMatchesEmpty');
+        if (matchesEmpty) matchesEmpty.classList.add('hidden');
+      } else {
+        var selectedIds = selectedColors.map(function(c) { return c.id; }).filter(Boolean);
+        var allMatches = [];
+
+        selectedColors.forEach(function(c) {
+          var matches = findMatchingItems(c.hex, selectedIds);
+          matches.forEach(function(m) {
+            if (!allMatches.some(function(am) { return am.item.id === m.item.id; })) {
+              allMatches.push(m);
+            }
+          });
+        });
+
+        allMatches.sort(function(a,b) { return b.matchScore - a.matchScore; });
+        allMatches = allMatches.slice(0, 6);
+
+        var matchesGrid = document.getElementById('colorHarmonyMatchesGrid');
+        var matchesEmpty = document.getElementById('colorHarmonyMatchesEmpty');
+
+        if (allMatches.length > 0) {
+          matchesEl.classList.remove('hidden');
+          if (matchesEmpty) matchesEmpty.classList.add('hidden');
+          if (matchesGrid) {
+            var html = '';
+            allMatches.forEach(function(m) {
+              var imgSrc = m.item.image || '';
+              var itemName = m.item.color || m.item.type || t('color_harmony_item');
+              var matchLabel = m.matchScore >= 80 ? t('color_harmony_great_match') : m.matchScore >= 60 ? t('color_harmony_good_match') : t('color_harmony_ok_match');
+              html += '<div class="ch-match-card">';
+              if (imgSrc) {
+                html += '<img src="' + imgSrc + '" class="ch-match-thumb" alt="" />';
+              } else {
+                html += '<div class="ch-match-thumb" style="background:' + (m.item.colorHex || '#888') + '"></div>';
+              }
+              html += '<div class="flex-1 min-w-0">';
+              html += '<div class="text-xs font-bold text-white truncate">' + itemName + '</div>';
+              html += '<div class="text-[10px] text-gray-400">' + matchLabel + '</div>';
+              html += '</div>';
+              html += '<div style="width:14px;height:14px;border-radius:4px;background:' + (m.item.colorHex || '#888') + ';flex-shrink:0;border:1px solid rgba(255,255,255,0.15)"></div>';
+              html += '</div>';
+            });
+            matchesGrid.innerHTML = html;
+          }
+        } else {
+          matchesEl.classList.remove('hidden');
+          if (matchesGrid) matchesGrid.innerHTML = '';
+          if (matchesEmpty) matchesEmpty.classList.remove('hidden');
+        }
+      } // end PRO else
+    } // end if matchesEl
   }
 
   // --- Render all ---
   function renderAll() {
+    updateProState();
     buildColorPicker();
     renderSelected();
     renderResult();
@@ -18305,8 +18767,13 @@ window.saveCurrentOutfit = function() {
     if (idx >= 0) {
       selectedColors.splice(idx, 1);
     } else {
-      if (selectedColors.length >= 5) {
-        if (typeof showToast === 'function') showToast(t('color_harmony_max_colors'));
+      var maxColors = _isPro ? _maxProColors : _maxFreeColors;
+      if (selectedColors.length >= maxColors) {
+        if (!_isPro && selectedColors.length >= _maxFreeColors) {
+          if (typeof showToast === 'function') showToast(t('color_harmony_free_limit_toast'));
+        } else {
+          if (typeof showToast === 'function') showToast(t('color_harmony_max_colors'));
+        }
         return;
       }
       selectedColors.push({ hex: hex, colorId: id, name: name || hex });
@@ -18960,7 +19427,7 @@ window.saveCurrentOutfit = function() {
       renderOccasions(days);
 
       // Show tabs
-      if (tabsBar) tabsBar.classList.remove('hidden');
+      if (tabsBar) { tabsBar.classList.remove('hidden'); tabsBar.style.display = 'flex'; }
       switchTab('packing');
 
     } catch (err) {
@@ -19010,7 +19477,7 @@ window.saveCurrentOutfit = function() {
     activeTab = 'packing';
 
     var tabsBar = document.getElementById('tripTabsBar');
-    if (tabsBar) tabsBar.classList.add('hidden');
+    if (tabsBar) { tabsBar.classList.add('hidden'); tabsBar.style.display = 'none'; }
     var weatherEl = document.getElementById('tripWeather');
     if (weatherEl) weatherEl.classList.add('hidden');
     var errorEl = document.getElementById('tripError');
@@ -19459,17 +19926,17 @@ window.saveCurrentOutfit = function() {
     html += '<video id="careDecoderVideo" autoplay playsinline webkit-playsinline muted style="display:none"></video>';
     html += '<canvas id="careDecoderCanvas" style="display:none"></canvas>';
     // Analyze button (shown after image captured)
-    html += '<div id="careDecoderActions" class="hidden" style="margin-top:0.5rem;display:flex;align-items:center;justify-content:center;gap:0.5rem;flex-wrap:wrap">';
+    html += '<div id="careDecoderActions" class="hidden" style="margin-top:0.5rem;display:none;align-items:center;justify-content:center;gap:0.5rem;flex-wrap:wrap">';
     html += '<button id="careDecoderRetakeBtn" class="care-decoder-btn care-decoder-btn-upload">🔄 ' + _t('care_decoder_retake') + '</button>';
     html += '<button id="careDecoderAnalyzeBtn" class="care-decoder-btn care-decoder-btn-analyze">🧠 ' + _t('care_decoder_analyze') + '</button>';
     html += '</div>';
     // Loading state
-    html += '<div id="careDecoderLoading" class="care-decoder-loading hidden">';
+    html += '<div id="careDecoderLoading" class="care-decoder-loading hidden" style="display:none">';
     html += '<div class="care-decoder-spinner"></div>';
     html += '<p class="text-xs text-gray-400">' + _t('care_decoder_analyzing') + '</p>';
     html += '</div>';
     // Results container
-    html += '<div id="careDecoderResults" class="hidden" style="margin-top:0.75rem"></div>';
+    html += '<div id="careDecoderResults" class="hidden" style="display:none;margin-top:0.75rem"></div>';
     html += '</div>';
 
     // --- Depreciation Tracker ---
@@ -19591,8 +20058,8 @@ window.saveCurrentOutfit = function() {
     // Hide results & loading from previous analysis
     var res = document.getElementById('careDecoderResults');
     var ld = document.getElementById('careDecoderLoading');
-    if (res) { res.classList.add('hidden'); res.innerHTML = ''; }
-    if (ld) ld.classList.add('hidden');
+    if (res) { res.classList.add('hidden'); res.style.display = 'none'; res.innerHTML = ''; }
+    if (ld) { ld.classList.add('hidden'); ld.style.display = 'none'; }
   }
 
   function _decoderReset() {
@@ -19613,8 +20080,8 @@ window.saveCurrentOutfit = function() {
       _bindDecoderButtons();
     }
     if (actions) { actions.classList.add('hidden'); actions.style.display = 'none'; }
-    if (res) { res.classList.add('hidden'); res.innerHTML = ''; }
-    if (ld) ld.classList.add('hidden');
+    if (res) { res.classList.add('hidden'); res.style.display = 'none'; res.innerHTML = ''; }
+    if (ld) { ld.classList.add('hidden'); ld.style.display = 'none'; }
   }
 
   function _bindDecoderButtons() {
@@ -19706,8 +20173,8 @@ window.saveCurrentOutfit = function() {
     var loading = document.getElementById('careDecoderLoading');
     var results = document.getElementById('careDecoderResults');
     if (analyzeBtn) analyzeBtn.disabled = true;
-    if (loading) loading.classList.remove('hidden');
-    if (results) { results.classList.add('hidden'); results.innerHTML = ''; }
+    if (loading) { loading.classList.remove('hidden'); loading.style.display = 'flex'; }
+    if (results) { results.classList.add('hidden'); results.style.display = 'none'; results.innerHTML = ''; }
 
     var WORKER_URL = 'https://api.datescan.app';
     var MODEL = 'zai-org/glm-4.5v';
@@ -19755,10 +20222,11 @@ window.saveCurrentOutfit = function() {
       console.warn('[care-decoder] Analysis error:', err);
       if (results) {
         results.classList.remove('hidden');
+        results.style.display = 'block';
         results.innerHTML = '<div class="care-decoder-error">' + _t('care_decoder_error') + '</div>';
       }
     } finally {
-      if (loading) loading.classList.add('hidden');
+      if (loading) { loading.classList.add('hidden'); loading.style.display = 'none'; }
       if (analyzeBtn) analyzeBtn.disabled = false;
     }
   }
@@ -19767,6 +20235,7 @@ window.saveCurrentOutfit = function() {
     var results = document.getElementById('careDecoderResults');
     if (!results) return;
     results.classList.remove('hidden');
+    results.style.display = 'block';
 
     // Try to parse JSON from the reply
     var parsed = null;
@@ -19959,9 +20428,9 @@ window.saveCurrentOutfit = function() {
     var generateBtn = document.getElementById('outfitGenerateBtn');
 
     if (items.length === 0) {
-      if (emptyEl) emptyEl.classList.remove('hidden');
-      if (resultsEl) resultsEl.classList.add('hidden');
-      if (loadingEl) loadingEl.classList.add('hidden');
+      if (emptyEl) { emptyEl.classList.remove('hidden'); emptyEl.style.display = ''; }
+      if (resultsEl) { resultsEl.classList.add('hidden'); resultsEl.style.display = 'none'; }
+      if (loadingEl) { loadingEl.classList.add('hidden'); loadingEl.style.display = 'none'; }
       return;
     }
 
@@ -20002,9 +20471,9 @@ window.saveCurrentOutfit = function() {
       '\n\nPick the best outfit for me.';
 
     // Show loading
-    if (loadingEl) loadingEl.classList.remove('hidden');
-    if (resultsEl) resultsEl.classList.add('hidden');
-    if (emptyEl) emptyEl.classList.add('hidden');
+    if (loadingEl) { loadingEl.classList.remove('hidden'); loadingEl.style.display = 'flex'; }
+    if (resultsEl) { resultsEl.classList.add('hidden'); resultsEl.style.display = 'none'; }
+    if (emptyEl) { emptyEl.classList.add('hidden'); emptyEl.style.display = 'none'; }
     if (generateBtn) generateBtn.disabled = true;
 
     try {
@@ -20055,7 +20524,7 @@ window.saveCurrentOutfit = function() {
       lastOutfitResult = fallback;
       renderOutfitResults(fallback, items, null);
     } finally {
-      if (loadingEl) loadingEl.classList.add('hidden');
+      if (loadingEl) { loadingEl.classList.add('hidden'); loadingEl.style.display = 'none'; }
       if (generateBtn) generateBtn.disabled = false;
     }
   }
@@ -20145,6 +20614,7 @@ window.saveCurrentOutfit = function() {
     }
 
     resultsEl.classList.remove('hidden');
+    resultsEl.style.display = 'block';
   }
 
   // --- Save outfit to chat ---
@@ -20197,11 +20667,11 @@ window.saveCurrentOutfit = function() {
     var preview = document.getElementById('outfitWeatherPreview');
     if (preview) preview.classList.add('hidden');
     var results = document.getElementById('outfitResults');
-    if (results) results.classList.add('hidden');
+    if (results) { results.classList.add('hidden'); results.style.display = 'none'; }
     var loading = document.getElementById('outfitLoading');
-    if (loading) loading.classList.add('hidden');
+    if (loading) { loading.classList.add('hidden'); loading.style.display = 'none'; }
     var empty = document.getElementById('outfitEmptyCloset');
-    if (empty) empty.classList.add('hidden');
+    if (empty) { empty.classList.add('hidden'); empty.style.display = 'none'; }
 
     modal.classList.remove('hidden');
   });
@@ -21472,10 +21942,12 @@ function showError(title, msg, { retryable = true } = {}) {
     retryBtn.dataset.mode = retryable ? 'retry' : 'refresh';
   }
   errorOverlay.classList.remove("hidden");
-  loadingOverlay.classList.add("hidden");
+  errorOverlay.style.display = 'flex';
+  loadingOverlay.classList.add("hidden"); loadingOverlay.style.display = 'none';
 }
 function hideError() { 
   errorOverlay.classList.add("hidden"); 
+  errorOverlay.style.display = 'none';
 }
 
 function hasWebGL() {
@@ -21991,6 +22463,7 @@ async function startAppFlow() {
 
   hideError();
   loadingOverlay.classList.remove("hidden");
+  loadingOverlay.style.display = 'flex';
 
   if (!(window.dsPrivacy && window.dsPrivacy.isPrivateMode()) && !hasWebGL()) {
     showError(t('error_webgl_title'), t('error_webgl_msg'));
@@ -22009,7 +22482,7 @@ async function startAppFlow() {
     // camera feed immediately and can tap "Scan" as soon as they're
     // ready; runScan() then downloads the model with its own progress
     // indicator in the thinkingOverlay.
-    loadingOverlay.classList.add("hidden");
+    loadingOverlay.classList.add("hidden"); loadingOverlay.style.display = 'none';
   } catch (e) {
     if (e && e.name === 'AIEngineError') {
       showError(t('error_ai_engine'), e.message, { retryable: e.retryable });
@@ -24092,9 +24565,10 @@ function renderStyleCoach(colorData, occasion, locked = false, items = null, reu
       </button>
     `;
 
+  let vibeText = (function(){ var v = generateVibe(analysis.score); store.set({lastVibe: v, lastVibeScore: analysis.score}); return v; })();
   let html = `
     <div class="flex flex-col items-center mb-6">
-      <div class="relative w-44 h-44 drop-shadow-[0_0_24px_rgba(236,72,153,0.35)]">
+      <div class="relative w-36 h-36 drop-shadow-[0_0_24px_rgba(236,72,153,0.35)]">
         <svg viewBox="0 0 100 100" class="w-full h-full transform -rotate-90">
           <defs>
             <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -24106,11 +24580,10 @@ function renderStyleCoach(colorData, occasion, locked = false, items = null, reu
           <circle cx="50" cy="50" r="45" fill="none" stroke="url(#scoreGrad)" stroke-width="5" stroke-linecap="round" stroke-dasharray="282.74" stroke-dashoffset="${282.74 - (282.74 * analysis.score / 100)}"></circle>
         </svg>
         <div class="absolute inset-0 flex flex-col items-center justify-center">
-          <span class="font-serif font-bold text-6xl text-white leading-none">${analysis.score}</span>
-          <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-400 mt-3">${scoreLabel}</span>
+          <span class="font-serif font-bold text-3xl text-white leading-tight text-center px-2">${vibeText}</span>
         </div>
       </div>
-      <div id="scanVibeText" class="font-serif italic text-base text-gray-300 mt-4 text-center">${(function(){ var v = generateVibe(analysis.score); store.set({lastVibe: v, lastVibeScore: analysis.score}); return v; })()}</div>
+      <div id="scanVibeText" class="hidden">${vibeText}</div>
     </div>
 
     <div class="flex items-center justify-between mb-6 gap-2">
@@ -24805,6 +25278,7 @@ function showResultsLayout() {
   camCol.classList.remove("lg:col-span-12", "max-w-2xl", "mx-auto");
   camCol.classList.add("lg:col-span-5", "xl:col-span-4");
   resCol.classList.remove("hidden");
+  resCol.style.display = 'flex';
   $("secondaryTools")?.classList.remove("hidden");
   void resCol.offsetWidth;
   
@@ -29192,7 +29666,7 @@ applyOfflineState(!navigator.onLine);
   }
 
   async function openMirror() {
-    camError.classList.add('hidden');
+    camError.classList.add('hidden'); camError.style.display = 'none';
     show(mirror);
     try {
       stream = await navigator.mediaDevices.getUserMedia({
@@ -29225,7 +29699,7 @@ applyOfflineState(!navigator.onLine);
       }
       camErrorTxt.textContent = t(descKey);
       camErrorTxt.setAttribute('data-i18n', descKey);
-      camError.classList.remove('hidden');
+      camError.classList.remove('hidden'); camError.style.display = 'flex';
       // Haptic feedback on error
       if (typeof window.triggerHaptic === 'function') window.triggerHaptic('error');
     }
@@ -29270,7 +29744,7 @@ applyOfflineState(!navigator.onLine);
     const snapshot = captureSnapshot();
     if (!snapshot) {
       camErrorTxt.textContent = t('scan_cam_error_read');
-      camError.classList.remove('hidden');
+      camError.classList.remove('hidden'); camError.style.display = 'flex';
       return;
     }
 
@@ -29300,17 +29774,17 @@ applyOfflineState(!navigator.onLine);
       var pContrast = Math.sqrt(pVar / pCount);
       if (pMean < 30) {
         camErrorTxt.textContent = t('scan_cam_error_dark');
-        camError.classList.remove('hidden');
+        camError.classList.remove('hidden'); camError.style.display = 'flex';
         return;
       }
       if (pMean > 245) {
         camErrorTxt.textContent = t('scan_cam_error_bright');
-        camError.classList.remove('hidden');
+        camError.classList.remove('hidden'); camError.style.display = 'flex';
         return;
       }
       if (pContrast < 10) {
         camErrorTxt.textContent = t('scan_cam_error_empty');
-        camError.classList.remove('hidden');
+        camError.classList.remove('hidden'); camError.style.display = 'flex';
         return;
       }
     } catch (e) {
@@ -29324,14 +29798,14 @@ applyOfflineState(!navigator.onLine);
       classification = classify(features);
     } catch (e) {
       camErrorTxt.textContent = t('scan_cam_error_fail');
-      camError.classList.remove('hidden');
+      camError.classList.remove('hidden'); camError.style.display = 'flex';
       return;
     }
 
     // Reject invalid images BEFORE entering the loader
     if (!classification.valid) {
       camErrorTxt.textContent = classification.reason;
-      camError.classList.remove('hidden');
+      camError.classList.remove('hidden'); camError.style.display = 'flex';
       return;
     }
 
@@ -29529,11 +30003,11 @@ applyOfflineState(!navigator.onLine);
   // Camera error CTA buttons
   $vai('vai-cam-back-btn') && $vai('vai-cam-back-btn').addEventListener('click', function() {
     stopCamera();
-    camError.classList.add('hidden');
+    camError.classList.add('hidden'); camError.style.display = 'none';
     show(idle);
   });
   $vai('vai-cam-retry-btn') && $vai('vai-cam-retry-btn').addEventListener('click', function() {
-    camError.classList.add('hidden');
+    camError.classList.add('hidden'); camError.style.display = 'none';
     openMirror();
   });
   $vai('vai-reset-btn').addEventListener('click', reset);
@@ -32074,6 +32548,777 @@ applyOfflineState(!navigator.onLine);
     document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(url), 5000);
     awardDuelShareXP();
+  });
+})();
+</script>
+
+<!-- ── Weekly Style Planner ── -->
+<script>
+(function initWeeklyPlanner() {
+  var modal = document.getElementById('weeklyPlannerModal');
+  var openBtn = document.getElementById('weeklyPlannerBtn');
+  var closeBtn = document.getElementById('weeklyPlannerClose');
+  if (!modal || !openBtn || !closeBtn) return;
+
+  var _t = function(key, vars) {
+    var str = (typeof t === 'function') ? t(key, vars) : key;
+    return str;
+  };
+
+  // --- Constants ---
+  var DAY_KEYS = ['wsp_day_mon','wsp_day_tue','wsp_day_wed','wsp_day_thu','wsp_day_fri','wsp_day_sat','wsp_day_sun'];
+  var DAY_OCCASIONS = ['work','work','work','work','work','weekend','weekend']; // Mon-Sun default
+  var OCC_CSS = { work: 'wsp-occ-work', date: 'wsp-occ-date', weekend: 'wsp-occ-weekend', casual: 'wsp-occ-casual' };
+  var WEATHER_ICONS = {
+    0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️', 45: '🌫️', 48: '🌫️',
+    51: '🌦️', 53: '🌦️', 55: '🌧️', 61: '🌧️', 63: '🌧️', 65: '🌧️',
+    71: '🌨️', 73: '🌨️', 75: '❄️', 80: '🌦️', 81: '🌧️', 82: '⛈️',
+    95: '⛈️', 96: '⛈️', 99: '⛈️'
+  };
+
+  var TYPE_EMOJI = {
+    top: '👕', shirt: '👔', blouse: '👚', tshirt: '👕', sweater: '🧶', hoodie: '🧥',
+    jacket: '🧥', coat: '🧥', blazer: '🧥',
+    jeans: '👖', pants: '👖', trousers: '👖', skirt: '👗', shorts: '🩳',
+    dress: '👗',
+    shoes: '👟', sneakers: '👟', boots: '🥾', heels: '👠',
+    accessory: '💍', hat: '🎩', scarf: '🧣', belt: '🪢', bag: '👜'
+  };
+
+  var TYPE_ROLES = {
+    top: 'wsp_role_top', shirt: 'wsp_role_top', blouse: 'wsp_role_top',
+    tshirt: 'wsp_role_top', sweater: 'wsp_role_top', hoodie: 'wsp_role_top',
+    jacket: 'wsp_role_outer', coat: 'wsp_role_outer', blazer: 'wsp_role_outer',
+    jeans: 'wsp_role_bottom', pants: 'wsp_role_bottom', trousers: 'wsp_role_bottom',
+    skirt: 'wsp_role_bottom', shorts: 'wsp_role_bottom',
+    dress: 'wsp_role_dress',
+    shoes: 'wsp_role_shoes', sneakers: 'wsp_role_shoes', boots: 'wsp_role_shoes', heels: 'wsp_role_shoes',
+    accessory: 'wsp_role_accessory', hat: 'wsp_role_accessory', scarf: 'wsp_role_accessory', belt: 'wsp_role_accessory',
+    bag: 'wsp_role_accessory'
+  };
+
+  var WSP_STORAGE_KEY = 'datescan_weekly_plan';
+  var weeklyPlan = {}; // dayIndex -> [{id, name, type, emoji}]
+  var weatherData = null; // array of 7 day forecasts
+  var allClosetItems = [];
+  var isGenerating = false;
+
+  // --- Helpers ---
+  function $(id) { return document.getElementById(id); }
+  function getMonday(d) {
+    d = new Date(d);
+    var day = d.getDay();
+    var diff = d.getDate() - day + (day === 0 ? -6 : 1);
+    return new Date(d.setDate(diff));
+  }
+  function formatDate(d) {
+    return (d.getMonth()+1) + '/' + d.getDate();
+  }
+  function isToday(d) {
+    var now = new Date();
+    return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
+  }
+  function getEmoji(type) {
+    return TYPE_EMOJI[type] || '👕';
+  }
+  function getRole(type) {
+    return TYPE_ROLES[type] ? _t(TYPE_ROLES[type]) : '';
+  }
+
+  // --- PRO gating ---
+  function checkPro() {
+    var isPro = (typeof window.__DS_IS_PRO !== 'undefined' && window.__DS_IS_PRO) ||
+                (typeof isProUser === 'function' && isProUser());
+    var locked = $('wspProLocked');
+    var content = $('wspProContent');
+    if (!locked || !content) return;
+    if (isPro) {
+      locked.classList.add('hidden');
+      content.classList.remove('hidden');
+    } else {
+      locked.classList.remove('hidden');
+      content.classList.add('hidden');
+    }
+  }
+
+  // --- Get closet items ---
+  function getClosetItems() {
+    return (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits : [];
+  }
+
+  // --- Render calendar ---
+  function renderCalendar() {
+    var grid = $('wspCalendarGrid');
+    if (!grid) return;
+    var monday = getMonday(new Date());
+    var html = '';
+    for (var i = 0; i < 7; i++) {
+      var dayDate = new Date(monday);
+      dayDate.setDate(monday.getDate() + i);
+      var dayIdx = i;
+      var todayClass = isToday(dayDate) ? ' wsp-today' : '';
+      var occ = DAY_OCCASIONS[i];
+      var items = weeklyPlan[dayIdx] || [];
+      var dayWeather = weatherData ? weatherData[i] : null;
+
+      html += '<div class="wsp-day-card' + todayClass + '" data-wsp-day="' + dayIdx + '">';
+      html += '<div class="wsp-day-header">';
+      html += '<div><div class="wsp-day-name">' + _t(DAY_KEYS[i]) + '</div>';
+      html += '<div class="wsp-day-date">' + formatDate(dayDate);
+      if (isToday(dayDate)) html += ' <span class="text-emerald-400">•</span>';
+      html += '</div></div>';
+      if (dayWeather) {
+        html += '<div class="wsp-day-weather">' + (WEATHER_ICONS[dayWeather.code] || '🌤️') + ' ' + Math.round(dayWeather.high) + '°</div>';
+      }
+      html += '</div>';
+      html += '<div class="wsp-day-occasion ' + (OCC_CSS[occ] || '') + '" data-wsp-day-occ="' + dayIdx + '">' + _t('wsp_occ_' + occ) + '</div>';
+
+      // Items
+      if (items.length > 0) {
+        for (var j = 0; j < items.length; j++) {
+          var it = items[j];
+          html += '<div class="wsp-outfit-slot" draggable="true" data-wsp-item-id="' + it.id + '" data-wsp-from-day="' + dayIdx + '">';
+          html += '<span class="wsp-slot-emoji">' + it.emoji + '</span>';
+          html += '<span class="wsp-slot-name">' + (it.name || 'Item') + '</span>';
+          html += '<button class="wsp-slot-remove" data-wsp-remove-day="' + dayIdx + '" data-wsp-remove-id="' + it.id + '" type="button">&times;</button>';
+          html += '</div>';
+        }
+      } else {
+        html += '<div class="wsp-day-empty">' + _t('wsp_drag_hint') + '</div>';
+      }
+
+      // Generate button for individual day
+      html += '<button class="wsp-generate-btn" data-wsp-gen-day="' + dayIdx + '" type="button"' + (isGenerating ? ' disabled' : '') + '>' + _t('wsp_ai_fill') + '</button>';
+
+      html += '</div>';
+    }
+    grid.innerHTML = html;
+    bindDragDrop();
+    bindCardButtons();
+  }
+
+  // --- Render closet pool ---
+  function renderPool() {
+    var pool = $('wspClosetPool');
+    var empty = $('wspPoolEmpty');
+    if (!pool) return;
+    allClosetItems = getClosetItems();
+
+    // Get all assigned item IDs
+    var assignedIds = {};
+    Object.keys(weeklyPlan).forEach(function(d) {
+      (weeklyPlan[d] || []).forEach(function(it) { assignedIds[it.id] = true; });
+    });
+
+    var unassigned = allClosetItems.filter(function(it) { return !assignedIds[it.id]; });
+
+    if (unassigned.length === 0) {
+      pool.innerHTML = '';
+      if (empty) {
+        empty.classList.remove('hidden');
+        if (allClosetItems.length === 0) {
+          empty.querySelector('p').textContent = _t('wsp_empty_closet');
+        } else {
+          empty.querySelector('p').textContent = _t('wsp_no_items');
+        }
+      }
+      return;
+    }
+
+    if (empty) empty.classList.add('hidden');
+    var html = '';
+    unassigned.forEach(function(it) {
+      var type = it.type || 'top';
+      var emoji = getEmoji(type);
+      var name = it.title || it.text || type;
+      html += '<div class="wsp-pool-item" draggable="true" data-wsp-pool-id="' + it.id + '">';
+      html += '<span class="wsp-pool-emoji">' + emoji + '</span>';
+      html += '<span class="wsp-pool-name">' + name + '</span>';
+      html += '</div>';
+    });
+    pool.innerHTML = html;
+    bindPoolDrag();
+  }
+
+  // --- Drag & Drop ---
+  var draggedItemId = null;
+  var draggedFromDay = null; // null = from pool, number = from day
+
+  function bindPoolDrag() {
+    var items = document.querySelectorAll('.wsp-pool-item');
+    items.forEach(function(el) {
+      el.addEventListener('dragstart', function(e) {
+        draggedItemId = el.getAttribute('data-wsp-pool-id');
+        draggedFromDay = null;
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', draggedItemId);
+        el.style.opacity = '0.5';
+      });
+      el.addEventListener('dragend', function() {
+        el.style.opacity = '1';
+        draggedItemId = null;
+      });
+    });
+  }
+
+  function bindDragDrop() {
+    var cards = document.querySelectorAll('.wsp-day-card');
+    cards.forEach(function(card) {
+      card.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        card.classList.add('wsp-drag-over');
+      });
+      card.addEventListener('dragleave', function() {
+        card.classList.remove('wsp-drag-over');
+      });
+      card.addEventListener('drop', function(e) {
+        e.preventDefault();
+        card.classList.remove('wsp-drag-over');
+        var targetDay = parseInt(card.getAttribute('data-wsp-day'), 10);
+        if (draggedItemId) {
+          moveItemToDay(draggedItemId, draggedFromDay, targetDay);
+        }
+      });
+    });
+
+    // Also make existing items draggable between days
+    var slots = document.querySelectorAll('.wsp-outfit-slot');
+    slots.forEach(function(slot) {
+      slot.addEventListener('dragstart', function(e) {
+        draggedItemId = slot.getAttribute('data-wsp-item-id');
+        draggedFromDay = parseInt(slot.getAttribute('data-wsp-from-day'), 10);
+        if (isNaN(draggedFromDay)) draggedFromDay = null;
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', draggedItemId);
+        slot.style.opacity = '0.5';
+      });
+      slot.addEventListener('dragend', function() {
+        slot.style.opacity = '1';
+        draggedItemId = null;
+      });
+    });
+  }
+
+  function moveItemToDay(itemId, fromDay, toDay) {
+    var item = null;
+
+    // Remove from source
+    if (fromDay !== null && fromDay !== undefined && weeklyPlan[fromDay]) {
+      var srcArr = weeklyPlan[fromDay];
+      for (var i = 0; i < srcArr.length; i++) {
+        if (srcArr[i].id === itemId) {
+          item = srcArr.splice(i, 1)[0];
+          break;
+        }
+      }
+    }
+
+    // If from pool, find item in closet
+    if (!item) {
+      var found = allClosetItems.filter(function(it) { return it.id === itemId; });
+      if (found.length > 0) {
+        var f = found[0];
+        item = { id: f.id, name: f.title || f.text || f.type || 'Item', type: f.type || 'top', emoji: getEmoji(f.type || 'top') };
+      }
+    }
+
+    if (!item) return;
+
+    // Add to target day
+    if (!weeklyPlan[toDay]) weeklyPlan[toDay] = [];
+    // Don't add duplicate
+    var exists = weeklyPlan[toDay].some(function(it) { return it.id === itemId; });
+    if (!exists) {
+      weeklyPlan[toDay].push(item);
+    }
+
+    renderCalendar();
+    renderPool();
+  }
+
+  // --- Card button bindings ---
+  function bindCardButtons() {
+    // Remove buttons
+    document.querySelectorAll('.wsp-slot-remove').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var dayIdx = parseInt(btn.getAttribute('data-wsp-remove-day'), 10);
+        var itemId = btn.getAttribute('data-wsp-remove-id');
+        if (weeklyPlan[dayIdx]) {
+          weeklyPlan[dayIdx] = weeklyPlan[dayIdx].filter(function(it) { return it.id !== itemId; });
+          if (weeklyPlan[dayIdx].length === 0) delete weeklyPlan[dayIdx];
+        }
+        renderCalendar();
+        renderPool();
+      });
+    });
+
+    // Day generate buttons
+    document.querySelectorAll('[data-wsp-gen-day]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var dayIdx = parseInt(btn.getAttribute('data-wsp-gen-day'), 10);
+        generateForDay(dayIdx);
+      });
+    });
+
+    // Occasion toggles
+    document.querySelectorAll('[data-wsp-day-occ]').forEach(function(el) {
+      el.addEventListener('click', function() {
+        var dayIdx = parseInt(el.getAttribute('data-wsp-day-occ'), 10);
+        var current = DAY_OCCASIONS[dayIdx];
+        var options = ['work','date','weekend','casual'];
+        var idx = options.indexOf(current);
+        DAY_OCCASIONS[dayIdx] = options[(idx + 1) % options.length];
+        renderCalendar();
+      });
+    });
+  }
+
+  // --- Weather ---
+  function getWeatherEmoji(code) {
+    var closest = 0;
+    Object.keys(WEATHER_ICONS).forEach(function(k) {
+      if (Math.abs(k - code) < Math.abs(closest - code)) closest = parseInt(k, 10);
+    });
+    return WEATHER_ICONS[closest] || '🌤️';
+  }
+
+  function fetchWeather(lat, lon) {
+    var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon +
+      '&daily=weather_code,temperature_2m_max,temperature_2m_min,wind_speed_10m_max,relative_humidity_2m_mean&timezone=auto&forecast_days=7';
+    return fetch(url).then(function(r) { return r.json(); });
+  }
+
+  function geocodeCity(city) {
+    var url = 'https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(city) + '&count=1&language=en';
+    return fetch(url).then(function(r) { return r.json(); });
+  }
+
+  function loadWeather() {
+    var cityInput = $('wspCityInput');
+    var city = cityInput ? cityInput.value.trim() : '';
+    if (!city) {
+      // Try GPS
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(pos) {
+          fetchAndSetWeather(pos.coords.latitude, pos.coords.longitude);
+        }, function() {
+          // No location, skip weather
+          weatherData = null;
+          renderCalendar();
+        }, { timeout: 5000 });
+      }
+      return;
+    }
+    geocodeCity(city).then(function(geo) {
+      if (geo.results && geo.results.length > 0) {
+        fetchAndSetWeather(geo.results[0].latitude, geo.results[0].longitude);
+      } else {
+        weatherData = null;
+        renderCalendar();
+      }
+    }).catch(function() {
+      weatherData = null;
+      renderCalendar();
+    });
+  }
+
+  function fetchAndSetWeather(lat, lon) {
+    fetchWeather(lat, lon).then(function(data) {
+      if (data.daily) {
+        weatherData = [];
+        for (var i = 0; i < 7; i++) {
+          weatherData.push({
+            code: data.daily.weather_code[i],
+            high: data.daily.temperature_2m_max[i],
+            low: data.daily.temperature_2m_min[i],
+            wind: data.daily.wind_speed_10m_max ? data.daily.wind_speed_10m_max[i] : 0,
+            humidity: data.daily.relative_humidity_2m_mean ? data.daily.relative_humidity_2m_mean[i] : 0
+          });
+        }
+        // Update preview
+        var preview = $('wspWeatherPreview');
+        if (preview && weatherData[0]) {
+          preview.classList.remove('hidden');
+          preview.style.display = 'flex';
+          var icon = $('wspWeatherIcon');
+          var temp = $('wspWeatherTemp');
+          var range = $('wspWeatherRange');
+          var cond = $('wspWeatherCondition');
+          var wind = $('wspWeatherWind');
+          var hum = $('wspWeatherHumidity');
+          if (icon) icon.textContent = getWeatherEmoji(weatherData[0].code);
+          if (temp) temp.textContent = Math.round(weatherData[0].high) + '°C';
+          if (range) range.textContent = Math.round(weatherData[0].low) + '° / ' + Math.round(weatherData[0].high) + '°';
+          if (cond) cond.textContent = _t('wsp_today') + ' — ' + Math.round(weatherData[0].high) + '°C';
+          if (wind) wind.textContent = Math.round(weatherData[0].wind) + ' km/h';
+          if (hum) hum.textContent = Math.round(weatherData[0].humidity) + '%';
+        }
+        renderCalendar();
+      }
+    }).catch(function() {
+      weatherData = null;
+      renderCalendar();
+    });
+  }
+
+  // --- AI Generation ---
+  function generateForDay(dayIdx) {
+    if (isGenerating) return;
+    allClosetItems = getClosetItems();
+    if (allClosetItems.length === 0) {
+      showToast(_t('wsp_empty_closet'));
+      return;
+    }
+
+    isGenerating = true;
+    renderCalendar(); // re-render with disabled buttons
+
+    var dayWeather = weatherData ? weatherData[dayIdx] : null;
+    var occasion = DAY_OCCASIONS[dayIdx];
+    var dayName = _t(DAY_KEYS[dayIdx]);
+
+    // Build closet summary
+    var closetSummary = allClosetItems.map(function(it) {
+      return { id: it.id, type: it.type || 'top', name: it.title || it.text || 'Item' };
+    });
+
+    var weatherStr = dayWeather ? (Math.round(dayWeather.high) + '°C, code ' + dayWeather.code) : 'unknown';
+    var prompt = _t('wsp_ai_prompt') + '\n\nDay: ' + dayName + ', Occasion: ' + occasion + ', Weather: ' + weatherStr +
+      '\n\nCloset items:\n' + JSON.stringify(closetSummary) +
+      '\n\nReturn ONLY the JSON for this single day: {"items":["id1","id2",...],"reason":"short explanation"}';
+
+    callAI(prompt).then(function(result) {
+      isGenerating = false;
+      if (result && result.items && Array.isArray(result.items)) {
+        weeklyPlan[dayIdx] = [];
+        result.items.forEach(function(id) {
+          var found = allClosetItems.filter(function(it) { return it.id === id; });
+          if (found.length > 0) {
+            var f = found[0];
+            weeklyPlan[dayIdx].push({
+              id: f.id, name: f.title || f.text || f.type || 'Item',
+              type: f.type || 'top', emoji: getEmoji(f.type || 'top')
+            });
+          }
+        });
+      } else {
+        // Fallback: random items
+        weeklyPlan[dayIdx] = randomOutfitForDay();
+      }
+      renderCalendar();
+      renderPool();
+    }).catch(function() {
+      isGenerating = false;
+      weeklyPlan[dayIdx] = randomOutfitForDay();
+      renderCalendar();
+      renderPool();
+    });
+  }
+
+  function generateAllDays() {
+    if (isGenerating) return;
+    allClosetItems = getClosetItems();
+    if (allClosetItems.length === 0) {
+      showToast(_t('wsp_empty_closet'));
+      return;
+    }
+
+    isGenerating = true;
+    renderCalendar();
+
+    var closetSummary = allClosetItems.map(function(it) {
+      return { id: it.id, type: it.type || 'top', name: it.title || it.text || 'Item' };
+    });
+
+    var weatherSummary = weatherData ? weatherData.map(function(w, i) {
+      return DAY_KEYS[i].replace('wsp_day_', '') + ': ' + Math.round(w.high) + '°C, code ' + w.code + ', ' + DAY_OCCASIONS[i];
+    }).join('\n') : 'Weather not available';
+
+    var prompt = _t('wsp_ai_prompt') + '\n\nWeather:\n' + weatherSummary +
+      '\n\nCloset items:\n' + JSON.stringify(closetSummary) +
+      '\n\nReturn ONLY a JSON array with 7 objects.';
+
+    callAI(prompt).then(function(results) {
+      isGenerating = false;
+      if (Array.isArray(results)) {
+        results.forEach(function(dayResult) {
+          var dayIdx = dayResult.day;
+          if (typeof dayIdx === 'number' && dayIdx >= 0 && dayIdx < 7 && dayResult.items) {
+            weeklyPlan[dayIdx] = [];
+            dayResult.items.forEach(function(id) {
+              var found = allClosetItems.filter(function(it) { return it.id === id; });
+              if (found.length > 0) {
+                var f = found[0];
+                weeklyPlan[dayIdx].push({
+                  id: f.id, name: f.title || f.text || f.type || 'Item',
+                  type: f.type || 'top', emoji: getEmoji(f.type || 'top')
+                });
+              }
+            });
+          }
+        });
+      } else {
+        // Fallback: random for all days
+        for (var d = 0; d < 7; d++) {
+          weeklyPlan[d] = randomOutfitForDay();
+        }
+      }
+      renderCalendar();
+      renderPool();
+    }).catch(function() {
+      isGenerating = false;
+      for (var d = 0; d < 7; d++) {
+        weeklyPlan[d] = randomOutfitForDay();
+      }
+      renderCalendar();
+      renderPool();
+    });
+  }
+
+  function randomOutfitForDay() {
+    var items = [];
+    var types = ['top', 'bottom', 'shoes'];
+    types.forEach(function(type) {
+      var matching = allClosetItems.filter(function(it) { return it.type === type; });
+      if (matching.length > 0) {
+        var pick = matching[Math.floor(Math.random() * matching.length)];
+        items.push({
+          id: pick.id, name: pick.title || pick.text || pick.type || 'Item',
+          type: pick.type, emoji: getEmoji(pick.type)
+        });
+      }
+    });
+    // Maybe add outer layer
+    if (Math.random() > 0.5) {
+      var outer = allClosetItems.filter(function(it) { return ['jacket','coat','blazer'].indexOf(it.type) >= 0; });
+      if (outer.length > 0) {
+        var pick = outer[Math.floor(Math.random() * outer.length)];
+        items.push({
+          id: pick.id, name: pick.title || pick.text || pick.type || 'Item',
+          type: pick.type, emoji: getEmoji(pick.type)
+        });
+      }
+    }
+    return items;
+  }
+
+  // --- AI call (reuses existing API pattern) ---
+  function callAI(prompt) {
+    return new Promise(function(resolve, reject) {
+      var apiKey = window.__DS_API_KEY || '';
+      var workerUrl = window.WORKER_URL || '';
+
+      if (!workerUrl && !apiKey) {
+        reject(new Error('No API'));
+        return;
+      }
+
+      var endpoint = workerUrl ? workerUrl + '/v1/chat/completions' :
+        'https://api.datescan.app/v1/chat/completions';
+
+      var body = {
+        model: 'zai-org/glm-4.5v',
+        messages: [
+          { role: 'system', content: 'You are a fashion stylist AI. Respond ONLY with valid JSON, no markdown, no explanation outside JSON.' },
+          { role: 'user', content: prompt }
+        ],
+        temperature: 0.7,
+        max_tokens: 2000
+      };
+
+      fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': apiKey ? 'Bearer ' + apiKey : ''
+        },
+        body: JSON.stringify(body)
+      }).then(function(r) {
+        if (!r.ok) throw new Error('API error ' + r.status);
+        return r.json();
+      }).then(function(data) {
+        var content = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+        if (!content) throw new Error('No content');
+        // Parse JSON from response
+        var jsonStr = content;
+        // Strip markdown code blocks if present
+        var mdMatch = content.match(/```(?:json)?\s*([\s\S]*?)```/);
+        if (mdMatch) jsonStr = mdMatch[1].trim();
+        // Try to find JSON array or object in the response
+        var arrMatch = jsonStr.match(/\[[\s\S]*\]/);
+        var objMatch = jsonStr.match(/\{[\s\S]*\}/);
+        if (arrMatch) {
+          resolve(JSON.parse(arrMatch[0]));
+        } else if (objMatch) {
+          resolve(JSON.parse(objMatch[0]));
+        } else {
+          reject(new Error('No JSON found'));
+        }
+      }).catch(reject);
+    });
+  }
+
+  // --- Save / Load ---
+  function savePlan() {
+    try {
+      var data = { plan: weeklyPlan, occasions: DAY_OCCASIONS.slice(), ts: Date.now() };
+      localStorage.setItem(WSP_STORAGE_KEY, JSON.stringify(data));
+      showToast(_t('wsp_saved'));
+    } catch (e) { console.warn('[wsp] save failed', e); }
+  }
+
+  function loadPlan() {
+    try {
+      var raw = localStorage.getItem(WSP_STORAGE_KEY);
+      if (raw) {
+        var data = JSON.parse(raw);
+        if (data.plan) weeklyPlan = data.plan;
+        if (data.occasions && data.occasions.length === 7) {
+          for (var i = 0; i < 7; i++) DAY_OCCASIONS[i] = data.occasions[i];
+        }
+      }
+    } catch (e) { console.warn('[wsp] load failed', e); }
+  }
+
+  function clearPlan() {
+    weeklyPlan = {};
+    DAY_OCCASIONS.forEach(function(v, i, a) { a[i] = ['work','work','work','work','work','weekend','weekend'][i]; });
+    localStorage.removeItem(WSP_STORAGE_KEY);
+    renderCalendar();
+    renderPool();
+    showToast(_t('wsp_cleared'));
+  }
+
+  // --- Toast ---
+  function showToast(msg) {
+    var el = $('dsToast');
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.remove('hidden');
+    clearTimeout(el._wspTimer);
+    el._wspTimer = setTimeout(function() { el.classList.add('hidden'); }, 2500);
+  }
+
+  // --- Open / Close ---
+  function openModal() {
+    checkPro();
+    loadPlan();
+    allClosetItems = getClosetItems();
+    renderCalendar();
+    renderPool();
+    loadWeather();
+    // Show saved plan indicator if there's a saved plan
+    var savedInd = document.getElementById('wspSavedIndicator');
+    if (savedInd) {
+      var hasPlan = Object.keys(weeklyPlan).length > 0;
+      if (hasPlan) {
+        savedInd.classList.remove('hidden');
+      } else {
+        savedInd.classList.add('hidden');
+      }
+    }
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+  }
+
+  function closeModal() {
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+  }
+
+  // --- Bind events ---
+  openBtn.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', function(e) {
+    if (e.target === modal) closeModal();
+  });
+
+  // City input
+  var cityInput = $('wspCityInput');
+  var cityTimer = null;
+  if (cityInput) {
+    cityInput.addEventListener('input', function() {
+      clearTimeout(cityTimer);
+      cityTimer = setTimeout(function() { loadWeather(); }, 800);
+    });
+  }
+
+  // My location button
+  var locBtn = $('wspMyLocationBtn');
+  if (locBtn) {
+    locBtn.addEventListener('click', function() {
+      if (cityInput) cityInput.value = '';
+      if (navigator.geolocation) {
+        locBtn.disabled = true;
+        navigator.geolocation.getCurrentPosition(function(pos) {
+          fetchAndSetWeather(pos.coords.latitude, pos.coords.longitude);
+          locBtn.disabled = false;
+        }, function() {
+          locBtn.disabled = false;
+          showToast(_t('wsp_weather_error'));
+        }, { timeout: 8000 });
+      }
+    });
+  }
+
+  // AI Fill All button
+  var aiFillBtn = $('wspAiFillBtn');
+  if (aiFillBtn) {
+    aiFillBtn.addEventListener('click', function() {
+      generateAllDays();
+    });
+  }
+
+  // Clear & Save buttons
+  var clearBtn = $('wspClearBtn');
+  var saveBtn = $('wspSaveBtn');
+  if (saveBtn) {
+    saveBtn.addEventListener('click', function() {
+      savePlan();
+      updateBadge();
+    });
+  }
+
+  // --- Badge: show dot on Weekly button when plan is saved ---
+  function updateBadge() {
+    var badge = document.getElementById('weeklyPlannerBadge');
+    if (!badge) return;
+    try {
+      var raw = localStorage.getItem(WSP_STORAGE_KEY);
+      var hasPlan = false;
+      if (raw) {
+        var data = JSON.parse(raw);
+        if (data.plan && Object.keys(data.plan).length > 0) hasPlan = true;
+      }
+      if (hasPlan) {
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    } catch (e) {
+      badge.classList.add('hidden');
+    }
+  }
+
+  // Also update badge on clear
+  var clearBtn = $('wspClearBtn');
+  if (clearBtn) {
+    clearBtn.addEventListener('click', function() {
+      clearPlan();
+      updateBadge();
+    });
+  }
+
+  // Update badge on page load
+  updateBadge();
+
+  // Keyboard close
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+      closeModal();
+    }
   });
 })();
 </script>
