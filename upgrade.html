@@ -142,6 +142,7 @@ h1 .gr{
 }
 .price{font-size:1.2rem;font-weight:800;letter-spacing:-.02em;line-height:1.1}
 .period{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#52525b;margin-top:2px}
+.vat{font-size:8px;font-weight:600;color:#f472b6;margin-top:2px;letter-spacing:.04em}
 
 .plan-ic{
   width:36px;height:36px;flex-shrink:0;border-radius:9px;
@@ -365,6 +366,7 @@ body.platform-android .app-only{display:revert!important}
       act_error: 'Connection error. Check your internet.',
       footer_text: 'Payments processed by Gumroad. Check email for License Key after purchase.',
       footer_support: 'Support:',
+      price_vat: '+ VAT',
       pro_title: "You're already PRO!",
       pro_desc: 'Premium access active. No need to purchase again.'
     },
@@ -406,6 +408,7 @@ body.platform-android .app-only{display:revert!important}
       act_error: 'Kapcsolathiiba. Ellenőrizd az internetkapcsolatodat.',
       footer_text: 'A fizetést a Gumroad kezeli. A vásárlás után ellenőrizd az emailedet a licenckulcsért.',
       footer_support: 'Támogatás:',
+      price_vat: '+ áfa',
       pro_title: 'Már PRO vagy!',
       pro_desc: 'A Prémium hozzáférés aktív. Nem kell újra vásárolnod.'
     },
@@ -447,6 +450,7 @@ body.platform-android .app-only{display:revert!important}
       act_error: 'Verbindungsfehler. Überprüfe deine Internetverbindung.',
       footer_text: 'Zahlungen werden von Gumroad abgewickelt. Überprüfe deine E-Mail nach dem Kauf für den Lizenzschlüssel.',
       footer_support: 'Support:',
+      price_vat: '+ MwSt.',
       pro_title: 'Du bist bereits PRO!',
       pro_desc: 'Premium-Zugang aktiv. Du musst nicht noch einmal kaufen.'
     }
@@ -619,6 +623,7 @@ body.platform-android .app-only{display:revert!important}
         <div class="right">
           <div class="price">$4.99</div>
           <div class="period" data-i18n="week_period">/week</div>
+          <div class="vat" data-i18n="price_vat">+ VAT</div>
         </div>
       </div>
     </label>
@@ -639,6 +644,7 @@ body.platform-android .app-only{display:revert!important}
         <div class="right">
           <div class="price">$9.99</div>
           <div class="period" data-i18n="month_period">/month</div>
+          <div class="vat" data-i18n="price_vat">+ VAT</div>
         </div>
       </div>
     </label>
@@ -660,6 +666,7 @@ body.platform-android .app-only{display:revert!important}
         <div class="right">
           <div class="price">$49.99</div>
           <div class="period" data-i18n="year_period">/year</div>
+          <div class="vat" data-i18n="price_vat">+ VAT</div>
         </div>
       </div>
     </label>
