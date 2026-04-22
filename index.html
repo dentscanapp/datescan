@@ -3759,6 +3759,7 @@ if (window.__DS_IS_ANDROID_APP) {
   @keyframes wsp-spin { to { transform: rotate(360deg); } }
   .wsp-loading-text { font-size: 0.6rem; color: rgba(255,255,255,0.7); }
 
+
 </style>
 
 <!-- ===== AGE GATE (18+) ===== -->
@@ -5025,10 +5026,9 @@ if (window.__DS_IS_ANDROID_APP) {
                <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
                <span data-i18n="closet_garment_care">Care</span>
             </button>
-            <button id="weeklyPlannerBtn" class="px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 text-emerald-300 hover:from-emerald-500/30 hover:to-teal-500/30 active:scale-[0.98] transition relative" title="Weekly Style Planner — plan your outfits for the week ahead">
+            <button id="weeklyPlannerBtn" class="px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 text-emerald-300 hover:from-emerald-500/30 hover:to-teal-500/30 active:scale-[0.98] transition" title="Weekly Style Planner — plan your outfits for the week ahead">
                <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                <span data-i18n="closet_weekly_planner">Weekly</span>
-               <span id="weeklyPlannerBadge" class="hidden absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400 border border-[#09090b]"></span>
             </button>
             <button id="closetUploadBtn" class="px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-[0.98] transition">
                <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/><circle cx="9" cy="10" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.814.014L6 21"/><path d="M19 2v6"/><path d="M22 5h-6"/></svg>
@@ -5992,7 +5992,7 @@ if (window.__DS_IS_ANDROID_APP) {
         </p>
 
         <!-- Date Outfit Picker Button -->
-        <button id="dateOutfitBtn" type="button" class="relative z-10 w-full flex items-center gap-3 px-4 py-3 rounded-2xl bg-gradient-to-r from-pink-500/15 via-rose-500/15 to-purple-500/15 border border-pink-500/25 text-left hover:from-pink-500/25 hover:via-rose-500/25 hover:to-purple-500/25 active:scale-[0.98] transition-all duration-200 mb-5 group">
+        <button id="dateOutfitBtn" type="button" class="relative z-10 w-full flex items-center gap-3 px-4 py-3 rounded-2xl bg-gradient-to-r from-pink-500/15 via-rose-500/15 to-purple-500/15 border border-pink-500/25 text-left hover:from-pink-500/25 hover:via-rose-500/25 hover:to-purple-500/25 active:scale-[0.98] transition-all duration-200 mb-3 group">
           <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500/20 to-purple-500/20 border border-pink-500/30 flex items-center justify-center text-lg shrink-0 group-hover:scale-110 transition-transform">🎯</div>
           <div class="flex-1 min-w-0">
             <div class="text-sm font-bold text-white" data-i18n="outfit_picker_title">Date Outfit Picker</div>
@@ -10978,6 +10978,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       // Color Harmony Analyzer
       closet_color_harmony: 'Colors',
       color_harmony_title: 'Color Harmony Analyzer',
+      color_harmony_scheme_locked: 'Unlock with PRO',
       color_harmony_subtitle: 'Check if your clothing colors work together and find matching pieces.',
       color_harmony_pick_header: 'Pick Colors to Compare',
       color_harmony_clear: 'Clear selection',
@@ -11171,7 +11172,8 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       wsp_ai_prompt: 'Based on the following closet items and weather forecast, suggest one complete outfit per day for the next 7 days. Consider: temperature, occasion (work on weekdays, casual on weekends), and style coherence. Return a JSON array with 7 objects, each having "day" (0-6, Monday=0), "items" (array of item IDs from the closet), and "reason" (short explanation).',
       wsp_weather_fetch: 'Fetching weather...',
       wsp_weather_error: 'Could not fetch weather. Using default suggestions.',
-      wsp_role_top: 'Top', wsp_role_bottom: 'Bottom', wsp_role_outer: 'Outer', wsp_role_dress: 'Dress', wsp_role_shoes: 'Shoes', wsp_role_accessory: 'Accessory'
+      wsp_role_top: 'Top', wsp_role_bottom: 'Bottom', wsp_role_outer: 'Outer', wsp_role_dress: 'Dress', wsp_role_shoes: 'Shoes', wsp_role_accessory: 'Accessory',
+
     },
     hu: {
       nav_closet: 'Szekrény',
@@ -12845,6 +12847,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       // Color Harmony Analyzer
       closet_color_harmony: 'Színek',
       color_harmony_title: 'Színharmonia Elemző',
+      color_harmony_scheme_locked: 'Nyisd fel PRO-val',
       color_harmony_subtitle: 'Ellenőrizd, hogy a ruháid színei összeillenek-e, és találj passzoló darabokat.',
       color_harmony_pick_header: 'Válassz színeket az összehasonlításhoz',
       color_harmony_clear: 'Kijelölés törlése',
@@ -13038,7 +13041,8 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       wsp_ai_prompt: 'A következő szekrénydarabok és időjárás előrejelzés alapján javasolj egy teljes öltözéket minden napra a következő 7 napban. Vedd figyelembe: hőmérséklet, alkalom (munka hétköznap, köznap hétvégén), és stílus összhang. Adj vissza egy JSON tömböt 7 objektummal, mindegyikben "day" (0-6, hétfő=0), "items" (szekrénydarab ID-k tömbje), és "reason" (rövid magyarázat).',
       wsp_weather_fetch: 'Időjárás lekérdezése...',
       wsp_weather_error: 'Nem sikerült lekérdezni az időjárást. Alapértelmezett javaslatok használata.',
-      wsp_role_top: 'Felső', wsp_role_bottom: 'Alsó', wsp_role_outer: 'Kabát', wsp_role_dress: 'Ruha', wsp_role_shoes: 'Cipő', wsp_role_accessory: 'Kiegészítő'
+      wsp_role_top: 'Felső', wsp_role_bottom: 'Alsó', wsp_role_outer: 'Kabát', wsp_role_dress: 'Ruha', wsp_role_shoes: 'Cipő', wsp_role_accessory: 'Kiegészítő',
+
     },
     de: {
       nav_closet: 'Schrank',
@@ -14712,6 +14716,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       // Color Harmony Analyzer
       closet_color_harmony: 'Farben',
       color_harmony_title: 'Farbharmonie-Analyse',
+      color_harmony_scheme_locked: 'Mit PRO freischalten',
       color_harmony_subtitle: 'Prüfe, ob deine Kleidungsfarben zusammenpassen und finde passende Stücke.',
       color_harmony_pick_header: 'Wähle Farben zum Vergleichen',
       color_harmony_clear: 'Auswahl löschen',
@@ -14905,7 +14910,8 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       wsp_ai_prompt: 'Schlage basierend auf den folgenden Schrankitems und Wettervorhersage ein komplettes Outfit pro Tag für die nächsten 7 Tage vor. Berücksichtige: Temperatur, Anlass (Arbeit unter der Woche, lässig am Wochenende) und Stilharmonie. Gib ein JSON-Array mit 7 Objekten zurück, jedes mit "day" (0-6, Montag=0), "items" (Array von Schrank-IDs) und "reason" (kurze Erklärung).',
       wsp_weather_fetch: 'Wetter wird abgerufen...',
       wsp_weather_error: 'Wetter konnte nicht abgerufen werden. Standardvorschläge werden verwendet.',
-      wsp_role_top: 'Oberteil', wsp_role_bottom: 'Unterteil', wsp_role_outer: 'Jacke', wsp_role_dress: 'Kleid', wsp_role_shoes: 'Schuhe', wsp_role_accessory: 'Accessoire'
+      wsp_role_top: 'Oberteil', wsp_role_bottom: 'Unterteil', wsp_role_outer: 'Jacke', wsp_role_dress: 'Kleid', wsp_role_shoes: 'Schuhe', wsp_role_accessory: 'Accessoire',
+
     },
   };
 
@@ -18650,13 +18656,40 @@ window.saveCurrentOutfit = function() {
 
     if (selectedColors.length < 2) {
       resultEl.classList.add('hidden');
-      if (matchesEl) matchesEl.classList.add('hidden');
+      resultEl.style.display = 'none';
+      if (matchesEl) { matchesEl.classList.add('hidden'); matchesEl.style.display = 'none'; }
       if (_isPro) buildColorWheel(selectedColors.map(function(c) { return hexToHsl(c.hex); }));
       return;
     }
 
     resultEl.classList.remove('hidden');
+    resultEl.style.display = '';
 
+    // --- FREE: show locked result ---
+    if (!_isPro) {
+      var scoreVal = document.getElementById('colorHarmonyScoreValue');
+      var scoreBar = document.getElementById('colorHarmonyScoreBar');
+      var schemeEl = document.getElementById('colorHarmonyScheme');
+      // Show a generic hint instead of real score
+      if (scoreVal) scoreVal.textContent = '???';
+      if (scoreBar) { scoreBar.style.width = '50%'; scoreBar.style.backgroundColor = '#6b7280'; }
+      if (schemeEl) schemeEl.textContent = t('color_harmony_scheme_locked') || 'Unlock with PRO';
+      // Clear wheel
+      var wheelSvg = document.getElementById('colorHarmonyWheel');
+      if (wheelSvg) wheelSvg.innerHTML = '';
+      // Show matches section locked
+      if (matchesEl) {
+        matchesEl.classList.remove('hidden');
+        matchesEl.style.display = '';
+        var matchesGrid = document.getElementById('colorHarmonyMatchesGrid');
+        if (matchesGrid) matchesGrid.innerHTML = '';
+        var matchesEmpty = document.getElementById('colorHarmonyMatchesEmpty');
+        if (matchesEmpty) matchesEmpty.classList.add('hidden');
+      }
+      return;
+    }
+
+    // --- PRO: full results ---
     var harmony = calculateHarmony(selectedColors);
     var score = harmony.score;
 
@@ -18673,25 +18706,11 @@ window.saveCurrentOutfit = function() {
     }
     if (schemeEl) schemeEl.textContent = harmony.scheme;
 
-    // Color wheel — PRO only (free sees locked overlay)
-    if (_isPro) {
-      buildColorWheel(harmony.hslData, harmony.type);
-    } else {
-      // Clear the wheel for free users so lock overlay is clean
-      var wheelSvg = document.getElementById('colorHarmonyWheel');
-      if (wheelSvg) wheelSvg.innerHTML = '';
-    }
+    // Color wheel
+    buildColorWheel(harmony.hslData, harmony.type);
 
-    // Matching items from closet — PRO only
+    // Matching items from closet
     if (matchesEl) {
-      if (!_isPro) {
-        // Show section with lock overlay (no real content)
-        matchesEl.classList.remove('hidden');
-        var matchesGrid = document.getElementById('colorHarmonyMatchesGrid');
-        if (matchesGrid) matchesGrid.innerHTML = '';
-        var matchesEmpty = document.getElementById('colorHarmonyMatchesEmpty');
-        if (matchesEmpty) matchesEmpty.classList.add('hidden');
-      } else {
         var selectedIds = selectedColors.map(function(c) { return c.id; }).filter(Boolean);
         var allMatches = [];
 
@@ -18739,7 +18758,6 @@ window.saveCurrentOutfit = function() {
           if (matchesGrid) matchesGrid.innerHTML = '';
           if (matchesEmpty) matchesEmpty.classList.remove('hidden');
         }
-      } // end PRO else
     } // end if matchesEl
   }
 
@@ -33281,26 +33299,8 @@ applyOfflineState(!navigator.onLine);
     });
   }
 
-  // --- Badge: show dot on Weekly button when plan is saved ---
-  function updateBadge() {
-    var badge = document.getElementById('weeklyPlannerBadge');
-    if (!badge) return;
-    try {
-      var raw = localStorage.getItem(WSP_STORAGE_KEY);
-      var hasPlan = false;
-      if (raw) {
-        var data = JSON.parse(raw);
-        if (data.plan && Object.keys(data.plan).length > 0) hasPlan = true;
-      }
-      if (hasPlan) {
-        badge.classList.remove('hidden');
-      } else {
-        badge.classList.add('hidden');
-      }
-    } catch (e) {
-      badge.classList.add('hidden');
-    }
-  }
+  // --- Badge removed (was confusing green dot on Weekly button) ---
+  function updateBadge() {}
 
   // Also update badge on clear
   var clearBtn = $('wspClearBtn');
@@ -33322,6 +33322,8 @@ applyOfflineState(!navigator.onLine);
   });
 })();
 </script>
+
+
 
 <!-- ── Haptic Feedback: vibration on interactive element press ── -->
 <script>
