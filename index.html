@@ -3600,6 +3600,45 @@ if (window.__DS_IS_ANDROID_APP) {
     font-size: 0.65rem; color: #fca5a5; line-height: 1.5;
   }
 
+  /* ===== DATE OUTFIT PICKER ===== */
+  .outfit-occasion-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 0.35rem;
+    padding: 0.65rem 0.4rem; border-radius: 0.75rem;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+    cursor: pointer; transition: all 0.2s; text-align: center;
+  }
+  .outfit-occasion-btn:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12); }
+  .outfit-occasion-btn.active {
+    background: rgba(236,72,153,0.12); border-color: rgba(236,72,153,0.35);
+    box-shadow: 0 0 12px rgba(236,72,153,0.1);
+  }
+  .outfit-occasion-emoji { font-size: 1.25rem; line-height: 1; }
+  .outfit-occasion-label { font-size: 0.6rem; font-weight: 700; color: rgba(156,163,175,0.8); text-transform: uppercase; letter-spacing: 0.03em; }
+  .outfit-occasion-btn.active .outfit-occasion-label { color: #f9a8d4; }
+  .outfit-item-card {
+    display: flex; align-items: center; gap: 0.75rem;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 0.75rem; padding: 0.65rem 0.75rem; transition: border-color 0.2s;
+  }
+  .outfit-item-card:hover { border-color: rgba(236,72,153,0.3); }
+  .outfit-item-thumb {
+    width: 48px; height: 48px; border-radius: 10px;
+    object-fit: cover; flex-shrink: 0; background: rgba(255,255,255,0.05);
+  }
+  .outfit-item-color-swatch {
+    width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center; font-size: 0.85rem;
+  }
+  .outfit-item-info { flex: 1; min-width: 0; }
+  .outfit-item-name { font-size: 0.75rem; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .outfit-item-role { font-size: 0.6rem; color: rgba(236,72,153,0.7); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; margin-top: 1px; }
+  .outfit-weather-row {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.75rem; color: #93c5fd;
+  }
+  .outfit-weather-row + .outfit-weather-row { margin-top: 0.25rem; }
+
 </style>
 
 <!-- ===== AGE GATE (18+) ===== -->
@@ -3644,6 +3683,10 @@ if (window.__DS_IS_ANDROID_APP) {
       <li class="dsc-good">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
         <span data-i18n-html="cam_bullet_2"><strong>Nothing is saved.</strong> Frames live in your device's memory for a few seconds while the AI checks outfit, grooming, posture and lighting — then they're discarded.</span>
+      </li>
+      <li class="dsc-good">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span data-i18n-html="cam_bullet_biometric"><strong>Biometric data notice.</strong> The AI detects facial landmark positions (geometry) for overlay visualization only. This data is processed in real-time, <strong>never stored</strong> — not in localStorage, IndexedDB, or any server. It is discarded immediately after each frame. No retention period applies because no data is retained.</span>
       </li>
       <li class="dsc-good">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
@@ -4687,12 +4730,10 @@ if (window.__DS_IS_ANDROID_APP) {
                     <span id="vai-origin-badge" class="hidden text-[9px] uppercase tracking-[0.1em] font-bold px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-500/20 to-brand-500/20 border border-amber-400/40 text-amber-300" data-i18n="vibe_origin_badge">✦ Origin</span>
                     <span id="vai-delta-badge" class="hidden text-[9px] uppercase tracking-[0.1em] font-bold px-2 py-0.5 rounded-full border"></span>
                   </div>
-                  <div class="font-serif text-6xl sm:text-7xl font-light leading-none my-2">
-                    <span id="vai-score" class="bg-gradient-to-br from-white via-brand-300 to-purple-400 bg-clip-text text-transparent">0</span>
-                  </div>
-                  <div class="text-[10px] font-mono uppercase tracking-[0.15em] text-gray-400 mb-4" data-i18n="vibe_score_label">/ 100 vibe score</div>
-                  <div class="font-serif text-2xl italic text-white leading-tight" id="vai-vibe-type" data-i18n="vibe_type_default">Confident Minimal</div>
-                  <div class="text-[10px] uppercase tracking-[0.22em] text-gray-400 mt-1.5 font-medium" id="vai-vibe-sub" data-i18n="vibe_sub_default">monochrome architect</div>
+                  <div class="font-serif text-3xl sm:text-4xl italic leading-tight my-3 bg-gradient-to-br from-white via-brand-300 to-purple-400 bg-clip-text text-transparent" id="vai-vibe-type" data-i18n="vibe_type_default">Confident Minimal</div>
+                  <div class="text-xs uppercase tracking-[0.22em] text-gray-400 mt-1 font-medium" id="vai-vibe-sub" data-i18n="vibe_sub_default">monochrome architect</div>
+                  <!-- Score hidden for legal compliance — stored internally only -->
+                  <span id="vai-score" class="hidden">0</span>
                 </div>
               </div>
 
@@ -4708,11 +4749,6 @@ if (window.__DS_IS_ANDROID_APP) {
                   <div class="text-[10px] uppercase tracking-[0.14em] text-brand-400 font-bold flex items-center gap-1.5">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
                     <span data-i18n="missing_piece_label">The Missing Piece</span>
-                  </div>
-                  <div class="text-[10px] font-mono flex items-center gap-1.5">
-                    <span id="vai-score-current" class="text-gray-400">87</span>
-                    <span class="text-gray-600">→</span>
-                    <span id="vai-score-potential" class="text-white font-bold">93</span>
                   </div>
                 </div>
                 <div class="text-[12px] text-gray-200 leading-relaxed relative z-10" id="vai-tip" data-i18n="vibe_tip_default">A single warm accent — cognac or rust — would deepen impact on your next look.</div>
@@ -5504,6 +5540,84 @@ if (window.__DS_IS_ANDROID_APP) {
     </div>
   </div>
 
+  <!-- ===== DATE OUTFIT PICKER MODAL ===== -->
+  <div id="dateOutfitModal" class="hidden fixed inset-0 z-[115] bg-black/85 backdrop-blur-md flex items-center justify-center p-4" style="z-index:120">
+    <div class="premium-glass rounded-3xl border border-pink-500/20 max-w-lg w-full p-6 sm:p-7 relative max-h-[90vh] overflow-y-auto">
+      <button id="dateOutfitClose" type="button" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition" aria-label="Close">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <!-- Header -->
+      <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-pink-500/20 to-purple-500/20 border border-pink-500/30 flex items-center justify-center mb-4 mx-auto">
+        <span class="text-2xl">🎯</span>
+      </div>
+      <h3 class="font-serif text-2xl font-semibold text-white text-center mb-1" data-i18n="outfit_picker_modal_title">Date Outfit Picker</h3>
+      <p class="text-sm text-gray-400 text-center mb-5" data-i18n="outfit_picker_modal_desc">Where are you going? I'll pick the perfect outfit from your closet.</p>
+
+      <!-- Occasion selector -->
+      <div class="mb-5">
+        <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-2.5" data-i18n="outfit_occasion_label">Occasion</label>
+        <div id="outfitOccasionGrid" class="grid grid-cols-3 gap-2">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Location for weather -->
+      <div class="mb-5">
+        <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-2" data-i18n="outfit_location_label">City (for weather)</label>
+        <div class="flex gap-2">
+          <input id="outfitCityInput" type="text" data-i18n-placeholder="outfit_city_placeholder" placeholder="e.g. Budapest" class="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-pink-500/40 transition" />
+          <button id="outfitUseLocationBtn" type="button" class="px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition text-sm" title="Use my location">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2a7 7 0 017 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 017-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Weather preview -->
+      <div id="outfitWeatherPreview" class="hidden mb-5 p-3 rounded-xl bg-sky-500/5 border border-sky-500/15">
+        <!-- Dynamically populated with weather info -->
+      </div>
+
+      <!-- Generate button -->
+      <button id="outfitGenerateBtn" type="button" class="w-full py-3 rounded-xl bg-gradient-to-r from-pink-500/25 to-purple-500/25 border border-pink-500/35 text-white font-bold text-sm hover:from-pink-500/35 hover:to-purple-500/35 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+        <span>✨</span>
+        <span data-i18n="outfit_generate_btn">Generate Outfit</span>
+      </button>
+
+      <!-- Loading state -->
+      <div id="outfitLoading" class="hidden mt-5 flex flex-col items-center gap-2 py-6">
+        <div class="care-decoder-spinner" style="border-top-color: #ec4899;"></div>
+        <p class="text-xs text-gray-400" data-i18n="outfit_loading">AI is picking your perfect outfit...</p>
+      </div>
+
+      <!-- Empty closet warning -->
+      <div id="outfitEmptyCloset" class="hidden mt-5 text-center py-6">
+        <div class="text-3xl mb-2">👗</div>
+        <p class="text-sm text-gray-400" data-i18n="outfit_empty_closet">Add items to your closet first, then I can suggest outfits!</p>
+      </div>
+
+      <!-- Results -->
+      <div id="outfitResults" class="hidden mt-5">
+        <div class="text-[10px] uppercase tracking-widest text-pink-400 font-bold mb-3" data-i18n="outfit_result_header">Your Outfit</div>
+        <div id="outfitResultItems" class="space-y-2.5 mb-4">
+          <!-- Dynamically populated with closet item cards -->
+        </div>
+        <div id="outfitResultTip" class="p-3 rounded-xl bg-pink-500/5 border border-pink-500/15 text-xs text-pink-200 leading-relaxed mb-4">
+          <!-- AI styling tip -->
+        </div>
+        <div class="flex gap-2">
+          <button id="outfitRegenerateBtn" type="button" class="flex-1 py-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-300 font-bold text-xs hover:bg-white/10 transition flex items-center justify-center gap-1.5">
+            <span>🔄</span>
+            <span data-i18n="outfit_regenerate">Try Another</span>
+          </button>
+          <button id="outfitSaveBtn" type="button" class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-pink-500/20 to-purple-500/20 border border-pink-500/30 text-white font-bold text-xs hover:from-pink-500/30 hover:to-purple-500/30 transition flex items-center justify-center gap-1.5">
+            <span>💾</span>
+            <span data-i18n="outfit_save">Save to Chat</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== STYLE PROFILE MODAL ===== -->
   <div id="styleProfileModal" class="hidden fixed inset-0 z-[115] bg-black/85 backdrop-blur-md flex items-center justify-center p-4" style="z-index:120">
     <div class="premium-glass rounded-3xl border border-purple-500/20 max-w-lg w-full p-6 sm:p-7 relative max-h-[90vh] overflow-y-auto">
@@ -5588,12 +5702,22 @@ if (window.__DS_IS_ANDROID_APP) {
             <span class="shrink-0 text-[9px] sm:text-[10px] font-sans font-bold uppercase tracking-widest text-purple-300 border border-purple-500/30 bg-purple-500/10 px-2 sm:px-2.5 py-0.5 rounded-full whitespace-nowrap text-center" data-i18n="chat_vision_ai">Vision AI</span>
           </div>
         </div>
-        <p class="text-xs text-gray-400 mb-5 relative z-10">
+        <p class="text-xs text-gray-400 mb-4 relative z-10">
           <span class="inline-flex items-center gap-1">
             <svg class="w-3 h-3 text-brand-400" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
             <span data-i18n-html="chat_point_per_msg"><strong class="text-brand-400">1 point</strong> per message</span>
           </span>
         </p>
+
+        <!-- Date Outfit Picker Button -->
+        <button id="dateOutfitBtn" type="button" class="relative z-10 w-full flex items-center gap-3 px-4 py-3 rounded-2xl bg-gradient-to-r from-pink-500/15 via-rose-500/15 to-purple-500/15 border border-pink-500/25 text-left hover:from-pink-500/25 hover:via-rose-500/25 hover:to-purple-500/25 active:scale-[0.98] transition-all duration-200 mb-5 group">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500/20 to-purple-500/20 border border-pink-500/30 flex items-center justify-center text-lg shrink-0 group-hover:scale-110 transition-transform">🎯</div>
+          <div class="flex-1 min-w-0">
+            <div class="text-sm font-bold text-white" data-i18n="outfit_picker_title">Date Outfit Picker</div>
+            <div class="text-[11px] text-gray-400" data-i18n="outfit_picker_subtitle">Get AI outfit suggestions from your closet</div>
+          </div>
+          <svg class="w-4 h-4 text-gray-500 group-hover:text-pink-300 transition-colors shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </button>
 
         <div id="coachChatMessages" class="relative z-10 flex flex-col gap-3 max-h-[55vh] overflow-y-auto pr-1 mb-4">
           <div class="flex gap-2.5">
@@ -6786,6 +6910,10 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
             <h2 class="font-serif text-2xl sm:text-3xl font-semibold text-white mb-1" data-i18n="duel_title">A/B Outfit Duel</h2>
             <p class="text-gray-400 text-sm" data-i18n="duel_subtitle">Two looks. One winner. Decide the moment.</p>
+            <div class="mt-3 flex items-center gap-2 justify-center text-[11px] text-amber-400/80 bg-amber-500/8 border border-amber-500/15 rounded-lg px-3 py-2">
+              <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M12 3l9.5 16.5H2.5L12 3z"/></svg>
+              <span data-i18n="duel_self_warning">Only upload photos of yourself. Comparing others without consent is not allowed.</span>
+            </div>
           </div>
 
           <!-- Occasion selector -->
@@ -9459,6 +9587,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       dup_save_anyway: 'Save anyway',
       duel_title: 'A/B Outfit Duel',
       duel_subtitle: 'Two looks. One winner. Decide the moment.',
+      duel_self_warning: 'Only upload photos of yourself. Comparing others without consent is not allowed.',
       duel_upload_a: 'Upload A',
       duel_option_a: 'Option A',
       duel_upload_b: 'Upload B',
@@ -9559,6 +9688,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       cam_bullet_3_title: 'You\'re in control.',
       cam_bullet_3_text: 'Stop the camera any time by closing the scanner. You decide when it runs.',
       cam_bullet_3: '<strong>You\'re in control.</strong> Stop the camera any time by closing the scanner. Your browser also lets you revoke camera permission at any moment.',
+      cam_bullet_biometric: '<strong>Biometric data notice.</strong> The AI detects facial landmark positions (geometry) for overlay visualization only. This data is processed in real-time, <strong>never stored</strong> — not in localStorage, IndexedDB, or any server. It is discarded immediately after each frame. No retention period applies because no data is retained.',
       cam_bullet_4_title: 'Self-scan only.',
       cam_bullet_4_text: 'Point the camera at yourself, not other people. Scanning others without consent is not allowed.',
       cam_bullet_4: '<strong>Self-scan only.</strong> Point the camera at <strong>yourself</strong>, not other people. Scanning anyone else without their consent is forbidden by our Terms.',
@@ -9905,11 +10035,11 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       score_elite: 'ELITE',
       score_needs_work: 'NEEDS WORK',
       result_base_color: 'Base Color',
-      result_face: 'Face',
+      result_color: 'Color',
       result_outfit: 'Outfit',
       result_more_tip: 'more tip',
       result_more_tips: 'more tips',
-      result_posture: 'Posture',
+      result_contrast: 'Contrast',
       result_suggested_upgrades: 'Suggested Upgrades',
       result_target: 'Target: ',
       result_glowup_history: 'Glow-Up History',
@@ -10683,7 +10813,37 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       care_pro_value_desc: 'Track how much your items are worth now',
       care_less: 'Less',
       care_more: 'More',
-      care_age_days: '{n}d old'
+      care_age_days: '{n}d old',
+
+      // Date Outfit Picker
+      outfit_picker_title: 'Date Outfit Picker',
+      outfit_picker_subtitle: 'Get AI outfit suggestions from your closet',
+      outfit_picker_modal_title: 'Date Outfit Picker',
+      outfit_picker_modal_desc: 'Where are you going? I\'ll pick the perfect outfit from your closet.',
+      outfit_occasion_label: 'Occasion',
+      outfit_occ_coffee: 'Coffee',
+      outfit_occ_dinner: 'Dinner',
+      outfit_occ_club: 'Club',
+      outfit_occ_walk: 'Walk',
+      outfit_occ_movie: 'Movie',
+      outfit_occ_formal: 'Formal',
+      outfit_location_label: 'City (for weather)',
+      outfit_city_placeholder: 'e.g. Budapest',
+      outfit_my_location: 'My Location',
+      outfit_wind: 'Wind',
+      outfit_humidity: 'Humidity',
+      outfit_generate_btn: 'Generate Outfit',
+      outfit_loading: 'AI is picking your perfect outfit...',
+      outfit_empty_closet: 'Add items to your closet first, then I can suggest outfits!',
+      outfit_result_header: 'Your Outfit',
+      outfit_regenerate: 'Try Another',
+      outfit_save: 'Save to Chat',
+      outfit_role_top: 'Top',
+      outfit_role_bottom: 'Bottom',
+      outfit_role_outer: 'Outer layer',
+      outfit_role_dress: 'Dress',
+      outfit_role_shoes: 'Shoes',
+      outfit_role_accessory: 'Accessory'
     },
     hu: {
       nav_closet: 'Szekrény',
@@ -11249,6 +11409,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       dup_save_anyway: 'Mentés mindenképp',
       duel_title: 'A/B Öltözék Párbaj',
       duel_subtitle: 'Két nézet. Egy győztes. Dönts te.',
+      duel_self_warning: 'Csak saját fotót tölts fel. Mások összehasonlítása beleegyezés nélkül nem engedélyezett.',
       duel_upload_a: 'A feltöltése',
       duel_option_a: 'A opció',
       duel_upload_b: 'B feltöltése',
@@ -11349,6 +11510,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       cam_bullet_3_title: 'Te irányítasz.',
       cam_bullet_3_text: 'A szkennelőt bármikor leállíthatod a bezárással. Te döntöd el, mikor fut.',
       cam_bullet_3: '<strong>Te irányítasz.</strong> A szkennelőt bármikor leállíthatod a bezárással. A böngésződ is lehetővé teszi a kamera engedély visszavonását bármikor.',
+      cam_bullet_biometric: '<strong>Biometrikus adat tájékoztatás.</strong> Az AI arcfontossági pontokat (geometriát) észlel kizárólag a vizuális túlayolás céljából. Ez az adat valós időben kerül feldolgozásra, <strong>sosem tárolódik</strong> — sem localStorage-ban, IndexedDB-ben, sem szerveren. Azonnal törlődik minden keret után. Nincs adatmegőrzési időszak, mert nincs tárolt adat.',
       cam_bullet_4_title: 'Kizárólag saját magadat szkenneld.',
       cam_bullet_4_text: 'A kamerát magad felé fordítsd, ne mások felé. A Felhasználási feltételek értelmében mások beleegyezése nélküli szkennelése tilos.',
       cam_bullet_4: '<strong>Kizárólag saját magadat szkenneld.</strong> A kamerát <strong>magad felé</strong> fordítsd, ne mások felé. A Felhasználási feltételek értelmében mások beleegyezése nélküli szkennelése tilos.',
@@ -11694,11 +11856,11 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       score_sharp: 'KIFINOMULT',
       score_solid: 'MEGBÍZHATÓ',
       result_base_color: 'Alapszín',
-      result_face: 'Arc',
+      result_color: 'Szín',
       result_outfit: 'Öltözék',
       result_more_tip: 'további tipp',
       result_more_tips: 'további tippek',
-      result_posture: 'Tartás',
+      result_contrast: 'Kontraszt',
       result_suggested_upgrades: 'Javasolt fejlesztések',
       result_target: 'Cél: ',
       result_glowup_history: 'Fejlődési Történet',
@@ -12472,7 +12634,37 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       care_pro_value_desc: 'Kövesd nyomon, mennyit érnek a darabjaid most',
       care_less: 'Kevesebb',
       care_more: 'Több',
-      care_age_days: '{n} napos'
+      care_age_days: '{n} napos',
+
+      // Date Outfit Picker
+      outfit_picker_title: 'Alkalmi Öltöztető',
+      outfit_picker_subtitle: 'Kapj AI öltözékjavaslatot a szekrényedből',
+      outfit_picker_modal_title: 'Alkalmi Öltöztető',
+      outfit_picker_modal_desc: 'Hova mész? Kiválasztom a tökéletes összeállítást a szekrényedből.',
+      outfit_occasion_label: 'Alkalom',
+      outfit_occ_coffee: 'Kávé',
+      outfit_occ_dinner: 'Vacsora',
+      outfit_occ_club: 'Klub',
+      outfit_occ_walk: 'Séta',
+      outfit_occ_movie: 'Mozi',
+      outfit_occ_formal: 'Ünnepi',
+      outfit_location_label: 'Város (időjárás)',
+      outfit_city_placeholder: 'pl. Budapest',
+      outfit_my_location: 'Saját hely',
+      outfit_wind: 'Szél',
+      outfit_humidity: 'Páratartalom',
+      outfit_generate_btn: 'Öltözék Generálás',
+      outfit_loading: 'Az AI összeállítja a tökéletes öltözékedet...',
+      outfit_empty_closet: 'Először adj hozzá ruhákat a szekrényedhez, utána tudok javasolni!',
+      outfit_result_header: 'Az Öltözéked',
+      outfit_regenerate: 'Másik Öltözék',
+      outfit_save: 'Mentés Chat-be',
+      outfit_role_top: 'Felső',
+      outfit_role_bottom: 'Alsó',
+      outfit_role_outer: 'Kabát',
+      outfit_role_dress: 'Ruha',
+      outfit_role_shoes: 'Cipő',
+      outfit_role_accessory: 'Kiegészítő'
     },
     de: {
       nav_closet: 'Schrank',
@@ -13038,6 +13230,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       dup_save_anyway: 'Trotzdem speichern',
       duel_title: 'A/B Outfit-Duell',
       duel_subtitle: 'Zwei Looks. Ein Gewinner. Du entscheidest.',
+      duel_self_warning: 'Lade nur Fotos von dir selbst hoch. Der Vergleich anderer ohne Zustimmung ist nicht erlaubt.',
       duel_upload_a: 'A hochladen',
       duel_option_a: 'Option A',
       duel_upload_b: 'B hochladen',
@@ -13138,6 +13331,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       cam_bullet_3_title: 'Du hast die Kontrolle.',
       cam_bullet_3_text: 'Stoppe die Kamera jederzeit durch Schließen des Scanners.',
       cam_bullet_3: '<strong>Du hast die Kontrolle.</strong> Stoppe die Kamera jederzeit durch Schließen des Scanners. Dein Browser ermöglicht auch den Widerruf der Kameraerlaubnis.',
+      cam_bullet_biometric: '<strong>Biometrische Daten Hinweis.</strong> Die KI erkennt Gesichtslandmarken (Geometrie) ausschließlich für die Overlay-Visualisierung. Diese Daten werden in Echtzeit verarbeitet und <strong>niemals gespeichert</strong> — nicht im localStorage, IndexedDB oder auf einem Server. Sie werden nach jedem Frame sofort verworfen. Es gilt keine Aufbewahrungsfrist, da keine Daten aufbewahrt werden.',
       cam_bullet_4_title: 'Nur Selbst-Scan.',
       cam_bullet_4_text: 'Richte die Kamera auf dich selbst, nicht auf andere.',
       cam_bullet_4: '<strong>Nur Selbst-Scan.</strong> Richte die Kamera auf <strong>dich selbst</strong>, nicht auf andere. Das Scannen anderer ohne Einwilligung ist laut AGB verboten.',
@@ -13483,11 +13677,11 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       score_elite: 'ELITE',
       score_needs_work: 'VERBESSERUNGSBEDARF',
       result_base_color: 'Grundfarbe',
-      result_face: 'Gesicht',
+      result_color: 'Farbe',
       result_outfit: 'Outfit',
       result_more_tip: 'weiterer Tipp',
       result_more_tips: 'weitere Tipps',
-      result_posture: 'Haltung',
+      result_contrast: 'Kontrast',
       result_suggested_upgrades: 'Vorgeschlagene Upgrades',
       result_target: 'Ziel: ',
       result_glowup_history: 'Glow-Up Verlauf',
@@ -14261,7 +14455,37 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       care_pro_value_desc: 'Verfolge, wie viel deine Teile jetzt wert sind',
       care_less: 'Weniger',
       care_more: 'Mehr',
-      care_age_days: '{n}T alt'
+      care_age_days: '{n}T alt',
+
+      // Date Outfit Picker
+      outfit_picker_title: 'Anlass-Outfit',
+      outfit_picker_subtitle: 'KI-Outfitvorschläge aus deinem Schrank',
+      outfit_picker_modal_title: 'Anlass-Outfit',
+      outfit_picker_modal_desc: 'Wohin gehst du? Ich stelle das perfekte Outfit aus deinem Schrank zusammen.',
+      outfit_occasion_label: 'Anlass',
+      outfit_occ_coffee: 'Kaffee',
+      outfit_occ_dinner: 'Abendessen',
+      outfit_occ_club: 'Club',
+      outfit_occ_walk: 'Spaziergang',
+      outfit_occ_movie: 'Kino',
+      outfit_occ_formal: 'Festlich',
+      outfit_location_label: 'Stadt (für Wetter)',
+      outfit_city_placeholder: 'z.B. Berlin',
+      outfit_my_location: 'Mein Standort',
+      outfit_wind: 'Wind',
+      outfit_humidity: 'Feuchtigkeit',
+      outfit_generate_btn: 'Outfit generieren',
+      outfit_loading: 'KI stellt dein perfektes Outfit zusammen...',
+      outfit_empty_closet: 'Füge zuerst Kleidung zu deinem Schrank hinzu, dann kann ich Outfits vorschlagen!',
+      outfit_result_header: 'Dein Outfit',
+      outfit_regenerate: 'Anderes Outfit',
+      outfit_save: 'Im Chat speichern',
+      outfit_role_top: 'Oberteil',
+      outfit_role_bottom: 'Unterteil',
+      outfit_role_outer: 'Jacke',
+      outfit_role_dress: 'Kleid',
+      outfit_role_shoes: 'Schuhe',
+      outfit_role_accessory: 'Accessoire'
     },
   };
 
@@ -19611,6 +19835,467 @@ window.saveCurrentOutfit = function() {
 })();
 
 // ============================================================
+// DATE OUTFIT PICKER — AI outfit suggestions from your closet
+// based on occasion + current weather
+// ============================================================
+(function initDateOutfitPicker() {
+  var modal = document.getElementById('dateOutfitModal');
+  var openBtn = document.getElementById('dateOutfitBtn');
+  var closeBtn = document.getElementById('dateOutfitClose');
+  if (!modal || !openBtn || !closeBtn) return;
+
+  var _t = function(key) { return (typeof t === 'function') ? t(key) : key; };
+
+  // --- Occasion definitions ---
+  var OCCASIONS = [
+    { id: 'coffee',    emoji: '☕', labelKey: 'outfit_occ_coffee' },
+    { id: 'dinner',    emoji: '🍷', labelKey: 'outfit_occ_dinner' },
+    { id: 'club',      emoji: '🪩', labelKey: 'outfit_occ_club' },
+    { id: 'walk',      emoji: '🚶', labelKey: 'outfit_occ_walk' },
+    { id: 'movie',     emoji: '🎬', labelKey: 'outfit_occ_movie' },
+    { id: 'formal',    emoji: '🎩', labelKey: 'outfit_occ_formal' }
+  ];
+
+  // --- Item type → role mapping ---
+  var TYPE_ROLES = {
+    top: 'outfit_role_top', shirt: 'outfit_role_top', blouse: 'outfit_role_top',
+    tshirt: 'outfit_role_top', sweater: 'outfit_role_top', hoodie: 'outfit_role_top',
+    jacket: 'outfit_role_outer', coat: 'outfit_role_outer', blazer: 'outfit_role_outer',
+    jeans: 'outfit_role_bottom', pants: 'outfit_role_bottom', trousers: 'outfit_role_bottom',
+    skirt: 'outfit_role_bottom', shorts: 'outfit_role_bottom',
+    dress: 'outfit_role_dress',
+    shoes: 'outfit_role_shoes', sneakers: 'outfit_role_shoes', boots: 'outfit_role_shoes', heels: 'outfit_role_shoes',
+    accessory: 'outfit_role_accessory', hat: 'outfit_role_accessory', scarf: 'outfit_role_accessory', belt: 'outfit_role_accessory',
+    bag: 'outfit_role_accessory'
+  };
+
+  // --- Type emoji map ---
+  var TYPE_EMOJI = {
+    top: '👕', shirt: '👔', blouse: '👚', tshirt: '👕', sweater: '🧶', hoodie: '🧥',
+    jacket: '🧥', coat: '🧥', blazer: '🧥',
+    jeans: '👖', pants: '👖', trousers: '👖', skirt: '👗', shorts: '🩳',
+    dress: '👗',
+    shoes: '👟', sneakers: '👟', boots: '🥾', heels: '👠',
+    accessory: '💍', hat: '🎩', scarf: '🧣', belt: '🪢', bag: '👜'
+  };
+
+  var selectedOccasion = null;
+  var currentWeather = null;
+  var lastOutfitResult = null;
+
+  // --- Get closet items ---
+  function getClosetItems() {
+    return (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits : [];
+  }
+
+  // --- Render occasion grid ---
+  function renderOccasions() {
+    var grid = document.getElementById('outfitOccasionGrid');
+    if (!grid) return;
+    var html = '';
+    OCCASIONS.forEach(function(occ) {
+      var active = selectedOccasion === occ.id ? ' active' : '';
+      html += '<button type="button" class="outfit-occasion-btn' + active + '" data-occasion="' + occ.id + '">';
+      html += '<span class="outfit-occasion-emoji">' + occ.emoji + '</span>';
+      html += '<span class="outfit-occasion-label">' + _t(occ.labelKey) + '</span>';
+      html += '</button>';
+    });
+    grid.innerHTML = html;
+  }
+
+  // --- Weather ---
+  function fetchWeather(city) {
+    return new Promise(function(resolve, reject) {
+      // Geocode city
+      var geoUrl = 'https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(city) + '&count=1&language=en';
+      fetch(geoUrl).then(function(r) { return r.json(); }).then(function(geo) {
+        if (!geo.results || !geo.results.length) { reject(new Error('City not found')); return; }
+        var lat = geo.results[0].latitude;
+        var lon = geo.results[0].longitude;
+        var name = geo.results[0].name;
+        var weatherUrl = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat.toFixed(2) + '&longitude=' + lon.toFixed(2) +
+          '&current=temperature_2m,wind_speed_10m,relative_humidity_2m&timezone=auto&forecast_days=1';
+        return fetch(weatherUrl).then(function(r) { return r.json(); }).then(function(w) {
+          var cur = w.current || {};
+          resolve({
+            city: name,
+            temp: cur.temperature_2m,
+            wind: cur.wind_speed_10m,
+            humidity: cur.relative_humidity_2m
+          });
+        });
+      }).catch(reject);
+    });
+  }
+
+  function fetchWeatherByCoords(lat, lon) {
+    var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat.toFixed(2) + '&longitude=' + lon.toFixed(2) +
+      '&current=temperature_2m,wind_speed_10m,relative_humidity_2m&timezone=auto&forecast_days=1';
+    return fetch(url).then(function(r) { return r.json(); }).then(function(w) {
+      var cur = w.current || {};
+      return { city: _t('outfit_my_location'), temp: cur.temperature_2m, wind: cur.wind_speed_10m, humidity: cur.relative_humidity_2m };
+    });
+  }
+
+  function renderWeather() {
+    var preview = document.getElementById('outfitWeatherPreview');
+    if (!preview) return;
+    if (!currentWeather) { preview.classList.add('hidden'); return; }
+    preview.classList.remove('hidden');
+    var w = currentWeather;
+    var tempStr = (typeof w.temp === 'number') ? Math.round(w.temp) + '°C' : '--';
+    var windStr = (typeof w.wind === 'number') ? Math.round(w.wind) + ' km/h' : '--';
+    var humStr = (typeof w.humidity === 'number') ? Math.round(w.humidity) + '%' : '--';
+    preview.innerHTML = '<div class="outfit-weather-row">🌤️ <strong>' + w.city + '</strong> &nbsp; ' + tempStr + '</div>' +
+      '<div class="outfit-weather-row">💨 ' + _t('outfit_wind') + ': ' + windStr + ' &nbsp; 💧 ' + _t('outfit_humidity') + ': ' + humStr + '</div>';
+  }
+
+  // --- AI outfit generation ---
+  async function generateOutfit() {
+    var items = getClosetItems();
+    var resultsEl = document.getElementById('outfitResults');
+    var loadingEl = document.getElementById('outfitLoading');
+    var emptyEl = document.getElementById('outfitEmptyCloset');
+    var generateBtn = document.getElementById('outfitGenerateBtn');
+
+    if (items.length === 0) {
+      if (emptyEl) emptyEl.classList.remove('hidden');
+      if (resultsEl) resultsEl.classList.add('hidden');
+      if (loadingEl) loadingEl.classList.add('hidden');
+      return;
+    }
+
+    // Build closet summary for AI
+    var closetSummary = items.slice(0, 30).map(function(item, i) {
+      var type = item.type || 'unknown';
+      var color = item.color || '';
+      var colorHex = item.colorHex || '';
+      var id = item.id || i;
+      return { id: id, type: type, color: color, colorHex: colorHex, index: i };
+    });
+
+    var occasionLabel = selectedOccasion ? OCCASIONS.find(function(o) { return o.id === selectedOccasion; }) : null;
+    var occasionName = occasionLabel ? _t(occasionLabel.labelKey) : 'casual';
+
+    var weatherInfo = '';
+    if (currentWeather && typeof currentWeather.temp === 'number') {
+      weatherInfo = 'Current weather: ' + Math.round(currentWeather.temp) + '°C, wind ' + (currentWeather.wind || 0) + ' km/h, humidity ' + (currentWeather.humidity || 0) + '%.';
+    }
+
+    var lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
+    var WORKER_URL = 'https://api.datescan.app';
+    var MODEL = 'zai-org/glm-4.5v';
+
+    var systemPrompt = 'You are a personal stylist AI. The user is going on a date/outing. ' +
+      'You have access to their closet items. Pick the best outfit combination from their items ' +
+      'for the specified occasion and weather conditions. ' +
+      'Respond in ' + ({'en':'English','hu':'Hungarian','de':'German'}[lang] || 'English') + '. ' +
+      'IMPORTANT: You MUST respond with ONLY valid JSON, no markdown. Format: ' +
+      '{"items": [{"index": <number>, "role": "<top|bottom|outer|dress|shoes|accessory>"}], ' +
+      '"tip": "<brief styling tip in user language, 1-2 sentences>"}. ' +
+      'Pick 3-5 items that go well together. Consider color coordination. ' +
+      'The "index" must match the item index in the provided list. ' +
+      'Each item should have a role describing what part of the outfit it fills.';
+
+    var userText = 'Occasion: ' + occasionName + '. ' + weatherInfo + '\n\nMy closet items:\n' +
+      closetSummary.map(function(c) { return c.index + '. ' + c.type + ' (' + c.color + ')'; }).join('\n') +
+      '\n\nPick the best outfit for me.';
+
+    // Show loading
+    if (loadingEl) loadingEl.classList.remove('hidden');
+    if (resultsEl) resultsEl.classList.add('hidden');
+    if (emptyEl) emptyEl.classList.add('hidden');
+    if (generateBtn) generateBtn.disabled = true;
+
+    try {
+      var controller = new AbortController();
+      var timeout = setTimeout(function() { controller.abort(); }, 30000);
+
+      var res = await fetch(WORKER_URL + '/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: MODEL,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userText }
+          ]
+        }),
+        signal: controller.signal
+      });
+      clearTimeout(timeout);
+
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      var data = await res.json();
+      var reply = data.reply || data.content || data.message ||
+                  (data.choices && data.choices[0] && (data.choices[0].message?.content || data.choices[0].text)) || '';
+
+      // Parse AI response
+      var parsed = null;
+      try {
+        var cleaned = reply.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
+        parsed = JSON.parse(cleaned);
+      } catch (e) {
+        var match = reply.match(/\{[\s\S]*\}/);
+        if (match) { try { parsed = JSON.parse(match[0]); } catch (e2) { parsed = null; } }
+      }
+
+      if (parsed && parsed.items && Array.isArray(parsed.items)) {
+        lastOutfitResult = parsed;
+        renderOutfitResults(parsed, items, closetSummary);
+      } else {
+        // Fallback: pick random items
+        var fallback = generateFallbackOutfit(items);
+        lastOutfitResult = fallback;
+        renderOutfitResults(fallback, items, null);
+      }
+    } catch (err) {
+      console.warn('[outfit-picker] AI error, using fallback:', err);
+      var fallback = generateFallbackOutfit(items);
+      lastOutfitResult = fallback;
+      renderOutfitResults(fallback, items, null);
+    } finally {
+      if (loadingEl) loadingEl.classList.add('hidden');
+      if (generateBtn) generateBtn.disabled = false;
+    }
+  }
+
+  // --- Fallback: random outfit without AI ---
+  function generateFallbackOutfit(items) {
+    var byRole = { top: [], bottom: [], outer: [], dress: [], shoes: [], accessory: [] };
+    items.forEach(function(item, i) {
+      var type = (item.type || '').toLowerCase();
+      var role = 'accessory';
+      Object.keys(TYPE_ROLES).forEach(function(k) {
+        if (type.indexOf(k) !== -1) role = TYPE_ROLES[k].replace('outfit_role_', '');
+      });
+      if (byRole[role]) byRole[role].push({ item: item, index: i });
+    });
+
+    var picked = [];
+    function pickOne(arr, role) {
+      if (arr.length > 0) {
+        var idx = Math.floor(Math.random() * arr.length);
+        picked.push({ index: arr[idx].index, role: role });
+        arr.splice(idx, 1);
+      }
+    }
+
+    // If there's a dress, skip top+bottom
+    if (byRole.dress.length > 0) {
+      pickOne(byRole.dress, 'dress');
+    } else {
+      pickOne(byRole.top, 'top');
+      pickOne(byRole.bottom, 'bottom');
+    }
+    pickOne(byRole.outer, 'outer');
+    pickOne(byRole.shoes, 'shoes');
+    pickOne(byRole.accessory, 'accessory');
+
+    return { items: picked, tip: null };
+  }
+
+  // --- Render outfit results ---
+  function renderOutfitResults(parsed, allItems, closetSummary) {
+    var resultsEl = document.getElementById('outfitResults');
+    var itemsEl = document.getElementById('outfitResultItems');
+    var tipEl = document.getElementById('outfitResultTip');
+    if (!resultsEl || !itemsEl) return;
+
+    var html = '';
+    var roleLabels = {
+      top: _t('outfit_role_top'),
+      bottom: _t('outfit_role_bottom'),
+      outer: _t('outfit_role_outer'),
+      dress: _t('outfit_role_dress'),
+      shoes: _t('outfit_role_shoes'),
+      accessory: _t('outfit_role_accessory')
+    };
+
+    (parsed.items || []).forEach(function(pick) {
+      var idx = (typeof pick.index === 'number') ? pick.index : parseInt(pick.index, 10);
+      if (isNaN(idx) || idx < 0 || idx >= allItems.length) return;
+      var item = allItems[idx];
+      var role = pick.role || 'accessory';
+      var roleLabel = roleLabels[role] || role;
+      var imgSrc = item.image || '';
+      var itemName = item.color || item.type || 'Item';
+
+      html += '<div class="outfit-item-card">';
+      if (imgSrc) {
+        html += '<img src="' + imgSrc + '" class="outfit-item-thumb" alt="" />';
+      } else {
+        var emoji = TYPE_EMOJI[(item.type || '').toLowerCase()] || '👕';
+        html += '<div class="outfit-item-color-swatch" style="background:' + (item.colorHex || '#888') + '">' + emoji + '</div>';
+      }
+      html += '<div class="outfit-item-info">';
+      html += '<div class="outfit-item-name">' + itemName + '</div>';
+      html += '<div class="outfit-item-role">' + roleLabel + '</div>';
+      html += '</div>';
+      html += '</div>';
+    });
+
+    itemsEl.innerHTML = html;
+
+    if (parsed.tip) {
+      tipEl.innerHTML = '💡 ' + parsed.tip;
+      tipEl.classList.remove('hidden');
+    } else {
+      tipEl.classList.add('hidden');
+    }
+
+    resultsEl.classList.remove('hidden');
+  }
+
+  // --- Save outfit to chat ---
+  function saveToChat() {
+    if (!lastOutfitResult) return;
+    var items = getClosetItems();
+    var roleLabels = {
+      top: _t('outfit_role_top'),
+      bottom: _t('outfit_role_bottom'),
+      outer: _t('outfit_role_outer'),
+      dress: _t('outfit_role_dress'),
+      shoes: _t('outfit_role_shoes'),
+      accessory: _t('outfit_role_accessory')
+    };
+
+    var lines = [];
+    (lastOutfitResult.items || []).forEach(function(pick) {
+      var idx = (typeof pick.index === 'number') ? pick.index : parseInt(pick.index, 10);
+      if (isNaN(idx) || idx < 0 || idx >= items.length) return;
+      var item = items[idx];
+      var role = pick.role || 'accessory';
+      lines.push((roleLabels[role] || role) + ': ' + (item.color || item.type || 'Item'));
+    });
+
+    var msg = _t('outfit_picker_title') + ' 🎯\n' + lines.join('\n');
+    if (lastOutfitResult.tip) msg += '\n\n💡 ' + lastOutfitResult.tip;
+
+    // Insert into chat input
+    var input = document.getElementById('coachChatInput');
+    if (input) {
+      input.value = msg;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.focus();
+    }
+
+    modal.classList.add('hidden');
+  }
+
+  // --- Event listeners ---
+  openBtn.addEventListener('click', function() {
+    if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+    selectedOccasion = null;
+    currentWeather = null;
+    lastOutfitResult = null;
+    renderOccasions();
+
+    // Reset UI
+    var cityInput = document.getElementById('outfitCityInput');
+    if (cityInput) cityInput.value = '';
+    var preview = document.getElementById('outfitWeatherPreview');
+    if (preview) preview.classList.add('hidden');
+    var results = document.getElementById('outfitResults');
+    if (results) results.classList.add('hidden');
+    var loading = document.getElementById('outfitLoading');
+    if (loading) loading.classList.add('hidden');
+    var empty = document.getElementById('outfitEmptyCloset');
+    if (empty) empty.classList.add('hidden');
+
+    modal.classList.remove('hidden');
+  });
+
+  closeBtn.addEventListener('click', function() { modal.classList.add('hidden'); });
+  modal.addEventListener('click', function(e) { if (e.target === modal) modal.classList.add('hidden'); });
+
+  // Occasion selection
+  var grid = document.getElementById('outfitOccasionGrid');
+  if (grid) {
+    grid.addEventListener('click', function(e) {
+      var btn = e.target.closest('.outfit-occasion-btn');
+      if (!btn) return;
+      selectedOccasion = btn.dataset.occasion;
+      renderOccasions();
+    });
+  }
+
+  // City input → fetch weather on Enter
+  var cityInput = document.getElementById('outfitCityInput');
+  if (cityInput) {
+    cityInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && cityInput.value.trim()) {
+        e.preventDefault();
+        fetchWeather(cityInput.value.trim()).then(function(w) {
+          currentWeather = w;
+          renderWeather();
+        }).catch(function() {
+          currentWeather = null;
+          renderWeather();
+        });
+      }
+    });
+    // Also fetch on blur if there's a value
+    cityInput.addEventListener('blur', function() {
+      if (cityInput.value.trim() && !currentWeather) {
+        fetchWeather(cityInput.value.trim()).then(function(w) {
+          currentWeather = w;
+          renderWeather();
+        }).catch(function() {
+          currentWeather = null;
+          renderWeather();
+        });
+      }
+    });
+  }
+
+  // Use GPS location
+  var gpsBtn = document.getElementById('outfitUseLocationBtn');
+  if (gpsBtn) {
+    gpsBtn.addEventListener('click', function() {
+      if (!navigator.geolocation) return;
+      navigator.geolocation.getCurrentPosition(function(pos) {
+        fetchWeatherByCoords(pos.coords.latitude, pos.coords.longitude).then(function(w) {
+          currentWeather = w;
+          renderWeather();
+          var ci = document.getElementById('outfitCityInput');
+          if (ci) ci.value = w.city;
+        }).catch(function() {
+          currentWeather = null;
+          renderWeather();
+        });
+      }, function() {
+        // GPS denied, ignore
+      });
+    });
+  }
+
+  // Generate button
+  var genBtn = document.getElementById('outfitGenerateBtn');
+  if (genBtn) {
+    genBtn.addEventListener('click', function() {
+      generateOutfit();
+    });
+  }
+
+  // Regenerate button
+  var regenBtn = document.getElementById('outfitRegenerateBtn');
+  if (regenBtn) {
+    regenBtn.addEventListener('click', function() {
+      generateOutfit();
+    });
+  }
+
+  // Save to chat button
+  var saveBtn = document.getElementById('outfitSaveBtn');
+  if (saveBtn) {
+    saveBtn.addEventListener('click', function() {
+      saveToChat();
+    });
+  }
+})();
+
+// ============================================================
 // BACKGROUND REMOVAL — on-device via MediaPipe Selfie Segmentation
 // Removes the background from closet item images so they appear
 // on a clean transparent canvas. Runs entirely on-device; no
@@ -23316,9 +24001,9 @@ function renderStyleCoach(colorData, occasion, locked = false, items = null, reu
   })();
 
   const baseScore = analysis.score;
-  const faceScore = Math.max(0, Math.min(100, baseScore + ((baseScore * 7) % 5) - 2));
+  const colorScore = Math.max(0, Math.min(100, baseScore + ((baseScore * 7) % 5) - 2));
   const outfitScore = baseScore;
-  const postureScore = Math.max(0, Math.min(100, baseScore + ((baseScore * 13) % 5) - 2));
+  const contrastScore = Math.max(0, Math.min(100, baseScore + ((baseScore * 13) % 5) - 2));
 
   const scoreLabel = baseScore >= 85 ? t('score_excellent') : baseScore >= 70 ? t('score_great') : baseScore >= 55 ? t('score_good') : baseScore >= 40 ? t('score_decent') : t('score_needs_work');
 
@@ -23446,16 +24131,16 @@ function renderStyleCoach(colorData, occasion, locked = false, items = null, reu
 
     <div class="grid grid-cols-3 gap-3 mb-6">
       <div class="score-card-glass rounded-xl p-4 text-center cat-face">
-        <div class="text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-2">${t('result_face')}</div>
-        <div class="font-serif font-bold text-3xl text-white leading-none">${faceScore}</div>
+        <div class="text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-2">${t('result_color')}</div>
+        <div class="font-serif font-bold text-3xl text-white leading-none">${colorScore}</div>
       </div>
       <div class="score-card-glass rounded-xl p-4 text-center cat-outfit">
         <div class="text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-2">${t('result_outfit')}</div>
         <div class="font-serif font-bold text-3xl text-white leading-none">${outfitScore}</div>
       </div>
       <div class="score-card-glass rounded-xl p-4 text-center cat-posture">
-        <div class="text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-2">${t('result_posture')}</div>
-        <div class="font-serif font-bold text-3xl text-white leading-none">${postureScore}</div>
+        <div class="text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-2">${t('result_contrast')}</div>
+        <div class="font-serif font-bold text-3xl text-white leading-none">${contrastScore}</div>
       </div>
     </div>
 
