@@ -2953,7 +2953,8 @@ if (window.__DS_IS_ANDROID_APP) {
   body:has(#garmentCareModal:not(.hidden)) #mobileBottomNav,
   body:has(#dateOutfitModal:not(.hidden)) #mobileBottomNav,
   body:has(#weeklyPlannerModal:not(.hidden)) #mobileBottomNav,
-  body:has(#styleProfileModal:not(.hidden)) #mobileBottomNav {
+  body:has(#styleProfileModal:not(.hidden)) #mobileBottomNav,
+  body:has(#trendRadarModal:not(.hidden)) #mobileBottomNav {
     display: none !important;
   }
   /* Hide header (PNT / PRO / lang icons) when modals are open so
@@ -2979,7 +2980,9 @@ if (window.__DS_IS_ANDROID_APP) {
   body:has(#weeklyPlannerModal:not(.hidden)) > header,
   body:has(#weeklyPlannerModal:not(.hidden)) > #langSelectorDropdown,
   body:has(#styleProfileModal:not(.hidden)) > header,
-  body:has(#styleProfileModal:not(.hidden)) > #langSelectorDropdown {
+  body:has(#styleProfileModal:not(.hidden)) > #langSelectorDropdown,
+  body:has(#trendRadarModal:not(.hidden)) > header,
+  body:has(#trendRadarModal:not(.hidden)) > #langSelectorDropdown {
     visibility: hidden !important;
     pointer-events: none !important;
   }
@@ -3338,11 +3341,98 @@ if (window.__DS_IS_ANDROID_APP) {
     width: 100%; height: 100%;
   }
   /* Color Harmony PRO lock overlay */
-  #colorHarmonyWheelLock, #colorHarmonyMatchesLock {
+  #colorHarmonyWheelLock, #colorHarmonyMatchesLock, #colorHarmonyColorblindLock {
     background: rgba(0,0,0,0.55);
     backdrop-filter: blur(4px);
     border-radius: 0.75rem;
     transition: opacity 0.3s;
+  }
+
+  /* ===== Color Harmony — Colorblind Mode ===== */
+  .ch-cvd-type-btn {
+    padding: 5px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.04);
+    color: #9ca3af;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .ch-cvd-type-btn:hover {
+    border-color: rgba(255,255,255,0.25);
+    color: #d1d5db;
+    background: rgba(255,255,255,0.07);
+  }
+  .ch-cvd-type-btn.is-active {
+    border-color: #f59e0b;
+    background: rgba(245,158,11,0.12);
+    color: #fbbf24;
+    box-shadow: 0 0 10px rgba(245,158,11,0.2);
+  }
+  .ch-cvd-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.55rem 0.7rem;
+    border-radius: 0.75rem;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: border-color 0.2s;
+  }
+  .ch-cvd-row:hover {
+    border-color: rgba(245,158,11,0.2);
+  }
+  .ch-cvd-swatch {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    border: 2px solid rgba(255,255,255,0.15);
+    flex-shrink: 0;
+    transition: background-color 0.4s ease;
+  }
+  .ch-cvd-arrow {
+    color: #6b7280;
+    flex-shrink: 0;
+  }
+  .ch-cvd-label {
+    font-size: 10px;
+    color: #6b7280;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    min-width: 28px;
+  }
+  .ch-cvd-hex {
+    font-size: 10px;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    color: #9ca3af;
+  }
+  .ch-cvd-info-box {
+    padding: 0.6rem 0.75rem;
+    border-radius: 0.75rem;
+    background: rgba(245,158,11,0.05);
+    border: 1px solid rgba(245,158,11,0.12);
+    margin-top: 0.6rem;
+  }
+  .ch-cvd-info-box p {
+    font-size: 11px;
+    color: #d1d5db;
+    line-height: 1.5;
+    margin: 0;
+  }
+  .ch-cvd-severity {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    margin-top: 0.5rem;
+  }
+  .ch-cvd-severity-bar {
+    height: 4px;
+    border-radius: 2px;
+    flex: 1;
+    transition: background-color 0.3s;
   }
 
   /* ===== TRIP PACKING PLANNER ===== */
@@ -5010,6 +5100,10 @@ if (window.__DS_IS_ANDROID_APP) {
                <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                <span data-i18n="closet_style_profile">Style Profile</span>
             </button>
+            <button id="trendRadarBtn" class="px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-gradient-to-r from-brand-500/20 to-purple-500/20 border border-brand-500/30 text-brand-400 hover:from-brand-500/30 hover:to-purple-500/30 active:scale-[0.98] transition" title="Trend Radar — see how your closet matches current trends">
+               <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 19 21 12 17 5 21"/></svg>
+               <span data-i18n="closet_trend_radar">Trend Radar</span>
+            </button>
             <button id="smartShopBtn" class="px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-amber-300 hover:from-amber-500/30 hover:to-orange-500/30 active:scale-[0.98] transition" title="Smart Shopping List — wardrobe gap analysis and suggestions">
                <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                <span data-i18n="closet_smart_shop">Shopping List</span>
@@ -5449,6 +5543,48 @@ if (window.__DS_IS_ANDROID_APP) {
             <div class="text-center py-4">
               <div class="text-lg mb-1">🔒</div>
               <p class="text-[10px] text-gray-400 font-bold" data-i18n="color_harmony_matches_lock">Closet matches — PRO</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Colorblind Mode (CVD Simulation) — PRO ===== -->
+      <div id="colorHarmonyColorblind" class="hidden">
+        <div class="relative">
+          <div class="flex items-center justify-between mb-2">
+            <div class="text-[10px] uppercase tracking-widest text-amber-400 font-bold" data-i18n="color_harmony_colorblind_header">Colorblind Simulation</div>
+          </div>
+          <!-- CVD type selector -->
+          <div class="flex flex-wrap gap-2 mb-3">
+            <button type="button" class="ch-cvd-type-btn is-active" data-cvd-type="protanopia" data-i18n="color_harmony_cvd_protanopia">Protanopia</button>
+            <button type="button" class="ch-cvd-type-btn" data-cvd-type="deuteranopia" data-i18n="color_harmony_cvd_deuteranopia">Deuteranopia</button>
+            <button type="button" class="ch-cvd-type-btn" data-cvd-type="tritanopia" data-i18n="color_harmony_cvd_tritanopia">Tritanopia</button>
+          </div>
+          <!-- CVD type description -->
+          <div id="colorHarmonyCvdDesc" class="text-[11px] text-gray-400 mb-3 leading-relaxed" data-i18n="color_harmony_cvd_protanopia_desc">Red-blind — difficulty distinguishing red and green tones. Affects ~1% of males.</div>
+          <!-- Color comparison rows -->
+          <div id="colorHarmonyCvdRows" class="space-y-2 mb-3">
+            <!-- Dynamically populated -->
+          </div>
+          <!-- Severity indicator -->
+          <div id="colorHarmonyCvdSeverity" class="ch-cvd-severity" style="display:none">
+            <span class="text-[10px] text-gray-500 font-bold" data-i18n="color_harmony_cvd_severity_label">Impact:</span>
+            <div class="ch-cvd-severity-bar" id="colorHarmonyCvdSevBar1"></div>
+            <div class="ch-cvd-severity-bar" id="colorHarmonyCvdSevBar2"></div>
+            <div class="ch-cvd-severity-bar" id="colorHarmonyCvdSevBar3"></div>
+            <div class="ch-cvd-severity-bar" id="colorHarmonyCvdSevBar4"></div>
+            <div class="ch-cvd-severity-bar" id="colorHarmonyCvdSevBar5"></div>
+            <span id="colorHarmonyCvdSevText" class="text-[10px] font-bold"></span>
+          </div>
+          <!-- Info box -->
+          <div class="ch-cvd-info-box">
+            <p id="colorHarmonyCvdInfoText" data-i18n="color_harmony_cvd_info">Select colors above to see how they appear with color vision deficiency. This helps you choose outfits that are distinguishable for everyone.</p>
+          </div>
+          <!-- PRO lock overlay -->
+          <div id="colorHarmonyColorblindLock" class="absolute inset-0 flex items-center justify-center rounded-xl bg-black/60 backdrop-blur-sm" style="display:none">
+            <div class="text-center py-4">
+              <div class="text-lg mb-1">🔒</div>
+              <p class="text-[10px] text-gray-400 font-bold" data-i18n="color_harmony_colorblind_lock">Colorblind mode — PRO</p>
             </div>
           </div>
         </div>
@@ -5953,6 +6089,129 @@ if (window.__DS_IS_ANDROID_APP) {
           <button id="styleProfileSave" type="button" class="w-full py-3.5 rounded-xl btn-primary text-sm font-bold" data-i18n="sp_save">Save Profile</button>
         </div>
       </div>
+
+  <!-- AI CHAT VIEW — Phase 2 extraction.
+
+  <!-- ===== TREND RADAR MODAL ===== -->
+  <div id="trendRadarModal" class="hidden fixed inset-0 z-[115] bg-black/85 backdrop-blur-md flex items-center justify-center p-4" style="z-index:120">
+    <div class="premium-glass rounded-3xl border border-brand-500/20 max-w-lg w-full p-5 sm:p-6 relative max-h-[92vh] overflow-y-auto">
+      <button id="trendRadarClose" type="button" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition z-10" aria-label="Close">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+
+      <!-- Header -->
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-500/25 to-purple-500/25 border border-brand-500/30 flex items-center justify-center">
+          <svg class="w-6 h-6 text-brand-400" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="12 2 19 21 12 17 5 21"/></svg>
+        </div>
+        <div>
+          <h3 class="font-serif text-xl font-semibold text-white flex items-center gap-2" data-i18n="tr_title">Trend Radar
+          </h3>
+          <p class="text-[11px] text-gray-400" id="trSeasonLabel">Tavasz 2026</p>
+        </div>
+      </div>
+
+      <!-- Overall Score Circle -->
+      <div class="text-center mb-5 p-5 rounded-2xl bg-white/[0.03] border border-white/5">
+        <div class="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-3 flex items-center justify-center gap-2" data-i18n="tr_score_label">Divat trend pontszámod
+        </div>
+        <div class="relative inline-flex items-center justify-center" style="width:140px;height:140px;">
+          <canvas id="trScoreRing" width="140" height="140" style="width:140px;height:140px;position:absolute;inset:0;"></canvas>
+          <div class="flex flex-col items-center justify-center text-center" style="z-index:1;">
+            <span id="trScoreValue" class="text-3xl font-bold text-white tabular-nums leading-none">0</span>
+            <span class="text-[9px] uppercase tracking-widest text-gray-400 font-bold leading-none mt-1" data-i18n="tr_score_unit">TREND PONT</span>
+          </div>
+        </div>
+        <p id="trScoreMsg" class="text-xs text-gray-400 mt-2"></p>
+      </div>
+
+      <!-- Radar Chart -->
+      <div class="mb-5 p-4 rounded-2xl bg-white/[0.03] border border-white/5">
+        <div class="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-3 flex items-center gap-2">
+          <svg class="w-3 h-3 text-brand-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 19 21 12 17 5 21"/></svg>
+          <span data-i18n="tr_radar_label">Kategória radar</span>
+        </div>
+        <canvas id="trRadarCanvas" width="280" height="260" class="mx-auto" style="max-width:280px;"></canvas>
+      </div>
+
+      <!-- Tab navigation -->
+      <div class="flex gap-1 mb-4 bg-white/5 rounded-xl p-1" id="trTabs">
+        <button data-tr-tab="overview" class="tr-tab flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-colors bg-brand-500/20 text-brand-300 border border-brand-500/30" data-i18n="tr_tab_overview">Áttekintés</button>
+        <button data-tr-tab="trending" class="tr-tab flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-colors bg-white/5 text-gray-400 border border-transparent hover:bg-white/10" data-i18n="tr_tab_trending">Trendi</button>
+        <button data-tr-tab="missing" class="tr-tab flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-colors bg-white/5 text-gray-400 border border-transparent hover:bg-white/10" data-i18n="tr_tab_missing">Hiányzó</button>
+      </div>
+
+      <!-- Overview panel -->
+      <div id="trOverview" class="tr-panel">
+        <!-- Featured trend card -->
+        <div id="trFeaturedCard" class="mb-4 p-4 rounded-2xl bg-gradient-to-br from-brand-500/10 to-purple-500/10 border border-brand-500/20">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-[9px] uppercase tracking-widest text-gray-400 font-bold" data-i18n="tr_featured_label">HA CSAK EGY DOLGOT VÁLASZTASZ, EZ LEGYEN AZ.</span>
+            <span class="text-[9px] text-gray-600">|</span>
+            <span id="trFeaturedSource" class="text-[9px] text-gray-500" data-i18n="tr_source">source: trend data</span>
+          </div>
+          <h4 id="trFeaturedName" class="font-serif text-lg font-semibold text-white mb-1">—</h4>
+          <div id="trFeaturedTags" class="flex flex-wrap gap-1.5 mb-3"></div>
+          <p id="trFeaturedDesc" class="text-xs text-gray-400 leading-relaxed mb-3"></p>
+          <div class="flex items-center gap-3 mb-2">
+            <span class="text-[10px] text-gray-500" data-i18n="tr_relevance">Népszerűségi index</span>
+            <div class="flex-1 h-1.5 rounded-full bg-white/10 overflow-hidden"><div id="trFeaturedBar" class="h-full rounded-full bg-gradient-to-r from-brand-500 to-purple-500 transition-all duration-700" style="width:0%"></div></div>
+            <span id="trFeaturedPct" class="text-[11px] font-bold text-brand-400 tabular-nums">0%</span>
+          </div>
+          <div id="trFeaturedMeta" class="flex items-center gap-2 text-[10px] text-gray-500 mt-2"></div>
+        </div>
+
+        <!-- Trend counts -->
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3 text-center">
+            <div class="flex items-center justify-center gap-1.5 mb-1"><span class="text-emerald-400 text-sm">✓</span><span id="trCountHave" class="text-xl font-bold text-white tabular-nums">0</span></div>
+            <div class="text-[9px] uppercase tracking-widest text-gray-400 font-bold" data-i18n="tr_count_have">TRENDI DARAB</div>
+          </div>
+          <div class="rounded-xl border border-brand-500/20 bg-brand-500/5 p-3 text-center">
+            <div class="flex items-center justify-center gap-1.5 mb-1"><span class="text-brand-400 text-sm">+</span><span id="trCountMissing" class="text-xl font-bold text-white tabular-nums">0</span></div>
+            <div class="text-[9px] uppercase tracking-widest text-gray-400 font-bold" data-i18n="tr_count_missing">HIÁNYZÓ TREND</div>
+          </div>
+        </div>
+
+        <!-- Category breakdown -->
+        <div class="p-4 rounded-2xl bg-white/[0.03] border border-white/5">
+          <div class="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-3 flex items-center gap-2" data-i18n="tr_cat_title">Kategória trendek
+          </div>
+          <div id="trCatBreakdown" class="space-y-3">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Trending panel (items user already has) -->
+      <div id="trTrending" class="tr-panel hidden">
+        <div class="text-[10px] uppercase tracking-widest text-emerald-400 font-bold mb-3" data-i18n="tr_have_header">AMI MÁR TRENDI A SZEKRÉNYEDBEN</div>
+        <div id="trHaveList" class="space-y-2.5"></div>
+        <div id="trHaveEmpty" class="hidden text-center py-8">
+          <div class="text-3xl mb-2">👀</div>
+          <p class="text-sm text-gray-400" data-i18n="tr_have_empty">Szekrényed üres. Tölts fel ruhákat a Szekrénybe!</p>
+        </div>
+        <button id="trHaveMore" class="hidden w-full mt-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-gray-300 hover:bg-white/10 active:scale-[0.98] transition" data-i18n="tr_show_more">Összes trendi darab megtekintése →</button>
+      </div>
+
+      <!-- Missing panel -->
+      <div id="trMissing" class="tr-panel hidden">
+        <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mb-3" data-i18n="tr_missing_header">AMIT MÉG HIÁNYZIK</div>
+        <div id="trMissList" class="space-y-2.5"></div>
+        <div id="trMissEmpty" class="hidden text-center py-8">
+          <div class="text-3xl mb-2">🎉</div>
+          <p class="text-sm text-gray-400" data-i18n="tr_miss_empty">Szekrényed fedi az összes aktuális trendet!</p>
+        </div>
+        <button id="trMissMore" class="hidden w-full mt-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-gray-300 hover:bg-white/10 active:scale-[0.98] transition" data-i18n="tr_show_more_miss">Összes hiányzó trend megtekintése →</button>
+      </div>
+
+      <!-- Data source disclaimer -->
+      <div class="mt-5 p-3 rounded-xl bg-white/[0.02] border border-white/5 text-center">
+        <p class="text-[10px] text-gray-600 leading-relaxed" data-i18n="tr_disclaimer">Ez a grafikon a szekrényed és a trendek viszonyát mutatja, nem egyértelmű stílusértékelés. A trendadatok a netről származnak (Wikipedia, divatoldalak). 7 napig cache-elt adat.</p>
+        <p id="trCacheInfo" class="text-[9px] text-gray-700 mt-1"></p>
+      </div>
+    </div>
+  </div>
 
   <!-- AI CHAT VIEW — Phase 2 extraction.
        This used to be a card at the bottom of #viewScanner's camera column.
@@ -9690,6 +9949,27 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       closet_title: 'Digital Closet',
       closet_subtitle: 'Your saved outfits and personal style archive.',
       closet_style_profile: 'Style Profile',
+      closet_trend_radar: 'Trend Radar',
+      tr_title: 'Trend Radar',
+      tr_score_label: 'Your fashion trend score',
+      tr_score_unit: 'TREND POINT',
+      tr_radar_label: 'Category radar',
+      tr_tab_overview: 'Overview',
+      tr_tab_trending: 'Trending',
+      tr_tab_missing: 'Missing',
+      tr_featured_label: 'IF YOU ONLY PICK ONE THING, MAKE IT THIS.',
+      tr_relevance: 'Popularity index',
+      tr_count_have: 'TRENDY ITEM',
+      tr_count_missing: 'MISSING TREND',
+      tr_cat_title: 'Category trends',
+      tr_have_header: 'ALREADY TRENDING IN YOUR CLOSET',
+      tr_have_empty: 'Your closet is empty. Upload clothes to the Closet!',
+      tr_missing_header: 'WHAT YOU\'RE STILL MISSING',
+      tr_miss_empty: 'Your closet covers all current trends!',
+      tr_show_more: 'View all trending items →',
+      tr_show_more_miss: 'View all missing trends →',
+      tr_disclaimer: 'This chart shows the relationship between your closet and trends, not a definitive style rating. Trend data comes from the web (Wikipedia, fashion sites). Data is cached for 7 days.',
+      tr_source: 'source: trend data',
       closet_add_item: 'Add Item',
       closet_ab_duel: 'A/B Duel',
       closet_build_outfit: 'Build Outfit',
@@ -11015,6 +11295,25 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       color_harmony_pro_palette_desc: 'Compare up to 5 colors at once',
       color_harmony_pro_colorblind_title: 'Colorblind Mode',
       color_harmony_pro_colorblind_desc: 'See how your outfit looks with color vision deficiency',
+      color_harmony_colorblind_header: 'Colorblind Simulation',
+      color_harmony_cvd_protanopia: 'Protanopia',
+      color_harmony_cvd_deuteranopia: 'Deuteranopia',
+      color_harmony_cvd_tritanopia: 'Tritanopia',
+      color_harmony_cvd_protanopia_desc: 'Red-blind — difficulty distinguishing red and green tones. Affects ~1% of males.',
+      color_harmony_cvd_deuteranopia_desc: 'Green-blind — the most common CVD type. Red and green appear similar. Affects ~1.2% of males.',
+      color_harmony_cvd_tritanopia_desc: 'Blue-blind — difficulty distinguishing blue and yellow tones. Very rare, affects ~0.01%.',
+      color_harmony_cvd_severity_label: 'Impact:',
+      color_harmony_cvd_severity_low: 'Low',
+      color_harmony_cvd_severity_moderate: 'Moderate',
+      color_harmony_cvd_severity_high: 'High',
+      color_harmony_cvd_severity_extreme: 'Extreme',
+      color_harmony_cvd_info: 'Select colors above to see how they appear with color vision deficiency. This helps you choose outfits that are distinguishable for everyone.',
+      color_harmony_cvd_original: 'Original',
+      color_harmony_cvd_simulated: 'Simulated',
+      color_harmony_colorblind_lock: 'Colorblind mode — PRO',
+      color_harmony_cvd_confusion: 'These colors may look similar',
+      color_harmony_cvd_safe: 'These colors remain distinguishable',
+      color_harmony_cvd_pair_header: 'Pair Comparison',
 
       // Trip Packing Planner
       closet_trip_packing: 'Trip Pack',
@@ -11560,6 +11859,27 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       closet_title: 'Digitális Szekrény',
       closet_subtitle: 'Elmentett öltözékek és személyes stílusarchívum.',
       closet_style_profile: 'Stílusadatlap',
+      closet_trend_radar: 'Trend Radar',
+      tr_title: 'Trend Radar',
+      tr_score_label: 'Divat trend pontszámod',
+      tr_score_unit: 'TREND PONT',
+      tr_radar_label: 'Kategória radar',
+      tr_tab_overview: 'Áttekintés',
+      tr_tab_trending: 'Trendi',
+      tr_tab_missing: 'Hiányzó',
+      tr_featured_label: 'HA CSAK EGY DOLGOT VÁLASZTASZ, EZ LEGYEN AZ.',
+      tr_relevance: 'Népszerűségi index',
+      tr_count_have: 'TRENDI DARAB',
+      tr_count_missing: 'HIÁNYZÓ TREND',
+      tr_cat_title: 'Kategória trendek',
+      tr_have_header: 'AMI MÁR TRENDI A SZEKRÉNYEDBEN',
+      tr_have_empty: 'Szekrényed üres. Tölts fel ruhákat a Szekrénybe!',
+      tr_missing_header: 'AMIT MÉG HIÁNYZIK',
+      tr_miss_empty: 'Szekrényed fedi az összes aktuális trendet!',
+      tr_show_more: 'Összes trendi darab megtekintése →',
+      tr_show_more_miss: 'Összes hiányzó trend megtekintése →',
+      tr_disclaimer: 'Ez a grafikon a szekrényed és a trendek viszonyát mutatja, nem egyértelmű stílusértékelés. A trendadatok a netről származnak (Wikipedia, divatoldalak). 7 napig cache-elt adat.',
+      tr_source: 'forrás: trendadatok',
       closet_add_item: 'Tárgy hozzáadása',
       closet_ab_duel: 'A/B Párbaj',
       closet_build_outfit: 'Öltözék összeállítása',
@@ -12884,6 +13204,25 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       color_harmony_pro_palette_desc: 'Összehasonlíts egyszerre 5 színt',
       color_harmony_pro_colorblind_title: 'Színvak Mód',
       color_harmony_pro_colorblind_desc: 'Lásd, hogyan néz ki a szett színlátás-hiánnyal',
+      color_harmony_colorblind_header: 'Színvak Szimuláció',
+      color_harmony_cvd_protanopia: 'Protanópia',
+      color_harmony_cvd_deuteranopia: 'Deuteranópia',
+      color_harmony_cvd_tritanopia: 'Tritanópia',
+      color_harmony_cvd_protanopia_desc: 'Vörös-vak — nehézség a vörös és zöld árnyalatok megkülönböztetésében. A férfiak ~1%-át érinti.',
+      color_harmony_cvd_deuteranopia_desc: 'Zöld-vak — a leggyakoribb színlátászavar. A vörös és zöld hasonlónak tűnik. A férfiak ~1,2%-át érinti.',
+      color_harmony_cvd_tritanopia_desc: 'Kék-vak — nehézség a kék és sárga árnyalatok megkülönböztetésében. Nagyon ritka, ~0,01%-ot érint.',
+      color_harmony_cvd_severity_label: 'Hatás:',
+      color_harmony_cvd_severity_low: 'Enyhe',
+      color_harmony_cvd_severity_moderate: 'Közepes',
+      color_harmony_cvd_severity_high: 'Erős',
+      color_harmony_cvd_severity_extreme: 'Extrém',
+      color_harmony_cvd_info: 'Válassz színeket fent, hogy lásd, hogyan jelennek meg színlátászavarral. Ez segít olyan szetteket választani, amelyek mindenki számára megkülönböztethetők.',
+      color_harmony_cvd_original: 'Eredeti',
+      color_harmony_cvd_simulated: 'Szimulált',
+      color_harmony_colorblind_lock: 'Színvak mód — PRO',
+      color_harmony_cvd_confusion: 'Ezek a színek hasonlónak tűnhetnek',
+      color_harmony_cvd_safe: 'Ezek a színek megkülönböztethetők maradnak',
+      color_harmony_cvd_pair_header: 'Pár-összehasonlítás',
 
       // Utazás Csomagoló
       closet_trip_packing: 'Utazás',
@@ -13429,6 +13768,27 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       closet_title: 'Digitaler Kleiderschrank',
       closet_subtitle: 'Deine gespeicherten Outfits und persönliches Stil-Archiv.',
       closet_style_profile: 'Stil-Profil',
+      closet_trend_radar: 'Trend Radar',
+      tr_title: 'Trend Radar',
+      tr_score_label: 'Dein Mode-Trend-Score',
+      tr_score_unit: 'TREND PUNKT',
+      tr_radar_label: 'Kategorie Radar',
+      tr_tab_overview: 'Übersicht',
+      tr_tab_trending: 'Trendig',
+      tr_tab_missing: 'Fehlend',
+      tr_featured_label: 'WENN DU NUR EIN TEIL WÄHLST, DANN DIESES.',
+      tr_relevance: 'Beliebt­heits­index',
+      tr_count_have: 'TRENDIGE TEILE',
+      tr_count_missing: 'FEHLENDE TRENDS',
+      tr_cat_title: 'Kategorie Trends',
+      tr_have_header: 'SCHON TRENDIG IN DEINEM SCHRANK',
+      tr_have_empty: 'Dein Schrank ist leer. Lade Kleidung hoch!',
+      tr_missing_header: 'WAS DIR NOCH FEHLT',
+      tr_miss_empty: 'Dein Schrank deckt alle aktuellen Trends ab!',
+      tr_show_more: 'Alle trendigen Teile anzeigen →',
+      tr_show_more_miss: 'Alle fehlenden Trends anzeigen →',
+      tr_disclaimer: 'Dieses Diagramm zeigt das Verhältnis zwischen deinem Schrank und den Trends, keine definitive Stilbewertung. Trenddaten stammen aus dem Web (Wikipedia, Modeseiten). Daten werden 7 Tage gecacht.',
+      tr_source: 'Quelle: Trenddaten',
       closet_add_item: 'Teil hinzufügen',
       closet_ab_duel: 'A/B Duell',
       closet_build_outfit: 'Outfit zusammenstellen',
@@ -14753,6 +15113,25 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       color_harmony_pro_palette_desc: 'Bis zu 5 Farben gleichzeitig vergleichen',
       color_harmony_pro_colorblind_title: 'Farbenblind-Modus',
       color_harmony_pro_colorblind_desc: 'Sehe, wie dein Outfit mit Farbsehstörung aussieht',
+      color_harmony_colorblind_header: 'Farbenblind-Simulation',
+      color_harmony_cvd_protanopia: 'Protanopie',
+      color_harmony_cvd_deuteranopia: 'Deuteranopie',
+      color_harmony_cvd_tritanopia: 'Tritanopie',
+      color_harmony_cvd_protanopia_desc: 'Rot-blind — Schwierigkeiten, Rot- und Grüntöne zu unterscheiden. Betrifft ~1% der Männer.',
+      color_harmony_cvd_deuteranopia_desc: 'Grün-blind — die häufigste Farbsehstörung. Rot und Grün erscheinen ähnlich. Betrifft ~1,2% der Männer.',
+      color_harmony_cvd_tritanopia_desc: 'Blau-blind — Schwierigkeiten, Blau- und Gelbtöne zu unterscheiden. Sehr selten, betrifft ~0,01%.',
+      color_harmony_cvd_severity_label: 'Auswirkung:',
+      color_harmony_cvd_severity_low: 'Gering',
+      color_harmony_cvd_severity_moderate: 'Mäßig',
+      color_harmony_cvd_severity_high: 'Stark',
+      color_harmony_cvd_severity_extreme: 'Extrem',
+      color_harmony_cvd_info: 'Wähle oben Farben, um zu sehen, wie sie mit Farbsehstörung erscheinen. Hilft dir, Outfits zu wählen, die für alle unterscheidbar sind.',
+      color_harmony_cvd_original: 'Original',
+      color_harmony_cvd_simulated: 'Simuliert',
+      color_harmony_colorblind_lock: 'Farbenblind-Modus — PRO',
+      color_harmony_cvd_confusion: 'Diese Farben könnten ähnlich aussehen',
+      color_harmony_cvd_safe: 'Diese Farben bleiben unterscheidbar',
+      color_harmony_cvd_pair_header: 'Paarvergleich',
 
       // Reise Packplaner
       closet_trip_packing: 'Reise',
@@ -18273,6 +18652,82 @@ window.saveCurrentOutfit = function() {
     return rgbToHsl(rgb[0], rgb[1], rgb[2]);
   }
 
+  // --- Color Vision Deficiency (CVD) simulation ---
+  // Brettel/Viénot simulation matrices for dichromatic vision
+  // Each matrix transforms [R, G, B] (0-1 range) to the CVD simulation
+  var CVD_MATRICES = {
+    protanopia: [
+      [0.567, 0.433, 0.000],
+      [0.558, 0.442, 0.000],
+      [0.000, 0.242, 0.758]
+    ],
+    deuteranopia: [
+      [0.625, 0.375, 0.000],
+      [0.700, 0.300, 0.000],
+      [0.000, 0.300, 0.700]
+    ],
+    tritanopia: [
+      [0.950, 0.050, 0.000],
+      [0.000, 0.433, 0.567],
+      [0.000, 0.475, 0.525]
+    ]
+  };
+
+  // Apply CVD simulation matrix to a hex color, returns new hex
+  function simulateCVD(hex, cvdType) {
+    var rgb = hexToRgb(hex); // returns [r, g, b] in 0-1 range
+    var matrix = CVD_MATRICES[cvdType];
+    if (!matrix) return hex;
+
+    var r = matrix[0][0] * rgb[0] + matrix[0][1] * rgb[1] + matrix[0][2] * rgb[2];
+    var g = matrix[1][0] * rgb[0] + matrix[1][1] * rgb[1] + matrix[1][2] * rgb[2];
+    var b = matrix[2][0] * rgb[0] + matrix[2][1] * rgb[1] + matrix[2][2] * rgb[2];
+
+    // Clamp to 0-1
+    r = Math.max(0, Math.min(1, r));
+    g = Math.max(0, Math.min(1, g));
+    b = Math.max(0, Math.min(1, b));
+
+    // Convert back to hex
+    var ri = Math.round(r * 255);
+    var gi = Math.round(g * 255);
+    var bi = Math.round(b * 255);
+    return '#' + ((1 << 24) + (ri << 16) + (gi << 8) + bi).toString(16).slice(1);
+  }
+
+  // Calculate color difference (Euclidean distance in RGB space, 0-1 range)
+  function colorDifference(hex1, hex2) {
+    var rgb1 = hexToRgb(hex1);
+    var rgb2 = hexToRgb(hex2);
+    var dr = rgb1[0] - rgb2[0];
+    var dg = rgb1[1] - rgb2[1];
+    var db = rgb1[2] - rgb2[2];
+    return Math.sqrt(dr * dr + dg * dg + db * db);
+  }
+
+  // Calculate how different colors become under CVD simulation
+  // Returns average pairwise difference of simulated colors (0-1)
+  function cvdColorDivergence(colors, cvdType) {
+    if (colors.length < 2) return 0;
+    var simulated = colors.map(function(c) { return simulateCVD(c, cvdType); });
+    var totalDiff = 0;
+    var pairs = 0;
+    for (var i = 0; i < simulated.length; i++) {
+      for (var j = i + 1; j < simulated.length; j++) {
+        totalDiff += colorDifference(simulated[i], simulated[j]);
+        pairs++;
+      }
+    }
+    return pairs > 0 ? totalDiff / pairs : 0;
+  }
+
+  // Calculate how similar original and CVD-simulated colors are
+  // Returns average difference between original and simulated per color (0-1)
+  function cvdPerColorShift(hex, cvdType) {
+    var simulated = simulateCVD(hex, cvdType);
+    return colorDifference(hex, simulated);
+  }
+
   // --- Harmony calculations ---
   // Calculate the angular distance between two hues (0-180)
   function hueDistance(h1, h2) {
@@ -18536,6 +18991,7 @@ window.saveCurrentOutfit = function() {
   var _isPro = (typeof isProUser === 'function' && isProUser()) || (typeof window.__DS_IS_PRO !== 'undefined' && window.__DS_IS_PRO);
   var _maxFreeColors = 2;
   var _maxProColors = 5;
+  var _activeCvdType = 'protanopia'; // Current CVD simulation type
 
   // --- DOM ---
   var modal = document.getElementById('colorHarmonyModal');
@@ -18554,6 +19010,7 @@ window.saveCurrentOutfit = function() {
     _isPro = (typeof isProUser === 'function' && isProUser()) || (typeof window.__DS_IS_PRO !== 'undefined' && window.__DS_IS_PRO);
     var wheelLock = document.getElementById('colorHarmonyWheelLock');
     var matchesLock = document.getElementById('colorHarmonyMatchesLock');
+    var colorblindLock = document.getElementById('colorHarmonyColorblindLock');
     var freeHint = document.getElementById('colorHarmonyFreeHint');
     var proPreviews = document.getElementById('colorHarmonyProPreviews');
 
@@ -18561,12 +19018,14 @@ window.saveCurrentOutfit = function() {
       // PRO: unlock everything
       if (wheelLock) wheelLock.style.display = 'none';
       if (matchesLock) matchesLock.style.display = 'none';
+      if (colorblindLock) colorblindLock.style.display = 'none';
       if (freeHint) freeHint.style.display = 'none';
       if (proPreviews) proPreviews.style.display = 'none';
     } else {
       // Free: show locks
       if (wheelLock) wheelLock.style.display = 'flex';
       if (matchesLock) matchesLock.style.display = 'flex';
+      if (colorblindLock) colorblindLock.style.display = 'flex';
       if (freeHint) freeHint.style.display = '';
       if (proPreviews) proPreviews.style.display = '';
     }
@@ -18761,12 +19220,138 @@ window.saveCurrentOutfit = function() {
     } // end if matchesEl
   }
 
+  // --- Render Colorblind Mode ---
+  function renderColorblind() {
+    var cbSection = document.getElementById('colorHarmonyColorblind');
+    if (!cbSection) return;
+
+    // Show section only when colors are selected
+    if (selectedColors.length === 0) {
+      cbSection.classList.add('hidden');
+      cbSection.style.display = 'none';
+      return;
+    }
+
+    cbSection.classList.remove('hidden');
+    cbSection.style.display = '';
+
+    // Update CVD type description
+    var cvdDescEl = document.getElementById('colorHarmonyCvdDesc');
+    if (cvdDescEl) {
+      var descKey = 'color_harmony_cvd_' + _activeCvdType + '_desc';
+      cvdDescEl.textContent = t(descKey);
+    }
+
+    // Build color comparison rows
+    var rowsEl = document.getElementById('colorHarmonyCvdRows');
+    if (!rowsEl) return;
+
+    var html = '';
+
+    // Individual color simulation rows
+    selectedColors.forEach(function(c, idx) {
+      var simulatedHex = simulateCVD(c.hex, _activeCvdType);
+      var shift = cvdPerColorShift(c.hex, _activeCvdType);
+      var shiftPct = Math.round(shift * 100);
+
+      html += '<div class="ch-cvd-row">';
+      html += '  <div class="ch-cvd-swatch" style="background:' + c.hex + '" title="' + t('color_harmony_cvd_original') + ': ' + c.hex + '"></div>';
+      html += '  <div class="ch-cvd-label">' + t('color_harmony_cvd_original') + '</div>';
+      html += '  <svg class="ch-cvd-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>';
+      html += '  <div class="ch-cvd-swatch" style="background:' + simulatedHex + '" title="' + t('color_harmony_cvd_simulated') + ': ' + simulatedHex + '"></div>';
+      html += '  <div class="flex flex-col min-w-0">';
+      html += '    <span class="ch-cvd-label">' + t('color_harmony_cvd_simulated') + '</span>';
+      html += '    <span class="ch-cvd-hex">' + simulatedHex + ' <span style="color:' + (shift > 0.3 ? '#f87171' : shift > 0.15 ? '#fbbf24' : '#34d399') + '">(' + shiftPct + '%)</span></span>';
+      html += '  </div>';
+      html += '</div>';
+    });
+
+    // Pair comparison — check if any two colors become confusing under CVD
+    if (selectedColors.length >= 2 && _isPro) {
+      html += '<div class="mt-3 mb-1">';
+      html += '  <div class="text-[10px] uppercase tracking-widest text-amber-400/70 font-bold mb-2">' + t('color_harmony_cvd_pair_header') + '</div>';
+
+      var hasConfusion = false;
+      for (var i = 0; i < selectedColors.length; i++) {
+        for (var j = i + 1; j < selectedColors.length; j++) {
+          var simI = simulateCVD(selectedColors[i].hex, _activeCvdType);
+          var simJ = simulateCVD(selectedColors[j].hex, _activeCvdType);
+          var simDiff = colorDifference(simI, simJ);
+          var origDiff = colorDifference(selectedColors[i].hex, selectedColors[j].hex);
+          var confusionRatio = origDiff > 0 ? simDiff / origDiff : 1;
+
+          if (confusionRatio < 0.5) {
+            hasConfusion = true;
+            html += '<div class="ch-cvd-row" style="border-color:rgba(248,113,113,0.2)">';
+            html += '  <div class="ch-cvd-swatch" style="background:' + selectedColors[i].hex + ';width:28px;height:28px;border-radius:8px"></div>';
+            html += '  <div class="ch-cvd-swatch" style="background:' + selectedColors[j].hex + ';width:28px;height:28px;border-radius:8px"></div>';
+            html += '  <svg class="ch-cvd-arrow" width="14" height="14" fill="none" stroke="#f87171" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>';
+            html += '  <div class="ch-cvd-swatch" style="background:' + simI + ';width:28px;height:28px;border-radius:8px"></div>';
+            html += '  <div class="ch-cvd-swatch" style="background:' + simJ + ';width:28px;height:28px;border-radius:8px"></div>';
+            html += '  <span class="text-[10px] font-bold text-red-400 ml-auto">' + t('color_harmony_cvd_confusion') + '</span>';
+            html += '</div>';
+          }
+        }
+      }
+
+      if (!hasConfusion) {
+        html += '<div class="ch-cvd-row" style="border-color:rgba(52,211,153,0.15)">';
+        html += '  <span class="text-[11px] font-bold text-emerald-400">' + t('color_harmony_cvd_safe') + '</span>';
+        html += '</div>';
+      }
+      html += '</div>';
+    }
+
+    rowsEl.innerHTML = html;
+
+    // Update severity indicator
+    var severityEl = document.getElementById('colorHarmonyCvdSeverity');
+    if (severityEl && selectedColors.length >= 2 && _isPro) {
+      severityEl.style.display = '';
+      var hexes = selectedColors.map(function(c) { return c.hex; });
+      var divergence = cvdColorDivergence(hexes, _activeCvdType);
+      // divergence 0 = all same (extreme), 0.5+ = very distinguishable (low)
+      var severityScore = Math.max(0, Math.min(1, 1 - (divergence / 0.5)));
+      var bars = 5;
+      var filledBars = Math.round(severityScore * bars);
+      var severityLabel, severityColor;
+      if (severityScore < 0.25) {
+        severityLabel = t('color_harmony_cvd_severity_low');
+        severityColor = '#34d399';
+      } else if (severityScore < 0.5) {
+        severityLabel = t('color_harmony_cvd_severity_moderate');
+        severityColor = '#fbbf24';
+      } else if (severityScore < 0.75) {
+        severityLabel = t('color_harmony_cvd_severity_high');
+        severityColor = '#fb923c';
+      } else {
+        severityLabel = t('color_harmony_cvd_severity_extreme');
+        severityColor = '#f87171';
+      }
+
+      for (var b = 1; b <= bars; b++) {
+        var barEl = document.getElementById('colorHarmonyCvdSevBar' + b);
+        if (barEl) {
+          barEl.style.backgroundColor = b <= filledBars ? severityColor : 'rgba(255,255,255,0.08)';
+        }
+      }
+      var sevTextEl = document.getElementById('colorHarmonyCvdSevText');
+      if (sevTextEl) {
+        sevTextEl.textContent = severityLabel;
+        sevTextEl.style.color = severityColor;
+      }
+    } else if (severityEl) {
+      severityEl.style.display = 'none';
+    }
+  }
+
   // --- Render all ---
   function renderAll() {
     updateProState();
     buildColorPicker();
     renderSelected();
     renderResult();
+    renderColorblind();
   }
 
   // --- Event: color dot click ---
@@ -18809,12 +19394,39 @@ window.saveCurrentOutfit = function() {
   openBtn.addEventListener('click', function() {
     if (typeof triggerHaptic === 'function') triggerHaptic('tap');
     selectedColors = [];
+    _activeCvdType = 'protanopia';
     renderAll();
     modal.classList.remove('hidden');
   });
 
   closeBtn.addEventListener('click', function() { modal.classList.add('hidden'); });
   modal.addEventListener('click', function(e) { if (e.target === modal) modal.classList.add('hidden'); });
+
+  // --- Event: CVD type selector ---
+  document.addEventListener('click', function(e) {
+    var cvdBtn = e.target.closest('.ch-cvd-type-btn');
+    if (!cvdBtn) return;
+    // Only respond if inside colorHarmonyModal
+    if (!modal || modal.classList.contains('hidden')) return;
+    if (typeof triggerHaptic === 'function') triggerHaptic('tap');
+
+    var cvdType = cvdBtn.dataset.cvdType;
+    if (!cvdType || !CVD_MATRICES[cvdType]) return;
+
+    _activeCvdType = cvdType;
+
+    // Update active button state
+    var allBtns = modal.querySelectorAll('.ch-cvd-type-btn');
+    allBtns.forEach(function(b) {
+      if (b.dataset.cvdType === cvdType) {
+        b.classList.add('is-active');
+      } else {
+        b.classList.remove('is-active');
+      }
+    });
+
+    renderColorblind();
+  });
 
   // Expose for external refresh
   window.refreshColorHarmony = renderAll;
@@ -33356,6 +33968,563 @@ applyOfflineState(!navigator.onLine);
       hapticTap(10);          // standard tap for buttons / controls
     }
   }, { passive: true });
+})();
+
+// ===== TREND RADAR MODULE =====
+// Fetches trend data from Wikipedia API, caches 7 days,
+// compares against closet items, renders radar + score.
+(function() {
+  var t = function(k,v) { return typeof window.t === 'function' ? window.t(k,v) : k; };
+  var modal = document.getElementById('trendRadarModal');
+  var openBtn = document.getElementById('trendRadarBtn');
+  var closeBtn = document.getElementById('trendRadarClose');
+  if (!modal || !openBtn) return;
+
+  if (modal.parentElement !== document.body) document.body.appendChild(modal);
+
+  var CACHE_KEY = 'datescan.trendRadar.cache';
+  var CACHE_TTL = 7 * 24 * 60 * 60 * 1000; // 7 days
+  var _trShowAllHave = false;
+  var _trShowAllMiss = false;
+
+  // ── Season helper ──
+  function getSeason() {
+    var m = new Date().getMonth();
+    var y = new Date().getFullYear();
+    if (m >= 2 && m <= 4) return { en: 'Spring', hu: 'Tavasz', de: 'Frühling', year: y };
+    if (m >= 5 && m <= 7) return { en: 'Summer', hu: 'Nyár', de: 'Sommer', year: y };
+    if (m >= 8 && m <= 10) return { en: 'Autumn', hu: 'Ősz', de: 'Herbst', year: y };
+    return { en: 'Winter', hu: 'Tél', de: 'Winter', year: y };
+  }
+
+  // ── Trend categories ──
+  var TREND_CATEGORIES = {
+    tops:       { emoji: '👕', hu: 'Felsők',       en: 'Tops',        de: 'Oberteile',    pattern: /shirt|top|tshirt|blouse|sweater|pullover|hoodie|polo|tank|vest/i },
+    bottoms:    { emoji: '👖', hu: 'Nadrágok',     en: 'Pants',       de: 'Hosen',        pattern: /pants|jeans|trousers|shorts|skirt|chinos|cargo|jogger|legging/i },
+    shoes:      { emoji: '👟', hu: 'Cipők',        en: 'Shoes',       de: 'Schuhe',       pattern: /shoes|sneakers|boots|loafers|sandals|heels|flats|oxford|derby/i },
+    outerwear:  { emoji: '🧥', hu: 'Felsőruházat', en: 'Outerwear',   de: 'Oberbekleidung',pattern: /jacket|coat|blazer|parka|windbreaker|trench|bomber|cardigan/i },
+    accessories:{ emoji: '👜', hu: 'Kiegészítők',  en: 'Accessories', de: 'Accessoires',  pattern: /accessor|watch|belt|scarf|jewelry|ring|necklace|bag|hat|sunglasses|bracelet/i },
+    colors:     { emoji: '🎨', hu: 'Színek',       en: 'Colors',      de: 'Farben',       pattern: /color|colour|hue|palette|tone|shade|tint|pigment/i }
+  };
+  function _trCatLabel(cat) { var lk = (typeof window.getLang === 'function' ? window.getLang() : 'en'); return cat[lk] || cat.en; }
+
+  // ── Hardcoded trend knowledge (baseline, enhanced by Wikipedia) ──
+  var TREND_DB = [
+    { hu:'Bő szabású blézer',      en:'Oversized blazer',       de:'Oversized Blazer',       cat:'outerwear',   keywords:['oversized','blazer','structured'],         relevance:92, descHu:'Nagyon felkapott darab, ami azonnal emeli az összhatást.',               descEn:'Highly popular piece that instantly elevates the overall look.',                descDe:'Ein sehr angesagtes Teil, das den Gesamtlook sofort aufwertet.' },
+    { hu:'Szűk farmer',           en:'Slim jeans',             de:'Slim-Jeans',             cat:'bottoms',     keywords:['slim','jeans','denim','skinny'],           relevance:88, descHu:'Nálad már van — ez idén trendi!',                                       descEn:'You already own these — they\'re trendy this year!',                            descDe:'Du hast sie schon — dieses Jahr sind sie trendy!' },
+    { hu:'Bőr hatású kabát',      en:'Leather-look jacket',    de:'Leder-Look-Jacke',       cat:'outerwear',   keywords:['leather','jacket','faux','moto'],          relevance:85, descHu:'Vagány, modern, sokoldalú.',                                            descEn:'Edgy, modern, versatile.',                                                     descDe:'Cool, modern, vielseitig.' },
+    { hu:'Fehér sneaker',         en:'White sneakers',         de:'Weiße Sneaker',          cat:'shoes',       keywords:['white','sneaker','clean','minimal'],       relevance:90, descHu:'Időtlen klasszikus, mindig trendi.',                                     descEn:'Timeless classic, always trendy.',                                              descDe:'Zeitloser Klassiker, immer im Trend.' },
+    { hu:'Cargo nadrág',          en:'Cargo pants',            de:'Cargohose',              cat:'bottoms',     keywords:['cargo','pants','utility','pocket'],        relevance:78, descHu:'Utility stílus visszatért.',                                             descEn:'Utility style is back.',                                                       descDe:'Der Utility-Stil ist zurück.' },
+    { hu:'Oversized póló',        en:'Oversized t-shirt',      de:'Oversized T-Shirt',      cat:'tops',        keywords:['oversized','tshirt','loose','boxy'],       relevance:82, descHu:'Laza, kényelmes, streetwear vibe.',                                      descEn:'Relaxed, comfortable, streetwear vibe.',                                       descDe:'Lässig, bequem, Streetwear-Vibe.' },
+    { hu:'Chunky sneaker',        en:'Chunky sneakers',        de:'Chunky Sneaker',         cat:'shoes',       keywords:['chunky','sneaker','platform','dad'],       relevance:75, descHu:'Vastag talpú sneaker, még mindig megy.',                                 descEn:'Thick-soled sneakers, still going strong.',                                    descDe:'Dicksohlige Sneaker, immer noch angesagt.' },
+    { hu:'Bomber kabát',          en:'Bomber jacket',          de:'Bomberjacke',            cat:'outerwear',   keywords:['bomber','jacket','aviator','flight'],      relevance:80, descHu:'Retro vibes, modern twist.',                                             descEn:'Retro vibes, modern twist.',                                                   descDe:'Retro-Vibes, moderner Twist.' },
+    { hu:'Lenvászon ing',         en:'Linen shirt',            de:'Leinenhemd',             cat:'tops',        keywords:['linen','shirt','breathable','natural'],    relevance:83, descHu:'Természetes anyag, nyári must-have.',                                    descEn:'Natural fabric, summer must-have.',                                            descDe:'Natürlicher Stoff, Sommer-Must-have.' },
+    { hu:'Selyem nyakkendő',      en:'Silk tie',               de:'Seidenkrawatte',         cat:'accessories', keywords:['silk','tie','necktie','formal'],           relevance:65, descHu:'Elegáns kiegészítő, formális alkalmakra.',                               descEn:'Elegant accessory for formal occasions.',                                      descDe:'Elegantes Accessoire für formelle Anlässe.' },
+    { hu:'Bubblegum pink',        en:'Bubblegum pink',         de:'Bubblegum-Pink',         cat:'colors',      keywords:['pink','bubblegum','pastel','rose'],        relevance:72, descHu:'Merész, fiatalos szín.',                                                 descEn:'Bold, youthful color.',                                                        descDe:'Mutige, jugendliche Farbe.' },
+    { hu:'Selyem nadrág',         en:'Silk trousers',          de:'Seidenhose',             cat:'bottoms',     keywords:['silk','trousers','flowing','wide'],        relevance:68, descHu:'Fényes, selymes hatású nadrágok elérhető megjelenéshez.',                descEn:'Shiny, silky trousers for an approachable look.',                              descDe:'Glänzende, seidige Hosen für einen zugänglichen Look.' },
+    { hu:'Napszemüveg (retro)',    en:'Retro sunglasses',       de:'Retro-Sonnenbrille',     cat:'accessories', keywords:['sunglasses','retro','aviator','round'],    relevance:77, descHu:'Retro formák visszatértek.',                                             descEn:'Retro shapes are back.',                                                       descDe:'Retro-Formen sind zurück.' },
+    { hu:'Garbó pulóver',         en:'Turtleneck sweater',     de:'Rollkragenpullover',     cat:'tops',        keywords:['turtleneck','sweater','roll','neck'],      relevance:70, descHu:'Minimalista elegancia.',                                                  descEn:'Minimalist elegance.',                                                         descDe:'Minimalistische Eleganz.' },
+    { hu:'Chelsea boots',         en:'Chelsea boots',          de:'Chelsea Boots',          cat:'shoes',       keywords:['chelsea','boots','ankle','elastic'],       relevance:86, descHu:'Elegáns, de laza — tökéletes átmenet.',                                  descEn:'Elegant yet relaxed — perfect transition.',                                    descDe:'Elegant und doch lässig — perfekter Übergang.' },
+    { hu:'Halvány kék',           en:'Light blue',             de:'Hellblau',               cat:'colors',      keywords:['blue','light','pastel','sky','baby'],      relevance:74, descHu:'Nyugodt, kifinomult szín.',                                              descEn:'Calm, refined color.',                                                         descDe:'Ruhige, raffinierte Farbe.' },
+    { hu:'Sportos cipzáras',      en:'Sporty zip-up',          de:'Sportlicher Zip-Up',     cat:'tops',        keywords:['zip','sporty','track','athletic'],         relevance:71, descHu:'Athleisure trend folytatódik.',                                           descEn:'Athleisure trend continues.',                                                  descDe:'Athleisure-Trend geht weiter.' },
+    { hu:'Széles nadrág',         en:'Wide leg pants',         de:'Weite Hose',             cat:'bottoms',     keywords:['wide','leg','pants','palazzo','flare'],    relevance:79, descHu:'Bő szárú nadrágok újra divatban.',                                       descEn:'Wide-leg pants are back in fashion.',                                          descDe:'Weite Hosen sind wieder in Mode.' },
+    { hu:'Oversized napszemüveg', en:'Oversized sunglasses',   de:'Oversized-Sonnenbrille', cat:'accessories', keywords:['oversized','sunglasses','shield','maxi'],  relevance:73, descHu:'Statement kiegészítő.',                                                  descEn:'Statement accessory.',                                                         descDe:'Statement-Accessoire.' },
+    { hu:'Nyilatkozat nyaklánc',  en:'Statement necklace',     de:'Statement-Kette',        cat:'accessories', keywords:['necklace','statement','chain','layered'],  relevance:69, descHu:'Egyedi, személyes stílus kiegészítő.',                                   descEn:'Unique, personal style accessory.',                                            descDe:'Einzigartiges, persönliches Stil-Accessoire.' },
+    { hu:'Khaki szín',            en:'Khaki color',            de:'Khaki-Farbe',            cat:'colors',      keywords:['khaki','olive','earth','military','green'],relevance:76, descHu:'Földszínek még mindig erősek.',                                           descEn:'Earth tones still going strong.',                                               descDe:'Erdtöne sind immer noch stark.' },
+    { hu:'Loafer cipő',           en:'Loafer shoes',           de:'Loafer-Schuhe',          cat:'shoes',       keywords:['loafer','slip','penny','moccasin'],        relevance:81, descHu:'Kényelmes elegancia, smart casual.',                                      descEn:'Comfortable elegance, smart casual.',                                          descDe:'Komfortable Eleganz, Smart Casual.' },
+    { hu:'Kötött kardigán',       en:'Knit cardigan',          de:'Strickjacke',            cat:'outerwear',   keywords:['cardigan','knit','cozy','button'],         relevance:67, descHu:'Kényelmes rétegezés.',                                                    descEn:'Cozy layering.',                                                               descDe:'Gemütliches Layering.' },
+    { hu:'Sportos shortok',       en:'Athletic shorts',        de:'Sport-Shorts',           cat:'bottoms',     keywords:['shorts','athletic','sport','running'],     relevance:66, descHu:'Nyári sportoláshoz és hétköznapra.',                                      descEn:'For summer sports and everyday wear.',                                         descDe:'Für Sommersport und Alltag.' },
+    { hu:'Bézs/Camel tónus',     en:'Beige/Camel tone',       de:'Beige/Camel-Ton',        cat:'colors',      keywords:['beige','camel','tan','neutral','sand'],    relevance:84, descHu:'Klasszikus neutrals, mindig működik.',                                   descEn:'Classic neutrals, always works.',                                               descDe:'Klassische Neutraltöne, funktionieren immer.' },
+  ];
+  function _trName(trend) { var lk = (typeof window.getLang === 'function' ? window.getLang() : 'en'); return trend[lk] || trend.en; }
+  function _trDesc(trend) { var lk = (typeof window.getLang === 'function' ? window.getLang() : 'en'); var k = 'desc' + lk.charAt(0).toUpperCase() + lk.slice(1); return trend[k] || trend.descEn; }
+
+  // ── Wikipedia API fetch ──
+  async function fetchWikiTrends() {
+    var cached = null;
+    try {
+      var raw = localStorage.getItem(CACHE_KEY);
+      if (raw) {
+        cached = JSON.parse(raw);
+        if (cached && cached.ts && (Date.now() - cached.ts < CACHE_TTL)) {
+          return cached.data;
+        }
+      }
+    } catch(e) {}
+
+    var season = getSeason();
+    var queries = [
+      season.year + ' in fashion',
+      'Fashion trend ' + season.en.toLowerCase() + ' ' + season.year,
+      '2020s in fashion'
+    ];
+
+    var extraKeywords = [];
+    for (var q = 0; q < queries.length; q++) {
+      try {
+        var url = 'https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=' +
+                  encodeURIComponent(queries[q]) +
+                  '&srlimit=3&format=json&origin=*';
+        var resp = await fetch(url, { signal: AbortSignal.timeout(8000) });
+        var json = await resp.json();
+        if (json.query && json.query.search) {
+          json.query.search.forEach(function(r) {
+            var snippet = (r.snippet || '').replace(/<[^>]+>/g, ' ').toLowerCase();
+            // Extract fashion-relevant words
+            var words = snippet.match(/\b(oversized|slim|wide[\s-]leg|cargo|leather|denim|linen|silk|velvet|corduroy|satin|cashmere|knit|chunky|platform|retro|vintage|minimalist|maximalist|layered|cropped|flared|pleated|tailored|relaxed|baggy|fitted|structured|deconstructed|sustainable|pastel|neon|earth[\s-]tone|monochrome|neutral|bold|muted|sneaker|loafer|boot|blazer|cardigan|hoodie|trench|bomber|parka|turtleneck|polo|tank|vest|shorts|jogger|chino|oxford)\b/gi);
+            if (words) extraKeywords = extraKeywords.concat(words.map(function(w) { return w.toLowerCase(); }));
+          });
+        }
+      } catch(e) { _dsLog('[TrendRadar] Wiki fetch error:', e); }
+    }
+
+    // Deduplicate
+    extraKeywords = [...new Set(extraKeywords)];
+
+    // Enhance TREND_DB with wiki data
+    if (extraKeywords.length > 0) {
+      TREND_DB.forEach(function(trend) {
+        var boost = 0;
+        trend.keywords.forEach(function(kw) {
+          if (extraKeywords.indexOf(kw.toLowerCase()) !== -1) boost += 5;
+        });
+        trend.relevance = Math.min(99, trend.relevance + boost);
+        trend.wikiConfirmed = boost > 0;
+      });
+    }
+
+    var result = { trends: TREND_DB, wikiKeywords: extraKeywords, season: season };
+
+    try {
+      localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: result }));
+    } catch(e) {}
+
+    return result;
+  }
+
+  // ── Get closet items ──
+  function getClosetItems() {
+    var outfits = (window.userCloset && Array.isArray(window.userCloset.outfits)) ? window.userCloset.outfits : [];
+    return outfits;
+  }
+
+  // ── Match closet items to trends ──
+  function matchTrends(trends, closetItems) {
+    var matched = [];
+    var missing = [];
+
+    trends.forEach(function(trend) {
+      var found = false;
+      for (var i = 0; i < closetItems.length; i++) {
+        var item = closetItems[i];
+        var searchText = ((item.type || '') + ' ' + (item.name || '') + ' ' + (item.color || '') + ' ' +
+                          ((item.meta && item.meta.colors) ? item.meta.colors.join(' ') : '')).toLowerCase();
+        var matchCount = 0;
+        trend.keywords.forEach(function(kw) {
+          if (searchText.indexOf(kw.toLowerCase()) !== -1) matchCount++;
+        });
+        if (matchCount >= 1) {
+          found = true;
+          matched.push({ trend: trend, item: item, matchStrength: matchCount });
+          break;
+        }
+      }
+      if (!found) missing.push(trend);
+    });
+
+    return { matched: matched, missing: missing };
+  }
+
+  // ── Category scores ──
+  function calcCategoryScores(trends, closetItems) {
+    var scores = {};
+    Object.keys(TREND_CATEGORIES).forEach(function(catKey) {
+      var catTrends = trends.filter(function(t) { return t.cat === catKey; });
+      var catItems = closetItems.filter(function(item) {
+        var cat = TREND_CATEGORIES[catKey];
+        return cat.pattern.test((item.type || '') + ' ' + (item.name || ''));
+      });
+      var maxScore = catTrends.length || 1;
+      var earnedScore = 0;
+      catTrends.forEach(function(tr) {
+        for (var i = 0; i < closetItems.length; i++) {
+          var searchText = ((closetItems[i].type || '') + ' ' + (closetItems[i].name || '') + ' ' + (closetItems[i].color || '')).toLowerCase();
+          var hits = 0;
+          tr.keywords.forEach(function(kw) { if (searchText.indexOf(kw) !== -1) hits++; });
+          if (hits >= 1) { earnedScore++; break; }
+        }
+      });
+      scores[catKey] = Math.round((earnedScore / maxScore) * 100);
+    });
+    return scores;
+  }
+
+  // ── Draw score ring ──
+  function drawScoreRing(score) {
+    var c = document.getElementById('trScoreRing');
+    if (!c) return;
+    var ctx = c.getContext('2d');
+    var dpr = window.devicePixelRatio || 1;
+    c.width = 140 * dpr; c.height = 140 * dpr;
+    c.style.width = '140px'; c.style.height = '140px';
+    ctx.scale(dpr, dpr);
+
+    var cx = 70, cy = 70, r = 58, lw = 8;
+    var startAngle = -Math.PI / 2;
+    var endAngle = startAngle + (2 * Math.PI * score / 100);
+
+    // Background ring
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = lw;
+    ctx.stroke();
+
+    // Score ring
+    if (score > 0) {
+      var grad = ctx.createLinearGradient(0, 0, 140, 140);
+      grad.addColorStop(0, '#fbbf24');
+      grad.addColorStop(1, '#f59e0b');
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, startAngle, endAngle);
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = lw;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+    }
+  }
+
+  // ── Draw radar chart ──
+  function drawRadar(scores) {
+    var c = document.getElementById('trRadarCanvas');
+    if (!c) return;
+    var ctx = c.getContext('2d');
+    var dpr = window.devicePixelRatio || 1;
+    c.width = 280 * dpr; c.height = 260 * dpr;
+    c.style.width = '280px'; c.style.height = '260px';
+    ctx.scale(dpr, dpr);
+
+    var cats = Object.keys(TREND_CATEGORIES);
+    var cx = 140, cy = 125, maxR = 90;
+    var n = cats.length;
+    var angleStep = (2 * Math.PI) / n;
+    var startAngle = -Math.PI / 2;
+
+    function getPoint(i, val) {
+      var angle = startAngle + i * angleStep;
+      var r = (val / 100) * maxR;
+      return { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) };
+    }
+
+    // Grid levels
+    [0.25, 0.5, 0.75, 1.0].forEach(function(lvl) {
+      ctx.beginPath();
+      for (var i = 0; i <= n; i++) {
+        var angle = startAngle + (i % n) * angleStep;
+        var r = lvl * maxR;
+        var x = cx + r * Math.cos(angle);
+        var y = cy + r * Math.sin(angle);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    });
+
+    // Axis lines
+    for (var i = 0; i < n; i++) {
+      var p = getPoint(i, 100);
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(p.x, p.y);
+      ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    // Data polygon
+    ctx.beginPath();
+    cats.forEach(function(cat, i) {
+      var p = getPoint(i, scores[cat] || 0);
+      if (i === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+    });
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(236, 72, 153, 0.15)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(236, 72, 153, 0.7)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Data dots
+    cats.forEach(function(cat, i) {
+      var p = getPoint(i, scores[cat] || 0);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 3, 0, 2 * Math.PI);
+      ctx.fillStyle = '#ec4899';
+      ctx.fill();
+    });
+
+    // Labels
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '600 11px Inter, sans-serif';
+    ctx.fillStyle = 'rgba(209, 213, 219, 0.8)';
+    cats.forEach(function(cat, i) {
+      var angle = startAngle + i * angleStep;
+      var lr = maxR + 22;
+      var lx = cx + lr * Math.cos(angle);
+      var ly = cy + lr * Math.sin(angle);
+      ctx.fillText(_trCatLabel(TREND_CATEGORIES[cat]), lx, ly);
+    });
+  }
+
+  // ── Render a trend item row ──
+  function renderTrendRow(trend, matchItem, showBar) {
+    var row = document.createElement('div');
+    row.className = 'rounded-xl border border-white/5 bg-white/[0.03] p-3';
+    var matchPct = matchItem ? Math.min(100, matchItem.matchStrength * 33) : 0;
+    var catObj = TREND_CATEGORIES[trend.cat] || {};
+    var tagColors = trend.wikiConfirmed
+      ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+      : 'bg-white/5 text-gray-400 border-white/10';
+
+    row.innerHTML = '<div class="flex items-start gap-3">' +
+      '<div class="w-9 h-9 rounded-lg bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-lg shrink-0">' + (catObj.emoji || '🔥') + '</div>' +
+      '<div class="flex-1 min-w-0">' +
+        '<div class="flex items-center gap-2 mb-0.5">' +
+          '<span class="font-semibold text-sm text-white truncate">' + _trName(trend) + '</span>' +
+          '<span class="px-1.5 py-0.5 rounded text-[8px] font-bold border ' + tagColors + ' shrink-0">' + _trCatLabel(catObj) + '</span>' +
+        '</div>' +
+        '<p class="text-[11px] text-gray-400 leading-relaxed mb-1.5">' + _trDesc(trend) + '</p>' +
+        (showBar ? (
+          '<div class="flex items-center gap-2">' +
+            '<div class="flex-1 h-1 rounded-full bg-white/10 overflow-hidden"><div class="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-700" style="width:' + matchPct + '%"></div></div>' +
+            '<span class="text-[10px] font-bold text-emerald-400 tabular-nums">' + matchPct + '%</span>' +
+          '</div>'
+        ) : (
+          '<div class="flex items-center gap-2">' +
+            '<div class="flex-1 h-1 rounded-full bg-white/10 overflow-hidden"><div class="h-full rounded-full bg-gradient-to-r from-brand-500 to-purple-500 transition-all duration-700" style="width:' + trend.relevance + '%"></div></div>' +
+            '<span class="text-[10px] font-bold text-brand-400 tabular-nums">' + trend.relevance + '%</span>' +
+          '</div>'
+        )) +
+      '</div>' +
+    '</div>';
+    return row;
+  }
+
+  // ── Render category breakdown ──
+  function renderCatBreakdown(catScores) {
+    var container = document.getElementById('trCatBreakdown');
+    if (!container) return;
+    container.innerHTML = '';
+
+    Object.keys(TREND_CATEGORIES).forEach(function(catKey) {
+      var cat = TREND_CATEGORIES[catKey];
+      var score = catScores[catKey] || 0;
+      var barColor = score >= 70 ? 'from-emerald-500 to-teal-500'
+                   : score >= 40 ? 'from-amber-500 to-orange-500'
+                   : 'from-brand-500 to-purple-500';
+
+      var div = document.createElement('div');
+      div.innerHTML = '<div class="flex items-center justify-between mb-1">' +
+        '<span class="text-sm font-semibold text-white flex items-center gap-2">' +
+          '<span class="text-base">' + cat.emoji + '</span>' + _trCatLabel(cat) +
+        '</span>' +
+        '<span class="text-xs font-bold tabular-nums ' + (score >= 70 ? 'text-emerald-400' : score >= 40 ? 'text-amber-400' : 'text-brand-400') + '">' + score + '%</span>' +
+      '</div>' +
+      '<div class="h-1.5 rounded-full bg-white/10 overflow-hidden">' +
+        '<div class="h-full rounded-full bg-gradient-to-r ' + barColor + ' transition-all duration-700" style="width:' + score + '%"></div>' +
+      '</div>';
+      container.appendChild(div);
+    });
+  }
+
+  // ── Tab switching ──
+  var tabs = modal.querySelectorAll('.tr-tab');
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      var target = tab.getAttribute('data-tr-tab');
+      tabs.forEach(function(t) {
+        t.classList.remove('bg-brand-500/20', 'text-brand-300', 'border-brand-500/30');
+        t.classList.add('bg-white/5', 'text-gray-400', 'border-transparent');
+      });
+      tab.classList.remove('bg-white/5', 'text-gray-400', 'border-transparent');
+      tab.classList.add('bg-brand-500/20', 'text-brand-300', 'border-brand-500/30');
+      modal.querySelectorAll('.tr-panel').forEach(function(p) { p.classList.add('hidden'); });
+      var panel = document.getElementById(target === 'overview' ? 'trOverview' : target === 'trending' ? 'trTrending' : 'trMissing');
+      if (panel) panel.classList.remove('hidden');
+    });
+  });
+
+  // ── Main render ──
+  async function renderTrendRadar() {
+    var data = await fetchWikiTrends();
+    var trends = data.trends || [];
+    var season = data.season || getSeason();
+    var closetItems = getClosetItems();
+    var result = matchTrends(trends, closetItems);
+    var catScores = calcCategoryScores(trends, closetItems);
+
+    // Season label
+    var langKey = (typeof window.getLang === 'function' ? window.getLang() : 'en');
+    var seasonLabel = document.getElementById('trSeasonLabel');
+    if (seasonLabel) {
+      var sName = langKey === 'hu' ? season.hu : langKey === 'de' ? season.de : season.en;
+      seasonLabel.textContent = sName + ' ' + season.year;
+    }
+
+    // Overall score
+    var totalCats = Object.keys(catScores).length || 1;
+    var totalScore = Math.round(Object.values(catScores).reduce(function(a, b) { return a + b; }, 0) / totalCats);
+    var scoreEl = document.getElementById('trScoreValue');
+    if (scoreEl) scoreEl.textContent = totalScore;
+    drawScoreRing(totalScore);
+
+    // Score message
+    var msgEl = document.getElementById('trScoreMsg');
+    if (msgEl) {
+      if (closetItems.length === 0) {
+        msgEl.textContent = langKey === 'hu' ? 'Szekrényed üres. Tölts fel ruhákat!' : langKey === 'de' ? 'Dein Schrank ist leer. Lade Kleidung hoch!' : 'Your closet is empty. Add items!';
+      } else if (totalScore >= 75) {
+        msgEl.textContent = langKey === 'hu' ? 'Szuper! Nagyon trendiesen öltözöl!' : langKey === 'de' ? 'Super! Du kleidest dich sehr trendig!' : 'Awesome! You dress very trendy!';
+      } else if (totalScore >= 40) {
+        msgEl.textContent = langKey === 'hu' ? 'Jó irány, néhány divatos darab hiányzik.' : langKey === 'de' ? 'Gute Richtung, einige trendige Teile fehlen.' : 'Good direction, some trendy pieces missing.';
+      } else {
+        msgEl.textContent = langKey === 'hu' ? 'Több trendi darabra lenne szükség.' : langKey === 'de' ? 'Mehr trendige Teile wären nötig.' : 'More trendy pieces needed.';
+      }
+    }
+
+    // Radar chart
+    drawRadar(catScores);
+
+    // Trend counts
+    var countHave = document.getElementById('trCountHave');
+    var countMiss = document.getElementById('trCountMissing');
+    if (countHave) countHave.textContent = result.matched.length;
+    if (countMiss) countMiss.textContent = result.missing.length;
+
+    // Featured card
+    var sortedMissing = result.missing.slice().sort(function(a, b) { return b.relevance - a.relevance; });
+    var featured = sortedMissing[0] || trends[0];
+    if (featured) {
+      var fName = document.getElementById('trFeaturedName');
+      var fDesc = document.getElementById('trFeaturedDesc');
+      var fBar = document.getElementById('trFeaturedBar');
+      var fPct = document.getElementById('trFeaturedPct');
+      var fTags = document.getElementById('trFeaturedTags');
+      var fMeta = document.getElementById('trFeaturedMeta');
+
+      if (fName) fName.textContent = _trName(featured);
+      if (fDesc) fDesc.textContent = _trDesc(featured);
+      if (fBar) fBar.style.width = featured.relevance + '%';
+      if (fPct) fPct.textContent = featured.relevance + '%';
+
+      if (fTags) {
+        fTags.innerHTML = '';
+        var catObj = TREND_CATEGORIES[featured.cat] || {};
+        fTags.innerHTML = '<span class="px-1.5 py-0.5 rounded text-[8px] font-bold bg-brand-500/15 text-brand-400 border border-brand-500/30">' + _trCatLabel(catObj) + '</span>';
+        if (featured.wikiConfirmed) {
+          var confirmLabel = langKey === 'hu' ? '✓ Megerősítve' : langKey === 'de' ? '✓ Bestätigt' : '✓ Confirmed';
+          fTags.innerHTML += '<span class="px-1.5 py-0.5 rounded text-[8px] font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">' + confirmLabel + '</span>';
+        }
+      }
+      if (fMeta) {
+        var priceStr = langKey === 'hu' ? '10 000 – 25 000 Ft' : langKey === 'de' ? '25 – 65 €' : '$30 – $70';
+        var storeStr = langKey === 'hu' ? 'Mango, Zara, H&M, helyi áruházak' : langKey === 'de' ? 'Mango, Zara, H&M, lokale Geschäfte' : 'Mango, Zara, H&M, local stores';
+        fMeta.innerHTML = '💰 <span class="text-gray-400">' + priceStr + '</span> &nbsp;|&nbsp; 🏬 <span class="text-gray-400">' + storeStr + '</span>';
+      }
+    }
+
+    // Category breakdown
+    renderCatBreakdown(catScores);
+
+    // Trending panel (matched items)
+    var haveList = document.getElementById('trHaveList');
+    var haveEmpty = document.getElementById('trHaveEmpty');
+    var haveMore = document.getElementById('trHaveMore');
+    if (haveList) {
+      haveList.innerHTML = '';
+      var matchedSorted = result.matched.slice().sort(function(a, b) { return b.trend.relevance - a.trend.relevance; });
+      var showHave = _trShowAllHave ? matchedSorted : matchedSorted.slice(0, 5);
+      showHave.forEach(function(m) {
+        haveList.appendChild(renderTrendRow(m.trend, m, true));
+      });
+      if (matchedSorted.length === 0) {
+        haveEmpty.classList.remove('hidden');
+        haveMore.classList.add('hidden');
+      } else {
+        haveEmpty.classList.add('hidden');
+        if (matchedSorted.length > 5 && !_trShowAllHave) {
+          haveMore.classList.remove('hidden');
+          haveMore.textContent = (langKey === 'hu' ? 'Összes trendi darab megtekintése (' : langKey === 'de' ? 'Alle trendigen Teile anzeigen (' : 'Show all trending items (') + matchedSorted.length + ') →';
+        } else {
+          haveMore.classList.add('hidden');
+        }
+      }
+    }
+
+    // Missing panel
+    var missList = document.getElementById('trMissList');
+    var missEmpty = document.getElementById('trMissEmpty');
+    var missMore = document.getElementById('trMissMore');
+    if (missList) {
+      missList.innerHTML = '';
+      var showMiss = _trShowAllMiss ? sortedMissing : sortedMissing.slice(0, 5);
+      showMiss.forEach(function(tr) {
+        missList.appendChild(renderTrendRow(tr, null, false));
+      });
+      if (sortedMissing.length === 0) {
+        missEmpty.classList.remove('hidden');
+        missMore.classList.add('hidden');
+      } else {
+        missEmpty.classList.add('hidden');
+        if (sortedMissing.length > 5 && !_trShowAllMiss) {
+          missMore.classList.remove('hidden');
+          missMore.textContent = (langKey === 'hu' ? 'Összes hiányzó trend megtekintése (' : langKey === 'de' ? 'Alle fehlenden Trends anzeigen (' : 'Show all missing trends (') + sortedMissing.length + ') →';
+        } else {
+          missMore.classList.add('hidden');
+        }
+      }
+    }
+
+    // Cache info
+    var cacheInfo = document.getElementById('trCacheInfo');
+    if (cacheInfo) {
+      try {
+        var raw = localStorage.getItem(CACHE_KEY);
+        if (raw) {
+          var cData = JSON.parse(raw);
+          var cacheDate = new Date(cData.ts);
+          var expDate = new Date(cData.ts + CACHE_TTL);
+          var updLabel = langKey === 'hu' ? 'Frissítve: ' : langKey === 'de' ? 'Aktualisiert: ' : 'Updated: ';
+          var expLabel = langKey === 'hu' ? 'Lejár: ' : langKey === 'de' ? 'Läuft ab: ' : 'Expires: ';
+          var wkLabel = langKey === 'hu' ? ' Wikipedia kulcsszó' : langKey === 'de' ? ' Wikipedia-Schlüsselwörter' : ' Wikipedia keywords';
+          cacheInfo.textContent = updLabel +
+            cacheDate.toLocaleDateString() + ' — ' +
+            expLabel + expDate.toLocaleDateString() +
+            (data.wikiKeywords && data.wikiKeywords.length > 0 ? ' (' + data.wikiKeywords.length + wkLabel + ')' : '');
+        }
+      } catch(e) {}
+    }
+  }
+
+  // ── Show More buttons ──
+  var haveMoreBtn = document.getElementById('trHaveMore');
+  var missMoreBtn = document.getElementById('trMissMore');
+  if (haveMoreBtn) haveMoreBtn.addEventListener('click', function() { _trShowAllHave = true; renderTrendRadar(); });
+  if (missMoreBtn) missMoreBtn.addEventListener('click', function() { _trShowAllMiss = true; renderTrendRadar(); });
+
+  // ── Open / Close ──
+  openBtn.addEventListener('click', function() {
+    _trShowAllHave = false;
+    _trShowAllMiss = false;
+    modal.classList.remove('hidden');
+    renderTrendRadar();
+  });
+
+  if (closeBtn) closeBtn.addEventListener('click', function() { modal.classList.add('hidden'); });
+  modal.addEventListener('click', function(e) { if (e.target === modal) modal.classList.add('hidden'); });
 })();
 </script>
 
