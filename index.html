@@ -1487,6 +1487,150 @@ window._dsLog = function() { if (window.__DS_DEBUG) console.log.apply(console, a
     font-size: 13px;
   }
 
+  /* ===== Style DNA Deep — Radar / Pie / Trend / Compatibility ===== */
+  .dna-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 12px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 12px;
+    padding: 3px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .dna-tab {
+    flex: 1;
+    padding: 7px 4px;
+    border-radius: 10px;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.45);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+  .dna-tab:hover { color: rgba(255,255,255,0.7); }
+  .dna-tab.active {
+    background: linear-gradient(135deg, rgba(168,85,247,0.3), rgba(236,72,153,0.2));
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(168,85,247,0.15);
+  }
+  .dna-panel { display: none; }
+  .dna-panel.active { display: block; animation: dnaPanelIn 0.25s ease-out; }
+  @keyframes dnaPanelIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .dna-chart-wrap {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .dna-chart-wrap canvas {
+    max-width: 100%;
+    height: auto;
+  }
+  .dna-radar-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+  }
+  .dna-radar-center .arch-icon { font-size: 22px; }
+  .dna-radar-center .arch-name {
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.7);
+    margin-top: 2px;
+  }
+  .dna-compat-list { display: flex; flex-direction: column; gap: 8px; }
+  .dna-compat-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .dna-compat-label {
+    width: 80px;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.6);
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .dna-compat-bar-track {
+    flex: 1;
+    height: 8px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .dna-compat-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.6s ease;
+  }
+  .dna-compat-pct {
+    width: 36px;
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.7);
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .dna-trend-empty {
+    text-align: center;
+    padding: 20px 8px;
+    color: rgba(255,255,255,0.35);
+    font-size: 12px;
+  }
+  .dna-pie-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    margin-top: 8px;
+    justify-content: center;
+  }
+  .dna-pie-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    color: rgba(255,255,255,0.6);
+  }
+  .dna-pie-swatch {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.15);
+    flex-shrink: 0;
+  }
+  .dna-section-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(168,85,247,0.5);
+    margin-bottom: 8px;
+  }
+  .dna-compat-summary {
+    background: linear-gradient(135deg, rgba(168,85,247,0.1), rgba(236,72,153,0.06));
+    border: 1px solid rgba(168,85,247,0.2);
+    border-radius: 12px;
+    padding: 10px 12px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.5;
+  }
+
   /* Vibe Check — corner badge overlays so the date number / score stay readable */
   .scorecal-vibe-plus {
     position: absolute;
@@ -2176,6 +2320,128 @@ window._dsLog = function() { if (window.__DS_DEBUG) console.log.apply(console, a
   }
   .level-tier-icon--diamond {
     box-shadow: 0 0 32px rgba(185,242,255,0.5), 0 0 64px rgba(123,104,238,0.2), inset 0 1px 0 rgba(255,255,255,0.3);
+  }
+
+  /* ===== Vibe Deep: Real-time Overlay + Before/After + History ===== */
+  .vai-vibe-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0;
+    transition: opacity 0.3s ease, box-shadow 0.5s ease;
+  }
+  .vai-vibe-overlay.active { opacity: 1; }
+  .vai-vibe-overlay.tier-elite   { box-shadow: inset 0 0 30px rgba(168,85,247,0.5), inset 0 0 60px rgba(236,72,153,0.3); }
+  .vai-vibe-overlay.tier-high    { box-shadow: inset 0 0 25px rgba(168,85,247,0.35), inset 0 0 50px rgba(236,72,153,0.2); }
+  .vai-vibe-overlay.tier-mid     { box-shadow: inset 0 0 20px rgba(236,72,153,0.25), inset 0 0 40px rgba(244,114,182,0.15); }
+  .vai-vibe-overlay.tier-low     { box-shadow: inset 0 0 18px rgba(251,146,60,0.3), inset 0 0 36px rgba(251,191,36,0.15); }
+  .vai-vibe-overlay.tier-rough   { box-shadow: inset 0 0 16px rgba(239,68,68,0.3), inset 0 0 32px rgba(251,146,60,0.15); }
+  .vai-vibe-tier-label {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 3px 10px;
+    border-radius: 999px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    white-space: nowrap;
+    z-index: 6;
+    pointer-events: none;
+  }
+  .vai-vibe-tier-label.tier-elite { background: rgba(168,85,247,0.3); color: #e9d5ff; border: 1px solid rgba(168,85,247,0.5); }
+  .vai-vibe-tier-label.tier-high  { background: rgba(236,72,153,0.25); color: #fce7f3; border: 1px solid rgba(236,72,153,0.4); }
+  .vai-vibe-tier-label.tier-mid   { background: rgba(244,114,182,0.2); color: #fce7f3; border: 1px solid rgba(244,114,182,0.3); }
+  .vai-vibe-tier-label.tier-low   { background: rgba(251,146,60,0.25); color: #fed7aa; border: 1px solid rgba(251,146,60,0.4); }
+  .vai-vibe-tier-label.tier-rough { background: rgba(239,68,68,0.25); color: #fecaca; border: 1px solid rgba(239,68,68,0.4); }
+
+  /* Before/After comparison */
+  .vai-before-after {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .vai-ba-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+  }
+  .vai-ba-card .vai-ba-label {
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 6px;
+  }
+  .vai-ba-card .vai-ba-score {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+  }
+  .vai-ba-card .vai-ba-arch {
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 4px;
+    line-height: 1.3;
+  }
+  .vai-ba-card.after-card {
+    border-color: rgba(236,72,153,0.2);
+    background: rgba(236,72,153,0.06);
+  }
+  .vai-ba-card.after-card .vai-ba-label { color: rgba(236,72,153,0.6); }
+  .vai-ba-delta {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 0;
+  }
+  .vai-ba-delta.positive { color: #34d399; }
+  .vai-ba-delta.negative { color: #f87171; }
+  .vai-ba-delta.neutral  { color: #9ca3af; }
+
+  /* Vibe History chart section */
+  .vai-history-section {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .vai-history-title {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(236,72,153,0.5);
+    margin-bottom: 8px;
+  }
+  .vai-history-empty {
+    text-align: center;
+    padding: 16px 8px;
+    color: rgba(255,255,255,0.3);
+    font-size: 11px;
+  }
+  .vai-history-canvas-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .vai-history-canvas-wrap canvas {
+    max-width: 100%;
+    height: auto;
   }
 </style>
 
@@ -3076,25 +3342,23 @@ if (window.__DS_IS_ANDROID_APP) {
   #chatModeToggle {
     position: relative;
   }
-  /* Sliding pill indicator behind the active tab */
-  #chatModeToggle::before {
-    content: '';
+  /* Sliding pill indicator behind the active tab — real DOM element
+     sized dynamically by JS to match the active button's width. */
+  #chatModePill {
     position: absolute;
     top: 3px;
     left: 3px;
-    width: calc(50% - 3px);
     height: calc(100% - 6px);
     border-radius: 9999px;
     background: linear-gradient(135deg, rgba(147,51,234,0.55), rgba(168,85,247,0.45));
     box-shadow: 0 0 10px rgba(147,51,234,0.35), inset 0 1px 0 rgba(255,255,255,0.1);
-    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), background 0.35s ease, box-shadow 0.35s ease;
+    transition: left 0.35s cubic-bezier(0.4,0,0.2,1), width 0.35s cubic-bezier(0.4,0,0.2,1), background 0.35s ease, box-shadow 0.35s ease;
     z-index: 0;
     pointer-events: none;
-    will-change: transform;
+    will-change: left, width;
   }
-  /* Shopping mode: pill slides to the right AND turns gold */
-  #chatModeToggle.shopping-toggle::before {
-    transform: translateX(100%);
+  /* Shopping mode: pill turns gold */
+  #chatModePill.shopping-pill {
     background: linear-gradient(135deg, rgba(245,158,11,0.55), rgba(217,119,6,0.45));
     box-shadow: 0 0 10px rgba(245,158,11,0.35), inset 0 1px 0 rgba(255,255,255,0.1);
   }
@@ -5018,6 +5282,10 @@ if (window.__DS_IS_ANDROID_APP) {
                     <div class="relative w-full h-full rounded-full overflow-hidden bg-black">
                       <video id="vai-webcam" autoplay playsinline muted class="w-full h-full block" style="aspect-ratio: 1/1; object-fit: cover; transform: scaleX(-1);"></video>
 
+                      <!-- Real-time vibe overlay — color-coded border that pulses based on live analysis -->
+                      <div id="vai-vibe-overlay" class="vai-vibe-overlay"></div>
+                      <div id="vai-vibe-tier-label" class="vai-vibe-tier-label" style="display:none"></div>
+
                       <!-- Reflective glass sheen (diagonal highlight) -->
                       <div class="absolute inset-0 vai-mirror-sheen pointer-events-none rounded-full"></div>
 
@@ -5205,6 +5473,29 @@ if (window.__DS_IS_ANDROID_APP) {
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                   <span data-i18n="vibe_run_again">Run again</span>
                 </button>
+              </div>
+
+              <!-- Before/After Comparison -->
+              <div id="vai-before-after" class="vai-before-after" style="display:none">
+                <div class="vai-ba-card">
+                  <div class="vai-ba-label" id="vai-ba-before-label"></div>
+                  <div class="vai-ba-score" id="vai-ba-before-score">—</div>
+                  <div class="vai-ba-arch" id="vai-ba-before-arch"></div>
+                </div>
+                <div class="vai-ba-card after-card">
+                  <div class="vai-ba-label" id="vai-ba-after-label"></div>
+                  <div class="vai-ba-score" id="vai-ba-after-score">—</div>
+                  <div class="vai-ba-arch" id="vai-ba-after-arch"></div>
+                </div>
+                <div class="vai-ba-delta" id="vai-ba-delta"></div>
+              </div>
+
+              <!-- Vibe History Chart -->
+              <div class="vai-history-section">
+                <div class="vai-history-title" id="vai-history-title"></div>
+                <div id="vai-history-content">
+                  <div class="vai-history-empty" id="vai-history-empty"></div>
+                </div>
               </div>
             </div>
 
@@ -6441,8 +6732,13 @@ if (window.__DS_IS_ANDROID_APP) {
               <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 2a7 7 0 017 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 017-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
               <span data-i18n="memory_section_title">Style Preferences</span>
             </button>
+            <button id="goalsToggleBtn" type="button" class="shrink-0 text-[9px] sm:text-[10px] font-sans font-bold uppercase tracking-widest text-emerald-300 border border-emerald-500/30 bg-emerald-500/10 px-2 sm:px-2.5 py-0.5 rounded-full whitespace-nowrap text-center hover:bg-emerald-500/20 transition-colors flex items-center gap-1 cursor-pointer" title="Style Goals">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              <span data-i18n="goals_btn_label">Goals</span>
+            </button>
             <!-- Chat Mode Toggle: Style Coach / Shopping Concierge -->
             <div id="chatModeToggle" class="shrink-0 flex items-center rounded-full border border-white/10 bg-white/5 p-[3px] gap-0.5 transition-all duration-300">
+              <div id="chatModePill"></div>
               <button id="chatModeCoach" type="button" class="chat-mode-btn active text-[9px] sm:text-[10px] font-sans font-bold uppercase tracking-widest px-2 sm:px-3 py-1 rounded-full whitespace-nowrap text-center cursor-pointer" data-i18n="coach_mode_label">Style Coach</button>
               <button id="chatModeShopping" type="button" class="chat-mode-btn text-[9px] sm:text-[10px] font-sans font-bold uppercase tracking-widest px-2 sm:px-3 py-1 rounded-full whitespace-nowrap text-center cursor-pointer relative" data-i18n="shop_mode_label">Shopping</button>
             </div>
@@ -6464,6 +6760,74 @@ if (window.__DS_IS_ANDROID_APP) {
           </div>
           <svg class="w-4 h-4 text-gray-500 group-hover:text-pink-300 transition-colors shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
         </button>
+
+        <!-- Weekly Summary Card -->
+        <div id="weeklySummaryCard" class="relative z-10 w-full rounded-2xl border border-blue-500/20 bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-purple-500/10 p-4 mb-3 hidden">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-bold text-blue-200 flex items-center gap-1.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span data-i18n="weekly_summary_card_label">Weekly Summary</span>
+            </h3>
+            <button id="weeklySummaryClose" type="button" class="text-gray-400 hover:text-white transition-colors">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <div id="weeklySummaryContent" class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs text-gray-300">
+            <!-- Dynamically populated -->
+          </div>
+          <button id="weeklySummaryAsk" type="button" class="mt-3 w-full text-center text-xs font-semibold text-blue-300 hover:text-blue-200 py-1.5 rounded-xl bg-blue-500/10 border border-blue-500/20 hover:bg-blue-500/20 transition-all" data-i18n="weekly_summary_ask">Ask Coach about my week</button>
+        </div>
+
+        <!-- Style Goals Modal -->
+        <div id="goalsModal" class="relative z-10 hidden mb-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-4 transition-all duration-300">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-semibold text-emerald-300 flex items-center gap-1.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              <span data-i18n="goals_modal_title">Set Your Style Goals</span>
+            </h3>
+            <button id="goalsModalClose" type="button" class="text-gray-400 hover:text-white transition-colors">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <p class="text-xs text-gray-400 mb-4" data-i18n="goals_modal_subtitle">Tell me where you want to go — I'll tailor every tip to get you there.</p>
+
+          <!-- Goal Target Selection -->
+          <div class="mb-4">
+            <label class="text-[11px] font-semibold text-gray-300 uppercase tracking-wider mb-2 block" data-i18n="goals_target_label">I want to be more…</label>
+            <div class="grid grid-cols-2 gap-2" id="goalsTargetGrid">
+              <button data-goal="classic" class="goal-option text-xs px-3 py-2 rounded-xl border border-emerald-500/20 bg-emerald-500/5 text-gray-300 hover:bg-emerald-500/15 hover:text-emerald-200 transition-all text-left">👔 <span data-i18n="goals_option_classic">Classic & Refined</span></button>
+              <button data-goal="casual" class="goal-option text-xs px-3 py-2 rounded-xl border border-emerald-500/20 bg-emerald-500/5 text-gray-300 hover:bg-emerald-500/15 hover:text-emerald-200 transition-all text-left">☕ <span data-i18n="goals_option_casual">Smart Casual</span></button>
+              <button data-goal="street" class="goal-option text-xs px-3 py-2 rounded-xl border border-emerald-500/20 bg-emerald-500/5 text-gray-300 hover:bg-emerald-500/15 hover:text-emerald-200 transition-all text-left">🛹 <span data-i18n="goals_option_street">Street & Edgy</span></button>
+              <button data-goal="minimal" class="goal-option text-xs px-3 py-2 rounded-xl border border-emerald-500/20 bg-emerald-500/5 text-gray-300 hover:bg-emerald-500/15 hover:text-emerald-200 transition-all text-left">◽ <span data-i18n="goals_option_minimal">Minimalist</span></button>
+              <button data-goal="bold" class="goal-option text-xs px-3 py-2 rounded-xl border border-emerald-500/20 bg-emerald-500/5 text-gray-300 hover:bg-emerald-500/15 hover:text-emerald-200 transition-all text-left">🔥 <span data-i18n="goals_option_bold">Bold & Expressive</span></button>
+              <button data-goal="athletic" class="goal-option text-xs px-3 py-2 rounded-xl border border-emerald-500/20 bg-emerald-500/5 text-gray-300 hover:bg-emerald-500/15 hover:text-emerald-200 transition-all text-left">💪 <span data-i18n="goals_option_athletic">Athletic & Clean</span></button>
+              <button data-goal="romantic" class="goal-option text-xs px-3 py-2 rounded-xl border border-emerald-500/20 bg-emerald-500/5 text-gray-300 hover:bg-emerald-500/15 hover:text-emerald-200 transition-all text-left">🌸 <span data-i18n="goals_option_romantic">Romantic & Soft</span></button>
+              <button data-goal="professional" class="goal-option text-xs px-3 py-2 rounded-xl border border-emerald-500/20 bg-emerald-500/5 text-gray-300 hover:bg-emerald-500/15 hover:text-emerald-200 transition-all text-left">💼 <span data-i18n="goals_option_professional">Professional & Polished</span></button>
+            </div>
+          </div>
+
+          <!-- Timeline -->
+          <div class="mb-4">
+            <label class="text-[11px] font-semibold text-gray-300 uppercase tracking-wider mb-2 block" data-i18n="goals_timeline_label">Timeline</label>
+            <div class="flex gap-2" id="goalsTimelineGrid">
+              <button data-timeline="1m" class="timeline-option text-xs px-4 py-2 rounded-xl border border-emerald-500/20 bg-emerald-500/5 text-gray-300 hover:bg-emerald-500/15 hover:text-emerald-200 transition-all" data-i18n="goals_timeline_1m">1 month</button>
+              <button data-timeline="3m" class="timeline-option text-xs px-4 py-2 rounded-xl border border-emerald-500/20 bg-emerald-500/5 text-gray-300 hover:bg-emerald-500/15 hover:text-emerald-200 transition-all" data-i18n="goals_timeline_3m">3 months</button>
+              <button data-timeline="6m" class="timeline-option text-xs px-4 py-2 rounded-xl border border-emerald-500/20 bg-emerald-500/5 text-gray-300 hover:bg-emerald-500/15 hover:text-emerald-200 transition-all" data-i18n="goals_timeline_6m">6 months</button>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div class="mb-4">
+            <label class="text-[11px] font-semibold text-gray-300 uppercase tracking-wider mb-2 block" data-i18n="goals_notes_label">Anything else I should know?</label>
+            <textarea id="goalsNotes" rows="2" class="w-full text-xs bg-white/5 border border-emerald-500/20 rounded-xl px-3 py-2 text-gray-200 placeholder-gray-500 resize-none outline-none focus:border-emerald-500/40 transition-colors" data-i18n-placeholder="goals_notes_placeholder" placeholder="e.g. I have a wedding in June"></textarea>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex items-center gap-2">
+            <button id="goalsSaveBtn" type="button" class="flex-1 text-xs font-semibold text-emerald-200 py-2 rounded-xl bg-emerald-500/20 border border-emerald-500/30 hover:bg-emerald-500/30 transition-all" data-i18n="goals_save">Save Goals</button>
+            <button id="goalsClearBtn" type="button" class="text-[10px] text-gray-400 hover:text-red-400 transition-colors px-2" data-i18n="goals_clear">Remove goals</button>
+          </div>
+        </div>
 
         <div id="coachChatMessages" class="relative z-10 flex flex-col gap-3 max-h-[55vh] overflow-y-auto pr-1 mb-4">
           <!-- Coach mode welcome (shown by default) -->
@@ -6853,7 +7217,7 @@ if (window.__DS_IS_ANDROID_APP) {
           </div>
           <button class="siq-btn siq-btn-primary" onclick="window._siq.addItem()" style="width:100%" data-i18n="siq_add">+ Add Item</button>
         </div>
-        <div class="siq-search"><span class="sico">🔍</span><input id="siqSearch" placeholder="Search..." oninput="window._siq.renderLog()"/></div>
+        <div class="siq-search"><span class="sico">🔍</span><input id="siqSearch" data-i18n-placeholder="siq_search" placeholder="Search..." oninput="window._siq.renderLog()"/></div>
         <div class="siq-chips" id="siqFilterChips"></div>
         <div id="siqLogList"></div>
       </div>
@@ -9042,12 +9406,425 @@ window.incrementReferralCount = incrementReferralCount;
 window.updateColorCategories = updateColorCategories;
 
 // ============================================================
-// 4. STYLE DNA — Style archetype + color palette + shareable card
+// 4. STYLE DNA — Deep profile: Radar + Pie + Trend + Compatibility
 // ============================================================
 
 const STYLE_DNA_KEY = 'datescan.styleDna';
+var _dnaActiveTab = 'profile';
 
-// Archetype detection rules based on scan history
+// ── Style dimension computation from scan history ──────────
+// Each scan contributes points to 5 style axes based on:
+//   colors, formality, vibes, occasion, score patterns
+function _computeStyleDimensions(profile) {
+  var dims = { minimal: 20, street: 20, classic: 20, sporty: 20, bohemian: 20 };
+  var vibes = profile.styleVibes || [];
+  var colors = profile.colors || [];
+  var formality = profile.formality || '';
+  var scanCount = profile.scanCount || 0;
+  if (scanCount < 1) return dims;
+
+  // 1) Vibe-based scoring (strongest signal)
+  var vibeStr = vibes.join(' ').toLowerCase();
+  if (/minimal|clean|simple|scandinavian|basic/.test(vibeStr)) dims.minimal += 25;
+  if (/street|urban|edgy|techwear|rebel/.test(vibeStr))         dims.street += 25;
+  if (/classic|elegant|preppy|sophisticated|formal/.test(vibeStr)) dims.classic += 25;
+  if (/sport|athletic|athleisure|active/.test(vibeStr))         dims.sporty += 25;
+  if (/boho|bohemian|free|creative|artistic|vintage/.test(vibeStr)) dims.bohemian += 25;
+
+  // 2) Formality-based scoring
+  if (formality === 'formal')       { dims.classic += 20; dims.minimal += 5; }
+  if (formality === 'smart_casual') { dims.classic += 10; dims.minimal += 15; }
+  if (formality === 'casual')       { dims.sporty += 15; dims.street += 5; dims.bohemian += 5; }
+
+  // 3) Color-based scoring
+  var colorStr = colors.join(' ').toLowerCase();
+  // Neutrals → minimal / classic
+  if (/black|white|navy|charcoal|slate|beige|cream|camel/.test(colorStr)) { dims.minimal += 15; dims.classic += 10; }
+  // Bold colors → street / bohemian
+  if (/red|neon|gold|silver|metallic|burgundy/.test(colorStr)) { dims.street += 10; dims.bohemian += 5; }
+  // Earth tones → bohemian
+  if (/olive|rust|brown|forest|khaki|tan/.test(colorStr)) { dims.bohemian += 15; dims.street += 5; }
+  // Bright / sporty
+  if (/blue|teal|denim/.test(colorStr)) { dims.sporty += 5; dims.street += 5; }
+
+  // 4) Count individual vibe mentions for extra precision
+  var vibeCounts = {};
+  vibes.forEach(function(v) { if (v) { var k = v.toLowerCase(); vibeCounts[k] = (vibeCounts[k] || 0) + 1; }});
+  Object.keys(vibeCounts).forEach(function(k) {
+    var bonus = Math.min(vibeCounts[k] * 4, 15);
+    if (/minimal|clean|simple|scandinavian/.test(k)) dims.minimal += bonus;
+    if (/street|urban|edgy|techwear/.test(k))         dims.street += bonus;
+    if (/classic|elegant|preppy/.test(k))             dims.classic += bonus;
+    if (/sport|athletic|athleisure/.test(k))           dims.sporty += bonus;
+    if (/boho|bohemian|vintage|artistic/.test(k))      dims.bohemian += bonus;
+  });
+
+  // Cap each dimension at 100 and ensure minimum of 5
+  Object.keys(dims).forEach(function(k) { dims[k] = Math.max(5, Math.min(100, dims[k])); });
+  return dims;
+}
+
+// ── Color distribution with counts for pie chart ──────────
+function _getColorCounts(profile) {
+  var colorCategorySet = profile.colorCategorySet || {};
+  var cats = Object.keys(colorCategorySet);
+  if (cats.length === 0) return [];
+
+  var colorMeta = {
+    red:    { emoji: '🔴', hex: '#ef4444' },
+    blue:   { emoji: '🔵', hex: '#3b82f6' },
+    green:  { emoji: '🟢', hex: '#22c55e' },
+    yellow: { emoji: '🟡', hex: '#eab308' },
+    purple: { emoji: '🟣', hex: '#a855f7' },
+    orange: { emoji: '🟠', hex: '#f97316' },
+    pink:   { emoji: '🩷', hex: '#ec4899' },
+    brown:  { emoji: '🟤', hex: '#92400e' },
+    black:  { emoji: '⚫', hex: '#1f2937' },
+    white:  { emoji: '⚪', hex: '#e5e7eb' },
+    gray:   { emoji: '🔘', hex: '#6b7280' },
+  };
+
+  // For pie chart we need actual counts — use scan data if available
+  var counts = {};
+  try {
+    var arr = (window.userCloset && window.userCloset.outfits) || [];
+    arr.forEach(function(o) {
+      if (o && o.source !== 'upload') {
+        var cid = (o.colorId || '').toLowerCase() || (o.color ? o.color.toLowerCase() : '');
+        if (cid && colorMeta[cid]) {
+          counts[cid] = (counts[cid] || 0) + 1;
+        }
+      }
+    });
+  } catch(e) {}
+
+  // Fallback to just categories if no counts
+  if (Object.keys(counts).length === 0) {
+    cats.forEach(function(c) { counts[c] = 1; });
+  }
+
+  var total = 0;
+  Object.keys(counts).forEach(function(k) { total += counts[k]; });
+
+  return Object.keys(counts).map(function(c) {
+    var meta = colorMeta[c] || { emoji: '🎨', hex: '#888' };
+    return {
+      key: c,
+      count: counts[c],
+      pct: total > 0 ? Math.round((counts[c] / total) * 100) : 0,
+      emoji: meta.emoji,
+      hex: meta.hex,
+      label: typeof window.t === 'function' ? (window.t('color_' + c) !== 'color_' + c ? window.t('color_' + c) : c) : c
+    };
+  }).sort(function(a, b) { return b.count - a.count; });
+}
+
+// ── Trend data — style dimension changes over time ──────────
+function _getTrendData() {
+  try {
+    var arr = (window.userCloset && window.userCloset.outfits) || [];
+    var scanned = arr.filter(function(o) { return o && o.source !== 'upload' && o.date; });
+    if (scanned.length < 3) return null;
+
+    scanned.sort(function(a, b) { return a.date - b.date; });
+
+    // Group into time buckets (by week)
+    var weeks = {};
+    scanned.forEach(function(o) {
+      var d = new Date(o.date);
+      var weekKey = d.getFullYear() + '-W' + String(Math.ceil((d.getDate() + new Date(d.getFullYear(), d.getMonth(), 1).getDay()) / 7)).padStart(2, '0');
+      if (!weeks[weekKey]) weeks[weekKey] = [];
+      weeks[weekKey].push(o);
+    });
+
+    var weekKeys = Object.keys(weeks).sort();
+    if (weekKeys.length < 2) return null;
+
+    // Compute dominant dimension per week
+    var trendPoints = weekKeys.map(function(wk) {
+      var items = weeks[wk];
+      var miniDim = { minimal: 0, street: 0, classic: 0, sporty: 0, bohemian: 0 };
+
+      items.forEach(function(o) {
+        var col = (o.color || '').toLowerCase();
+        var occ = (o.occasion || 'casual').toLowerCase();
+        var score = o.score || 70;
+
+        // Simplified scoring per item
+        if (/black|white|navy|gray|beige|charcoal/.test(col)) miniDim.minimal += 2;
+        if (/red|neon|gold|silver|metallic/.test(col)) miniDim.street += 2;
+        if (/formal|business/.test(occ)) miniDim.classic += 3;
+        if (/casual|sport|active/.test(occ)) miniDim.sporty += 2;
+        if (/olive|rust|brown|earth/.test(col)) miniDim.bohemian += 2;
+        if (score >= 80) miniDim.classic += 1;
+      });
+
+      var topDim = 'minimal';
+      var topVal = 0;
+      Object.keys(miniDim).forEach(function(k) {
+        if (miniDim[k] > topVal) { topVal = miniDim[k]; topDim = k; }
+      });
+
+      return { week: wk, dominant: topDim, score: items.reduce(function(s, o) { return s + (o.score || 70); }, 0) / items.length };
+    });
+
+    return trendPoints;
+  } catch(e) { return null; }
+}
+
+// ── Canvas: Radar Chart ────────────────────────────────────
+function _drawRadarChart(canvas, dims) {
+  var size = 220;
+  var dpr = window.devicePixelRatio || 1;
+  canvas.width = size * dpr;
+  canvas.height = size * dpr;
+  canvas.style.width = size + 'px';
+  canvas.style.height = size + 'px';
+  var ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  var cx = size / 2, cy = size / 2;
+  var maxR = 80;
+  var keys = ['minimal', 'street', 'classic', 'sporty', 'bohemian'];
+  var labels = keys.map(function(k) { return typeof window.t === 'function' ? window.t('styledna_dim_' + k) : k; });
+  var n = keys.length;
+  var angleStep = (2 * Math.PI) / n;
+  var startAngle = -Math.PI / 2;
+
+  // Background rings
+  for (var ring = 1; ring <= 4; ring++) {
+    var r = maxR * (ring / 4);
+    ctx.beginPath();
+    for (var i = 0; i <= n; i++) {
+      var a = startAngle + i * angleStep;
+      var px = cx + r * Math.cos(a);
+      var py = cy + r * Math.sin(a);
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.strokeStyle = 'rgba(168,85,247,0.12)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Axis lines
+  for (var i = 0; i < n; i++) {
+    var a = startAngle + i * angleStep;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + maxR * Math.cos(a), cy + maxR * Math.sin(a));
+    ctx.strokeStyle = 'rgba(168,85,247,0.1)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Data polygon
+  ctx.beginPath();
+  for (var i = 0; i < n; i++) {
+    var a = startAngle + i * angleStep;
+    var val = Math.max(5, dims[keys[i]] || 0) / 100;
+    var px = cx + maxR * val * Math.cos(a);
+    var py = cy + maxR * val * Math.sin(a);
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.closePath();
+
+  // Gradient fill
+  var grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR);
+  grad.addColorStop(0, 'rgba(168,85,247,0.35)');
+  grad.addColorStop(1, 'rgba(236,72,153,0.15)');
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Border
+  ctx.strokeStyle = 'rgba(168,85,247,0.6)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Data points
+  for (var i = 0; i < n; i++) {
+    var a = startAngle + i * angleStep;
+    var val = Math.max(5, dims[keys[i]] || 0) / 100;
+    var px = cx + maxR * val * Math.cos(a);
+    var py = cy + maxR * val * Math.sin(a);
+    ctx.beginPath();
+    ctx.arc(px, py, 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#c084fc';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.4)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  }
+
+  // Labels
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = '600 9px Inter, system-ui, sans-serif';
+  for (var i = 0; i < n; i++) {
+    var a = startAngle + i * angleStep;
+    var labelR = maxR + 22;
+    var lx = cx + labelR * Math.cos(a);
+    var ly = cy + labelR * Math.sin(a);
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.fillText(labels[i], lx, ly);
+    // Value below label
+    ctx.fillStyle = 'rgba(168,85,247,0.7)';
+    ctx.font = '700 8px Inter, system-ui, sans-serif';
+    ctx.fillText(dims[keys[i]] + '%', lx, ly + 11);
+    ctx.font = '600 9px Inter, system-ui, sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+  }
+}
+
+// ── Canvas: Pie Chart for colors ────────────────────────────
+function _drawColorPie(canvas, colorData) {
+  var size = 200;
+  var dpr = window.devicePixelRatio || 1;
+  canvas.width = size * dpr;
+  canvas.height = size * dpr;
+  canvas.style.width = size + 'px';
+  canvas.style.height = size + 'px';
+  var ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  var cx = size / 2, cy = size / 2;
+  var outerR = 75, innerR = 45;
+  var total = 0;
+  colorData.forEach(function(c) { total += c.count; });
+  if (total === 0) return;
+
+  var startAngle = -Math.PI / 2;
+  colorData.forEach(function(c) {
+    var sliceAngle = (c.count / total) * 2 * Math.PI;
+    ctx.beginPath();
+    ctx.arc(cx, cy, outerR, startAngle, startAngle + sliceAngle);
+    ctx.arc(cx, cy, innerR, startAngle + sliceAngle, startAngle, true);
+    ctx.closePath();
+    ctx.fillStyle = c.hex;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    startAngle += sliceAngle;
+  });
+
+  // Center text
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'rgba(255,255,255,0.8)';
+  ctx.font = '700 18px "Playfair Display", serif';
+  ctx.fillText(colorData.length, cx, cy - 6);
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.font = '600 8px Inter, system-ui, sans-serif';
+  ctx.fillText(typeof window.t === 'function' ? window.t('styledna_colors_title').split(' ')[0] : 'Colors', cx, cy + 10);
+}
+
+// ── Canvas: Trend Line ─────────────────────────────────────
+function _drawTrendLine(canvas, trendData) {
+  if (!trendData || trendData.length < 2) return;
+
+  var size = 260;
+  var dpr = window.devicePixelRatio || 1;
+  canvas.width = size * dpr;
+  canvas.height = size * dpr;
+  canvas.style.width = size + 'px';
+  canvas.style.height = size + 'px';
+  var ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  var pad = { t: 24, b: 28, l: 30, r: 12 };
+  var W = size - pad.l - pad.r;
+  var H = size - pad.t - pad.b;
+
+  // Y-axis: scores 0-100
+  var minScore = 100, maxScore = 0;
+  trendData.forEach(function(p) {
+    var s = Math.round(p.score);
+    if (s < minScore) minScore = s;
+    if (s > maxScore) maxScore = s;
+  });
+  minScore = Math.max(0, minScore - 10);
+  maxScore = Math.min(100, maxScore + 10);
+  var scoreRange = Math.max(1, maxScore - minScore);
+
+  // Background grid
+  for (var g = 0; g <= 4; g++) {
+    var gy = pad.t + (g / 4) * H;
+    ctx.beginPath();
+    ctx.moveTo(pad.l, gy);
+    ctx.lineTo(pad.l + W, gy);
+    ctx.strokeStyle = 'rgba(168,85,247,0.08)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    var label = Math.round(maxScore - (g / 4) * scoreRange);
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.font = '600 8px Inter, system-ui, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(label, pad.l - 5, gy);
+  }
+
+  // Data points positions
+  var points = trendData.map(function(p, i) {
+    var x = pad.l + (trendData.length > 1 ? (i / (trendData.length - 1)) * W : W / 2);
+    var y = pad.t + (1 - (p.score - minScore) / scoreRange) * H;
+    return { x: x, y: y, dominant: p.dominant, week: p.week };
+  });
+
+  // Gradient area under curve
+  if (points.length >= 2) {
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, pad.t + H);
+    points.forEach(function(p) { ctx.lineTo(p.x, p.y); });
+    ctx.lineTo(points[points.length - 1].x, pad.t + H);
+    ctx.closePath();
+    var areaGrad = ctx.createLinearGradient(0, pad.t, 0, pad.t + H);
+    areaGrad.addColorStop(0, 'rgba(168,85,247,0.2)');
+    areaGrad.addColorStop(1, 'rgba(236,72,153,0.02)');
+    ctx.fillStyle = areaGrad;
+    ctx.fill();
+  }
+
+  // Line
+  ctx.beginPath();
+  points.forEach(function(p, i) {
+    if (i === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+  });
+  ctx.strokeStyle = 'rgba(168,85,247,0.7)';
+  ctx.lineWidth = 2.5;
+  ctx.lineJoin = 'round';
+  ctx.stroke();
+
+  // Points with dominant-color coding
+  var dimColors = {
+    minimal: '#a78bfa', street: '#f472b6', classic: '#60a5fa',
+    sporty: '#34d399', bohemian: '#fbbf24'
+  };
+  points.forEach(function(p) {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+    ctx.fillStyle = dimColors[p.dominant] || '#c084fc';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.4)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  });
+
+  // Week labels on X-axis
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.font = '600 7px Inter, system-ui, sans-serif';
+  points.forEach(function(p, i) {
+    // Show every other label if too many
+    if (trendData.length <= 6 || i % 2 === 0) {
+      var shortWeek = p.week.replace(/^\d{4}-W/, 'W');
+      ctx.fillText(shortWeek, p.x, pad.t + H + 6);
+    }
+  });
+}
+
+// ── Archetype detection (unchanged logic, kept for reference) ──
 function _detectArchetype(profile) {
   var scanCount = profile.scanCount || 0;
   if (scanCount < 1) return null;
@@ -9056,7 +9833,6 @@ function _detectArchetype(profile) {
   var colors = profile.colors || [];
   var formality = profile.formality || '';
 
-  // Count vibe frequencies
   var vibeCounts = {};
   vibes.forEach(function(v) { if (v) vibeCounts[v] = (vibeCounts[v] || 0) + 1; });
   var topVibe = '';
@@ -9065,7 +9841,6 @@ function _detectArchetype(profile) {
     if (vibeCounts[k] > topVibeCount) { topVibe = k; topVibeCount = vibeCounts[k]; }
   });
 
-  // Detect based on vibes and formality
   var tv = topVibe.toLowerCase();
   if (/classic|elegant|formal|sophisticated/.test(tv) || formality === 'formal') return 'elegant';
   if (/street|urban|edgy|bold|rebel/.test(tv)) return 'street';
@@ -9074,40 +9849,14 @@ function _detectArchetype(profile) {
   if (/sport|athletic|active|casual/.test(tv) || formality === 'casual') return 'sporty';
   if (/bold|statement|dramatic|glam/.test(tv)) return 'bold';
 
-  // Fallback: color-based guess
   var colorStr = (colors || []).join(' ').toLowerCase();
   if (/black|white|gray|grey|navy|beige/.test(colorStr) && !/red|pink|yellow|orange/.test(colorStr)) return 'minimal';
   if (/neon|red|pink|gold|silver|metallic/.test(colorStr)) return 'bold';
 
-  return 'minimal'; // default
+  return 'minimal';
 }
 
-function _getColorDistribution(profile) {
-  var colorCategorySet = profile.colorCategorySet || {};
-  var cats = Object.keys(colorCategorySet);
-  if (cats.length === 0) return [];
-
-  // Sort by name for consistent display
-  var colorMap = {
-    red: { emoji: '🔴', label: t('color_red') },
-    blue: { emoji: '🔵', label: t('color_blue') },
-    green: { emoji: '🟢', label: t('color_green') },
-    yellow: { emoji: '🟡', label: t('color_yellow') },
-    purple: { emoji: '🟣', label: t('color_purple') },
-    orange: { emoji: '🟠', label: t('color_orange') },
-    pink: { emoji: '🩷', label: t('color_pink') },
-    brown: { emoji: '🟤', label: t('color_brown') },
-    black: { emoji: '⚫', label: t('color_black') },
-    white: { emoji: '⚪', label: t('color_white') },
-    gray: { emoji: '🔘', label: t('color_gray') },
-  };
-
-  return cats.map(function(c) {
-    var info = colorMap[c] || { emoji: '🎨', label: c };
-    return { key: c, emoji: info.emoji, label: info.label };
-  });
-}
-
+// ── Main render function ───────────────────────────────────
 function renderStyleDNA() {
   var content = document.getElementById('styleDnaContent');
   var countEl = document.getElementById('styleDnaScanCount');
@@ -9133,55 +9882,154 @@ function renderStyleDNA() {
   var archIcons = { minimal: '🧘', street: '🛹', elegant: '👔', boho: '🌻', sporty: '🏃', bold: '💎' };
   var archIcon = archIcons[archKey] || '✨';
 
-  var colorDist = _getColorDistribution(profile);
-  var colorHtml = '';
-  if (colorDist.length > 0) {
-    colorHtml = '<div class="mt-3 pt-3 border-t border-white/[0.06]">' +
-      '<div class="text-[9px] uppercase tracking-widest font-bold text-purple-300/50 mb-2">' + t('styledna_color_palette') + '</div>' +
-      '<div class="flex flex-wrap gap-1.5">';
-    colorDist.forEach(function(c) {
-      colorHtml += '<span class="dna-color-chip inline-flex items-center gap-1 text-[10px] bg-white/[0.04] border border-white/[0.07] rounded-lg px-2 py-1 cursor-default">' +
-        c.emoji + ' <span class="text-gray-300">' + c.label + '</span></span>';
-    });
-    colorHtml += '</div></div>';
+  // Compute dimensions and data
+  var dims = _computeStyleDimensions(profile);
+  var colorData = _getColorCounts(profile);
+  var trendData = _getTrendData();
+
+  // Build compatibility index (sorted descending)
+  var dimKeys = ['minimal', 'street', 'classic', 'sporty', 'bohemian'];
+  var compatItems = dimKeys.map(function(k) {
+    return { key: k, val: dims[k], label: t('styledna_dim_' + k) };
+  }).sort(function(a, b) { return b.val - a.val; });
+
+  var dimColors = {
+    minimal: '#a78bfa', street: '#f472b6', classic: '#60a5fa',
+    sporty: '#34d399', bohemian: '#fbbf24'
+  };
+
+  // Compatibility summary text
+  var compatSummary = '';
+  if (compatItems.length >= 2) {
+    compatSummary = t('styledna_compat_summary')
+      .replace('{p1}', compatItems[0].val)
+      .replace('{l1}', compatItems[0].label)
+      .replace('{p2}', compatItems[1].val)
+      .replace('{l2}', compatItems[1].label);
   }
 
-  content.innerHTML =
-    '<div class="flex items-center gap-3 p-3 rounded-2xl bg-black/30 border border-purple-500/20">' +
-      '<div class="dna-arch-ring w-11 h-11 rounded-xl flex items-center justify-center text-xl shrink-0" style="background:linear-gradient(135deg,rgba(168,85,247,0.25),rgba(236,72,153,0.25))">' + archIcon + '</div>' +
-      '<div class="min-w-0">' +
-        '<div class="text-[9px] uppercase tracking-widest font-bold text-purple-300/50">' + t('styledna_archetype') + '</div>' +
-        '<div class="font-serif text-base text-white font-semibold truncate">' + archName + '</div>' +
-        '<div class="flex items-center gap-3 mt-0.5">' +
-          '<span class="text-[10px] text-gray-400">' + scanCount + ' ' + t('styledna_scans_label') + '</span>' +
-          '<span class="text-[10px] text-gray-400">' + t('styledna_avg_label') + ' ' + avgScore + '</span>' +
-        '</div>' +
+  // ── Build HTML ──
+  var html = '';
+
+  // Archetype header (compact)
+  html += '<div class="flex items-center gap-3 p-3 rounded-2xl bg-black/30 border border-purple-500/20 mb-3">' +
+    '<div class="dna-arch-ring w-11 h-11 rounded-xl flex items-center justify-center text-xl shrink-0" style="background:linear-gradient(135deg,rgba(168,85,247,0.25),rgba(236,72,153,0.25))">' + archIcon + '</div>' +
+    '<div class="min-w-0 flex-1">' +
+      '<div class="text-[9px] uppercase tracking-widest font-bold text-purple-300/50">' + t('styledna_archetype') + '</div>' +
+      '<div class="font-serif text-base text-white font-semibold truncate">' + archName + '</div>' +
+      '<div class="flex items-center gap-3 mt-0.5">' +
+        '<span class="text-[10px] text-gray-400">' + scanCount + ' ' + t('styledna_scans_label') + '</span>' +
+        '<span class="text-[10px] text-gray-400">' + t('styledna_avg_label') + ' ' + avgScore + '</span>' +
       '</div>' +
     '</div>' +
-    colorHtml +
-    '<button id="shareDnaBtn" class="dna-share-btn mt-3 w-full text-xs font-semibold py-2.5 px-3 rounded-xl border border-purple-500/30 text-purple-300 flex items-center justify-center gap-2">' +
-      '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z"/></svg>' +
-      '<span data-i18n="styledna_share">' + t('styledna_share') + '</span>' +
-    '</button>';
+  '</div>';
 
-  // Bind share button
-  var shareBtn = document.getElementById('shareDnaBtn');
-  if (shareBtn) {
-    shareBtn.addEventListener('click', function() {
-      var shareText = '🧬 ' + t('styledna_title') + ': ' + archName + '\n' +
-        '📊 ' + scanCount + ' ' + t('styledna_scans_label') + ' · ' + t('styledna_avg_label') + ' ' + avgScore + '\n' +
-        '🎨 ' + colorDist.map(function(c) { return c.emoji + ' ' + c.label; }).join(', ') + '\n\n' +
-        t('share_app_signature');
-      if (navigator.share) {
-        navigator.share({ title: t('styledna_title'), text: shareText }).catch(function(){});
-      } else {
-        navigator.clipboard.writeText(shareText).then(function() {
-          if (window.dsPrivacy && window.dsPrivacy.showToast) window.dsPrivacy.showToast('📋 ' + t('toast_copied'), 2000);
-        }).catch(function(){});
-      }
+  // Tabs
+  html += '<div class="dna-tabs">' +
+    '<button class="dna-tab' + (_dnaActiveTab === 'profile' ? ' active' : '') + '" onclick="window._dnaSwitchTab(\'profile\')">' + t('styledna_tab_profile') + '</button>' +
+    '<button class="dna-tab' + (_dnaActiveTab === 'colors' ? ' active' : '') + '" onclick="window._dnaSwitchTab(\'colors\')">' + t('styledna_tab_colors') + '</button>' +
+    '<button class="dna-tab' + (_dnaActiveTab === 'trend' ? ' active' : '') + '" onclick="window._dnaSwitchTab(\'trend\')">' + t('styledna_tab_trend') + '</button>' +
+    '<button class="dna-tab' + (_dnaActiveTab === 'compat' ? ' active' : '') + '" onclick="window._dnaSwitchTab(\'compat\')">' + t('styledna_tab_compat') + '</button>' +
+  '</div>';
+
+  // ── Panel: Profile (Radar) ──
+  html += '<div class="dna-panel' + (_dnaActiveTab === 'profile' ? ' active' : '') + '" id="dnaPanelProfile">';
+  html += '<div class="dna-section-label">' + t('styledna_profile_title') + '</div>';
+  html += '<div class="dna-chart-wrap"><canvas id="dnaRadarCanvas"></canvas></div>';
+  html += '<div class="text-center text-[9px] text-purple-400/50 mt-1">' + t('styledna_radar_label') + '</div>';
+  html += '</div>';
+
+  // ── Panel: Colors (Pie) ──
+  html += '<div class="dna-panel' + (_dnaActiveTab === 'colors' ? ' active' : '') + '" id="dnaPanelColors">';
+  html += '<div class="dna-section-label">' + t('styledna_colors_title') + '</div>';
+  if (colorData.length > 0) {
+    html += '<div class="dna-chart-wrap"><canvas id="dnaPieCanvas"></canvas></div>';
+    html += '<div class="dna-pie-legend">';
+    colorData.forEach(function(c) {
+      html += '<div class="dna-pie-legend-item"><span class="dna-pie-swatch" style="background:' + c.hex + '"></span>' + c.emoji + ' ' + c.label + ' ' + c.pct + '%</div>';
     });
+    html += '</div>';
+  } else {
+    html += '<div class="dna-trend-empty">' + t('styledna_no_data') + '</div>';
   }
+  html += '</div>';
+
+  // ── Panel: Trend ──
+  html += '<div class="dna-panel' + (_dnaActiveTab === 'trend' ? ' active' : '') + '" id="dnaPanelTrend">';
+  html += '<div class="dna-section-label">' + t('styledna_trend_title') + '</div>';
+  if (trendData && trendData.length >= 2) {
+    html += '<div class="dna-chart-wrap"><canvas id="dnaTrendCanvas"></canvas></div>';
+  } else {
+    html += '<div class="dna-trend-empty">' + t('styledna_trend_empty') + '</div>';
+  }
+  html += '</div>';
+
+  // ── Panel: Compatibility Index ──
+  html += '<div class="dna-panel' + (_dnaActiveTab === 'compat' ? ' active' : '') + '" id="dnaPanelCompat">';
+  html += '<div class="dna-section-label">' + t('styledna_compat_title') + '</div>';
+  html += '<div class="dna-compat-list">';
+  compatItems.forEach(function(item) {
+    html += '<div class="dna-compat-row">' +
+      '<div class="dna-compat-label">' + item.label + '</div>' +
+      '<div class="dna-compat-bar-track"><div class="dna-compat-bar-fill" style="width:' + item.val + '%;background:' + (dimColors[item.key] || '#c084fc') + '"></div></div>' +
+      '<div class="dna-compat-pct">' + item.val + '%</div>' +
+    '</div>';
+  });
+  html += '</div>';
+  if (compatSummary) {
+    html += '<div class="dna-compat-summary">' + compatSummary + '</div>';
+  }
+  html += '</div>';
+
+  // Share button
+  html += '<button id="shareDnaBtn" class="dna-share-btn mt-3 w-full text-xs font-semibold py-2.5 px-3 rounded-xl border border-purple-500/30 text-purple-300 flex items-center justify-center gap-2">' +
+    '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z"/></svg>' +
+    '<span data-i18n="styledna_share">' + t('styledna_share') + '</span>' +
+  '</button>';
+
+  content.innerHTML = html;
+
+  // ── Draw canvases after DOM insert ──
+  setTimeout(function() {
+    if (_dnaActiveTab === 'profile') {
+      var radarCanvas = document.getElementById('dnaRadarCanvas');
+      if (radarCanvas) _drawRadarChart(radarCanvas, dims);
+    }
+    if (_dnaActiveTab === 'colors') {
+      var pieCanvas = document.getElementById('dnaPieCanvas');
+      if (pieCanvas) _drawColorPie(pieCanvas, colorData);
+    }
+    if (_dnaActiveTab === 'trend') {
+      var trendCanvas = document.getElementById('dnaTrendCanvas');
+      if (trendCanvas) _drawTrendLine(trendCanvas, trendData);
+    }
+
+    // Bind share button
+    var shareBtn = document.getElementById('shareDnaBtn');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', function() {
+        var shareText = '🧬 ' + t('styledna_title') + ': ' + archName + '\n' +
+          '📊 ' + scanCount + ' ' + t('styledna_scans_label') + ' · ' + t('styledna_avg_label') + ' ' + avgScore + '\n' +
+          '📐 ' + compatSummary + '\n' +
+          '🎨 ' + colorData.map(function(c) { return c.emoji + ' ' + c.label; }).join(', ') + '\n\n' +
+          t('share_app_signature');
+        if (navigator.share) {
+          navigator.share({ title: t('styledna_title'), text: shareText }).catch(function(){});
+        } else {
+          navigator.clipboard.writeText(shareText).then(function() {
+            if (window.dsPrivacy && window.dsPrivacy.showToast) window.dsPrivacy.showToast('📋 ' + t('toast_copied'), 2000);
+          }).catch(function(){});
+        }
+      });
+    }
+  }, 30);
 }
+
+// Tab switcher — global function
+window._dnaSwitchTab = function(tab) {
+  _dnaActiveTab = tab;
+  renderStyleDNA();
+};
 
 window.renderStyleDNA = renderStyleDNA;
 
@@ -10299,6 +11147,16 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       vibe_metric_warmth: 'Warmth',
       vibe_share_score: 'Share Score',
       vibe_run_again: 'Run again',
+      // Vibe Deep
+      vibe_tier_elite: 'Elite', vibe_tier_high: 'High', vibe_tier_mid: 'Mid', vibe_tier_low: 'Low', vibe_tier_rough: 'Rough',
+      vibe_before_label: 'Previous',
+      vibe_after_label: 'Current',
+      vibe_delta_up: 'up from last scan',
+      vibe_delta_down: 'down from last scan',
+      vibe_delta_same: 'same as last scan',
+      vibe_history_title: 'Vibe Evolution',
+      vibe_history_empty: 'Scan more to see your vibe trend',
+      vibe_no_prev: 'First scan — baseline set!',
       vibe_next_achievements: 'Achievements',
       scan_phrase_symmetry: 'Analyzing facial symmetry...',
       scan_phrase_harmony: 'Checking color harmony...',
@@ -11335,6 +12193,49 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       memory_cleared: 'Style memory cleared!',
       memory_saved: 'Got it — I\'ll remember that!',
 
+      // Style Goals
+      goals_section_title: 'Style Goals',
+      goals_btn_label: 'Goals',
+      goals_modal_title: 'Set Your Style Goals',
+      goals_modal_subtitle: 'Tell me where you want to go — I\'ll tailor every tip to get you there.',
+      goals_target_label: 'I want to be more…',
+      goals_timeline_label: 'Timeline',
+      goals_timeline_1m: '1 month',
+      goals_timeline_3m: '3 months',
+      goals_timeline_6m: '6 months',
+      goals_notes_label: 'Anything else I should know?',
+      goals_notes_placeholder: 'e.g. "I have a wedding in June" or "I want to look sharper at work"',
+      goals_save: 'Save Goals',
+      goals_saved: 'Goals saved — I\'ll keep them in mind!',
+      goals_clear: 'Remove goals',
+      goals_cleared: 'Goals removed',
+      goals_active_badge: 'Goal active',
+      goals_option_classic: 'Classic & Refined',
+      goals_option_casual: 'Smart Casual',
+      goals_option_street: 'Street & Edgy',
+      goals_option_minimal: 'Minimalist',
+      goals_option_bold: 'Bold & Expressive',
+      goals_option_athletic: 'Athletic & Clean',
+      goals_option_romantic: 'Romantic & Soft',
+      goals_option_professional: 'Professional & Polished',
+      ctx_goals_header: 'USER STYLE GOALS',
+      ctx_goals_desc: 'The user has set the following style goals. Tailor ALL advice to help them move toward these goals. Reference their goal progress naturally when relevant, but don\'t force it every time.',
+      ctx_goals_target: 'Goal direction',
+      ctx_goals_timeline: 'Timeline',
+      ctx_goals_notes: 'Additional notes',
+
+      // Weekly Summary
+      weekly_summary_title: 'Your Week in Style',
+      weekly_summary_scans: 'Scans this week',
+      weekly_summary_avg: 'Average score',
+      weekly_summary_best: 'Best score',
+      weekly_summary_streak: 'Day streak',
+      weekly_summary_xp: 'XP earned',
+      weekly_summary_tip: 'Coach tip',
+      weekly_summary_no_data: 'No scans this week yet — give it a try!',
+      weekly_summary_ask: 'Ask Coach about my week',
+      weekly_summary_card_label: 'Weekly Summary',
+
       // Typing mood hints
       typing_mood_thinking_1: 'Thinking it over…',
       typing_mood_thinking_2: 'Let me consider…',
@@ -11419,6 +12320,23 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       styledna_arch_bold: 'Bold Statement',
       styledna_scans_label: 'scans analyzed',
       styledna_avg_label: 'avg score',
+      // Style DNA Deep
+      styledna_tab_profile: 'Profile',
+      styledna_tab_colors: 'Colors',
+      styledna_tab_trend: 'Trend',
+      styledna_tab_compat: 'Index',
+      styledna_dim_minimal: 'Minimalist',
+      styledna_dim_street: 'Street',
+      styledna_dim_classic: 'Classic',
+      styledna_dim_sporty: 'Sporty',
+      styledna_dim_bohemian: 'Bohemian',
+      styledna_compat_title: 'Compatibility Index',
+      styledna_compat_summary: 'Your style is {p1}% {l1} and {p2}% {l2}',
+      styledna_trend_title: 'Style Evolution',
+      styledna_trend_empty: 'Need at least 3 scans to show style trends',
+      styledna_colors_title: 'Color Distribution',
+      styledna_profile_title: 'Style Profile',
+      styledna_radar_label: '5-axis style breakdown',
 
       // OOTD Generator
       ootd_title: 'Outfit of the Day',
@@ -11934,6 +12852,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       siq_tab_replace: 'Replace',
       siq_tab_report: 'Report',
       siq_log_title: 'Purchase Log',
+      siq_search: 'Search...',
       siq_lbl_name: 'Name',
       siq_lbl_price: 'Price',
       siq_lbl_category: 'Category',
@@ -12315,6 +13234,16 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       vibe_metric_warmth: 'Melegség',
       vibe_share_score: 'Eredmény megosztása',
       vibe_run_again: 'Újra',
+      // Vibe Deep
+      vibe_tier_elite: 'Elit', vibe_tier_high: 'Magas', vibe_tier_mid: 'Közepes', vibe_tier_low: 'Alacsony', vibe_tier_rough: 'Gyenge',
+      vibe_before_label: 'Előző',
+      vibe_after_label: 'Jelenlegi',
+      vibe_delta_up: 'növekedés az előző szkennelés óta',
+      vibe_delta_down: 'csökkenés az előző szkennelés óta',
+      vibe_delta_same: 'azonos az előző szkenneléssel',
+      vibe_history_title: 'Vibe evolúció',
+      vibe_history_empty: 'Szkennelj többet a vibe trendért',
+      vibe_no_prev: 'Első szkennelés — alapvonal beállítva!',
       vibe_next_achievements: 'Achievementek',
       scan_phrase_symmetry: 'Arcszimmetria elemzése...',
       scan_phrase_harmony: 'Színharmonia ellenőrzése...',
@@ -13350,6 +14279,49 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       memory_cleared: 'Stílusmemória törölve!',
       memory_saved: 'Megjegyeztem!',
 
+      // Style Goals
+      goals_section_title: 'Stíluscélok',
+      goals_btn_label: 'Célok',
+      goals_modal_title: 'Állítsd be a stíluscéljaidat',
+      goals_modal_subtitle: 'Mondd el, hová akarsz eljutni — minden tanácsomat ehhez igazítom.',
+      goals_target_label: 'Szeretnék…',
+      goals_timeline_label: 'Idővonal',
+      goals_timeline_1m: '1 hónap',
+      goals_timeline_3m: '3 hónap',
+      goals_timeline_6m: '6 hónap',
+      goals_notes_label: 'Bármi más, amit tudnom kell?',
+      goals_notes_placeholder: 'pl. "Júniusban esküvőm van" vagy "A munkában szeretnék elegánsabb lenni"',
+      goals_save: 'Célok mentése',
+      goals_saved: 'Célok elmentve — észben tartom!',
+      goals_clear: 'Célok eltávolítása',
+      goals_cleared: 'Célok eltávolítva',
+      goals_active_badge: 'Cél aktív',
+      goals_option_classic: 'Klasszikus és kifinomult',
+      goals_option_casual: 'Okos laza',
+      goals_option_street: 'Utcai és merész',
+      goals_option_minimal: 'Minimalista',
+      goals_option_bold: 'Merész és kifejező',
+      goals_option_athletic: 'Sportos és letisztult',
+      goals_option_romantic: 'Romantikus és lágy',
+      goals_option_professional: 'Professzionális és ápolt',
+      ctx_goals_header: 'FELHASZNÁLÓI STÍLUSCÉLOK',
+      ctx_goals_desc: 'A felhasználó az alábbi stíluscélokat állította be. Az ÖSSZES tanácsot úgy alakítsd, hogy segítsen ezek felé haladni. Hivatkozz a céljaira természetesen, amikor releváns, de ne erőltesd minden válaszban.',
+      ctx_goals_target: 'Célirány',
+      ctx_goals_timeline: 'Idővonal',
+      ctx_goals_notes: 'További megjegyzések',
+
+      // Weekly Summary
+      weekly_summary_title: 'A heted stílusban',
+      weekly_summary_scans: 'Szkennelés ezen a héten',
+      weekly_summary_avg: 'Átlagos pontszám',
+      weekly_summary_best: 'Legjobb pontszám',
+      weekly_summary_streak: 'Napi sorozat',
+      weekly_summary_xp: 'Zsebelt XP',
+      weekly_summary_tip: 'Edzői tipp',
+      weekly_summary_no_data: 'Még nincs szkennelés ezen a héten — próbáld ki!',
+      weekly_summary_ask: 'Kérdezd a Coacht a hetemről',
+      weekly_summary_card_label: 'Heti összefoglaló',
+
       // Gépelés hangulat tippek
       typing_mood_thinking_1: 'Átgondolom…',
       typing_mood_thinking_2: 'Hadd fontoljam…',
@@ -13434,6 +14406,23 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       styledna_arch_bold: 'Merész kijelentő',
       styledna_scans_label: 'szkennelés elemezve',
       styledna_avg_label: 'átlag pontszám',
+      // Style DNA Deep
+      styledna_tab_profile: 'Profil',
+      styledna_tab_colors: 'Színek',
+      styledna_tab_trend: 'Trend',
+      styledna_tab_compat: 'Index',
+      styledna_dim_minimal: 'Minimalista',
+      styledna_dim_street: 'Street',
+      styledna_dim_classic: 'Klasszikus',
+      styledna_dim_sporty: 'Sportos',
+      styledna_dim_bohemian: 'Bohém',
+      styledna_compat_title: 'Kompatibilitási index',
+      styledna_compat_summary: 'A stílusod {p1}%-ban {l1}, {p2}%-ban {l2}',
+      styledna_trend_title: 'Stílusevolúció',
+      styledna_trend_empty: 'Legalább 3 szkennelés kell a trend megjelenítéséhez',
+      styledna_colors_title: 'Színeloszlás',
+      styledna_profile_title: 'Stílusprofil',
+      styledna_radar_label: '5-tengelyes stíluselemzés',
 
       // OOTD Generátor
       ootd_title: 'Nap Öltözéke',
@@ -13949,6 +14938,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       siq_tab_replace: 'Kiváltás',
       siq_tab_report: 'Riport',
       siq_log_title: 'Vásárlásnapló',
+      siq_search: 'Keresés...',
       siq_lbl_name: 'Név',
       siq_lbl_price: 'Ár',
       siq_lbl_category: 'Kategória',
@@ -14331,6 +15321,16 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       vibe_metric_warmth: 'Wärme',
       vibe_share_score: 'Ergebnis teilen',
       vibe_run_again: 'Nochmal',
+      // Vibe Deep
+      vibe_tier_elite: 'Elite', vibe_tier_high: 'Hoch', vibe_tier_mid: 'Mittel', vibe_tier_low: 'Niedrig', vibe_tier_rough: 'Schwach',
+      vibe_before_label: 'Vorher',
+      vibe_after_label: 'Aktuell',
+      vibe_delta_up: 'gestiegen seit dem letzten Scan',
+      vibe_delta_down: 'gesunken seit dem letzten Scan',
+      vibe_delta_same: 'gleich wie beim letzten Scan',
+      vibe_history_title: 'Vibe-Evolution',
+      vibe_history_empty: 'Scanne mehr für deinen Vibe-Trend',
+      vibe_no_prev: 'Erster Scan — Basislinie gesetzt!',
       vibe_next_achievements: 'Erfolge',
       scan_phrase_symmetry: 'Gesichtssymmetrie analysieren...',
       scan_phrase_harmony: 'Farbharmonie prüfen...',
@@ -15366,6 +16366,49 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       memory_cleared: 'Stil-Gedächtnis gelöscht!',
       memory_saved: 'Hab ich mir gemerkt!',
 
+      // Style Goals
+      goals_section_title: 'Stilziele',
+      goals_btn_label: 'Ziele',
+      goals_modal_title: 'Stilziele festlegen',
+      goals_modal_subtitle: 'Sag mir, wohin du willst — ich passe jeden Tipp daran an.',
+      goals_target_label: 'Ich möchte…',
+      goals_timeline_label: 'Zeitraum',
+      goals_timeline_1m: '1 Monat',
+      goals_timeline_3m: '3 Monate',
+      goals_timeline_6m: '6 Monate',
+      goals_notes_label: 'Noch etwas, das ich wissen sollte?',
+      goals_notes_placeholder: 'z.B. "Ich habe im Juni eine Hochzeit" oder "Ich möchte auf der Arbeit schärfer aussehen"',
+      goals_save: 'Ziele speichern',
+      goals_saved: 'Ziele gespeichert — ich behalte sie im Kopf!',
+      goals_clear: 'Ziele entfernen',
+      goals_cleared: 'Ziele entfernt',
+      goals_active_badge: 'Ziel aktiv',
+      goals_option_classic: 'Klassisch & Raffiniert',
+      goals_option_casual: 'Smart Casual',
+      goals_option_street: 'Street & Edgy',
+      goals_option_minimal: 'Minimalistisch',
+      goals_option_bold: 'Mutig & Ausdrucksstark',
+      goals_option_athletic: 'Sportlich & Sauber',
+      goals_option_romantic: 'Romantisch & Weich',
+      goals_option_professional: 'Professionell & Gepflegt',
+      ctx_goals_header: 'BENUTZER-STILZIELE',
+      ctx_goals_desc: 'Der Benutzer hat folgende Stilziele gesetzt. Passe ALLE Ratschläge an, um ihm dabei zu helfen. Bezie dich natürlich auf die Ziele, wenn relevant, aber erzwing es nicht in jeder Antwort.',
+      ctx_goals_target: 'Zielrichtung',
+      ctx_goals_timeline: 'Zeitraum',
+      ctx_goals_notes: 'Zusätzliche Notizen',
+
+      // Weekly Summary
+      weekly_summary_title: 'Deine Woche im Stil',
+      weekly_summary_scans: 'Scans diese Woche',
+      weekly_summary_avg: 'Durchschnittspunktzahl',
+      weekly_summary_best: 'Beste Punktzahl',
+      weekly_summary_streak: 'Tagesserie',
+      weekly_summary_xp: 'Gesammelte XP',
+      weekly_summary_tip: 'Coach-Tipp',
+      weekly_summary_no_data: 'Noch keine Scans diese Woche — probier es aus!',
+      weekly_summary_ask: 'Coach nach meiner Woche fragen',
+      weekly_summary_card_label: 'Wöchentliche Zusammenfassung',
+
       // Tipp-Stimmung Hinweise
       typing_mood_thinking_1: 'Denke nach…',
       typing_mood_thinking_2: 'Lass mich überlegen…',
@@ -15450,6 +16493,23 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       styledna_arch_bold: 'Mutiges Statement',
       styledna_scans_label: 'Scans analysiert',
       styledna_avg_label: 'Durchschnitt',
+      // Style DNA Deep
+      styledna_tab_profile: 'Profil',
+      styledna_tab_colors: 'Farben',
+      styledna_tab_trend: 'Trend',
+      styledna_tab_compat: 'Index',
+      styledna_dim_minimal: 'Minimalistisch',
+      styledna_dim_street: 'Street',
+      styledna_dim_classic: 'Klassisch',
+      styledna_dim_sporty: 'Sportlich',
+      styledna_dim_bohemian: 'Boho',
+      styledna_compat_title: 'Kompatibilitätsindex',
+      styledna_compat_summary: 'Dein Stil ist {p1}% {l1} und {p2}% {l2}',
+      styledna_trend_title: 'Stil-Evolution',
+      styledna_trend_empty: 'Mindestens 3 Scans für Trendanzeige nötig',
+      styledna_colors_title: 'Farbverteilung',
+      styledna_profile_title: 'Stilprofil',
+      styledna_radar_label: '5-Achsen-Stilanalyse',
 
       // OOTD Generator
       ootd_title: 'Outfit des Tages',
@@ -15965,6 +17025,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       siq_tab_replace: 'Ersatz',
       siq_tab_report: 'Bericht',
       siq_log_title: 'Einkaufsprotokoll',
+      siq_search: 'Suchen...',
       siq_lbl_name: 'Name',
       siq_lbl_price: 'Preis',
       siq_lbl_category: 'Kategorie',
@@ -16148,7 +17209,11 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
   window.getDateLocale = getDateLocale;
   window.getSupportedLangs = getSupportedLangs;
   window.applyTranslations = applyTranslations;
+  window.translations = translations;
   window.__i18n = { SUPPORTED_LANGS: SUPPORTED_LANGS, LANG_NAMES: LANG_NAMES, SPEECH_LANGS: SPEECH_LANGS };
+
+  // Notify any classic scripts that were deferred waiting for translations
+  window.dispatchEvent(new CustomEvent('_dsTranslationsReady'));
 
   // Set initial HTML lang attribute
   document.documentElement.lang = currentLang;
@@ -29180,6 +30245,10 @@ applyOfflineState(!navigator.onLine);
   }
   initChatHistory();
 
+  // Initialize Style Goals UI and Weekly Summary
+  _initGoalsUI();
+  _renderWeeklySummary();
+
   // Persist a message to IndexedDB. Non-blocking — errors are logged
   // but never prevent the UI from updating.
   function persistMessage(role, content) {
@@ -29984,6 +31053,289 @@ applyOfflineState(!navigator.onLine);
     localStorage.removeItem(MEM_KEY);
   };
 
+  // ═══════════════════════════════════════════════════════════════════
+  // STYLE GOALS — User-defined style direction + timeline
+  // ═══════════════════════════════════════════════════════════════════
+  const GOALS_KEY = 'datescan.styleGoals';
+
+  function _readGoals() {
+    try {
+      const raw = localStorage.getItem(GOALS_KEY);
+      if (!raw) return { target: '', timeline: '', notes: '', setAt: 0 };
+      return JSON.parse(raw);
+    } catch(e) {
+      return { target: '', timeline: '', notes: '', setAt: 0 };
+    }
+  }
+
+  function _writeGoals(goals) {
+    if (!goals.setAt) goals.setAt = Date.now();
+    try { localStorage.setItem(GOALS_KEY, JSON.stringify(goals)); } catch(e) {}
+  }
+
+  function _buildGoalsPrompt() {
+    const goals = _readGoals();
+    if (!goals.target) return '';
+    const parts = [];
+    parts.push(t('ctx_goals_target') + ': ' + t('goals_option_' + goals.target));
+    if (goals.timeline) parts.push(t('ctx_goals_timeline') + ': ' + t('goals_timeline_' + goals.timeline));
+    if (goals.notes) parts.push(t('ctx_goals_notes') + ': ' + goals.notes);
+    // Calculate how much time has passed / remains
+    if (goals.setAt && goals.timeline) {
+      const elapsed = Date.now() - goals.setAt;
+      const timelineMs = { '1m': 30*86400000, '3m': 90*86400000, '6m': 180*86400000 };
+      const total = timelineMs[goals.timeline] || timelineMs['3m'];
+      const pct = Math.min(100, Math.round((elapsed / total) * 100));
+      parts.push('Progress: ' + pct + '% of timeline elapsed');
+    }
+    return '\n\n=== ' + t('ctx_goals_header') + ' ===\n' +
+      t('ctx_goals_desc') + '\n' +
+      parts.join('. ') + '.\n';
+  }
+
+  // ── Goals UI logic ─────────────────────────────────────────────
+  function _initGoalsUI() {
+    const toggleBtn = document.getElementById('goalsToggleBtn');
+    const modal = document.getElementById('goalsModal');
+    const closeBtn = document.getElementById('goalsModalClose');
+    const saveBtn = document.getElementById('goalsSaveBtn');
+    const clearBtn = document.getElementById('goalsClearBtn');
+    const targetGrid = document.getElementById('goalsTargetGrid');
+    const timelineGrid = document.getElementById('goalsTimelineGrid');
+    const notesInput = document.getElementById('goalsNotes');
+    if (!toggleBtn || !modal) return;
+
+    let selectedTarget = '';
+    let selectedTimeline = '';
+
+    // Load existing goals into UI state
+    const existing = _readGoals();
+    if (existing.target) selectedTarget = existing.target;
+    if (existing.timeline) selectedTimeline = existing.timeline;
+
+    function _highlightSelections() {
+      if (targetGrid) {
+        targetGrid.querySelectorAll('.goal-option').forEach(btn => {
+          const g = btn.getAttribute('data-goal');
+          if (g === selectedTarget) {
+            btn.classList.add('border-emerald-400', 'bg-emerald-500/20', 'text-emerald-200');
+            btn.classList.remove('border-emerald-500/20', 'bg-emerald-500/5', 'text-gray-300');
+          } else {
+            btn.classList.remove('border-emerald-400', 'bg-emerald-500/20', 'text-emerald-200');
+            btn.classList.add('border-emerald-500/20', 'bg-emerald-500/5', 'text-gray-300');
+          }
+        });
+      }
+      if (timelineGrid) {
+        timelineGrid.querySelectorAll('.timeline-option').forEach(btn => {
+          const tl = btn.getAttribute('data-timeline');
+          if (tl === selectedTimeline) {
+            btn.classList.add('border-emerald-400', 'bg-emerald-500/20', 'text-emerald-200');
+            btn.classList.remove('border-emerald-500/20', 'bg-emerald-500/5', 'text-gray-300');
+          } else {
+            btn.classList.remove('border-emerald-400', 'bg-emerald-500/20', 'text-emerald-200');
+            btn.classList.add('border-emerald-500/20', 'bg-emerald-500/5', 'text-gray-300');
+          }
+        });
+      }
+    }
+
+    function _showGoalBadge() {
+      if (!toggleBtn) return;
+      const goals = _readGoals();
+      let badge = toggleBtn.querySelector('.goal-active-dot');
+      if (goals.target) {
+        if (!badge) {
+          badge = document.createElement('span');
+          badge.className = 'goal-active-dot w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0';
+          toggleBtn.appendChild(badge);
+        }
+      } else if (badge) {
+        badge.remove();
+      }
+    }
+
+    toggleBtn.addEventListener('click', function() {
+      const isHidden = modal.classList.contains('hidden');
+      modal.classList.toggle('hidden');
+      if (isHidden) {
+        const g = _readGoals();
+        selectedTarget = g.target || '';
+        selectedTimeline = g.timeline || '';
+        if (notesInput) notesInput.value = g.notes || '';
+        _highlightSelections();
+      }
+    });
+
+    if (closeBtn) closeBtn.addEventListener('click', function() {
+      modal.classList.add('hidden');
+    });
+
+    if (targetGrid) targetGrid.addEventListener('click', function(e) {
+      const btn = e.target.closest('.goal-option');
+      if (!btn) return;
+      selectedTarget = btn.getAttribute('data-goal');
+      _highlightSelections();
+    });
+
+    if (timelineGrid) timelineGrid.addEventListener('click', function(e) {
+      const btn = e.target.closest('.timeline-option');
+      if (!btn) return;
+      selectedTimeline = btn.getAttribute('data-timeline');
+      _highlightSelections();
+    });
+
+    if (saveBtn) saveBtn.addEventListener('click', function() {
+      if (!selectedTarget) return;
+      _writeGoals({
+        target: selectedTarget,
+        timeline: selectedTimeline,
+        notes: notesInput ? notesInput.value.trim() : '',
+        setAt: _readGoals().setAt || Date.now()
+      });
+      modal.classList.add('hidden');
+      _showGoalBadge();
+      try { window.dsPrivacy?.showToast?.(t('goals_saved'), 2000); } catch(e) {}
+    });
+
+    if (clearBtn) clearBtn.addEventListener('click', function() {
+      localStorage.removeItem(GOALS_KEY);
+      selectedTarget = '';
+      selectedTimeline = '';
+      if (notesInput) notesInput.value = '';
+      _highlightSelections();
+      _showGoalBadge();
+      modal.classList.add('hidden');
+      try { window.dsPrivacy?.showToast?.(t('goals_cleared'), 2000); } catch(e) {}
+    });
+
+    _showGoalBadge();
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // WEEKLY SUMMARY — stats from scan history + XP + streak
+  // ═══════════════════════════════════════════════════════════════════
+  function _getWeeklyStats() {
+    const now = Date.now();
+    const weekAgo = now - 7 * 86400000;
+    // Scan history
+    let hist = [];
+    try { hist = JSON.parse(localStorage.getItem('datescan.history') || '[]'); } catch(e) {}
+    const weekScans = hist.filter(h => h.time >= weekAgo);
+    const scores = weekScans.map(h => h.score).filter(s => typeof s === 'number' && s > 0);
+    const avg = scores.length ? Math.round(scores.reduce((a,b) => a+b, 0) / scores.length) : 0;
+    const best = scores.length ? Math.max(...scores) : 0;
+    // XP this week from missions log
+    let xpThisWeek = 0;
+    try {
+      const m = JSON.parse(localStorage.getItem('datescan.missions') || '{}');
+      if (m.log && Array.isArray(m.log)) {
+        xpThisWeek = m.log.filter(l => l.ts >= weekAgo).reduce((sum, l) => sum + (l.xp || 0), 0);
+      }
+    } catch(e) {}
+    // Streak
+    let streak = 0;
+    try {
+      const sd = JSON.parse(localStorage.getItem('datescan.scanStreak') || '{}');
+      streak = sd.count || 0;
+    } catch(e) {}
+    return { scans: weekScans.length, avg, best, streak, xp: xpThisWeek };
+  }
+
+  function _renderWeeklySummary() {
+    const card = document.getElementById('weeklySummaryCard');
+    const content = document.getElementById('weeklySummaryContent');
+    const closeBtn = document.getElementById('weeklySummaryClose');
+    const askBtn = document.getElementById('weeklySummaryAsk');
+    if (!card || !content) return;
+
+    // If the real window.t isn't ready yet (module script hasn't run),
+    // defer the render until it is.  Without this the stub window.t just
+    // returns the raw key, producing labels like "weekly_summary_scans".
+    if (typeof window.t !== 'function' || !window.translations) {
+      window.addEventListener('_dsTranslationsReady', _renderWeeklySummary, { once: true });
+      return;
+    }
+
+    const stats = _getWeeklyStats();
+
+    // Only show if there are scans this week
+    if (stats.scans === 0) {
+      content.innerHTML = '<div class="col-span-full text-center text-gray-400 py-2" data-i18n="weekly_summary_no_data">' + t('weekly_summary_no_data') + '</div>';
+    } else {
+      // Generate a coach tip based on stats
+      let tip = '';
+      if (stats.avg >= 80) tip = '🎯 ' + t('ctx_avg_score') + ': ' + stats.avg + '/100 — ' + (typeof t === 'function' ? 'keep pushing for elite!' : '');
+      else if (stats.avg >= 60) tip = '📈 ' + t('ctx_avg_score') + ': ' + stats.avg + '/100 — try upgrading one piece per outfit';
+      else tip = '💪 Start with the basics: fit and color contrast make the biggest difference';
+
+      content.innerHTML =
+        '<div class="bg-white/5 rounded-xl p-2.5 text-center"><div class="text-lg font-bold text-blue-200">' + stats.scans + '</div><div class="text-[10px] text-gray-400" data-i18n="weekly_summary_scans">' + t('weekly_summary_scans') + '</div></div>' +
+        '<div class="bg-white/5 rounded-xl p-2.5 text-center"><div class="text-lg font-bold text-purple-200">' + stats.avg + '</div><div class="text-[10px] text-gray-400" data-i18n="weekly_summary_avg">' + t('weekly_summary_avg') + '</div></div>' +
+        '<div class="bg-white/5 rounded-xl p-2.5 text-center"><div class="text-lg font-bold text-green-200">' + stats.best + '</div><div class="text-[10px] text-gray-400" data-i18n="weekly_summary_best">' + t('weekly_summary_best') + '</div></div>' +
+        '<div class="bg-white/5 rounded-xl p-2.5 text-center"><div class="text-lg font-bold text-orange-200">' + stats.streak + '</div><div class="text-[10px] text-gray-400" data-i18n="weekly_summary_streak">' + t('weekly_summary_streak') + '</div></div>' +
+        '<div class="bg-white/5 rounded-xl p-2.5 text-center"><div class="text-lg font-bold text-yellow-200">+' + stats.xp + '</div><div class="text-[10px] text-gray-400" data-i18n="weekly_summary_xp">' + t('weekly_summary_xp') + '</div></div>' +
+        '<div class="bg-white/5 rounded-xl p-2.5 col-span-2 sm:col-span-1"><div class="text-[10px] text-gray-400 mb-0.5" data-i18n="weekly_summary_tip">' + t('weekly_summary_tip') + '</div><div class="text-[11px] text-gray-200">' + tip + '</div></div>';
+    }
+
+    // Show card (only on Mondays or first chat of the week)
+    const lastShown = localStorage.getItem('datescan.weeklySummaryShown');
+    const now = Date.now();
+    const weekAgo = now - 7 * 86400000;
+    if (!lastShown || parseInt(lastShown) < weekAgo) {
+      card.classList.remove('hidden');
+      try { localStorage.setItem('datescan.weeklySummaryShown', String(now)); } catch(e) {}
+    }
+
+    if (closeBtn) closeBtn.addEventListener('click', function() {
+      card.classList.add('hidden');
+    });
+
+    if (askBtn) askBtn.addEventListener('click', function() {
+      card.classList.add('hidden');
+      const input = document.getElementById('coachChatInput');
+      if (input) {
+        const stats = _getWeeklyStats();
+        const msg = t('weekly_summary_scans') + ': ' + stats.scans + ', ' +
+          t('weekly_summary_avg') + ': ' + stats.avg + ', ' +
+          t('weekly_summary_best') + ': ' + stats.best + ', ' +
+          t('weekly_summary_streak') + ': ' + stats.streak + ', ' +
+          t('weekly_summary_xp') + ': +' + stats.xp;
+        input.value = msg;
+        const form = document.getElementById('coachChatForm');
+        if (form) form.dispatchEvent(new Event('submit', { cancelable: true }));
+      }
+    });
+  }
+
+  // Expose globally so the module script and langchange handler can call it
+  window._renderWeeklySummary = _renderWeeklySummary;
+
+  // Re-render weekly summary on language change so stat labels translate
+  window.addEventListener('langchange', function() {
+    if (typeof _renderWeeklySummary === 'function') _renderWeeklySummary();
+  });
+
+  // ═══════════════════════════════════════════════════════════════════
+  // ENHANCED MEMORY — recent scan results injected into prompt
+  // ═══════════════════════════════════════════════════════════════════
+  function _buildScanHistoryPrompt() {
+    let hist = [];
+    try { hist = JSON.parse(localStorage.getItem('datescan.history') || '[]'); } catch(e) {}
+    if (hist.length === 0) return '';
+    // Last 5 scans
+    const recent = hist.slice(-5);
+    const lines = recent.map(h => {
+      const d = new Date(h.time);
+      const timeStr = d.toLocaleDateString ? d.toLocaleDateString() : new Date(h.time).toISOString().slice(0,10);
+      return timeStr + ': ' + h.score + '/100';
+    });
+    return '\n=== RECENT SCAN HISTORY ===\n' +
+      'User\'s last scan scores (most recent last):\n' +
+      lines.join('\n') + '\n' +
+      'Use these scores to reference improvement trends or compare current outfits to past performance. Never mention this section exists.\n';
+  }
+
   function buildSystemPrompt(recentHistory) {
     const base =
       "You are the in-app AI Style Coach for DateScan, a dating-prep app. " +
@@ -30058,6 +31410,12 @@ applyOfflineState(!navigator.onLine);
     // Inject long-term style memory so the AI "remembers" the user's preferences
     const memPrompt = _buildMemoryPrompt();
     if (memPrompt) result += memPrompt;
+    // Inject style goals so the AI coaches toward the user's target
+    const goalsPrompt = _buildGoalsPrompt();
+    if (goalsPrompt) result += goalsPrompt;
+    // Inject recent scan history so the AI can reference trends
+    const scanPrompt = _buildScanHistoryPrompt();
+    if (scanPrompt) result += scanPrompt;
     if (memorySection) result += memorySection;
     return result;
   }
@@ -30141,6 +31499,10 @@ applyOfflineState(!navigator.onLine);
     if (ctx) result += '\n\n=== LIVE APP CONTEXT ===\n' + ctx;
     const memPrompt = _buildMemoryPrompt();
     if (memPrompt) result += memPrompt;
+    const goalsPrompt = _buildGoalsPrompt();
+    if (goalsPrompt) result += goalsPrompt;
+    const scanPrompt = _buildScanHistoryPrompt();
+    if (scanPrompt) result += scanPrompt;
     if (memorySection) result += memorySection;
     return result;
   }
@@ -30623,8 +31985,14 @@ applyOfflineState(!navigator.onLine);
 
       // Slide the pill indicator behind the active tab
       var toggleContainer = document.getElementById('chatModeToggle');
-      if (toggleContainer) {
-        toggleContainer.classList.toggle('shopping-toggle', mode === 'shopping');
+      var pill = document.getElementById('chatModePill');
+      if (toggleContainer && pill) {
+        var activeBtn = mode === 'shopping' ? modeShopBtn : modeCoachBtn;
+        if (activeBtn) {
+          pill.style.left = (activeBtn.offsetLeft) + 'px';
+          pill.style.width = (activeBtn.offsetWidth) + 'px';
+        }
+        pill.classList.toggle('shopping-pill', mode === 'shopping');
       }
 
       // Toggle shopping accent on chat container + background glow
@@ -30719,8 +32087,12 @@ applyOfflineState(!navigator.onLine);
         // Free user → animate pill briefly, show teaser, snap back
         if (typeof window.isProUser === 'function' && !window.isProUser()) {
           // Animate pill to Shopping position
-          var toggleContainer = document.getElementById('chatModeToggle');
-          if (toggleContainer) toggleContainer.classList.add('shopping-toggle');
+          var pill = document.getElementById('chatModePill');
+          if (pill && modeShopBtn) {
+            pill.style.left = modeShopBtn.offsetLeft + 'px';
+            pill.style.width = modeShopBtn.offsetWidth + 'px';
+            pill.classList.add('shopping-pill');
+          }
           if (modeCoachBtn) modeCoachBtn.classList.remove('active');
           if (modeShopBtn) { modeShopBtn.classList.add('active', 'shopping-active'); }
 
@@ -30741,7 +32113,12 @@ applyOfflineState(!navigator.onLine);
 
           // Snap pill back to Coach after animation completes
           setTimeout(function() {
-            if (toggleContainer) toggleContainer.classList.remove('shopping-toggle');
+            var pill = document.getElementById('chatModePill');
+            if (pill && modeCoachBtn) {
+              pill.style.left = modeCoachBtn.offsetLeft + 'px';
+              pill.style.width = modeCoachBtn.offsetWidth + 'px';
+              pill.classList.remove('shopping-pill');
+            }
             if (modeCoachBtn) modeCoachBtn.classList.add('active');
             if (modeShopBtn) { modeShopBtn.classList.remove('active', 'shopping-active'); }
           }, 1200);
@@ -30755,6 +32132,20 @@ applyOfflineState(!navigator.onLine);
 
     // Initial state: always coach
     setMode('coach');
+
+    // Recalculate pill position/width on language change (button text
+    // lengths differ per language — e.g. "Stílustanácsadó" vs "Style Coach")
+    window.addEventListener('langchange', function() {
+      var pill = document.getElementById('chatModePill');
+      var activeBtn = window._dsChatMode === 'shopping' ? modeShopBtn : modeCoachBtn;
+      if (pill && activeBtn) {
+        // Slight delay so the DOM has updated the button text first
+        setTimeout(function() {
+          pill.style.left = activeBtn.offsetLeft + 'px';
+          pill.style.width = activeBtn.offsetWidth + 'px';
+        }, 50);
+      }
+    });
   })();
 
 })();
@@ -31775,6 +33166,345 @@ applyOfflineState(!navigator.onLine);
       }
     } catch(e) { console.warn('[langchange] VAI re-render failed:', e); }
   });
+
+  // ============================================================
+  // VIBE DEEP — Real-time Overlay + Before/After + History
+  // ============================================================
+
+  var VIBE_HIST_KEY = 'datescan.vibe_history';
+
+  function _loadVibeHistory() {
+    try { return JSON.parse(localStorage.getItem(VIBE_HIST_KEY) || '[]'); }
+    catch(e) { return []; }
+  }
+  function _saveVibeHistory(arr) {
+    try { localStorage.setItem(VIBE_HIST_KEY, JSON.stringify(arr)); } catch(e) {}
+  }
+
+  function _addVibeHistoryEntry(c) {
+    var hist = _loadVibeHistory();
+    hist.push({
+      score: c.score,
+      archetypeKey: c.archetypeKey || '',
+      archetype: c.archetype || '',
+      subtype: c.subtype || '',
+      timestamp: Date.now()
+    });
+    // Cap at 50 entries
+    if (hist.length > 50) hist = hist.slice(hist.length - 50);
+    _saveVibeHistory(hist);
+    return hist;
+  }
+
+  function _getVibeTier(score) {
+    if (score >= 92) return 'elite';
+    if (score >= 75) return 'high';
+    if (score >= 55) return 'mid';
+    if (score >= 40) return 'low';
+    return 'rough';
+  }
+
+  // ── Real-time Vibe Overlay on Camera Feed ──────────────
+  var overlayEl = $vai('vai-vibe-overlay');
+  var tierLabelEl = $vai('vai-vibe-tier-label');
+  var _overlayRAF = null;
+  var _lastOverlayTier = '';
+
+  function _startVibeOverlay() {
+    if (!overlayEl || !video) return;
+    overlayEl.classList.add('active');
+    _runOverlayFrame();
+  }
+
+  function _stopVibeOverlay() {
+    if (_overlayRAF) { cancelAnimationFrame(_overlayRAF); _overlayRAF = null; }
+    if (overlayEl) { overlayEl.classList.remove('active'); overlayEl.className = 'vai-vibe-overlay'; }
+    if (tierLabelEl) { tierLabelEl.style.display = 'none'; }
+    _lastOverlayTier = '';
+  }
+
+  function _runOverlayFrame() {
+    if (!video || video.paused || video.ended || !video.videoWidth) {
+      _overlayRAF = requestAnimationFrame(_runOverlayFrame);
+      return;
+    }
+    try {
+      var c = document.createElement('canvas');
+      var W = 32, H = Math.max(1, Math.round(W * video.videoHeight / video.videoWidth));
+      c.width = W; c.height = H;
+      var ctx = c.getContext('2d');
+      ctx.drawImage(video, 0, 0, W, H);
+      var data = ctx.getImageData(0, 0, W, H).data;
+      var lumaSum = 0, satSum = 0, n = W * H;
+      for (var i = 0; i < data.length; i += 4) {
+        var r = data[i], g = data[i+1], b = data[i+2];
+        lumaSum += 0.299 * r + 0.587 * g + 0.114 * b;
+        var mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+        satSum += mx === 0 ? 0 : (mx - mn) / mx;
+      }
+      var avgLuma = lumaSum / n;
+      var avgSat = satSum / n;
+
+      // Quick quality estimate for overlay display
+      var qual = 50;
+      if (avgLuma > 35 && avgLuma < 230) qual += 10;
+      if (avgSat > 0.15 && avgSat < 0.55) qual += 10;
+      qual = Math.min(95, Math.max(30, qual + Math.round(avgSat * 20)));
+
+      var tier = _getVibeTier(qual);
+      if (tier !== _lastOverlayTier) {
+        _lastOverlayTier = tier;
+        // Update overlay class
+        overlayEl.className = 'vai-vibe-overlay active tier-' + tier;
+        // Update tier label
+        if (tierLabelEl) {
+          tierLabelEl.textContent = t('vibe_tier_' + tier);
+          tierLabelEl.className = 'vai-vibe-tier-label tier-' + tier;
+          tierLabelEl.style.display = '';
+        }
+      }
+    } catch(e) { /* ignore frame analysis errors */ }
+    _overlayRAF = requestAnimationFrame(_runOverlayFrame);
+  }
+
+  // ── Before/After Comparison ────────────────────────────
+  function _renderBeforeAfter(c) {
+    var baEl = $vai('vai-before-after');
+    if (!baEl) return;
+
+    var hist = _loadVibeHistory();
+    // We just added the current entry, so previous is hist[hist.length - 2]
+    if (hist.length < 2) {
+      // First scan — show baseline message
+      baEl.style.display = 'none';
+      return;
+    }
+
+    var prev = hist[hist.length - 2];
+    var curr = hist[hist.length - 1];
+    var dScore = curr.score - prev.score;
+
+    baEl.style.display = '';
+
+    // Before card
+    var beforeLabel = $vai('vai-ba-before-label');
+    var beforeScore = $vai('vai-ba-before-score');
+    var beforeArch  = $vai('vai-ba-before-arch');
+    if (beforeLabel) beforeLabel.textContent = t('vibe_before_label');
+    if (beforeScore) beforeScore.textContent = prev.score;
+    if (beforeArch) beforeArch.textContent = prev.archetypeKey ? t(prev.archetypeKey) : prev.archetype;
+
+    // After card
+    var afterLabel = $vai('vai-after-label');
+    var afterScore = $vai('vai-after-score');
+    var afterArch  = $vai('vai-ba-after-arch');
+    if (afterLabel) afterLabel.textContent = t('vibe_after_label');
+    if (afterScore) afterScore.textContent = curr.score;
+    if (afterArch) afterArch.textContent = curr.archetypeKey ? t(curr.archetypeKey) : curr.archetype;
+
+    // Delta
+    var deltaEl = $vai('vai-ba-delta');
+    if (deltaEl) {
+      var sign = dScore > 0 ? '+' : '';
+      if (dScore > 0) {
+        deltaEl.textContent = sign + dScore + ' ' + t('vibe_delta_up');
+        deltaEl.className = 'vai-ba-delta positive';
+      } else if (dScore < 0) {
+        deltaEl.textContent = dScore + ' ' + t('vibe_delta_down');
+        deltaEl.className = 'vai-ba-delta negative';
+      } else {
+        deltaEl.textContent = t('vibe_delta_same');
+        deltaEl.className = 'vai-ba-delta neutral';
+      }
+    }
+  }
+
+  // ── Vibe History Chart (Canvas) ────────────────────────
+  function _renderVibeHistory() {
+    var titleEl = $vai('vai-history-title');
+    var contentEl = $vai('vai-history-content');
+    if (!titleEl || !contentEl) return;
+
+    titleEl.textContent = t('vibe_history_title');
+
+    var hist = _loadVibeHistory();
+    if (hist.length < 2) {
+      contentEl.innerHTML = '<div class="vai-history-empty">' + t('vibe_history_empty') + '</div>';
+      return;
+    }
+
+    contentEl.innerHTML = '<div class="vai-history-canvas-wrap"><canvas id="vaiHistoryCanvas"></canvas></div>';
+
+    setTimeout(function() {
+      var canvas = document.getElementById('vaiHistoryCanvas');
+      if (!canvas) return;
+
+      var size = 260;
+      var dpr = window.devicePixelRatio || 1;
+      canvas.width = size * dpr;
+      canvas.height = size * dpr;
+      canvas.style.width = size + 'px';
+      canvas.style.height = size + 'px';
+      var ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+
+      var pad = { t: 20, b: 28, l: 30, r: 12 };
+      var W = size - pad.l - pad.r;
+      var H = size - pad.t - pad.b;
+
+      // Determine score range
+      var scores = hist.map(function(h) { return h.score; });
+      var minS = Math.max(0, Math.min.apply(null, scores) - 8);
+      var maxS = Math.min(100, Math.max.apply(null, scores) + 8);
+      var range = Math.max(1, maxS - minS);
+
+      // Background grid
+      for (var g = 0; g <= 4; g++) {
+        var gy = pad.t + (g / 4) * H;
+        ctx.beginPath();
+        ctx.moveTo(pad.l, gy);
+        ctx.lineTo(pad.l + W, gy);
+        ctx.strokeStyle = 'rgba(236,72,153,0.08)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        var label = Math.round(maxS - (g / 4) * range);
+        ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        ctx.font = '600 8px Inter, system-ui, sans-serif';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(label, pad.l - 5, gy);
+      }
+
+      // Data points
+      var points = hist.map(function(h, i) {
+        var x = pad.l + (hist.length > 1 ? (i / (hist.length - 1)) * W : W / 2);
+        var y = pad.t + (1 - (h.score - minS) / range) * H;
+        return { x: x, y: y, tier: _getVibeTier(h.score), ts: h.timestamp };
+      });
+
+      // Gradient area under curve
+      if (points.length >= 2) {
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, pad.t + H);
+        points.forEach(function(p) { ctx.lineTo(p.x, p.y); });
+        ctx.lineTo(points[points.length - 1].x, pad.t + H);
+        ctx.closePath();
+        var areaGrad = ctx.createLinearGradient(0, pad.t, 0, pad.t + H);
+        areaGrad.addColorStop(0, 'rgba(236,72,153,0.2)');
+        areaGrad.addColorStop(1, 'rgba(168,85,247,0.02)');
+        ctx.fillStyle = areaGrad;
+        ctx.fill();
+      }
+
+      // Line
+      ctx.beginPath();
+      points.forEach(function(p, i) {
+        if (i === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+      });
+      ctx.strokeStyle = 'rgba(236,72,153,0.7)';
+      ctx.lineWidth = 2.5;
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+
+      // Points with tier color
+      var tierColors = {
+        elite: '#a855f7', high: '#ec4899', mid: '#f472b6',
+        low: '#f97316', rough: '#ef4444'
+      };
+      points.forEach(function(p) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+        ctx.fillStyle = tierColors[p.tier] || '#ec4899';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(0,0,0,0.4)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      });
+
+      // Time labels
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      ctx.font = '600 7px Inter, system-ui, sans-serif';
+      points.forEach(function(p, i) {
+        if (hist.length <= 8 || i % 2 === 0) {
+          var d = new Date(p.ts);
+          var label = (d.getMonth() + 1) + '/' + d.getDate();
+          ctx.fillText(label, p.x, pad.t + H + 6);
+        }
+      });
+    }, 30);
+  }
+
+  // ── Hook into existing functions ───────────────────────
+
+  // Patch openMirror to start overlay
+  var _origOpenMirror = openMirror;
+  openMirror = function() {
+    _origOpenMirror();
+    // Small delay to let camera start
+    setTimeout(_startVibeOverlay, 500);
+  };
+
+  // Patch cancelMirror/stopCamera to stop overlay
+  var _origCancelMirror = cancelMirror;
+  cancelMirror = function() {
+    _stopVibeOverlay();
+    _origCancelMirror();
+  };
+
+  // Patch showResult to add history, before/after, and history chart
+  var _origShowResult = showResult;
+  showResult = function(c) {
+    _origShowResult(c);
+    try {
+      // Save to vibe history
+      _addVibeHistoryEntry(c);
+      // Render before/after comparison
+      _renderBeforeAfter(c);
+      // Render vibe history chart
+      _renderVibeHistory();
+    } catch(e) { console.warn('[VAI Deep] render failed:', e); }
+  };
+
+  // Patch reset to stop overlay
+  var _origReset = reset;
+  reset = function() {
+    _stopVibeOverlay();
+    _origReset();
+  };
+
+  // Also update wire-up to use the patched functions
+  // (The original addEventListener calls reference the original functions,
+  //  but since we patched the module-level vars, the new buttons work too.)
+
+  // Patch langchange for before/after and history re-render
+  window.addEventListener('langchange', function() {
+    try {
+      _renderVibeHistory();
+      // Re-render before/after labels
+      var baEl = $vai('vai-before-after');
+      if (baEl && baEl.style.display !== 'none') {
+        var hist = _loadVibeHistory();
+        if (hist.length >= 2) {
+          var prev = hist[hist.length - 2];
+          var curr = hist[hist.length - 1];
+          var beforeLabel = $vai('vai-ba-before-label');
+          var afterLabel = $vai('vai-after-label');
+          var beforeArch = $vai('vai-ba-before-arch');
+          var afterArch = $vai('vai-ba-after-arch');
+          if (beforeLabel) beforeLabel.textContent = t('vibe_before_label');
+          if (afterLabel) afterLabel.textContent = t('vibe_after_label');
+          if (beforeArch) beforeArch.textContent = prev.archetypeKey ? t(prev.archetypeKey) : prev.archetype;
+          if (afterArch) afterArch.textContent = curr.archetypeKey ? t(curr.archetypeKey) : curr.archetype;
+        }
+      }
+    } catch(e) {}
+  });
+
+  // Initial render of vibe history (in case returning user)
+  setTimeout(_renderVibeHistory, 200);
+
 })();
 </script>
 
@@ -35955,6 +37685,7 @@ applyOfflineState(!navigator.onLine);
   function updatePlaceholders() {
     var p = _$('siqLogPrice'); if (p) p.placeholder = _t('siq_ph_price');
     var b = _$('siqBudget'); if (b) b.placeholder = _t('siq_ph_budget');
+    var s = _$('siqSearch'); if (s) s.placeholder = _t('siq_search');
   }
   updatePlaceholders();
   window.addEventListener('langchange', updatePlaceholders);
