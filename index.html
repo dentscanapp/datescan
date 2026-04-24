@@ -657,6 +657,16 @@ window._dsLog = function() { if (window.__DS_DEBUG) console.log.apply(console, a
   .mobile-nav-btn.is-active span {
     color: #f9a8d4 !important;
   }
+  /* Shopping mode — gold/amber active glow for bottom nav chat button */
+  .mobile-nav-btn.is-active.is-shopping-nav {
+    background: linear-gradient(to bottom, rgba(245,158,11,0.32), rgba(217,119,6,0.22)) !important;
+    border-color: rgba(245,158,11,0.85) !important;
+    box-shadow: 0 0 24px rgba(245,158,11,0.5) !important;
+  }
+  .mobile-nav-btn.is-active.is-shopping-nav svg,
+  .mobile-nav-btn.is-active.is-shopping-nav span {
+    color: #fde68a !important;
+  }
 
   @media (max-width: 1023px) {
     #cameraCol {
@@ -2707,9 +2717,17 @@ if (window.__DS_IS_ANDROID_APP) {
     box-shadow: 0 30px 80px -20px rgba(236, 72, 153, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.04);
     text-align: center;
     animation: ag-pop 280ms cubic-bezier(0.16, 1, 0.3, 1);
-    isolation: isolate;
-    will-change: transform;
     position: relative;
+  }
+  @media (pointer: coarse), (hover: none) {
+    #age-gate .ag-card { isolation: auto; will-change: auto; }
+    #age-gate .ag-actions { position: relative; z-index: 2; }
+    #age-gate button {
+      -webkit-touch-callout: none;
+      isolation: auto;
+      transform: translateZ(0);
+      pointer-events: auto !important;
+    }
   }
   @keyframes ag-pop {
     from { transform: translateY(12px) scale(0.97); opacity: 0; }
@@ -2789,11 +2807,7 @@ if (window.__DS_IS_ANDROID_APP) {
     position: relative;
     touch-action: auto;
   }
-  /* Desktop: keep isolation for visual correctness.
-     Mobile: remove isolation + will-change to prevent touch event swallowing */
-  @media not all and (pointer: coarse) {
-    .ds-consent .dsc-card { isolation: isolate; will-change: transform; }
-  }
+  /* Mobile: remove isolation + will-change to prevent touch event swallowing */
   .ds-consent .dsc-scroll {
     overflow-y: auto; flex: 1 1 auto; min-height: 0;
     -webkit-overflow-scrolling: touch;
@@ -3057,6 +3071,111 @@ if (window.__DS_IS_ANDROID_APP) {
   body.user-is-pro .upgrade-section { display: none !important; }
   .pro-feature { display: none !important; }
   body.user-is-pro .pro-feature { display: revert !important; }
+
+  /* ── Chat Mode Toggle (Style Coach / Shopping Concierge) ── */
+  #chatModeToggle {
+    position: relative;
+  }
+  /* Sliding pill indicator behind the active tab */
+  #chatModeToggle::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: calc(50% - 3px);
+    height: calc(100% - 6px);
+    border-radius: 9999px;
+    background: linear-gradient(135deg, rgba(147,51,234,0.55), rgba(168,85,247,0.45));
+    box-shadow: 0 0 10px rgba(147,51,234,0.35), inset 0 1px 0 rgba(255,255,255,0.1);
+    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), background 0.35s ease, box-shadow 0.35s ease;
+    z-index: 0;
+    pointer-events: none;
+    will-change: transform;
+  }
+  /* Shopping mode: pill slides to the right AND turns gold */
+  #chatModeToggle.shopping-toggle::before {
+    transform: translateX(100%);
+    background: linear-gradient(135deg, rgba(245,158,11,0.55), rgba(217,119,6,0.45));
+    box-shadow: 0 0 10px rgba(245,158,11,0.35), inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+  /* Shopping mode: active button gets gold text glow */
+  .chat-mode-btn.shopping-active {
+    color: #fff !important;
+    text-shadow: 0 0 8px rgba(245,158,11,0.4) !important;
+  }
+  .chat-mode-btn {
+    color: rgba(255,255,255,0.4);
+    background: transparent;
+    border: none;
+    transition: color 0.3s ease;
+    position: relative;
+    z-index: 1;
+  }
+  .chat-mode-btn.active {
+    color: #fff;
+    background: transparent;
+    text-shadow: 0 0 6px rgba(147,51,234,0.3);
+  }
+  .chat-mode-btn:hover:not(.active) {
+    color: rgba(255,255,255,0.65);
+  }
+  /* Shopping mode active — same lilac, white text */
+  .chat-mode-btn.shopping-active {
+    color: #fff;
+    background: transparent;
+    text-shadow: 0 0 6px rgba(147,51,234,0.3);
+  }
+  /* Hide the locked button when user is pro (upgrade-section hides it) */
+
+  /* Shopping mode — gold premium accent shift for chat header */
+  .chat-shopping-mode .premium-glass {
+    border-color: rgba(245,158,11,0.15) !important;
+  }
+  .chat-shopping-mode #quickReplyChips .quick-reply-chip {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+    border-color: rgba(245,158,11,0.3) !important;
+    box-shadow: 0 2px 12px rgba(245,158,11,0.35) !important;
+  }
+  .chat-shopping-mode #quickReplyChips .quick-reply-chip:hover {
+    box-shadow: 0 4px 20px rgba(245,158,11,0.5) !important;
+    filter: brightness(1.12);
+  }
+  .chat-shopping-mode #quickReplyChips .quick-reply-chip:active {
+    box-shadow: 0 1px 6px rgba(245,158,11,0.25) !important;
+    filter: brightness(0.95);
+  }
+  /* Shopping mode — gold accent for chat input bar */
+  .chat-shopping-mode .chat-input-bar:focus-within {
+    border-color: rgba(245,158,11,0.4);
+    box-shadow: 0 0 0 3px rgba(245,158,11,0.08), 0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+  .chat-shopping-mode .chat-input-bar .chat-send-btn {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    box-shadow: 0 2px 8px rgba(245,158,11,0.3);
+  }
+  .chat-shopping-mode .chat-input-bar .chat-send-btn:hover {
+    box-shadow: 0 4px 16px rgba(245,158,11,0.45);
+  }
+  .chat-shopping-mode .chat-input-bar .chat-icon-btn.has-attachment {
+    background: rgba(245,158,11,0.2);
+    color: rgb(251,191,36);
+    box-shadow: 0 0 0 2px rgba(245,158,11,0.35);
+  }
+  .chat-shopping-mode .chat-input-bar .chat-icon-btn.has-attachment::after {
+    background: #f59e0b;
+    box-shadow: 0 0 6px rgba(245,158,11,0.6);
+  }
+  /* Shopping mode — gold accent for attachment preview and voice badge */
+  .chat-shopping-mode #coachChatAttachments {
+    background: rgba(245,158,11,0.1) !important;
+    border-color: rgba(245,158,11,0.2) !important;
+  }
+  .chat-shopping-mode #voiceLangBadge {
+    color: rgba(245,158,11,0.7) !important;
+  }
+  .chat-shopping-mode #chatPointsClockIcon {
+    display: none;
+  }
 
   /* Android app users: hide Gumroad links, upgrade.html refs, external payment */
   .gumroad-only { /* visible by default on mobile web */ }
@@ -4050,6 +4169,10 @@ if (window.__DS_IS_ANDROID_APP) {
     no  && no.addEventListener('click', onNo);
     yes && yes.addEventListener('touchend', function handler(e) { e.preventDefault(); yes.removeEventListener('touchend', handler); onYes(); }, { passive: false });
     no  && no.addEventListener('touchend', function handler(e) { e.preventDefault(); no.removeEventListener('touchend', handler); onNo(); }, { passive: false });
+    // pointerdown fallback: catches touch on WebViews that swallow all
+    // touch events but still fire pointer events on the button.
+    yes && yes.addEventListener('pointerdown', function(e) { e.preventDefault(); onYes(); });
+    no  && no.addEventListener('pointerdown', function(e) { e.preventDefault(); onNo(); });
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && !modal.hidden) { e.preventDefault(); e.stopPropagation(); }
     }, true);
@@ -4065,20 +4188,7 @@ if (window.__DS_IS_ANDROID_APP) {
       if (!modal || !yes || !no) { resolve(); return; }
       modal.hidden = false;
       dscLock();
-      // On desktop, force the card into its own compositing layer so touch
-      // events aren't swallowed by backdrop-filter on older WebViews.
-      // On mobile (pointer:coarse), do NOT set translateZ on the card —
-      // nested compositing layers (card + buttons both with translateZ)
-      // cause touch event swallowing on many Android WebViews.
       var card = modal.querySelector('.dsc-card');
-      var isMobile = window.matchMedia('(pointer: coarse)').matches;
-      if (card && !isMobile) {
-        card.style.transform = 'translateZ(0)';
-        card.addEventListener('animationend', function onEnd() {
-          card.removeEventListener('animationend', onEnd);
-          card.style.transform = 'translateZ(0)';
-        });
-      }
       var _resolved = false;
       function cleanup() {
         yes.removeEventListener('click', onYes);
@@ -4161,14 +4271,6 @@ if (window.__DS_IS_ANDROID_APP) {
       modal.hidden = false;
       dscLock();
       var card = modal.querySelector('.dsc-card');
-      var isMobile2 = window.matchMedia('(pointer: coarse)').matches;
-      if (card && !isMobile2) {
-        card.style.transform = 'translateZ(0)';
-        card.addEventListener('animationend', function onEnd() {
-          card.removeEventListener('animationend', onEnd);
-          card.style.transform = 'translateZ(0)';
-        });
-      }
       function onChange() { yes.disabled = !confirm.checked; }
       function cleanup() {
         yes.removeEventListener('click', onYes);
@@ -6229,24 +6331,30 @@ if (window.__DS_IS_ANDROID_APP) {
       </div>
 
       <div class="premium-glass rounded-[32px] p-6 sm:p-8 relative overflow-hidden">
-        <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-purple-500/20 mix-blend-screen filter blur-[40px] pointer-events-none"></div>
-        <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 mb-1 relative z-10">
+        <span class="absolute top-3 right-4 z-20 text-[9px] sm:text-[10px] font-sans font-bold uppercase tracking-widest text-purple-300 border border-purple-500/30 bg-purple-500/10 px-2 sm:px-2.5 py-0.5 rounded-full whitespace-nowrap" data-i18n="chat_vision_ai">Vision AI</span>
+        <div id="chatGlowDefault" class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-purple-500/20 mix-blend-screen filter blur-[40px] pointer-events-none transition-opacity duration-500"></div>
+        <div id="chatGlowShopping" class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-amber-500/25 mix-blend-screen filter blur-[40px] pointer-events-none opacity-0 transition-opacity duration-500"></div>
+        <div class="absolute -bottom-8 -right-12 w-40 h-40 rounded-full mix-blend-screen filter blur-[50px] pointer-events-none transition-colors duration-500" id="chatGlowAccent" style="background: rgba(168,85,247,0.12);"></div>
+        <div class="flex flex-col gap-2 mb-1 relative z-10">
           <h2 class="font-serif text-xl sm:text-2xl font-semibold flex items-center gap-2 min-w-0">
-            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-purple-300 shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg>
-            <span data-i18n="chat_with_coach" class="truncate">Chat with Coach</span>
+            <span id="chatTitleLabel" data-i18n="chat_with_coach" class="truncate">Chat with Coach</span>
           </h2>
-          <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
             <button id="memoryToggleBtn" type="button" class="shrink-0 text-[9px] sm:text-[10px] font-sans font-bold uppercase tracking-widest text-purple-300 border border-purple-500/30 bg-purple-500/10 px-2 sm:px-2.5 py-0.5 rounded-full whitespace-nowrap text-center hover:bg-purple-500/20 transition-colors flex items-center gap-1 cursor-pointer" title="Style Memory">
               <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 2a7 7 0 017 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 017-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
               <span data-i18n="memory_section_title">Style Preferences</span>
             </button>
-            <span class="shrink-0 text-[9px] sm:text-[10px] font-sans font-bold uppercase tracking-widest text-purple-300 border border-purple-500/30 bg-purple-500/10 px-2 sm:px-2.5 py-0.5 rounded-full whitespace-nowrap text-center" data-i18n="chat_vision_ai">Vision AI</span>
+            <!-- Chat Mode Toggle: Style Coach / Shopping Concierge -->
+            <div id="chatModeToggle" class="shrink-0 flex items-center rounded-full border border-white/10 bg-white/5 p-[3px] gap-0.5 transition-all duration-300">
+              <button id="chatModeCoach" type="button" class="chat-mode-btn active text-[9px] sm:text-[10px] font-sans font-bold uppercase tracking-widest px-2 sm:px-3 py-1 rounded-full whitespace-nowrap text-center cursor-pointer" data-i18n="coach_mode_label">Style Coach</button>
+              <button id="chatModeShopping" type="button" class="chat-mode-btn text-[9px] sm:text-[10px] font-sans font-bold uppercase tracking-widest px-2 sm:px-3 py-1 rounded-full whitespace-nowrap text-center cursor-pointer relative" data-i18n="shop_mode_label">Shopping</button>
+            </div>
           </div>
         </div>
         <p class="text-xs text-gray-400 mb-4 relative z-10">
           <span class="inline-flex items-center gap-1">
-            <svg class="w-3 h-3 text-brand-400" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-            <span data-i18n-html="chat_point_per_msg"><strong class="text-brand-400">1 point</strong> per message</span>
+            <svg id="chatPointsClockIcon" class="w-3 h-3 text-brand-400" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <span id="chatPointsLabel" data-i18n-html="chat_point_per_msg"><strong class="text-brand-400">1 point</strong> per message</span>
           </span>
         </p>
 
@@ -6261,12 +6369,19 @@ if (window.__DS_IS_ANDROID_APP) {
         </button>
 
         <div id="coachChatMessages" class="relative z-10 flex flex-col gap-3 max-h-[55vh] overflow-y-auto pr-1 mb-4">
-          <div class="flex gap-2.5">
+          <!-- Coach mode welcome (shown by default) -->
+          <div id="coachWelcomeBubble" class="flex gap-2.5">
             <div class="shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-purple-500 flex items-center justify-center text-white">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.6 4.6L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.4z"/><path d="M19 14l.7 1.9 1.8.6-1.8.6L19 19l-.7-1.9-1.8-.6 1.8-.6z"/></svg>
             </div>
             <div class="bg-white/5 border border-white/10 rounded-2xl rounded-tl-sm px-4 py-2.5 text-sm text-gray-200 max-w-[85%]" data-i18n="chat_welcome">
               Hey! I'm your AI Style Coach with vision. Upload a photo or tap 👕 to pick from your closet, and I'll give you feedback on colors, fit, and how it works for your date tonight.
+            </div>
+          </div>
+          <!-- Shopping mode welcome (hidden by default, shown when shopping mode active) -->
+          <div id="shopWelcomeBubble" class="flex gap-2.5 hidden">
+            <div class="bg-white/5 border border-amber-500/20 rounded-2xl rounded-tl-sm px-4 py-2.5 text-sm text-gray-200 max-w-[85%]" data-i18n="shop_welcome">
+              Hey! I'm your Shopping Concierge. Tell me what you're looking for and I'll help you find the perfect piece — matched to your wardrobe, style, and budget.
             </div>
           </div>
         </div>
@@ -10637,30 +10752,30 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       vibe_high_4: 'you are the one they will remember',
       vibe_high_5: 'locked in - go.',
       vibe_high_6: 'presence before punchlines.',
-      vibe_elite_1: 'unforgettable. own every room.',
-      vibe_elite_2: 'next-level. do not waste this on small talk.',
-      vibe_elite_3: 'they noticed before you spoke.',
-      vibe_elite_4: 'magnetic. nothing left to prove.',
-      vibe_elite_5: 'top 1 %. act accordingly.',
+      vibe_elite_1: 'unforgettable. own every room',
+      vibe_elite_2: 'next-level. do not waste this on small talk',
+      vibe_elite_3: 'they noticed before you spoke',
+      vibe_elite_4: 'magnetic. nothing left to prove',
+      vibe_elite_5: 'top 1 %. act accordingly',
       vibe_mid_1: 'clean but forgettable',
-      vibe_mid_2: 'safe. too safe.',
+      vibe_mid_2: 'safe. too safe',
       vibe_mid_3: 'trying, not landing',
       vibe_mid_4: 'put together, not turned on',
       vibe_mid_5: 'showing up, not showing off',
-      vibe_mid_6: 'decent. that is the ceiling.',
+      vibe_mid_6: 'decent. that is the ceiling',
       vibe_mid_7: 'passes, does not pop',
-      vibe_mid_8: 'fine. fine is not the goal.',
+      vibe_mid_8: 'fine. fine is not the goal',
       vibe_low_1: 'not date-ready yet',
-      vibe_low_2: 'rough. fix the basics.',
+      vibe_low_2: 'rough. fix the basics',
       vibe_low_3: 'this will not do it tonight',
       vibe_low_4: 'hoping will not cut it - fix it',
       vibe_low_5: 'you know this is not it',
-      vibe_low_6: 'almost there. one more adjustment.',
-      vibe_rough_1: 'start over. seriously.',
-      vibe_rough_2: 'the mirror does not lie. fix this.',
-      vibe_rough_3: 'basics first. style later.',
-      vibe_rough_4: 'this is not a vibe. this is a warning.',
-      vibe_rough_5: 'reset everything and try again.',
+      vibe_low_6: 'almost there. one more adjustment',
+      vibe_rough_1: 'start over. seriously',
+      vibe_rough_2: 'the mirror does not lie. fix this',
+      vibe_rough_3: 'basics first. style later',
+      vibe_rough_4: 'this is not a vibe. this is a warning',
+      vibe_rough_5: 'reset everything and try again',
       booster_1: 'Slow down. Hold eye contact.',
       booster_2: 'Walk in like you belong there.',
       booster_3: 'Stop fidgeting. Every twitch leaks confidence.',
@@ -11473,6 +11588,27 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       wsp_weather_error: 'Could not fetch weather. Using default suggestions.',
       wsp_role_top: 'Top', wsp_role_bottom: 'Bottom', wsp_role_outer: 'Outer', wsp_role_dress: 'Dress', wsp_role_shoes: 'Shoes', wsp_role_accessory: 'Accessory',
 
+      // Shopping Concierge
+      shop_mode_label: 'Shopping',
+      coach_mode_label: 'Style Coach',
+      shop_welcome: 'Hey! I\'m your Shopping Concierge. Tell me what you\'re looking for and I\'ll help you find the perfect piece — matched to your wardrobe, style, and budget. Try: "I need a winter coat but I\'m not sure what kind"',
+      shop_chip_winter: 'Winter coat ideas',
+      shop_chip_date_night: 'Date night outfit',
+      shop_chip_work: 'Work wardrobe upgrade',
+      shop_chip_budget: 'Best under 30k',
+      shop_chip_shoes: 'Shoes to match my closet',
+      shop_chip_accessory: 'Accessory for my style',
+      shop_chip_replace: 'Replace my most worn',
+      shop_premium_hint: 'Unlock Shopping Concierge',
+      shop_premium_teaser: 'Shopping Concierge finds pieces that match your wardrobe and style. Available with premium.',
+      shop_cost_per_wear: 'Cost-per-wear analysis',
+      shop_wardrobe_match: 'Wardrobe match',
+      shop_buy_or_pass: 'Buy or pass',
+      shop_post_purchase: 'Scan your new piece for outfit ideas',
+      shop_narrowing_q: 'Help me narrow it down',
+      shop_ctx_wardrobe_intro: 'WARDROBE DATA',
+      shop_ctx_style_intro: 'STYLE PROFILE',
+      shop_ctx_budget_intro: 'BUDGET SIGNALS',
     },
     hu: {
       nav_closet: 'Szekrény',
@@ -12561,7 +12697,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       vibe_mid_8: 'rendben. a rendben nem a cél.',
       vibe_low_1: 'még nem randikész',
       vibe_low_2: 'durva. javítsd az alapokat.',
-      vibe_low_3: 'ez nem fogja megoldani ma este',
+      vibe_low_3: 'Ez ma este nem fog összejönni',
       vibe_low_4: 'a reménykedés nem elég - javítsd',
       vibe_low_5: 'tudod, hogy ez nem az',
       vibe_low_6: 'majdnem ott. még egy aprítás.',
@@ -13381,6 +13517,28 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       wsp_weather_fetch: 'Időjárás lekérdezése...',
       wsp_weather_error: 'Nem sikerült lekérdezni az időjárást. Alapértelmezett javaslatok használata.',
       wsp_role_top: 'Felső', wsp_role_bottom: 'Alsó', wsp_role_outer: 'Kabát', wsp_role_dress: 'Ruha', wsp_role_shoes: 'Cipő', wsp_role_accessory: 'Kiegészítő',
+
+      // Shopping Concierge
+      shop_mode_label: 'Vásárlás',
+      coach_mode_label: 'Stílustanácsadó',
+      shop_welcome: 'Szia! Én vagyok a vásárlási asszisztensed. Mondd el, mit keresel, és segítek megtalálni a tökéletes darabot – a szekrényedhez, stílusodhoz és keretedhez igazodva. Próbáld: "Keresek egy kabátot télre, de nem tudom milyet"',
+      shop_chip_winter: 'Téli kabátötletek',
+      shop_chip_date_night: 'Randi ruha',
+      shop_chip_work: 'Munkaruházat felújítás',
+      shop_chip_budget: 'Legjobb 30k alatt',
+      shop_chip_shoes: 'Cipő a szekrényemhez',
+      shop_chip_accessory: 'Kiegészítő a stílusomhoz',
+      shop_chip_replace: 'Cseréljem a legkopottabbat',
+      shop_premium_hint: 'Vásárlási asszisztens feloldása',
+      shop_premium_teaser: 'A vásárlási asszisztens olyan darabokat talál, amik illenek a szekrényedhez és stílusodhoz. Premium funkció.',
+      shop_cost_per_wear: 'Viselésenkénti költség elemzés',
+      shop_wardrobe_match: 'Szekrény-összekapcsolás',
+      shop_buy_or_pass: 'Vedd vagy ne vedd',
+      shop_post_purchase: 'Szkenneld az új darabod outfit-ötletekért',
+      shop_narrowing_q: 'Segíts leszűkíteni',
+      shop_ctx_wardrobe_intro: 'SZEKRÉNYADATOK',
+      shop_ctx_style_intro: 'STÍLUSPROFIL',
+      shop_ctx_budget_intro: 'KÖLTSÉGVETÉS JELZÉSEK',
 
     },
     de: {
@@ -14455,30 +14613,30 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       vibe_high_4: 'du bist der, an den sie sich erinnern werden',
       vibe_high_5: 'festgelegt - los.',
       vibe_high_6: 'Präsenz vor Pointen.',
-      vibe_elite_1: 'unvergesslich. besitze jeden Raum.',
-      vibe_elite_2: 'next level. verschwende das nicht an Smalltalk.',
-      vibe_elite_3: 'sie haben dich bemerkt, bevor du gesprochen hast.',
-      vibe_elite_4: 'magnetisch. nichts mehr zu beweisen.',
-      vibe_elite_5: 'top 1 %. handle danach.',
+      vibe_elite_1: 'unvergesslich. besitze jeden Raum',
+      vibe_elite_2: 'next level. verschwende das nicht an Smalltalk',
+      vibe_elite_3: 'sie haben dich bemerkt, bevor du gesprochen hast',
+      vibe_elite_4: 'magnetisch. nichts mehr zu beweisen',
+      vibe_elite_5: 'top 1 %. handle danach',
       vibe_mid_1: 'sauber aber vergesslich',
-      vibe_mid_2: 'sicher. zu sicher.',
+      vibe_mid_2: 'sicher. zu sicher',
       vibe_mid_3: 'versuchend, nicht treffend',
       vibe_mid_4: 'zusammengebaut, nicht eingeschaltet',
       vibe_mid_5: 'auftretend, nicht angebend',
-      vibe_mid_6: 'ordentlich. das ist die Decke.',
+      vibe_mid_6: 'ordentlich. das ist die Decke',
       vibe_mid_7: 'besteht, sticht nicht heraus',
-      vibe_mid_8: 'fine. fine ist nicht das Ziel.',
+      vibe_mid_8: 'fine. fine ist nicht das Ziel',
       vibe_low_1: 'noch nicht date-bereit',
-      vibe_low_2: 'grob. behebe die Grundlagen.',
+      vibe_low_2: 'grob. behebe die Grundlagen',
       vibe_low_3: 'das wird es heute Abend nicht tun',
       vibe_low_4: 'Hoffen reicht nicht - mach es besser',
       vibe_low_5: 'du weisst, das ist es nicht',
-      vibe_low_6: 'fast da. noch eine Anpassung.',
-      vibe_rough_1: 'fang von vorne an. ernsthaft.',
-      vibe_rough_2: 'der Spiegel lügt nicht. beheb das.',
-      vibe_rough_3: 'erst das Grundgerüst. Stil kommt später.',
-      vibe_rough_4: 'das ist kein Vibe. das ist eine Warnung.',
-      vibe_rough_5: 'alles auf null und nochmal versuchen.',
+      vibe_low_6: 'fast da. noch eine Anpassung',
+      vibe_rough_1: 'fang von vorne an. ernsthaft',
+      vibe_rough_2: 'der Spiegel lügt nicht. beheb das',
+      vibe_rough_3: 'erst das Grundgerüst. Stil kommt später',
+      vibe_rough_4: 'das ist kein Vibe. das ist eine Warnung',
+      vibe_rough_5: 'alles auf null und nochmal versuchen',
       booster_1: 'Werde langsamer. Halte den Augenkontakt.',
       booster_2: 'Geh rein, als gehorst du dorthin.',
       booster_3: 'Hor auf zu zappeln. Jedes Zucken verrt dein Selbstvertrauen.',
@@ -15290,6 +15448,28 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       wsp_weather_fetch: 'Wetter wird abgerufen...',
       wsp_weather_error: 'Wetter konnte nicht abgerufen werden. Standardvorschläge werden verwendet.',
       wsp_role_top: 'Oberteil', wsp_role_bottom: 'Unterteil', wsp_role_outer: 'Jacke', wsp_role_dress: 'Kleid', wsp_role_shoes: 'Schuhe', wsp_role_accessory: 'Accessoire',
+
+      // Shopping Concierge
+      shop_mode_label: 'Shopping',
+      coach_mode_label: 'Style-Berater',
+      shop_welcome: 'Hey! Ich bin dein Shopping-Concierge. Sag mir, was du suchst, und ich helfe dir, das perfekte Stück zu finden — passend zu deinem Kleiderschrank, deinem Stil und deinem Budget. Versuch: "Ich suche einen Wintermantel, aber ich weiss nicht welchen"',
+      shop_chip_winter: 'Wintermantel-Ideen',
+      shop_chip_date_night: 'Date-Night-Outfit',
+      shop_chip_work: 'Business-Gardererne Upgrade',
+      shop_chip_budget: 'Bestes unter 30k',
+      shop_chip_shoes: 'Schuhe zu meinem Schrank',
+      shop_chip_accessory: 'Accessoire zu meinem Stil',
+      shop_chip_replace: 'Mein meistgetragenes ersetzen',
+      shop_premium_hint: 'Shopping-Concierge freischalten',
+      shop_premium_teaser: 'Der Shopping-Concierge findet Stücke, die zu deinem Schrank und Stil passen. Mit Premium verfügbar.',
+      shop_cost_per_wear: 'Kosten-pro-Trag-Analyse',
+      shop_wardrobe_match: 'Schrank-Abgleich',
+      shop_buy_or_pass: 'Kaufen oder lassen',
+      shop_post_purchase: 'Scanne dein neues Stück für Outfit-Ideen',
+      shop_narrowing_q: 'Hilf mir einzugrenzen',
+      shop_ctx_wardrobe_intro: 'SCHRANKDATEN',
+      shop_ctx_style_intro: 'STILPROFIL',
+      shop_ctx_budget_intro: 'BUDGET-SIGNALE',
 
     },
   };
@@ -28025,9 +28205,24 @@ applyOfflineState(!navigator.onLine);
     { labelKey: 'scan_chip_score', icon: '📊' },
   ];
 
+  // Shopping Concierge chip definitions — shown when shopping mode is active
+  var SHOPPING_CHIP_DEFS = [
+    { labelKey: 'shop_chip_winter', icon: '🧥' },
+    { labelKey: 'shop_chip_date_night', icon: '🍷' },
+    { labelKey: 'shop_chip_work', icon: '💼' },
+    { labelKey: 'shop_chip_budget', icon: '💰' },
+    { labelKey: 'shop_chip_shoes', icon: '👟' },
+    { labelKey: 'shop_chip_accessory', icon: '⌚' },
+    { labelKey: 'shop_chip_replace', icon: '🔄' },
+  ];
+
   // Track whether a scan just happened so we can show scan chips
   // Uses window._scanJustHappened because it's set from the module scope (runScan)
   function getChips(occasion, scanFlag) {
+    // Shopping mode chips — override all other chips when shopping mode is active
+    if (window._dsChatMode === 'shopping') {
+      return SHOPPING_CHIP_DEFS.map(function(c) { return { label: (typeof window.t === 'function' ? window.t(c.labelKey) : c.labelKey), icon: c.icon }; });
+    }
     var raw = (CHIP_DEFS_KEY.core || []).concat(CHIP_DEFS_KEY[occasion] || []);
     // After a scan, prepend scan-specific chips for richer suggestions
     var shouldShowScanChips = scanFlag || window._scanJustHappened;
@@ -29031,6 +29226,29 @@ applyOfflineState(!navigator.onLine);
           (typeSummary ? ' (' + typeSummary + ')' : '') +
           (uniqueColors.length ? '. ' + t('ctx_dominant_colors') + ': ' + uniqueColors.join(', ') : '');
         lines.push(closetSummary + '.');
+
+        // Shopping mode: inject detailed item list so the AI can do
+        // precise wardrobe matching ("Your 3 beige trousers + navy
+        // blazer = perfect combo"). Each item gets one line with type,
+        // color, and occasion. Capped at 30 items to stay within
+        // token limits.
+        if (window._dsChatMode === 'shopping') {
+          const itemLines = [];
+          const maxItems = Math.min(allItems.length, 30);
+          for (let idx = 0; idx < maxItems; idx++) {
+            const item = allItems[idx];
+            const parts = [];
+            if (item.type) parts.push(item.type);
+            if (item.color) parts.push(item.color);
+            if (item.occasion) parts.push(item.occasion.replace('_', ' '));
+            if (item.tags && item.tags.season) parts.push(item.tags.season);
+            if (parts.length > 0) itemLines.push('  - ' + parts.join(', '));
+          }
+          if (itemLines.length > 0) {
+            lines.push(t('shop_ctx_wardrobe_intro') + ' (detailed):');
+            lines.push(itemLines.join('\n'));
+          }
+        }
       }
     } catch(e){}
 
@@ -29269,6 +29487,89 @@ applyOfflineState(!navigator.onLine);
     return result;
   }
 
+  // ── Shopping Concierge System Prompt ─────────────────────────
+  // Separate prompt for the shopping mode that focuses on product
+  // recommendations, wardrobe matching, and purchase decisions.
+  function buildShoppingSystemPrompt(recentHistory) {
+    const base =
+      "You are the Shopping Concierge for DateScan, a personal style app. " +
+      "You are a friendly, knowledgeable personal shopper who helps the user find the perfect clothing, shoes, or accessories. " +
+      "IMPORTANT: Always reply in the SAME LANGUAGE the user writes in. If they write in Hungarian, reply in Hungarian. If English, reply in English. Match their language exactly on every message. " +
+      "\n\n" +
+      "YOUR FLOW — guide the user through this natural conversation arc:\n" +
+      "1. DISCOVERY: The user describes what they're looking for (often vague — 'I need something for winter' or 'I want to look better on dates'). Ask 1-2 narrowing questions: occasion? budget? what do they already own that's similar?\n" +
+      "2. WARDROBE MATCHING: Use the wardrobe data provided to suggest items that complement what they already own. Be specific: 'You have 3 beige and 2 grey trousers — a navy blazer would work with all of them.'\n" +
+      "3. CONCRETE SUGGESTIONS: Recommend specific types, colors, and styles. When possible, suggest a price range and where to look (online stores, brands). Describe the item vividly enough that the user can search for it.\n" +
+      "4. BUY OR PASS ANALYSIS: If the user shares a specific item they're considering, analyze it: Does it match their wardrobe? Is the price justified? Calculate cost-per-wear if possible (price / estimated wears over lifetime). Compare to their usual spending patterns.\n" +
+      "5. POST-PURCHASE: If they bought something, encourage them to scan it in the app for outfit pairing suggestions. Offer to suggest 3-5 outfits with the new piece.\n" +
+      "\n\n" +
+      "WARDROBE CONTEXT — you have access to the user's saved wardrobe items. Use this data proactively to:\n" +
+      "- Identify gaps in their wardrobe\n" +
+      "- Suggest items that complement existing pieces (color matching, layering)\n" +
+      "- Avoid recommending items too similar to what they already own\n" +
+      "- Calculate versatile picks that work with multiple existing items\n" +
+      "\n\n" +
+      "STYLE CONTEXT — you also have the user's style profile (preferred colors, formality, style vibes). Tailor suggestions to their personal style.\n" +
+      "\n\n" +
+      "GUIDELINES:\n" +
+      "- Keep answers concise (3-6 sentences) unless the user asks for more detail\n" +
+      "- Be specific about colors, materials, and cuts — not just 'a nice jacket'\n" +
+      "- When discussing budget, be practical and respectful. Suggest options at different price points.\n" +
+      "- If the user is unsure, help them narrow down by asking about lifestyle, climate, and existing wardrobe\n" +
+      "- Never recommend items the user already owns (check wardrobe data)\n" +
+      "- Always explain WHY a piece works with their wardrobe\n" +
+      "\n\n" +
+      "FORBIDDEN WORDS — never say: 'context', 'app context', 'system', 'information provided', 'data', 'I don\\'t have access', 'based on the information', 'I was given', 'my instructions'. " +
+      "Speak like a knowledgeable friend who happens to know their wardrobe. If you don't know something specific, say naturally (in the user's language) something like: 'I'm not sure about that specific brand — but here's what to look for...' " +
+      "Never mention that you receive wardrobe or style data from the app.\n" +
+      "\n\n" +
+      "Use the LIVE APP CONTEXT silently to personalize advice. Never acknowledge it exists.";
+
+    // Same memory injection as the coach prompt
+    let memorySection = '';
+    if (Array.isArray(recentHistory) && recentHistory.length > 0) {
+      const exchanges = [];
+      let i = recentHistory.length - 1;
+      while (i >= 0 && exchanges.length < 3) {
+        const assistantMsg = recentHistory[i];
+        if (assistantMsg.role === 'assistant' && i - 1 >= 0) {
+          const userMsg = recentHistory[i - 1];
+          if (userMsg.role === 'user') {
+            const userText = typeof userMsg.content === 'string'
+              ? userMsg.content
+              : Array.isArray(userMsg.content)
+                ? userMsg.content.map(p => p.type === 'text' ? p.text : '[image]').join(' ')
+                : '[image]';
+            const assistantText = typeof assistantMsg.content === 'string'
+              ? assistantMsg.content
+              : '';
+            exchanges.unshift({ user: userText, assistant: assistantText });
+            i -= 2;
+            continue;
+          }
+        }
+        i -= 1;
+      }
+      if (exchanges.length > 0) {
+        memorySection = '\n\n=== ' + t('ctx_conversation_history') + ' ===\n';
+        memorySection += t('ctx_conversation_desc') + '\n';
+        exchanges.forEach((ex, idx) => {
+          memorySection += '\n[' + t('ctx_exchange') + ' ' + (idx + 1) + ']\n';
+          memorySection += t('ctx_user') + ': ' + ex.user + '\n';
+          memorySection += t('ctx_coach') + ': ' + ex.assistant + '\n';
+        });
+      }
+    }
+
+    const ctx = getModuleContext();
+    let result = base;
+    if (ctx) result += '\n\n=== LIVE APP CONTEXT ===\n' + ctx;
+    const memPrompt = _buildMemoryPrompt();
+    if (memPrompt) result += memPrompt;
+    if (memorySection) result += memorySection;
+    return result;
+  }
+
   function openClosetPicker() {
     // Read through window.userCloset — the chat IIFE lives in a classic
     // script while userCloset is declared in the module script, so the
@@ -29487,7 +29788,9 @@ applyOfflineState(!navigator.onLine);
     const detectedMood = _detectMood(text);
     startTypingIndicator(thinking, detectedMood);
 
-    let systemPrompt = buildSystemPrompt(history);
+    let systemPrompt = (window._dsChatMode === 'shopping')
+      ? buildShoppingSystemPrompt(history)
+      : buildSystemPrompt(history);
     // Append on-device feedback hints so the model adjusts based on
     // accumulated 👍/👎 signals. Runs entirely locally — no data leaves the browser.
     try {
@@ -29704,6 +30007,181 @@ applyOfflineState(!navigator.onLine);
       }
     });
   });
+
+  // ── Shopping Concierge Mode Toggle ────────────────────────────
+  // Single toggle: Style Coach ↔ Shopping
+  // Pro users: switches mode. Free users: shows inline teaser.
+  (function initChatModeToggle() {
+    var modeCoachBtn = document.getElementById('chatModeCoach');
+    var modeShopBtn = document.getElementById('chatModeShopping');
+    var coachWelcome = document.getElementById('coachWelcomeBubble');
+    var shopWelcome = document.getElementById('shopWelcomeBubble');
+    var chatContainer = messagesEl ? messagesEl.closest('.premium-glass') : null;
+    var dateOutfitBtn = document.getElementById('dateOutfitBtn');
+
+    // Always start in coach mode (shopping is only activated by explicit click)
+    window._dsChatMode = 'coach';
+    try { localStorage.setItem('datescan.chatMode', 'coach'); } catch(e) {}
+
+    function setMode(mode) {
+      if (mode !== 'coach' && mode !== 'shopping') mode = 'coach';
+      window._dsChatMode = mode;
+      try { localStorage.setItem('datescan.chatMode', mode); } catch(e) {}
+
+      // Update chat title text
+      var titleLabel = document.getElementById('chatTitleLabel');
+      if (mode === 'shopping') {
+        if (titleLabel) { titleLabel.textContent = t('shop_mode_label'); titleLabel.setAttribute('data-i18n', 'shop_mode_label'); }
+      } else {
+        if (titleLabel) { titleLabel.textContent = t('chat_with_coach'); titleLabel.setAttribute('data-i18n', 'chat_with_coach'); }
+      }
+
+      // Toggle active classes on buttons
+      if (modeCoachBtn) {
+        modeCoachBtn.classList.toggle('active', mode === 'coach');
+        modeCoachBtn.classList.toggle('shopping-active', false);
+      }
+      if (modeShopBtn) {
+        modeShopBtn.classList.toggle('active', mode === 'shopping');
+        modeShopBtn.classList.toggle('shopping-active', mode === 'shopping');
+      }
+
+      // Slide the pill indicator behind the active tab
+      var toggleContainer = document.getElementById('chatModeToggle');
+      if (toggleContainer) {
+        toggleContainer.classList.toggle('shopping-toggle', mode === 'shopping');
+      }
+
+      // Toggle shopping accent on chat container + background glow
+      if (chatContainer) {
+        chatContainer.classList.toggle('chat-shopping-mode', mode === 'shopping');
+      }
+      var glowDefault = document.getElementById('chatGlowDefault');
+      var glowShopping = document.getElementById('chatGlowShopping');
+      var glowAccent = document.getElementById('chatGlowAccent');
+      if (glowDefault) glowDefault.style.opacity = mode === 'shopping' ? '0' : '';
+      if (glowShopping) glowShopping.style.opacity = mode === 'shopping' ? '1' : '0';
+      if (glowAccent) glowAccent.style.background = mode === 'shopping' ? 'rgba(245,158,11,0.15)' : 'rgba(168,85,247,0.12)';
+
+      // Toggle gold/amber glow on bottom nav chat button when in shopping mode
+      // Also swap icon + label to Shopping cart when in shopping mode
+      var navChatBtn = document.getElementById('mobileNavChat');
+      if (navChatBtn) {
+        if (mode === 'shopping') {
+          navChatBtn.classList.add('is-shopping-nav');
+          navChatBtn.style.background = 'linear-gradient(to bottom, rgba(245,158,11,0.32), rgba(217,119,6,0.22))';
+          navChatBtn.style.borderColor = 'rgba(245,158,11,0.85)';
+          navChatBtn.style.boxShadow = '0 0 24px rgba(245,158,11,0.5)';
+          // Swap icon to shopping cart + label to Shopping
+          navChatBtn.innerHTML = '<svg class="w-[22px] h-[22px] text-white" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg><span class="text-[10px] font-bold uppercase tracking-widest" style="color:#fde68a">' + t('shop_mode_label') + '</span>';
+        } else {
+          navChatBtn.classList.remove('is-shopping-nav');
+          navChatBtn.style.background = '';
+          navChatBtn.style.borderColor = '';
+          navChatBtn.style.boxShadow = '';
+          // Restore original chat icon + label
+          navChatBtn.innerHTML = '<svg class="w-[22px] h-[22px] text-white" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg><span class="text-[10px] font-bold uppercase tracking-widest text-white" data-i18n="nav_chat">' + t('nav_chat') + '</span>';
+        }
+      }
+
+      // Toggle welcome bubbles
+      if (coachWelcome) coachWelcome.classList.toggle('hidden', mode !== 'coach');
+      if (shopWelcome) shopWelcome.classList.toggle('hidden', mode !== 'shopping');
+
+      // Toggle Date Outfit Picker (coach mode only)
+      if (dateOutfitBtn) {
+        dateOutfitBtn.style.display = mode === 'shopping' ? 'none' : '';
+      }
+
+      // Hide "1 point per message" in shopping mode (premium = no points)
+      var pointsLabel = document.getElementById('chatPointsLabel');
+      if (pointsLabel) {
+        pointsLabel.style.display = mode === 'shopping' ? 'none' : '';
+      }
+
+      // Remove shopping teaser when going back to coach
+      if (mode === 'coach' && messagesEl) {
+        var teaserEl = messagesEl.querySelector('.shopping-teaser');
+        if (teaserEl) teaserEl.remove();
+      }
+
+      // Re-render quick reply chips for the new mode
+      if (typeof window.renderQuickReplyChips === 'function') {
+        var qrc = document.getElementById('quickReplyChips');
+        if (qrc) { qrc.style.display = ''; qrc.classList.remove('fade-out'); }
+        window.renderQuickReplyChips();
+      }
+
+      // Clear chat messages (keep welcome bubble)
+      if (messagesEl) {
+        var allBubbles = messagesEl.querySelectorAll(':scope > .flex');
+        allBubbles.forEach(function(b) {
+          if (b === coachWelcome || b === shopWelcome) return;
+          b.remove();
+        });
+        // Also remove lock cards, cached badges, etc.
+        var extras = messagesEl.querySelectorAll('#chatPaywallLock, [data-cached-badge]');
+        extras.forEach(function(el) { el.remove(); });
+      }
+
+      // Clear history for the new mode (fresh start)
+      history.length = 0;
+    }
+
+    // ── Style Coach button ── always switches back to coach mode
+    if (modeCoachBtn) {
+      modeCoachBtn.addEventListener('click', function() {
+        if (typeof window.triggerHaptic === 'function') window.triggerHaptic('tap');
+        setMode('coach');
+      });
+    }
+
+    // ── Shopping button ── Pro: switches mode. Free: shows teaser.
+    if (modeShopBtn) {
+      modeShopBtn.addEventListener('click', function() {
+        if (typeof window.triggerHaptic === 'function') window.triggerHaptic('tap');
+
+        // Free user → animate pill briefly, show teaser, snap back
+        if (typeof window.isProUser === 'function' && !window.isProUser()) {
+          // Animate pill to Shopping position
+          var toggleContainer = document.getElementById('chatModeToggle');
+          if (toggleContainer) toggleContainer.classList.add('shopping-toggle');
+          if (modeCoachBtn) modeCoachBtn.classList.remove('active');
+          if (modeShopBtn) { modeShopBtn.classList.add('active', 'shopping-active'); }
+
+          if (!messagesEl.querySelector('.shopping-teaser')) {
+            var teaser = document.createElement('div');
+            teaser.className = 'flex gap-2.5 shopping-teaser';
+            teaser.innerHTML =
+              '<div class="shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white">' +
+                '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>' +
+              '</div>' +
+              '<div class="bg-white/5 border border-amber-500/20 rounded-2xl rounded-tl-sm px-4 py-2.5 text-sm text-gray-200 max-w-[85%]">' +
+                '<span class="text-amber-300 font-semibold">' + t('shop_premium_hint') + '</span><br>' +
+                '<span class="text-gray-400 text-xs">' + t('shop_premium_teaser') + '</span>' +
+              '</div>';
+            messagesEl.appendChild(teaser);
+            messagesEl.scrollTo({ top: messagesEl.scrollHeight, behavior: 'smooth' });
+          }
+
+          // Snap pill back to Coach after animation completes
+          setTimeout(function() {
+            if (toggleContainer) toggleContainer.classList.remove('shopping-toggle');
+            if (modeCoachBtn) modeCoachBtn.classList.add('active');
+            if (modeShopBtn) { modeShopBtn.classList.remove('active', 'shopping-active'); }
+          }, 1200);
+          return; // Don't fully switch mode for free users
+        }
+
+        // Pro user → switch to shopping mode
+        setMode('shopping');
+      });
+    }
+
+    // Initial state: always coach
+    setMode('coach');
+  })();
+
 })();
 </script>
 
