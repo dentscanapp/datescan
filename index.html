@@ -3554,7 +3554,7 @@ if (window.__DS_IS_ANDROID_APP) {
     opacity: 0;
   }
 
-  /* ===== Smart Shopping List ===== */
+  /* ===== Wardrobe Shopping List ===== */
   .smart-shop-gap-card {
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(255,255,255,0.08);
@@ -4308,6 +4308,94 @@ if (window.__DS_IS_ANDROID_APP) {
   #viewShopping .siq-modal-overlay.show{display:flex}
   #viewShopping .siq-modal{background:#111113;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:22px;width:100%;max-width:400px;max-height:85vh;overflow-y:auto}
 
+  /* ═══════════════════════════════════════════════════════════════
+       ALTEREGÓ LAB — Alteregó Építő Modul Stílusok
+       ═══════════════════════════════════════════════════════════════ */
+  #viewAlterego{font-family:Inter,sans-serif}
+  #viewAlterego .al-back-btn{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);cursor:pointer;transition:all 0.2s;flex-shrink:0}
+  #viewAlterego .al-back-btn:hover{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.2)}
+  #viewAlterego .al-back-btn:active{transform:scale(0.95)}
+  #viewAlterego .al-header{display:flex;align-items:center;gap:10px;margin-bottom:24px}
+  #viewAlterego .al-header-icon{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#ec4899,#9333ea);box-shadow:0 4px 14px rgba(236,72,153,0.3)}
+  #viewAlterego .al-title{font-size:1.25rem;font-weight:700;color:#fff;letter-spacing:-0.01em}
+  #viewAlterego .al-subtitle{font-size:10px;text-transform:uppercase;letter-spacing:0.15em;color:#9ca3af;font-weight:500;margin-top:2px}
+  #viewAlterego .al-hero{text-align:center;margin-bottom:32px}
+  #viewAlterego .al-hero h2{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:500;color:#fff;margin-bottom:8px;letter-spacing:-0.02em}
+  #viewAlterego .al-hero h2 em{font-style:italic;background:linear-gradient(90deg,#f472b6,#c084fc,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  #viewAlterego .al-hero p{font-size:0.8125rem;color:#9ca3af;max-width:420px;margin:0 auto;line-height:1.6}
+  #viewAlterego .al-overview{border-radius:16px;border:1px solid rgba(255,255,255,0.1);background:linear-gradient(135deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02));backdrop-filter:blur(20px);padding:20px;margin-bottom:24px}
+  #viewAlterego .al-overview-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  #viewAlterego .al-stat{border-radius:12px;padding:12px 8px;text-align:center}
+  #viewAlterego .al-stat-val{font-size:1.25rem;font-weight:700;color:#fff;font-variant-numeric:tabular-nums}
+  #viewAlterego .al-stat-lbl{font-size:9px;font-weight:600;margin-top:2px;text-transform:uppercase;letter-spacing:0.08em}
+  #viewAlterego .al-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:24px}
+  #viewAlterego .al-card{position:relative;border-radius:16px;border:1px solid rgba(255,255,255,0.1);background:linear-gradient(135deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02));backdrop-filter:blur(20px);overflow:hidden;cursor:pointer;transition:all 0.25s}
+  #viewAlterego .al-card:hover{border-color:rgba(255,255,255,0.2);transform:translateY(-4px);box-shadow:0 8px 30px rgba(236,72,153,0.12)}
+  #viewAlterego .al-card-bar{height:6px;width:100%}
+  #viewAlterego .al-card-body{padding:20px}
+  #viewAlterego .al-card-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  #viewAlterego .al-card-emoji{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem}
+  #viewAlterego .al-card-name{font-size:0.9375rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+  #viewAlterego .al-card-tagline{font-size:11px;color:#9ca3af;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
+  #viewAlterego .al-card-fav{position:absolute;top:16px;right:16px}
+  #viewAlterego .al-xp-row{display:flex;align-items:center;justify-content:space-between;font-size:11px;margin-bottom:6px}
+  #viewAlterego .al-xp-bar{height:8px;border-radius:4px;background:rgba(255,255,255,0.05);overflow:hidden;margin-bottom:10px}
+  #viewAlterego .al-xp-fill{height:100%;border-radius:4px;transition:width 0.6s cubic-bezier(0.4,0,0.2,1)}
+  #viewAlterego .al-stats-row{display:grid;grid-template-columns:3fr 3fr 3fr;gap:6px;margin-bottom:10px}
+  #viewAlterego .al-mini-stat{border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);padding:6px 8px;text-align:center}
+  #viewAlterego .al-mini-stat-val{font-size:11px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;gap:3px}
+  #viewAlterego .al-mini-stat-lbl{font-size:8px;color:#6b7280;margin-top:1px}
+  #viewAlterego .al-add-card{border:2px dashed rgba(255,255,255,0.1);background:rgba(255,255,255,0.02);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:220px;cursor:pointer;transition:all 0.25s}
+  #viewAlterego .al-add-card:hover{border-color:rgba(236,72,153,0.3);background:rgba(236,72,153,0.03)}
+  #viewAlterego .al-add-icon{width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:8px;color:#9ca3af;font-size:24px}
+  #viewAlterego .al-add-text{font-size:13px;font-weight:600;color:#9ca3af}
+  #viewAlterego .al-add-sub{font-size:10px;color:#6b7280;margin-top:4px}
+  /* Detail modal */
+  #alteregoDetailModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);z-index:115;align-items:flex-start;justify-content:center;padding:16px;padding-top:96px;padding-bottom:100px;overflow-y:auto}
+  #alteregoDetailModal.show{display:flex}
+  #alteregoDetailModal .al-modal{background:#0c0c10;border:1px solid rgba(255,255,255,0.1);border-radius:20px;width:100%;max-width:560px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column}
+  #alteregoDetailModal .al-modal-head{padding:20px 20px 12px;position:relative}
+  .al-modal-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:10px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:#d1d5db;cursor:pointer;transition:all 0.2s;z-index:5;font-size:14px;font-weight:700}
+  .al-modal-close:hover{color:#fff;background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.25)}
+  #alteregoDetailModal .al-modal-body{padding:0 20px 20px;overflow-y:auto;flex:1}
+  #alteregoDetailModal .al-tabs{display:flex;gap:4px;border-bottom:1px solid rgba(255,255,255,0.06);padding:0 20px;margin-bottom:16px}
+  #alteregoDetailModal .al-tab{padding:10px 14px;font-size:11px;font-weight:700;color:#6b7280;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;text-transform:uppercase;letter-spacing:0.05em}
+  #alteregoDetailModal .al-tab.active{color:#f472b6;border-bottom-color:#ec4899}
+  #alteregoDetailModal .al-tab:hover{color:#9ca3af}
+  /* Create modal */
+  #alteregoCreateModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);z-index:115;align-items:flex-start;justify-content:center;padding:16px;padding-top:96px;padding-bottom:100px;overflow-y:auto}
+  #alteregoCreateModal.show{display:flex}
+  #alteregoCreateModal .al-modal{background:#0c0c10;border:1px solid rgba(255,255,255,0.1);border-radius:20px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;padding:24px;position:relative}
+  #alteregoCreateModal .al-preset-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+  #alteregoCreateModal .al-preset{display:flex;align-items:center;gap:8px;border-radius:12px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.03);padding:10px;cursor:pointer;transition:all 0.2s;text-align:left}
+  #alteregoCreateModal .al-preset:hover{border-color:rgba(255,255,255,0.15);background:rgba(255,255,255,0.06)}
+  #alteregoCreateModal .al-preset-emoji{font-size:1.25rem}
+  #alteregoCreateModal .al-preset-name{font-size:11px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #alteregoCreateModal .al-preset-tag{font-size:9px;color:#6b7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #alteregoCreateModal .al-emoji-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  #alteregoCreateModal .al-emoji-btn{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.125rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);cursor:pointer;transition:all 0.15s}
+  #alteregoCreateModal .al-emoji-btn.sel{background:rgba(236,72,153,0.3);border-color:rgba(236,72,153,0.5);transform:scale(1.1)}
+  #alteregoCreateModal .al-emoji-btn:hover{background:rgba(255,255,255,0.08)}
+  #alteregoCreateModal .al-color-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  #alteregoCreateModal .al-color-btn{width:32px;height:32px;border-radius:50%;cursor:pointer;transition:all 0.15s}
+  #alteregoCreateModal .al-color-btn.sel{transform:scale(1.25);box-shadow:0 0 0 2px rgba(255,255,255,0.4)}
+  #alteregoCreateModal .al-color-btn:hover{transform:scale(1.1)}
+  #alteregoCreateModal label{display:block;font-size:10px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;margin-top:12px}
+  #alteregoCreateModal input[type="text"]{width:100%;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#fff;font-size:13px;font-weight:500;outline:none;transition:border-color 0.2s}
+  #alteregoCreateModal input[type="text"]:focus{border-color:rgba(236,72,153,0.5)}
+  #alteregoCreateModal input[type="text"]::placeholder{color:rgba(255,255,255,0.25)}
+  /* Celebration overlay */
+  #alteregoCelebrate{display:none;position:fixed;inset:0;z-index:116;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;text-align:center;padding:32px}
+  #alteregoCelebrate.show{display:flex}
+  /* How-it-works */
+  #viewAlterego .al-how{border-radius:16px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);padding:24px;margin-top:24px}
+  #viewAlterego .al-how h3{font-size:13px;font-weight:700;color:#fff;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+  #viewAlterego .al-how-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+  #viewAlterego .al-how-step{text-align:center;padding:12px}
+  #viewAlterego .al-how-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:1.25rem}
+  #viewAlterego .al-how-title{font-size:11px;font-weight:700;color:#fff;margin-bottom:4px}
+  #viewAlterego .al-how-desc{font-size:10px;color:#9ca3af;line-height:1.5}
+
   /* SIQ Edit Modal — lives outside #viewShopping for z-index reasons */
   #siqEditModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:200;align-items:center;justify-content:center;padding:20px}
   #siqEditModal.show{display:flex}
@@ -4364,7 +4452,7 @@ if (window.__DS_IS_ANDROID_APP) {
       </li>
       <li class="dsc-good">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-        <span data-i18n-html="cam_bullet_2"><strong>Nothing is saved.</strong> Frames live in your device's memory for a few seconds while the AI checks outfit, grooming, posture and lighting — then they're discarded.</span>
+        <span data-i18n-html="cam_bullet_2"><strong>Nothing is saved.</strong> Frames live in your device's memory for a few seconds while our scanner checks outfit, grooming, posture and lighting — then they're discarded.</span>
       </li>
       <li class="dsc-good">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
@@ -4729,6 +4817,10 @@ if (window.__DS_IS_ANDROID_APP) {
       <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
       <span class="hidden sm:inline" data-i18n="nav_shopping">Shop IQ</span>
     </button>
+    <button id="navAlteregoBtn" class="hidden lg:flex text-xs font-bold px-3 py-2 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors items-center gap-1.5" title="Alteregó Lab">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+      <span class="hidden sm:inline">Alteregó</span>
+    </button>
     <!-- Points pill (replaces the old "Free Scans Left" badge).
          Populated by updatePointsBadge(). Always visible — shows the
          current point balance for free users, "PRO" for upgraded
@@ -4783,7 +4875,7 @@ if (window.__DS_IS_ANDROID_APP) {
           <span data-i18n="scan_hero_title">Perfect your</span> <span class="italic text-[#ec4899]" data-i18n="scan_hero_title_accent">first impression</span>
         </h1>
         <p class="text-gray-400 text-sm md:text-base max-w-lg mx-auto font-medium tracking-wide" data-i18n="scan_hero_subtitle">
-          AI-driven style, grooming and posture analysis.
+          ML-assisted & algorithm-driven style, grooming and posture analysis.
         </p>
       </div>
 
@@ -5148,7 +5240,7 @@ if (window.__DS_IS_ANDROID_APP) {
           </div>
 
           <!-- ============================================================
-               VIBEAI — FIRST VIBE INFERENCE ENGINE · MAGIC MIRROR
+               VIBE SCAN — STYLE ANALYSIS ENGINE · MAGIC MIRROR
                Live camera mirror → snapshot → 4-stage analysis → result
                Camera only starts on user click (privacy compliant).
                ============================================================ -->
@@ -5172,7 +5264,7 @@ if (window.__DS_IS_ANDROID_APP) {
             <div class="relative z-10 text-center mb-6">
               <div class="flex items-center justify-center gap-3 mb-3">
                 <span class="h-px w-6 bg-brand-500/60"></span>
-                <span class="text-[10px] uppercase tracking-[0.18em] text-brand-400 font-bold" data-i18n="vibe_engine_label">First Vibe Inference Engine</span>
+                <span class="text-[10px] uppercase tracking-[0.18em] text-brand-400 font-bold" data-i18n="vibe_engine_label">Style Analysis Engine</span>
                 <span class="h-px w-6 bg-brand-500/60"></span>
               </div>
               <h2 class="font-serif text-2xl sm:text-3xl font-medium text-white leading-tight tracking-tight mb-2">
@@ -5261,7 +5353,7 @@ if (window.__DS_IS_ANDROID_APP) {
                 </button>
               </div>
 
-              <!-- Footer micro-copy (matches "AI-GENERATED PERCEPTION · VISUAL ANALYSIS" pattern) -->
+              <!-- Footer micro-copy (matches "ML-ASSISTED PERCEPTION · ALGORITHMIC ANALYSIS" pattern) -->
               <p class="mt-5 text-[9px] uppercase tracking-[0.2em] text-gray-600 font-semibold">
                 <span data-i18n="vibe_footer">Private &middot; Instant &middot; No account</span>
               </p>
@@ -5431,7 +5523,7 @@ if (window.__DS_IS_ANDROID_APP) {
               <div class="mt-4 pt-4 border-t border-white/5">
                 <div class="text-[9px] uppercase tracking-[0.18em] text-gray-600 font-bold mb-3 flex items-center gap-1.5">
                   <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" d="M12 7v5l3 2"/></svg>
-                  <span data-i18n="vibe_what_ai_saw">What the AI saw</span>
+                  <span data-i18n="vibe_what_ai_saw">What the scanner detected</span>
                 </div>
                 <div class="flex items-start gap-4 flex-col sm:flex-row sm:items-center">
                   <!-- Color swatches -->
@@ -5500,7 +5592,7 @@ if (window.__DS_IS_ANDROID_APP) {
             </div>
 
             <div class="relative z-10 text-center text-[9px] font-mono text-gray-600 mt-5 tracking-wide leading-relaxed">
-              <div data-i18n="disclaimer_line1">AI-GENERATED PERCEPTION · VISUAL ANALYSIS</div>
+              <div data-i18n="disclaimer_line1">ML-ASSISTED PERCEPTION · ALGORITHMIC ANALYSIS</div>
               <div class="mt-0.5" data-i18n="disclaimer_line2" style="display:none"></div>
             </div>
           </div>
@@ -5589,7 +5681,7 @@ if (window.__DS_IS_ANDROID_APP) {
                <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 19 21 12 17 5 21"/></svg>
                <span data-i18n="closet_trend_radar">Trend Radar</span>
             </button>
-            <button id="smartShopBtn" class="px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-amber-300 hover:from-amber-500/30 hover:to-orange-500/30 active:scale-[0.98] transition" title="Smart Shopping List — wardrobe gap analysis and suggestions">
+            <button id="smartShopBtn" class="px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-amber-300 hover:from-amber-500/30 hover:to-orange-500/30 active:scale-[0.98] transition" title="Wardrobe Shopping List — wardrobe gap analysis and suggestions">
                <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                <span data-i18n="closet_smart_shop">Shopping List</span>
             </button>
@@ -5597,7 +5689,7 @@ if (window.__DS_IS_ANDROID_APP) {
                <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 2a10 10 0 0 0 0 20 10 10 0 0 0 0-20z" stroke-dasharray="3 3"/></svg>
                <span data-i18n="closet_color_harmony">Colors</span>
             </button>
-            <button id="tripPackingBtn" class="px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-gradient-to-r from-sky-500/20 to-indigo-500/20 border border-sky-500/30 text-sky-300 hover:from-sky-500/30 hover:to-indigo-500/30 active:scale-[0.98] transition" title="Trip Packing Planner — smart packing based on weather and your closet">
+            <button id="tripPackingBtn" class="px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-gradient-to-r from-sky-500/20 to-indigo-500/20 border border-sky-500/30 text-sky-300 hover:from-sky-500/30 hover:to-indigo-500/30 active:scale-[0.98] transition" title="Trip Packing Planner — packing based on weather and your closet">
                <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
                <span data-i18n="closet_trip_packing">Trip Pack</span>
             </button>
@@ -5616,6 +5708,10 @@ if (window.__DS_IS_ANDROID_APP) {
             <button id="closetShopIqBtn" class="lg:hidden px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-gradient-to-r from-brand-500/20 to-purple-500/20 border border-brand-500/30 text-brand-400 hover:from-brand-500/30 hover:to-purple-500/30 active:scale-[0.98] transition" title="Shopping IQ" onclick="if(typeof window.toggleView==='function')window.toggleView('shopping')">
                <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                <span data-i18n="nav_shopping">Shop IQ</span>
+            </button>
+            <button id="closetAlteregoBtn" class="lg:hidden px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-gradient-to-r from-pink-500/20 to-fuchsia-500/20 border border-pink-500/30 text-pink-300 hover:from-pink-500/30 hover:to-fuchsia-500/30 active:scale-[0.98] transition" title="Alteregó Lab" onclick="if(typeof window.toggleView==='function')window.toggleView('alterego')">
+               <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+               <span>Alteregó</span>
             </button>
             <div class="flex gap-1.5 shrink-0 w-full">
                <button id="closetExportBtn" class="flex-1 px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center md:px-3 md:py-2.5 md:rounded-xl md:text-sm bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-[0.98] transition" title="Export closet backup">
@@ -5899,7 +5995,7 @@ if (window.__DS_IS_ANDROID_APP) {
       <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500/20 to-orange-500/20 border border-amber-500/30 flex items-center justify-center mb-4 mx-auto">
         <svg class="w-7 h-7 text-amber-300" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
       </div>
-      <h3 class="font-serif text-2xl font-semibold text-white text-center mb-1" data-i18n="smart_shop_title">Smart Shopping List</h3>
+      <h3 class="font-serif text-2xl font-semibold text-white text-center mb-1" data-i18n="smart_shop_title">Wardrobe Shopping List</h3>
       <p data-i18n="smart_shop_subtitle" class="text-sm text-gray-400 text-center mb-5 leading-relaxed">Wardrobe gap analysis and smart purchase suggestions based on your closet.</p>
 
       <!-- Tab navigation -->
@@ -6123,7 +6219,7 @@ if (window.__DS_IS_ANDROID_APP) {
         <svg class="w-7 h-7 text-sky-300" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
       </div>
       <h3 class="font-serif text-2xl font-semibold text-white text-center mb-1" data-i18n="trip_title">Trip Packing Planner</h3>
-      <p data-i18n="trip_subtitle" class="text-sm text-gray-400 text-center mb-5 leading-relaxed">Smart packing based on weather forecast and your closet.</p>
+      <p data-i18n="trip_subtitle" class="text-sm text-gray-400 text-center mb-5 leading-relaxed">Packing based on weather forecast and your closet.</p>
 
       <!-- Trip input form -->
       <div id="tripInputForm" class="mb-5">
@@ -6900,7 +6996,7 @@ if (window.__DS_IS_ANDROID_APP) {
 
         <!-- AI perception disclaimer — required on every scan/chat window -->
         <div class="relative z-10 text-center text-[9px] font-mono text-gray-600 mt-5 tracking-wide leading-relaxed">
-          <div data-i18n="disclaimer_line1">AI-GENERATED PERCEPTION · VISUAL ANALYSIS</div>
+          <div data-i18n="disclaimer_line1">ML-ASSISTED PERCEPTION · ALGORITHMIC ANALYSIS</div>
           <div class="mt-0.5" data-i18n="disclaimer_line2" style="display:none"></div>
         </div>
       </div>
@@ -7182,7 +7278,7 @@ if (window.__DS_IS_ANDROID_APP) {
 
       <div class="mb-6">
         <h2 class="font-serif text-3xl md:text-4xl font-medium mb-2 leading-tight bg-gradient-to-r from-[#ec4899] to-[#9333ea] bg-clip-text text-transparent" data-i18n="siq_heading">Shopping IQ</h2>
-        <p class="text-gray-400 text-sm font-medium" data-i18n="siq_subheading">Smart wardrobe investment tracker.</p>
+        <p class="text-gray-400 text-sm font-medium" data-i18n="siq_subheading">Wardrobe investment tracker.</p>
       </div>
 
       <!-- Sub-tabs -->
@@ -7231,7 +7327,7 @@ if (window.__DS_IS_ANDROID_APP) {
       <!-- 3. ADVISOR -->
       <div class="siq-panel" id="siqAdvisor">
         <div class="siq-card">
-          <div class="siq-card-title">💡 <span data-i18n="siq_adv_title">Smart Advisor</span></div>
+          <div class="siq-card-title">💡 <span data-i18n="siq_adv_title">Style Advisor</span></div>
           <div class="siq-field" style="margin-bottom:10px"><label data-i18n="siq_adv_budget">Monthly budget (HUF)</label><input id="siqBudget" type="number" placeholder="50000" min="0"/></div>
           <button class="siq-btn siq-btn-primary" onclick="window._siq.runAdvisor()" style="width:100%" data-i18n="siq_adv_analyze">Analyze</button>
         </div>
@@ -7250,7 +7346,7 @@ if (window.__DS_IS_ANDROID_APP) {
       <!-- 5. REPLACE -->
       <div class="siq-panel" id="siqReplace">
         <div class="siq-card"><div class="siq-card-title">🔄 <span data-i18n="siq_rpl_title">Fast Fashion Replacement</span></div><div id="siqRplList"></div></div>
-        <div class="siq-card"><div class="siq-card-title">💡 <span data-i18n="siq_rpl_tips_title">Smart Shopping Tips</span></div><div id="siqRplTips"></div></div>
+        <div class="siq-card"><div class="siq-card-title">💡 <span data-i18n="siq_rpl_tips_title">Style Shopping Tips</span></div><div id="siqRplTips"></div></div>
       </div>
 
       <!-- 6. REPORT -->
@@ -7329,6 +7425,100 @@ if (window.__DS_IS_ANDROID_APP) {
       </div>
     </div>
   </div>
+  <!-- ═══════════════════════════════════════════════════════
+       ALTEREGÓ LAB — Alteregó Építő Modul
+       ═══════════════════════════════════════════════════════ -->
+  <div id="viewAlterego" class="hidden opacity-0 translate-y-8 transition-all duration-500 pb-12 pt-4">
+    <div class="max-w-4xl mx-auto w-full px-2 sm:px-4">
+
+      <!-- Header + Close button -->
+      <div class="al-header" style="justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="al-header-icon">
+            <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+          </div>
+          <div>
+            <h1 class="al-title">Alteregó Lab<span style="color:#ec4899">.</span></h1>
+            <p class="al-subtitle" data-i18n="al_subtitle">Alteregó Építő</p>
+          </div>
+        </div>
+        <button class="al-back-btn" onclick="if(typeof window.toggleView==='function')window.toggleView('closet')" aria-label="Back to Closet" style="flex-shrink:0">
+          <svg width="18" height="18" fill="none" stroke="#d1d5db" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- Hero -->
+      <div class="al-hero">
+        <h2 data-i18n-html="al_hero_h2">Építsd a <em>stílusalteregóidat</em></h2>
+        <p data-i18n="al_hero_p">Minden alkalomhoz más személyiség. Hozz létre alteregókat a ruhatáradhoz, fejleszd őket scannel, és érdemelj XP-t a stílustudatodért!</p>
+      </div>
+
+      <!-- Overview stats -->
+      <div class="al-overview" id="alOverview" style="display:none">
+        <div class="al-overview-stats" id="alOverviewStats"></div>
+      </div>
+
+      <!-- Alteregó cards grid -->
+      <div class="al-grid" id="alGrid">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- How it works -->
+      <div class="al-how">
+        <h3 data-i18n="al_how_title">🎯 Hogyan működik az Alteregó Lab?</h3>
+        <div class="al-how-grid">
+          <div class="al-how-step">
+            <div class="al-how-icon" style="background:rgba(236,72,153,0.1);border:1px solid rgba(236,72,153,0.2)">🎭</div>
+            <p class="al-how-title" data-i18n="al_how_step1_title">1. Hozz létre alteregókat</p>
+            <p class="al-how-desc" data-i18n="al_how_step1_desc">Minden alkalomhoz – randi, munka, buli – saját stíluszemélyiséget építhetsz.</p>
+          </div>
+          <div class="al-how-step">
+            <div class="al-how-icon" style="background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2)">📸</div>
+            <p class="al-how-title" data-i18n="al_how_step2_title">2. Scan-elj és fejleszd</p>
+            <p class="al-how-desc" data-i18n="al_how_step2_desc">A stílusanalízis pontszámot és XP-t ad. Szintet lépsz, sorozatot építesz!</p>
+          </div>
+          <div class="al-how-step">
+            <div class="al-how-icon" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2)">🤖</div>
+            <p class="al-how-title" data-i18n="al_how_step3_title">3. Kérj AI tanácsot</p>
+            <p class="al-how-desc" data-i18n="al_how_step3_desc">Az alteregód és szekrényed alapján kontextus-érzékeny outfit javaslatokat kapsz.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Alteregó Detail Modal -->
+  <div id="alteregoDetailModal">
+    <div class="al-modal">
+      <div class="al-modal-head" id="alDetailHead"></div>
+      <div class="al-tabs" id="alDetailTabs">
+        <div class="al-tab active" data-tab="scan">Scan</div>
+        <div class="al-tab" data-tab="closet" data-i18n="al_tab_closet">Szekrény</div>
+        <div class="al-tab" data-tab="goals" data-i18n="al_tab_goals">Célok</div>
+        <div class="al-tab" data-tab="ai" data-i18n="al_tab_ai">AI Tanács</div>
+      </div>
+      <div class="al-modal-body" id="alDetailBody"></div>
+    </div>
+  </div>
+
+  <!-- Alteregó Create Modal -->
+  <div id="alteregoCreateModal">
+    <div class="al-modal">
+      <div class="al-modal-close" onclick="window._alCloseCreate()">✕</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+        <div style="width:36px;height:36px;border-radius:10px;background:rgba(236,72,153,0.2);display:flex;align-items:center;justify-content:center;font-size:14px">✨</div>
+        <h2 style="font-size:1.125rem;font-weight:700;color:#fff" data-i18n="al_create_title">Új Alteregó Létrehozása</h2>
+      </div>
+      <div id="alCreateContent"></div>
+    </div>
+  </div>
+
+  <!-- Alteregó Celebration Overlay -->
+  <div id="alteregoCelebrate">
+    <div id="alCelebrateContent"></div>
+  </div>
+
   <!-- ============================================================
        TINDER-STYLE FULL-BLEED SPLASH / LOADING SCREEN
        ============================================================
@@ -7507,6 +7697,7 @@ if (window.__DS_IS_ANDROID_APP) {
       </svg>
       <span class="text-[10px] font-bold uppercase tracking-widest text-white" data-i18n="nav_story">Story</span>
     </button>
+    <!-- Alteregó removed from mobile nav — accessible from Closet view instead -->
   </div>
 </nav>
 
@@ -7667,11 +7858,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const chatBtn = document.getElementById('mobileNavChat');
     const shoppingBtn = document.getElementById('mobileNavShopping');
     const storyBtn = document.getElementById('mobileNavStory');
+    // Alteregó button removed from mobile nav — accessible from Closet view
     const paywall = document.getElementById('paywallModal');
     const closetView = document.getElementById('viewCloset');
     const chatView = document.getElementById('viewChat');
     const historyView = document.getElementById('viewHistory');
     const shoppingView = document.getElementById('viewShopping');
+    const alteregoView = document.getElementById('viewAlterego');
 
     function setActive(which) {
       [scanBtn, closetBtn, chatBtn, shoppingBtn, storyBtn].forEach(b => b?.classList.remove('is-active'));
@@ -7680,7 +7873,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function syncActive() {
-      if (shoppingView && !shoppingView.classList.contains('hidden')) {
+      if (alteregoView && !alteregoView.classList.contains('hidden')) {
+        setActive('closet'); // Alteregó is reached from Closet, so highlight Closet
+      } else if (shoppingView && !shoppingView.classList.contains('hidden')) {
         setActive('shopping');
       } else if (historyView && !historyView.classList.contains('hidden')) {
         setActive('history');
@@ -7764,6 +7959,8 @@ document.addEventListener('DOMContentLoaded', function () {
       // Refresh saved tips when navigating to Story
       setTimeout(() => { if (typeof window.renderSavedTips === 'function') window.renderSavedTips(); }, 100);
     });
+
+    // Alteregó is now accessible from Closet view button, not from mobile nav
 
     if (paywall) {
       new MutationObserver(syncActive).observe(paywall, { attributes: true, attributeFilter: ['class'] });
@@ -7954,7 +8151,7 @@ document.addEventListener('DOMContentLoaded', function () {
       <div class="flex items-start justify-between gap-3 mb-2">
         <div>
           <div class="text-sm font-semibold text-white" data-i18n="privacy_private_mode">Private Mode</div>
-          <p data-i18n="privacy_private_mode_desc" class="text-xs text-gray-400 mt-0.5">Blocks all image uploads in chat and forces the on-device AI to use the CPU backend (no GPU fingerprint surface).</p>
+          <p data-i18n="privacy_private_mode_desc" class="text-xs text-gray-400 mt-0.5">Blocks all image uploads in chat and forces the on-device scanner to use the CPU backend (no GPU fingerprint surface).</p>
         </div>
         <button id="privateModeToggle" type="button" role="switch" aria-checked="false"
           class="shrink-0 relative w-12 h-7 rounded-full bg-white/10 border border-white/15 transition-colors">
@@ -10409,6 +10606,7 @@ function toggleView(targetView, opts) {
     const viewChat = $("viewChat");
     const viewHistory = $("viewHistory");
     const viewShopping = $("viewShopping");
+    const viewAlterego = $("viewAlterego");
     const navBtn = $("navClosetBtn");
     const storyBtn = $("navStoryModeBtn");
     const aiChatBtn = $("navAiChatBtn");
@@ -10491,6 +10689,19 @@ function toggleView(targetView, opts) {
       shopBtn.classList.add('bg-brand-500/20', 'text-brand-300', 'border-brand-500/40');
     }
 
+    // Alteregó Lab desktop nav button
+    const alteregoBtn = $("navAlteregoBtn");
+    function resetAlteregoNavBtn() {
+      if (!alteregoBtn) return;
+      alteregoBtn.classList.remove('bg-brand-500/20', 'text-brand-300', 'border-brand-500/40');
+      alteregoBtn.classList.add('bg-white/5', 'text-white', 'border-white/10');
+    }
+    function activateAlteregoNavBtn() {
+      if (!alteregoBtn) return;
+      alteregoBtn.classList.remove('bg-white/5', 'text-white', 'border-white/10');
+      alteregoBtn.classList.add('bg-brand-500/20', 'text-brand-300', 'border-brand-500/40');
+    }
+
     function stopCameraIfLeavingScanner() {
       try {
         const v = document.getElementById('video');
@@ -10505,6 +10716,7 @@ function toggleView(targetView, opts) {
         hideOverlay(viewChat);
         hideOverlay(viewHistory);
         hideOverlay(viewShopping);
+        hideOverlay(viewAlterego);
         showOverlay(viewCloset);
         resetStoryNavBtn();
         resetAiChatNavBtn();
@@ -10535,6 +10747,7 @@ function toggleView(targetView, opts) {
         hideOverlay(viewCloset);
         hideOverlay(viewHistory);
         hideOverlay(viewShopping);
+        hideOverlay(viewAlterego);
         showOverlay(viewChat);
         resetClosetNavBtn();
         resetStoryNavBtn();
@@ -10553,6 +10766,7 @@ function toggleView(targetView, opts) {
         hideOverlay(viewCloset);
         hideOverlay(viewChat);
         hideOverlay(viewShopping);
+        hideOverlay(viewAlterego);
         showOverlay(viewHistory);
         resetClosetNavBtn();
         activateStoryNavBtn();
@@ -10574,6 +10788,7 @@ function toggleView(targetView, opts) {
         hideOverlay(viewCloset);
         hideOverlay(viewChat);
         hideOverlay(viewHistory);
+        hideOverlay(viewAlterego);
         showOverlay(viewShopping);
         resetClosetNavBtn();
         resetStoryNavBtn();
@@ -10589,12 +10804,36 @@ function toggleView(targetView, opts) {
             if (_skipPush) history.replaceState({ view: 'shopping' }, '', '#shopping');
             else history.pushState({ view: 'shopping' }, '', '#shopping');
         }
+    } else if (targetView === 'alterego') {
+        hideScanner();
+        hideOverlay(viewCloset);
+        hideOverlay(viewChat);
+        hideOverlay(viewHistory);
+        hideOverlay(viewShopping);
+        showOverlay(viewAlterego);
+        resetClosetNavBtn();
+        resetStoryNavBtn();
+        resetAiChatNavBtn();
+        resetShoppingNavBtn();
+        activateAlteregoNavBtn();
+        stopCameraIfLeavingScanner();
+
+        // Render alteregó content when entering the view
+        if (typeof window._alRender === 'function') {
+            window._alRender();
+        }
+        store.set({ activeView: 'alterego' });
+        if (location.hash !== '#alterego') {
+            if (_skipPush) history.replaceState({ view: 'alterego' }, '', '#alterego');
+            else history.pushState({ view: 'alterego' }, '', '#alterego');
+        }
     } else {
         // targetView === 'scanner' (or any unrecognized value — default).
         hideOverlay(viewCloset);
         hideOverlay(viewChat);
         hideOverlay(viewHistory);
         hideOverlay(viewShopping);
+        hideOverlay(viewAlterego);
         // Scanner comes back in after the overlay fade-down completes
         // so the two transitions don't visually fight.
         setTimeout(showScanner, 300);
@@ -10602,6 +10841,7 @@ function toggleView(targetView, opts) {
         resetStoryNavBtn();
         resetAiChatNavBtn();
         resetShoppingNavBtn();
+        resetAlteregoNavBtn();
 
         if (typeof safeReinitCamera === 'function') {
           setTimeout(() => {
@@ -10706,6 +10946,24 @@ try {
     console.error('[nav] Shopping IQ wire-up failed:', err);
 }
 
+// Alteregó Lab button — desktop top-bar
+try {
+    const _navAlteregoBtn = $("navAlteregoBtn");
+    if (_navAlteregoBtn) {
+        _navAlteregoBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            try { triggerHaptic('tap'); } catch (_) {}
+            const s = store.get();
+            const next = s.activeView === 'alterego' ? 'scanner' : 'alterego';
+            if (typeof window.toggleView === 'function') {
+                window.toggleView(next);
+            }
+        });
+    }
+} catch (err) {
+    console.error('[nav] Alteregó Lab wire-up failed:', err);
+}
+
 // Expose for use by the inline mobile-nav script and other modules.
 window.toggleView = toggleView;
 window.unlockBodyScroll = unlockBodyScroll;
@@ -10720,7 +10978,7 @@ window.unlockBodyScroll = unlockBodyScroll;
 window.addEventListener('popstate', function(e) {
   try {
     var hash = location.hash.replace('#', '');
-    var viewMap = { closet: 'closet', chat: 'chat', story: 'history', shopping: 'shopping' };
+    var viewMap = { closet: 'closet', chat: 'chat', story: 'history', shopping: 'shopping', alterego: 'alterego' };
     var targetView = viewMap[hash] || 'scanner';
     var currentView = store.get().activeView;
     // Only switch if the view actually changed (avoid redundant transitions)
@@ -11020,7 +11278,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       ob_start_btn: 'Enable Camera & Start',
       scan_hero_title: 'Perfect your',
       scan_hero_title_accent: 'first impression',
-      scan_hero_subtitle: 'AI-driven style, grooming and posture analysis.',
+      scan_hero_subtitle: 'ML-assisted & algorithm-driven style, grooming and posture analysis.',
       scan_cam_blocked: 'Camera Blocked',
       scan_cam_blocked_msg: 'Please check your browser settings and try again.',
       scan_target_occasion: 'Target Occasion',
@@ -11102,7 +11360,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       grooming_title: 'Grooming & Presence',
       grooming_readiness: 'Readiness',
       vibe_origin: 'Origin Vibe',
-      vibe_engine_label: 'First Vibe Inference Engine',
+      vibe_engine_label: 'Style Analysis Engine',
       vibe_instant_perception: 'Instant perception.',
       vibe_desc_line1: 'One image. Four stages. Lightning fast.',
       vibe_step_begin: 'Step 01 · Begin',
@@ -11139,7 +11397,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       vibe_sub_default: 'monochrome architect',
       vibe_tip_default: 'A single warm accent — cognac or rust — would deepen impact on your next look.',
       vibe_missing_piece: 'The Missing Piece',
-      vibe_what_ai_saw: 'What the AI saw',
+      vibe_what_ai_saw: 'What the scanner detected',
       vibe_palette: 'Palette',
       vibe_signals: 'Signals',
       vibe_metric_contrast: 'Contrast',
@@ -11228,7 +11486,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       cal_vibe_saved: 'vibe saved.',
       vibe_origin_tip: 'This is Your Original Vibe',
       vibe_origin_baseline: 'the baseline for every future scan.',
-      disclaimer_line1: 'AI-GENERATED PERCEPTION · VISUAL ANALYSIS',
+      disclaimer_line1: 'ML-ASSISTED PERCEPTION · ALGORITHMIC ANALYSIS',
       disclaimer_line2: 'NOT A PROFESSIONAL ASSESSMENT · FOR ENTERTAINMENT ONLY',
       closet_title: 'Digital Closet',
       closet_subtitle: 'Your saved outfits and personal style archive.',
@@ -11479,7 +11737,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       share_item_text: 'Check out my closet item on DateScan',
       share_native_title: 'My DateScan Score',
       share_confidence_title: 'CONFIDENCE OPTIMIZER FOR DATES',
-      share_ai_rated_tag: 'AI RATED MY OUTFIT',
+      share_ai_rated_tag: 'SCAN RATED MY OUTFIT',
       share_my_score: 'MY SCORE',
       paywall_title: 'You\'re 1 tweak away from a better first impression.',
       paywall_subtitle: 'Most users see a real boost in how they\'re perceived. Discover an offer that fits your next date\'s vibe, or get started for free—no obligations required.',
@@ -11503,9 +11761,9 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       privacy_item_chat_text: '<strong class="text-white">AI Style Coach Chat — text.</strong> Your messages are sent to <code class="text-[11px] bg-white/10 px-1.5 py-0.5 rounded">api.datescan.app</code> and forwarded to a vision-language model so you can get a reply.',
       privacy_item_chat_images: '<strong class="text-white">AI Style Coach Chat — images.</strong> If you attach a photo or pick one from your closet, that image is uploaded with your message for the model to "see". It is processed for that single request and not retained on our server beyond the response. We do not use chat content to train models.',
       privacy_private_mode: 'Private Mode',
-      privacy_private_mode_desc: 'Blocks all image uploads in chat and forces the on-device AI to use the CPU backend.',
+      privacy_private_mode_desc: 'Blocks all image uploads in chat and forces the on-device scanner to use the CPU backend.',
       privacy_status_off: 'Status: <span class="text-gray-300">Off</span> — image uploads in chat are allowed after consent.',
-      privacy_status_on: 'Status: <span class="text-brand-400 font-semibold">On</span> — chat image uploads blocked, on-device AI uses CPU backend.',
+      privacy_status_on: 'Status: <span class="text-brand-400 font-semibold">On</span> — chat image uploads blocked, on-device scanner uses CPU backend.',
       privacy_delete_title: 'Delete my account & data',
       privacy_delete_desc: 'View your account ID and permanently delete your account & all data.',
       privacy_open_page: 'Open Privacy & Data page',
@@ -11530,7 +11788,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       cam_bullet_1: '<strong>Scanning = local.</strong> Your camera image is analyzed exclusively by your browser, directly on your device. The data <strong>never leaves your device</strong>, so we never see it.',
       cam_bullet_2_title: 'Nothing is saved.',
       cam_bullet_2_text: 'Frames live in your device\'s memory for a few seconds and are then automatically discarded.',
-      cam_bullet_2: '<strong>Nothing is saved.</strong> Frames live in your device\'s memory for a few seconds while the AI checks outfit, grooming, posture and lighting — then they\'re discarded.',
+      cam_bullet_2: '<strong>Nothing is saved.</strong> Frames live in your device\'s memory for a few seconds while our scanner checks outfit, grooming, posture and lighting — then they\'re discarded.',
       cam_bullet_3_title: 'You\'re in control.',
       cam_bullet_3_text: 'Stop the camera any time by closing the scanner. You decide when it runs.',
       cam_bullet_3: '<strong>You\'re in control.</strong> Stop the camera any time by closing the scanner. Your browser also lets you revoke camera permission at any moment.',
@@ -11643,7 +11901,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       stylecal_location_keyword: 'Keyword',
       stylecal_status_maps_synced: 'maps synced',
       stylecal_status_synced: 'synced',
-      privacy_status_on: 'Status: On — chat image uploads blocked, on-device AI uses CPU backend.',
+      privacy_status_on: 'Status: On — chat image uploads blocked, on-device scanner uses CPU backend.',
       badge_lucky_outfit_desc: 'Got a second date in this outfit!',
       alt_saved_item: 'Saved Item',
       toast_storage_full: 'Storage full! Couldn\'t save outfit.',
@@ -12525,9 +12783,9 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       ctx_feedback_header: 'Feedback-based adjustments',
       storage_warning: 'Storage is full — some data was cleared to keep the app running.',
 
-      // Smart Shopping List
+      // Wardrobe Shopping List
       closet_smart_shop: 'Shopping List',
-      smart_shop_title: 'Smart Shopping List',
+      smart_shop_title: 'Wardrobe Shopping List',
       smart_shop_subtitle: 'Wardrobe gap analysis and smart purchase suggestions based on your closet.',
       smart_shop_tab_gaps: 'Gaps',
       smart_shop_tab_occasions: 'Occasions',
@@ -12664,7 +12922,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       // Trip Packing Planner
       closet_trip_packing: 'Trip Pack',
       trip_title: 'Trip Packing Planner',
-      trip_subtitle: 'Smart packing based on weather forecast and your closet.',
+      trip_subtitle: 'Packing based on weather forecast and your closet.',
       trip_destination_label: 'Destination',
       trip_destination_placeholder: 'City name...',
       trip_days_label: 'Days',
@@ -12774,6 +13032,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       outfit_humidity: 'Humidity',
       outfit_generate_btn: 'Generate Outfit',
       outfit_loading: 'AI is picking your perfect outfit...',
+      outfit_fallback_notice: '⚠️ AI unavailable — showing a random pick. Try again later for AI-curated results.',
       outfit_empty_closet: 'Add items to your closet first, then I can suggest outfits!',
       outfit_result_header: 'Your Outfit',
       outfit_regenerate: 'Try Another',
@@ -12844,7 +13103,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       // ── Shopping IQ Module ──
       nav_shopping: 'Shop IQ',
       siq_heading: 'Shopping IQ',
-      siq_subheading: 'Smart wardrobe investment tracker.',
+      siq_subheading: 'Wardrobe investment tracker.',
       siq_tab_log: 'Log',
       siq_tab_cpw: 'CPW',
       siq_tab_advisor: 'Advisor',
@@ -12876,7 +13135,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       siq_cpw_empty: 'Add items in the Log first',
       siq_cpw_wear: 'wears',
       siq_cpw_per_wear: '/wear',
-      siq_adv_title: 'Smart Advisor',
+      siq_adv_title: 'Style Advisor',
       siq_adv_budget: 'Monthly budget (USD)',
       siq_adv_analyze: 'Analyze',
       siq_adv_spent: 'Spent this month',
@@ -12899,7 +13158,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       siq_rpl_title: 'Fast Fashion Replacement',
       siq_rpl_empty: 'No fast fashion items',
       siq_rpl_saving: 'Annual savings:',
-      siq_rpl_tips_title: 'Smart Shopping Tips',
+      siq_rpl_tips_title: 'Style Shopping Tips',
       siq_rpl_tip1: '💰 1 premium tee = lifespan of 5 fast fashion tees',
       siq_rpl_tip2: '🔍 Check fabric composition: 95%+ cotton = durable',
       siq_rpl_tip3: '📏 Fit > Trend — timeless cuts last years',
@@ -12924,6 +13183,91 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       siq_currency_pos: 'before',
       siq_ph_price: '29',
       siq_ph_budget: '200',
+      // Alteregó Lab
+      al_subtitle: 'Alter Ego Builder',
+      al_hero_h2: 'Build your <em>style alter egos</em>',
+      al_hero_p: 'A different persona for every occasion. Create alter egos for your wardrobe, level them up with scans, and earn XP for your style awareness!',
+      al_how_title: '🎯 How does Alteregó Lab work?',
+      al_how_step1_title: '1. Create alter egos',
+      al_how_step1_desc: 'For every occasion — date, work, party — build your own style persona.',
+      al_how_step2_title: '2. Scan & improve',
+      al_how_step2_desc: 'Style analysis gives you scores and XP. Level up, build streaks!',
+      al_how_step3_title: '3. Get AI advice',
+      al_how_step3_desc: 'Get context-aware outfit suggestions based on your alter ego and closet.',
+      al_tab_closet: 'Closet',
+      al_tab_goals: 'Goals',
+      al_tab_ai: 'AI Advice',
+      al_create_title: 'Create New Alter Ego',
+      al_stat_total_xp: 'Total XP',
+      al_stat_scans: 'Scans',
+      al_stat_items: 'Items',
+      al_stat_streak: 'Best Streak',
+      al_level_abbr: 'Lv. ',
+      al_pieces: 'Pieces',
+      al_streak_lbl: 'Streak',
+      al_new_alterego: 'New Alter Ego',
+      al_new_sub: 'Bring a new alter ego to life',
+      al_avg: 'Avg',
+      al_best: 'Best',
+      al_occasion_label: 'Occasion',
+      al_scan_btn: '📸 Start Style Analysis',
+      al_scan_history: 'Scan History',
+      al_item_placeholder: 'Item name...',
+      al_color_placeholder: 'Color',
+      al_closet_empty_title: 'Closet is empty',
+      al_closet_empty_hint: 'Add items using the field above',
+      al_goal_placeholder: 'New style goal...',
+      al_pro_feature: 'PRO Feature',
+      al_pro_desc: 'The AI Style Advisor gives personalized outfit suggestions using real AI, based on your alter ego and closet.',
+      al_pro_btn: '👑 Upgrade to PRO',
+      al_occ_label_ai: 'Outfit suggestion for occasion',
+      al_ai_advisor_title: 'AI Style Advisor suggestion',
+      al_ai_empty_title: 'Choose an occasion for AI suggestion',
+      al_ai_empty_hint: 'Personalized based on your alter ego and closet',
+      al_create_presets: 'Quick Templates',
+      al_create_emoji: 'Emoji',
+      al_create_name: 'Name',
+      al_create_name_ph: 'e.g. Monday Professional',
+      al_create_emoji_picker: 'Emoji Picker',
+      al_create_tagline: 'Tagline',
+      al_create_tagline_ph: 'Short description, e.g. First impressions matter',
+      al_create_color: 'Color',
+      al_create_btn: '+ Create Alter Ego',
+      al_level_up: 'Level Up! 🎉',
+      al_awesome: 'Awesome! ✨',
+      al_delete_item_confirm: 'Delete this item?',
+      al_ai_loading: '🤖 Generating AI suggestion...',
+      al_level_1: 'Rookie', al_level_2: 'Explorer', al_level_3: 'Style Scholar', al_level_4: 'Trendsetter', al_level_5: 'Icon',
+      al_level_6: 'Master', al_level_7: 'Legendary', al_level_8: 'Iconic', al_level_9: 'Overlord', al_level_10: 'Style Genius',
+      al_preset_1_name: 'Monday Professional', al_preset_1_tag: 'Office elegance',
+      al_preset_2_name: 'Friday Night Cool', al_preset_2_tag: 'Party-ready always',
+      al_preset_3_name: 'Sunday Casual', al_preset_3_tag: 'Comfort and style',
+      al_preset_4_name: 'Date Romantic', al_preset_4_tag: 'First impressions matter',
+      al_preset_5_name: 'Creative Soul', al_preset_5_tag: 'Expressive and bold',
+      al_preset_6_name: 'Sporty Team', al_preset_6_tag: 'Active lifestyle style',
+      al_cat_top: 'Top', al_cat_bottom: 'Bottom', al_cat_shoes: 'Shoes',
+      al_cat_outerwear: 'Outerwear', al_cat_accessory: 'Accessory', al_cat_dress: 'Dress',
+      al_occ_casual: 'Casual', al_occ_first_date: 'First Date',
+      al_occ_night_out: 'Night Out', al_occ_fancy: 'Formal', al_occ_professional: 'Business',
+      al_goal_1_title: 'First scan', al_goal_1_desc: 'Complete your first style analysis',
+      al_goal_2_title: '3 items', al_goal_2_desc: 'Add 3 items to your closet',
+      al_goal_3_title: 'Color harmony master', al_goal_3_desc: 'Achieve 80%+ color score',
+      al_vibe_mysterious: 'Mysterious', al_vibe_confident: 'Confident', al_vibe_creative: 'Creative',
+      al_vibe_elegant: 'Elegant', al_vibe_relaxed: 'Relaxed', al_vibe_cool: 'Cool',
+      al_vibe_romantic: 'Romantic', al_vibe_on_fire: 'On Fire',
+      al_scan_sys_prompt: 'You are a style advisor AI, the DateScan Alteregó Lab assistant. You give advice for the user\'s alter ego named "{name}" {emoji}. Reply in English, briefly, in a friendly tone, with concrete suggestions. Max 4-5 sentences. Use emojis. Give 3 specific outfit suggestions for the occasion, building on closet items. If the closet is empty, suggest key pieces to buy.',
+      al_scan_user_prompt: 'Occasion: {occasion}. {closet}. {score} Give 3 specific outfit suggestions for this occasion.',
+      al_closet_prefix: 'Closet: ',
+      al_closet_empty_ctx: 'Closet is empty.',
+      al_score_ctx: 'Latest style score: {score}/100',
+      al_fallback_casual: '💡 ☕ Casual tips: 1) A well-fitted white tee + dark jeans never disappoints. 2) Layered look: tee + open shirt + comfy shoes. 3) Simple accessories (watch, bracelet) elevate the look! 🎨',
+      al_fallback_first_date: '💡 💕 Date tips: 1) Smart casual: dark trousers + quality tee + blazer. 2) A statement accessory (watch, belt) can start a conversation. 3) Avoid overdressing — be comfortable and confident! 🌹',
+      al_fallback_night_out: '💡 🌙 Night out tips: 1) Bold colors and textures: leather jacket + dark jeans + statement shoes. 2) Layered jewelry or a standout watch. 3) Dark base + one vibrant piece for contrast! 🔥',
+      al_fallback_fancy: '💡 🎩 Formal tips: 1) Suit or dark blazer + quality shirt. 2) Clean, carefully pressed garments. 3) Simple elegant accessories — less is more! ✨',
+      al_fallback_professional: '💡 💼 Business tips: 1) Dark blazer + neutral shirt + well-fitted trousers. 2) Clean shoes and a polished appearance. 3) Simple, reliable pieces that project confidence! 📊',
+      al_fallback_generic: '💡 🎨 Style tips: 1) Combine your favourite pieces around a colour palette. 2) Create layered looks with accessories. 3) Pick a focal piece and build the outfit around it! 💡',
+      al_xp_level_label: '+{xp} XP • Level {level}',
+
     },
     hu: {
       nav_closet: 'Szekrény',
@@ -13107,7 +13451,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       ob_start_btn: 'Kamera engedélyezése és indítás',
       scan_hero_title: 'Tedd tökéletessé az',
       scan_hero_title_accent: 'első benyomást',
-      scan_hero_subtitle: 'AI-alapú stílus, ápoltság és tartáselemzés.',
+      scan_hero_subtitle: 'ML-támogatású & algoritmikus stílus, ápoltság és tartáselemzés.',
       scan_cam_blocked: 'Kamera blokkolva',
       scan_cam_blocked_msg: 'Ellenőrizd a böngésző beállításait és próbáld újra.',
       scan_target_occasion: 'Alkalom',
@@ -13189,7 +13533,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       grooming_title: 'Ápoltság & Jelenlét',
       grooming_readiness: 'Készség',
       vibe_origin: 'Eredeti Vibe',
-      vibe_engine_label: 'Vibe-elemző',
+      vibe_engine_label: 'Stíluselemző',
       vibe_instant_perception: 'Azonnali észlelés.',
       vibe_desc_line1: 'Pillanat alatt képben leszel. Egy fotó. Négy lépés. Villámgyors.',
       vibe_step_begin: '01. lépés · Kezdés',
@@ -13226,7 +13570,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       vibe_sub_default: 'monokróm építész',
       vibe_tip_default: 'Egyetlen meleg hangsúly — konyak vagy rozsdaszín — mélyítené a hatást a következő lookodon.',
       vibe_missing_piece: 'A Hiányzó Darab',
-      vibe_what_ai_saw: 'Mit látott az AI',
+      vibe_what_ai_saw: 'Mit érzékelt a szkenner',
       vibe_palette: 'Paletta',
       vibe_signals: 'Jelek',
       vibe_metric_contrast: 'Kontraszt',
@@ -13315,7 +13659,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       cal_vibe_saved: 'vibe elmentve.',
       vibe_origin_tip: 'Ez az Eredeti Vibeod',
       vibe_origin_baseline: 'a kiindulópont minden jövőbeli szkenneléshez.',
-      disclaimer_line1: 'AI-GENERÁLT ÉSZLELÉS · VIZUÁLIS ELEMZÉS · NEM MINŐSÍTÉS',
+      disclaimer_line1: 'ML-TÁMOGATÁSÚ ÉSZLELÉS · ALGORITMUSI ELEMZÉS · NEM MINŐSÍTÉS',
       disclaimer_line2: 'NEM SZAKMAI ÉRTÉKELÉS · CSAK SZÓRAKOZTATÁS CÉLJÁRA',
       closet_title: 'Digitális Szekrény',
       closet_subtitle: 'Elmentett öltözékek és személyes stílusarchívum.',
@@ -13566,7 +13910,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       share_item_text: 'Nézd meg a szekrényem elemét a DateScannen',
       share_native_title: 'DateScan Pontszámom',
       share_confidence_title: 'ÖNBIZALOM OPTIMALIZÁLÓ',
-      share_ai_rated_tag: 'AI ÉRTÉKELTE',
+      share_ai_rated_tag: 'SZKENNER ÉRTÉKELTE',
       share_my_score: 'PONTSZÁMOM',
       paywall_title: 'Egy apró változtatás a tökéletes első benyomásért.',
       paywall_subtitle: 'A legtöbb felhasználó valódi javulást tapasztal a megítélésében. Fedezd fel a következő randid hangulatához illő ajánlatot, vagy kezdd el ingyen — semmilyen kötelezettség.',
@@ -13617,7 +13961,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       cam_bullet_1: '<strong>Szkennelés = helyi.</strong> A kamera képét kizárólag a böngésződ elemzi, közvetlenül az eszközödön. Az adatok <strong>soha nem hagyják el a készülékedet</strong>, így mi soha nem látjuk őket.',
       cam_bullet_2_title: 'Semmi nem mentődik.',
       cam_bullet_2_text: 'A képkockák pár másodpercig élnek az eszközöd memóriájában, majd automatikusan törlődnek.',
-      cam_bullet_2: '<strong>Semmi nem mentődik.</strong> A képkockák pár másodpercig élnek az eszközöd memóriájában, amíg az AI ellenőrzi az öltözéket, ápoltságot, testtartást és világítást — utána automatikusan törlődnek.',
+      cam_bullet_2: '<strong>Semmi nem mentődik.</strong> A képkockák pár másodpercig élnek az eszközöd memóriájában, amíg a szkenner ellenőrzi az öltözéket, ápoltságot, testtartást és világítást — utána automatikusan törlődnek.',
       cam_bullet_3_title: 'Te irányítasz.',
       cam_bullet_3_text: 'A szkennelőt bármikor leállíthatod a bezárással. Te döntöd el, mikor fut.',
       cam_bullet_3: '<strong>Te irányítasz.</strong> A szkennelőt bármikor leállíthatod a bezárással. A böngésződ is lehetővé teszi a kamera engedély visszavonását bármikor.',
@@ -14613,7 +14957,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
 
       // Smart Shopping List
       closet_smart_shop: 'Bevásárlólista',
-      smart_shop_title: 'Okos Bevásárlólista',
+      smart_shop_title: 'Gardrób Bevásárlólista',
       smart_shop_subtitle: 'Szekrény-elemzés és okos vásárlási javaslatok a ruhatárad alapján.',
       smart_shop_tab_gaps: 'Hiányok',
       smart_shop_tab_occasions: 'Alkalmak',
@@ -14750,7 +15094,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       // Utazás Csomagoló
       closet_trip_packing: 'Utazás',
       trip_title: 'Utazás Csomagoló',
-      trip_subtitle: 'Okos csomagolás az időjárás-előrejelzés és a szekrényed alapján.',
+      trip_subtitle: 'Csomagolás az időjárás-előrejelzés és a szekrényed alapján.',
       trip_destination_label: 'Úti cél',
       trip_destination_placeholder: 'Város neve...',
       trip_days_label: 'Napok',
@@ -14860,6 +15204,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       outfit_humidity: 'Páratartalom',
       outfit_generate_btn: 'Öltözék Generálás',
       outfit_loading: 'Az AI összeállítja a tökéletes öltözékedet...',
+      outfit_fallback_notice: '⚠️ Az AI nem elérhető — véletlenszerű javaslat. Próbáld újra később az AI által összeállított eredményért.',
       outfit_empty_closet: 'Először adj hozzá ruhákat a szekrényedhez, utána tudok javasolni!',
       outfit_result_header: 'Az Öltözéked',
       outfit_regenerate: 'Másik Öltözék',
@@ -14930,7 +15275,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       // ── Shopping IQ Module ──
       nav_shopping: 'Shop IQ',
       siq_heading: 'Shopping IQ',
-      siq_subheading: 'Okos gardróbbefektetés-követő.',
+      siq_subheading: 'Gardróbbefektetés-követő.',
       siq_tab_log: 'Napló',
       siq_tab_cpw: 'CPW',
       siq_tab_advisor: 'Tanácsadó',
@@ -14962,7 +15307,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       siq_cpw_empty: 'Adj hozzá ruhákat a Naplóban',
       siq_cpw_wear: 'hordás',
       siq_cpw_per_wear: '/hordás',
-      siq_adv_title: 'Okos Tanácsadó',
+      siq_adv_title: 'Stílusanácsadó',
       siq_adv_budget: 'Havi keret (HUF)',
       siq_adv_analyze: 'Elemzés',
       siq_adv_spent: 'Költés ebben a hónapban',
@@ -14985,7 +15330,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       siq_rpl_title: 'Fast Fashion Kiváltás',
       siq_rpl_empty: 'Nincs fast fashion darab',
       siq_rpl_saving: 'Éves megtakarítás:',
-      siq_rpl_tips_title: 'Okos Vásárlási Tippek',
+      siq_rpl_tips_title: 'Stílus Vásárlási Tippek',
       siq_rpl_tip1: '💰 1 prémium póló = 5 fast fashion póló élettartama',
       siq_rpl_tip2: '🔍 Figyelj az anyagösszetételre: 95%+ pamut = tartós',
       siq_rpl_tip3: '📏 Méret > Trend — az időtálló szabás évekig jó',
@@ -15010,6 +15355,91 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       siq_currency_pos: 'after',
       siq_ph_price: '9990',
       siq_ph_budget: '50000',
+
+      // Alteregó Lab
+      al_subtitle: 'Alteregó Építő',
+      al_hero_h2: 'Építsd a <em>stílusalteregóidat</em>',
+      al_hero_p: 'Minden alkalomhoz más személyiség. Hozz létre alteregókat a ruhatáradhoz, fejleszd őket scannel, és érdemelj XP-t a stílustudatodért!',
+      al_how_title: '🎯 Hogyan működik az Alteregó Lab?',
+      al_how_step1_title: '1. Hozz létre alteregókat',
+      al_how_step1_desc: 'Minden alkalomhoz – randi, munka, buli – saját stíluszemélyiséget építhetsz.',
+      al_how_step2_title: '2. Scan-elj és fejleszd',
+      al_how_step2_desc: 'A stílusanalízis pontszámot és XP-t ad. Szintet lépsz, sorozatot építesz!',
+      al_how_step3_title: '3. Kérj AI tanácsot',
+      al_how_step3_desc: 'Az alteregód és szekrényed alapján kontextus-érzékeny outfit javaslatokat kapsz.',
+      al_tab_closet: 'Szekrény',
+      al_tab_goals: 'Célok',
+      al_tab_ai: 'AI Tanács',
+      al_create_title: 'Új Alteregó Létrehozása',
+      al_stat_total_xp: 'Összes XP',
+      al_stat_scans: 'Scan-ek',
+      al_stat_items: 'Ruhadarab',
+      al_stat_streak: 'Legjobb sorozat',
+      al_level_abbr: 'Sz. ',
+      al_pieces: 'Darab',
+      al_streak_lbl: 'Sorozat',
+      al_new_alterego: 'Új Alteregó',
+      al_new_sub: 'Adj életet egy új alteregónak',
+      al_avg: 'Átlag',
+      al_best: 'Legjobb',
+      al_occasion_label: 'Alkalom',
+      al_scan_btn: '📸 Stílusanalízis indítása',
+      al_scan_history: 'Scan előzmények',
+      al_item_placeholder: 'Ruhadarab neve...',
+      al_color_placeholder: 'Szín',
+      al_closet_empty_title: 'A szekrény üres',
+      al_closet_empty_hint: 'Adj hozzá ruhadarabokat a fenti mezővel',
+      al_goal_placeholder: 'Új stíluscél...',
+      al_pro_feature: 'PRO funkció',
+      al_pro_desc: 'Az AI Stíluskutató tanácsadó valós AI segítségével ad személyre szabott outfit javaslatokat az alteregód és szekrényed alapján.',
+      al_pro_btn: '👑 Váltás PRO-ra',
+      al_occ_label_ai: 'Outfit javaslat alkalomhoz',
+      al_ai_advisor_title: 'AI Stíluskutató javaslata',
+      al_ai_empty_title: 'Válassz egy alkalmat az AI javaslathoz',
+      al_ai_empty_hint: 'Az alteregód és szekrényed alapján személyre szabottan',
+      al_create_presets: 'Gyors sablonok',
+      al_create_emoji: 'Emoji',
+      al_create_name: 'Név',
+      al_create_name_ph: 'Pl. Hétfői Professzionalista',
+      al_create_emoji_picker: 'Emoji választó',
+      al_create_tagline: 'Szlogen',
+      al_create_tagline_ph: 'Rövid leírás, pl. Az első benyomás számít',
+      al_create_color: 'Szín',
+      al_create_btn: '+ Alteregó Létrehozása',
+      al_level_up: 'Szintlépés! 🎉',
+      al_awesome: 'Szuper! ✨',
+      al_delete_item_confirm: 'Törlöd ezt a ruhadarabot?',
+      al_ai_loading: '🤖 AI javaslat generálása...',
+      al_level_1: 'Újonc', al_level_2: 'Felfedező', al_level_3: 'Stílustudós', al_level_4: 'Trendsetter', al_level_5: 'Ikon',
+      al_level_6: 'Mester', al_level_7: 'Legendás', al_level_8: 'Ikonikus', al_level_9: 'Overlord', al_level_10: 'Stíluszseni',
+      al_preset_1_name: 'Hétfői Professzionalista', al_preset_1_tag: 'Irodai elegancia',
+      al_preset_2_name: 'Péntek Esti Vagány', al_preset_2_tag: 'Party-ready mindig',
+      al_preset_3_name: 'Vasárnapi Laza', al_preset_3_tag: 'Kényelem és stílus',
+      al_preset_4_name: 'Randi Romantikus', al_preset_4_tag: 'Az első benyomás számít',
+      al_preset_5_name: 'Kreatív Lélek', al_preset_5_tag: 'Kifejező és merész',
+      al_preset_6_name: 'Sportos Csapat', al_preset_6_tag: 'Aktív életmód stílus',
+      al_cat_top: 'Felső', al_cat_bottom: 'Alsó', al_cat_shoes: 'Cipő',
+      al_cat_outerwear: 'Kabát', al_cat_accessory: 'Kiegészítő', al_cat_dress: 'Ruha',
+      al_occ_casual: 'Hétköznapi', al_occ_first_date: 'Első randi',
+      al_occ_night_out: 'Buli', al_occ_fancy: 'Formál', al_occ_professional: 'Üzleti',
+      al_goal_1_title: 'Első scan', al_goal_1_desc: 'Végezd el az első stílusanalízist',
+      al_goal_2_title: '3 ruhadarab', al_goal_2_desc: 'Adj hozzá 3 ruhadarabot a szekrényedhez',
+      al_goal_3_title: 'Színharmonia mester', al_goal_3_desc: 'Érj el 80%+ színpontszámot',
+      al_vibe_mysterious: 'Rejtélyes', al_vibe_confident: 'Magabiztos', al_vibe_creative: 'Kreatív',
+      al_vibe_elegant: 'Elegáns', al_vibe_relaxed: 'Laza', al_vibe_cool: 'Vagány',
+      al_vibe_romantic: 'Romantikus', al_vibe_on_fire: 'Piszkosul jó',
+      al_scan_sys_prompt: 'Te egy stílustanácsadó AI vagy, a DateScan Alteregó Lab asszisztense. A felhasználó "{name}" {emoji} nevű alteregójához adsz tanácsot. Magyarul válaszolj, röviden, barátságosan, konkrét javaslatokkal. Maximum 4-5 mondat. Használj emojikat. Adj 3 konkrét outfit javaslatot a megadott alkalomra, építve a szekrényben lévő darabokra. Ha a szekrény üres, javasolj alapdarabokat amiket érdemes beszerezni.',
+      al_scan_user_prompt: 'Alkalom: {occasion}. {closet}. {score} Adj 3 konkrét outfit javaslatot erre az alkalomra.',
+      al_closet_prefix: 'Szekrény: ',
+      al_closet_empty_ctx: 'A szekrény még üres.',
+      al_score_ctx: 'Legutóbbi stílushordozás: {score}/100',
+      al_fallback_casual: '💡 ☕ Hétköznapi tippek: 1) Egy jól szabott fehér póló + sötét farmer sosem fog csalódást okozni. 2) Réteges öltözék: póló + nyitott ing + kényelmes cipő. 3) Egyszerű kiegészítők (óra, karkötő) emelik a lookot! 🎨',
+      al_fallback_first_date: '💡 💕 Randi tippek: 1) Smart casual: sötét nadrág + minőségi póló + blézer. 2) Egy feltűnő kiegészítő (órán, öv) beszélgetést indíthat. 3) Kerüld a túlöltözést — légy kényelmes és magabiztos! 🌹',
+      al_fallback_night_out: '💡 🌙 Buli tippek: 1) Bátor színek és textúrák: bőrkabát + sötét farmer + feltűnő cipő. 2) Réteges ékszerek vagy feltűnő óra. 3) Sötét alap + egy élénk színű darab a kontrasztért! 🔥',
+      al_fallback_fancy: '💡 🎩 Formál tippek: 1) Öltöny vagy sötét zakó + minőségi ing. 2) Tiszta, gondosan vasalt ruhadarabok. 3) Egyszerű, elegáns kiegészítők — kevesebb több! ✨',
+      al_fallback_professional: '💡 💼 Üzleti tippek: 1) Sötét zakó + semleges ing + jól szabott nadrág. 2) Tiszta cipő és ápolt megjelenés. 3) Egyszerű, megbízható darabok, amik magabiztosságot sugároznak! 📊',
+      al_fallback_generic: '💡 🎨 Stílustippek: 1) Kombináld a kedvenc darabjaidat egy színvilág köré. 2) Készíts réteges lookot kiegészítőkkel. 3) Válassz egy fókuszdarabot és építsd köré az outfitet! 💡',
+      al_xp_level_label: '+{xp} XP • Szint {level}',
 
     },
     de: {
@@ -15194,7 +15624,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       ob_start_btn: 'Kamera aktivieren & starten',
       scan_hero_title: 'Perfektioniere den',
       scan_hero_title_accent: 'ersten Eindruck',
-      scan_hero_subtitle: 'KI-gestützte Stil-, Pflege- und Haltungsanalyse.',
+      scan_hero_subtitle: 'ML-gestützte & algorithmische Stil-, Pflege- und Haltungsanalyse.',
       scan_cam_blocked: 'Kamera blockiert',
       scan_cam_blocked_msg: 'Bitte überprüfe deine Browsereinstellungen.',
       scan_target_occasion: 'Anlass',
@@ -15276,7 +15706,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       grooming_title: 'Pflege & Ausstrahlung',
       grooming_readiness: 'Bereitschaft',
       vibe_origin: 'Origin-Vibe',
-      vibe_engine_label: 'Erste Vibe-Inferenz-Engine',
+      vibe_engine_label: 'Stil-Analyse-Engine',
       vibe_instant_perception: 'Sofortige Wahrnehmung.',
       vibe_desc_line1: 'Ein Bild. Vier Stufen. Blitzschnell.',
       vibe_step_begin: 'Schritt 01 · Start',
@@ -15313,7 +15743,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       vibe_sub_default: 'monochromer Architekt',
       vibe_tip_default: 'Ein einzelner warmer Akzent — Kognak oder Rost — würde die Wirkung beim nächsten Look vertiefen.',
       vibe_missing_piece: 'Das fehlende Teil',
-      vibe_what_ai_saw: 'Was die AI sah',
+      vibe_what_ai_saw: 'Was der Scanner erkannt hat',
       vibe_palette: 'Palette',
       vibe_signals: 'Signale',
       vibe_metric_contrast: 'Kontrast',
@@ -15402,7 +15832,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       cal_vibe_saved: 'Vibe gespeichert.',
       vibe_origin_tip: 'Das ist dein Origin-Vibe',
       vibe_origin_baseline: 'die Basis für jeden zukünftigen Scan.',
-      disclaimer_line1: 'KI-GENERIERTE WAHRNEHMUNG',
+      disclaimer_line1: 'ML-GESTÜTZTE WAHRNEHMUNG · ALGORITHMISCHE ANALYSE',
       disclaimer_line2: 'KEINE PROFESSIONELLE BEURTEILUNG · NUR ZUR UNTERHALTUNG',
       closet_title: 'Digitaler Kleiderschrank',
       closet_subtitle: 'Deine gespeicherten Outfits und persönliches Stil-Archiv.',
@@ -15653,7 +16083,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       share_item_text: 'Schau dir mein Kleiderschrank-Item auf DateScan an',
       share_native_title: 'Mein DateScan Score',
       share_confidence_title: 'SELBSTBEWUSSTSEIN-OPTIMIERER FÜR DATES',
-      share_ai_rated_tag: 'AI BEWERTETE MEIN OUTFIT',
+      share_ai_rated_tag: 'SCAN BEWERTETE MEIN OUTFIT',
       share_my_score: 'MEIN SCORE',
       paywall_title: 'Eine kleine Änderung bis zum besseren ersten Eindruck.',
       paywall_subtitle: 'Die meisten Nutzer erleben eine echte Verbesserung in der Wahrnehmung. Entdecke ein Angebot, das zum Vibe deines nächsten Dates passt, oder starte kostenlos — ohne Verpflichtungen.',
@@ -15704,7 +16134,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       cam_bullet_1: '<strong>Scan = lokal.</strong> Dein Kamerabild wird ausschließlich von deinem Browser analysiert, direkt auf deinem Gerät. Die Daten <strong>verlassen niemals dein Gerät</strong>, daher sehen wir sie nie.',
       cam_bullet_2_title: 'Nichts wird gespeichert.',
       cam_bullet_2_text: 'Frames leben nur wenige Sekunden im Speicher und werden verworfen.',
-      cam_bullet_2: '<strong>Nichts wird gespeichert.</strong> Frames leben nur wenige Sekunden im Speicher deines Geräts, während die AI Outfit, Pflege, Haltung und Beleuchtung prüft — dann werden sie verworfen.',
+      cam_bullet_2: '<strong>Nichts wird gespeichert.</strong> Frames leben nur wenige Sekunden im Speicher deines Geräts, während der Scanner Outfit, Pflege, Haltung und Beleuchtung prüft — dann werden sie verworfen.',
       cam_bullet_3_title: 'Du hast die Kontrolle.',
       cam_bullet_3_text: 'Stoppe die Kamera jederzeit durch Schließen des Scanners.',
       cam_bullet_3: '<strong>Du hast die Kontrolle.</strong> Stoppe die Kamera jederzeit durch Schließen des Scanners. Dein Browser ermöglicht auch den Widerruf der Kameraerlaubnis.',
@@ -16700,7 +17130,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
 
       // Smart Shopping List
       closet_smart_shop: 'Einkaufsliste',
-      smart_shop_title: 'Smarte Einkaufsliste',
+      smart_shop_title: 'Garderoben-Einkaufsliste',
       smart_shop_subtitle: 'Garderoben-Lückenanalyse und intelligente Kau fvorschläge basierend auf deinem Schrank.',
       smart_shop_tab_gaps: 'Lücken',
       smart_shop_tab_occasions: 'Anlässe',
@@ -16837,7 +17267,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       // Reise Packplaner
       closet_trip_packing: 'Reise',
       trip_title: 'Reise Packplaner',
-      trip_subtitle: 'Intelligentes Packen basierend auf Wettervorhersage und deinem Schrank.',
+      trip_subtitle: 'Packen basierend auf Wettervorhersage und deinem Schrank.',
       trip_destination_label: 'Reiseziel',
       trip_destination_placeholder: 'Stadtname...',
       trip_days_label: 'Tage',
@@ -16947,6 +17377,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       outfit_humidity: 'Feuchtigkeit',
       outfit_generate_btn: 'Outfit generieren',
       outfit_loading: 'KI stellt dein perfektes Outfit zusammen...',
+      outfit_fallback_notice: '⚠️ KI nicht verfügbar — zufällige Auswahl. Versuche es später erneut für KI-kuratierte Ergebnisse.',
       outfit_empty_closet: 'Füge zuerst Kleidung zu deinem Schrank hinzu, dann kann ich Outfits vorschlagen!',
       outfit_result_header: 'Dein Outfit',
       outfit_regenerate: 'Anderes Outfit',
@@ -17017,7 +17448,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       // ── Shopping IQ Module ──
       nav_shopping: 'Shop IQ',
       siq_heading: 'Shopping IQ',
-      siq_subheading: 'Smarter Garderobe-Investitions-Tracker.',
+      siq_subheading: 'Garderoben-Investitions-Tracker.',
       siq_tab_log: 'Protokoll',
       siq_tab_cpw: 'CPW',
       siq_tab_advisor: 'Berater',
@@ -17049,7 +17480,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       siq_cpw_empty: 'Füge zuerst Artikel im Protokoll hinzu',
       siq_cpw_wear: 'Tragen',
       siq_cpw_per_wear: '/Trag',
-      siq_adv_title: 'Smarter Berater',
+      siq_adv_title: 'Stil-Berater',
       siq_adv_budget: 'Monatsbudget (EUR)',
       siq_adv_analyze: 'Analysieren',
       siq_adv_spent: 'Ausgaben diesen Monat',
@@ -17072,7 +17503,7 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       siq_rpl_title: 'Fast Fashion Ersatz',
       siq_rpl_empty: 'Keine Fast Fashion Artikel',
       siq_rpl_saving: 'Jährliche Ersparnis:',
-      siq_rpl_tips_title: 'Smarte Einkaufstipps',
+      siq_rpl_tips_title: 'Stil-Einkaufstipps',
       siq_rpl_tip1: '💰 1 Premium-Shirt = Lebensdauer von 5 Fast Fashion Shirts',
       siq_rpl_tip2: '🔍 Stoffzusammensetzung prüfen: 95%+ Baumwolle = langlebig',
       siq_rpl_tip3: '📏 Passform > Trend — zeitlose Schnitte halten Jahre',
@@ -17097,6 +17528,91 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       siq_currency_pos: 'after',
       siq_ph_price: '39',
       siq_ph_budget: '200',
+
+      // Alteregó Lab
+      al_subtitle: 'Alter Ego Baukasten',
+      al_hero_h2: 'Baue deine <em>Stil-Alter-Egos</em>',
+      al_hero_p: 'Für jeden Anlass eine andere Persönlichkeit. Erstelle Alter Egos für deine Garderobe, entwickle sie mit Scans weiter und verdiene XP für dein Stilbewusstsein!',
+      al_how_title: '🎯 Wie funktioniert das Alteregó Lab?',
+      al_how_step1_title: '1. Alter Egos erstellen',
+      al_how_step1_desc: 'Für jeden Anlass – Date, Arbeit, Party – baust du deine eigene Stil-Persönlichkeit.',
+      al_how_step2_title: '2. Scannen & verbessern',
+      al_how_step2_desc: 'Die Stilanalyse gibt Punkte und XP. Level aufsteigen, Serien bauen!',
+      al_how_step3_title: '3. KI-Ratschlag holen',
+      al_how_step3_desc: 'Kontextbezogene Outfit-Vorschläge basierend auf deinem Alter Ego und Schrank.',
+      al_tab_closet: 'Schrank',
+      al_tab_goals: 'Ziele',
+      al_tab_ai: 'KI-Ratschlag',
+      al_create_title: 'Neues Alter Ego erstellen',
+      al_stat_total_xp: 'Gesamt-XP',
+      al_stat_scans: 'Scans',
+      al_stat_items: 'Kleidung',
+      al_stat_streak: 'Beste Serie',
+      al_level_abbr: 'Lv. ',
+      al_pieces: 'Teile',
+      al_streak_lbl: 'Serie',
+      al_new_alterego: 'Neues Alter Ego',
+      al_new_sub: 'Erwecke ein neues Alter Ego zum Leben',
+      al_avg: 'Ø',
+      al_best: 'Beste',
+      al_occasion_label: 'Anlass',
+      al_scan_btn: '📸 Stilanalyse starten',
+      al_scan_history: 'Scan-Verlauf',
+      al_item_placeholder: 'Kleidungsstück...',
+      al_color_placeholder: 'Farbe',
+      al_closet_empty_title: 'Schrank ist leer',
+      al_closet_empty_hint: 'Füge Kleidung mit dem Feld oben hinzu',
+      al_goal_placeholder: 'Neues Stilziel...',
+      al_pro_feature: 'PRO-Funktion',
+      al_pro_desc: 'Der KI-Stilberater gibt personalisierte Outfit-Vorschläge mit echter KI, basierend auf deinem Alter Ego und Schrank.',
+      al_pro_btn: '👑 Auf PRO upgraden',
+      al_occ_label_ai: 'Outfit-Vorschlag für Anlass',
+      al_ai_advisor_title: 'Vorschlag des KI-Stilberaters',
+      al_ai_empty_title: 'Wähle einen Anlass für den KI-Vorschlag',
+      al_ai_empty_hint: 'Personalisiert basierend auf deinem Alter Ego und Schrank',
+      al_create_presets: 'Schnellvorlagen',
+      al_create_emoji: 'Emoji',
+      al_create_name: 'Name',
+      al_create_name_ph: 'z.B. Montag-Profi',
+      al_create_emoji_picker: 'Emoji-Auswahl',
+      al_create_tagline: 'Slogan',
+      al_create_tagline_ph: 'Kurzbeschreibung, z.B. Erster Eindruck zählt',
+      al_create_color: 'Farbe',
+      al_create_btn: '+ Alter Ego erstellen',
+      al_level_up: 'Level Up! 🎉',
+      al_awesome: 'Super! ✨',
+      al_delete_item_confirm: 'Dieses Kleidungsstück löschen?',
+      al_ai_loading: '🤖 KI-Vorschlag wird generiert...',
+      al_level_1: 'Neuling', al_level_2: 'Entdecker', al_level_3: 'Stilkenner', al_level_4: 'Trendsetter', al_level_5: 'Ikone',
+      al_level_6: 'Meister', al_level_7: 'Legendär', al_level_8: 'Ikonisch', al_level_9: 'Overlord', al_level_10: 'Stil-Genie',
+      al_preset_1_name: 'Montag-Profi', al_preset_1_tag: 'Büro-Eleganz',
+      al_preset_2_name: 'Freitagnacht-Cool', al_preset_2_tag: 'Party-ready immer',
+      al_preset_3_name: 'Sonntags-Lässig', al_preset_3_tag: 'Komfort und Stil',
+      al_preset_4_name: 'Date-Romantiker', al_preset_4_tag: 'Erster Eindruck zählt',
+      al_preset_5_name: 'Kreative Seele', al_preset_5_tag: 'Ausdrucksstark und mutig',
+      al_preset_6_name: 'Sport-Team', al_preset_6_tag: 'Aktiver Lebensstil',
+      al_cat_top: 'Oberteil', al_cat_bottom: 'Unterteil', al_cat_shoes: 'Schuhe',
+      al_cat_outerwear: 'Mantel', al_cat_accessory: 'Accessoire', al_cat_dress: 'Kleid',
+      al_occ_casual: 'Alltäglich', al_occ_first_date: 'Erstes Date',
+      al_occ_night_out: 'Ausgehen', al_occ_fancy: 'Formell', al_occ_professional: 'Business',
+      al_goal_1_title: 'Erster Scan', al_goal_1_desc: 'Führe deine erste Stilanalyse durch',
+      al_goal_2_title: '3 Kleidungsstücke', al_goal_2_desc: 'Füge 3 Kleidungsstücke zu deinem Schrank hinzu',
+      al_goal_3_title: 'Farbharmonie-Meister', al_goal_3_desc: 'Erreiche 80%+ Farbpunktzahl',
+      al_vibe_mysterious: 'Mysteriös', al_vibe_confident: 'Selbstsicher', al_vibe_creative: 'Kreativ',
+      al_vibe_elegant: 'Elegant', al_vibe_relaxed: 'Entspannt', al_vibe_cool: 'Cool',
+      al_vibe_romantic: 'Romantisch', al_vibe_on_fire: 'Megascharf',
+      al_scan_sys_prompt: 'Du bist ein Stil-KI, der DateScan Alteregó Lab Assistent. Du gibst Ratschläge für das Alter Ego des Nutzers namens "{name}" {emoji}. Antworte auf Deutsch, kurz, freundlich, mit konkreten Vorschlägen. Max. 4-5 Sätze. Verwende Emojis. Gib 3 konkrete Outfit-Vorschläge für den Anlass, basierend auf den Kleidungsstücken im Schrank. Wenn der Schrank leer ist, schlage Grundstücke vor, die sich lohnen.',
+      al_scan_user_prompt: 'Anlass: {occasion}. {closet}. {score} Gib 3 konkrete Outfit-Vorschläge für diesen Anlass.',
+      al_closet_prefix: 'Schrank: ',
+      al_closet_empty_ctx: 'Der Schrank ist noch leer.',
+      al_score_ctx: 'Letzter Stilwert: {score}/100',
+      al_fallback_casual: '💡 ☕ Alltags-Tipps: 1) Ein gut sitzendes weißes T-Shirt + dunkle Jeans enttäuscht nie. 2) Layered Look: T-Shirt + offenes Hemd + bequeme Schuhe. 3) Einfache Accessoires (Uhr, Armband) heben den Look! 🎨',
+      al_fallback_first_date: '💡 💕 Date-Tipps: 1) Smart Casual: dunkle Hose + Qualitäts-Shirt + Blazer. 2) Ein auffälliges Accessoire (Uhr, Gürtel) kann ein Gespräch starten. 3) Vermeide Überdressing — sei bequem und selbstsicher! 🌹',
+      al_fallback_night_out: '💡 🌙 Ausgeh-Tipps: 1) Mutige Farben und Texturen: Lederjacke + dunkle Jeans + Statement-Schuhe. 2) Geschichteter Schmuck oder auffällige Uhr. 3) Dunkle Basis + ein lebhaftes Stück für Kontrast! 🔥',
+      al_fallback_fancy: '💡 🎩 Formell-Tipps: 1) Anzug oder dunkler Blazer + Qualitätshemd. 2) Saubere, sorgfältig gebügelte Kleidung. 3) Einfache elegante Accessoires — weniger ist mehr! ✨',
+      al_fallback_professional: '💡 💼 Business-Tipps: 1) Dunkler Blazer + neutrales Hemd + gut sitzende Hose. 2) Saubere Schuhe und gepflegtes Erscheinungsbild. 3) Einfache, zuverlässige Stücke, die Selbstvertrauen ausstrahlen! 📊',
+      al_fallback_generic: '💡 🎨 Stil-Tipps: 1) Kombiniere deine Lieblingsstücke um eine Farbpalette. 2) Erstelle geschichtete Looks mit Accessoires. 3) Wähle ein Hauptstück und baue das Outfit darum! 💡',
+      al_xp_level_label: '+{xp} XP • Level {level}',
 
     },
   };
@@ -21244,7 +21760,7 @@ window.saveCurrentOutfit = function() {
 })();
 
 // ============================================================
-// TRIP PACKING PLANNER — smart packing list based on weather
+// TRIP PACKING PLANNER — packing list based on weather
 // forecast and the user's digital closet. Uses Open-Meteo API
 // for geocoding + weather. Generates packing suggestions, daily
 // outfit planner, and missing item warnings.
@@ -22956,12 +23472,14 @@ window.saveCurrentOutfit = function() {
       } else {
         // Fallback: pick random items
         var fallback = generateFallbackOutfit(items);
+        fallback._isFallback = true;
         lastOutfitResult = fallback;
         renderOutfitResults(fallback, items, null);
       }
     } catch (err) {
       console.warn('[outfit-picker] AI error, using fallback:', err);
       var fallback = generateFallbackOutfit(items);
+      fallback._isFallback = true;
       lastOutfitResult = fallback;
       renderOutfitResults(fallback, items, null);
     } finally {
@@ -23052,6 +23570,22 @@ window.saveCurrentOutfit = function() {
       tipEl.classList.remove('hidden');
     } else {
       tipEl.classList.add('hidden');
+    }
+
+    // Fallback notice: when AI was unavailable, show a disclaimer
+    if (parsed._isFallback) {
+      var noticeEl = document.getElementById('outfitFallbackNotice');
+      if (!noticeEl) {
+        noticeEl = document.createElement('div');
+        noticeEl.id = 'outfitFallbackNotice';
+        noticeEl.className = 'text-xs text-yellow-400/80 bg-yellow-400/10 rounded-lg px-3 py-2 mt-2 text-center';
+        resultsEl.insertBefore(noticeEl, resultsEl.firstChild.nextSibling);
+      }
+      noticeEl.textContent = _t('outfit_fallback_notice') || '⚠️ AI unavailable — showing a random pick. Try again later for AI-curated results.';
+      noticeEl.classList.remove('hidden');
+    } else {
+      var existingNotice = document.getElementById('outfitFallbackNotice');
+      if (existingNotice) existingNotice.classList.add('hidden');
     }
 
     resultsEl.classList.remove('hidden');
@@ -24147,7 +24681,7 @@ async function generateShareCard(overrideScore, overrideImage) {
       g.font = 'bold 22px Inter, sans-serif';
       g.textAlign = 'left';
       // Truncate tag text to fit within the pill (tagW - 48px padding)
-      let tagText = '🤖  ' + t('share_ai_rated_tag');
+      let tagText = '🔍  ' + t('share_ai_rated_tag');
       const maxTagW = tagW - 48;
       if (g.measureText(tagText).width > maxTagW) {
         while (tagText.length > 0 && g.measureText(tagText + '…').width > maxTagW) {
@@ -28231,7 +28765,8 @@ async function runScan() {
     // silently in that case.
     if (detectedOutfitColor) {
       setTimeout(() => {
-        const n = 6 + Math.floor(Math.random() * 8); // 6–13
+        const currentScore = store.get().lastScore || 50;
+        const n = Math.max(1, Math.min(20, 100 - currentScore));
         window.dsPrivacy?.showToast?.(t('toast_improvement_possible', {n: n}), 2400);
       }, 1000);
     }
@@ -32319,7 +32854,7 @@ applyOfflineState(!navigator.onLine);
 })();
 </script>
 
-<!-- ============ VIBEAI MODULE SCRIPT (Magic Mirror + Real Vision) ============ -->
+<!-- ============ VIBE SCAN MODULE SCRIPT (Magic Mirror + Style Analysis) ============ -->
 <script>
 (function() {
   var t = function(k,v) { return typeof window.t === 'function' ? window.t(k,v) : k; };
@@ -37703,4 +38238,706 @@ applyOfflineState(!navigator.onLine);
 </script>
 
 </body>
+<script>
+// ═══════════════════════════════════════════════════════════════
+// ALTEREGÓ LAB — Complete Module
+// localStorage-based data, scan, gamification, AI suggestions
+// ═══════════════════════════════════════════════════════════════
+(function() {
+  'use strict';
+
+  var STORAGE_KEY = 'datescan.alteregos';
+
+  // ─── Data Layer ───
+  // Known HU preset names → key mapping for migration
+  var _PRESET_NAME_MAP = {
+    'Hétfői Professzionalista':'al_preset_1_name','Irodai elegancia':'al_preset_1_tag',
+    'Péntek Esti Vagány':'al_preset_2_name','Party-ready mindig':'al_preset_2_tag',
+    'Vasárnapi Laza':'al_preset_3_name','Kényelem és stílus':'al_preset_3_tag',
+    'Randi Romantikus':'al_preset_4_name','Az első benyomás számít':'al_preset_4_tag',
+    'Kreatív Lélek':'al_preset_5_name','Kifejező és merész':'al_preset_5_tag',
+    'Sportos Csapat':'al_preset_6_name','Aktív életmód stílus':'al_preset_6_tag'
+  };
+  function _load() {
+    try {
+      var list = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      // Migrate: backfill nameKey/tagKey for preset-created alter egos
+      var changed = false;
+      list.forEach(function(a) {
+        if (!a.nameKey && _PRESET_NAME_MAP[a.name]) { a.nameKey = _PRESET_NAME_MAP[a.name]; changed = true; }
+        if (!a.tagKey && _PRESET_NAME_MAP[a.tagline]) { a.tagKey = _PRESET_NAME_MAP[a.tagline]; changed = true; }
+      });
+      if (changed) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); } catch(e) {} }
+      return list;
+    } catch(e) { return []; }
+  }
+  function _save(data) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
+  }
+  function _uuid() {
+    return 'al_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+  }
+
+  // ─── XP & Level System ───
+  function xpForLevel(lvl) {
+    var total = 0;
+    for (var i = 1; i < lvl; i++) total += 50 + i * 50;
+    return total;
+  }
+  function getLevelName(lvl) {
+    var keys = {1:'al_level_1',2:'al_level_2',3:'al_level_3',4:'al_level_4',5:'al_level_5',6:'al_level_6',7:'al_level_7',8:'al_level_8',9:'al_level_9',10:'al_level_10'};
+    return keys[lvl] ? t(keys[lvl]) : (t('al_level_abbr') + lvl);
+  }
+  function calcProgress(xp, lvl) {
+    var cur = xpForLevel(lvl), nxt = xpForLevel(lvl + 1);
+    var inLvl = xp - cur, need = nxt - cur;
+    return { xpForNext: nxt, pct: Math.min(100, Math.round((inLvl / need) * 100)) };
+  }
+
+  // ─── Presets ───
+  var PRESETS = [
+    { nameKey:'al_preset_1_name', tagKey:'al_preset_1_tag', emoji:'💼', category:'professional', color:'#6366f1' },
+    { nameKey:'al_preset_2_name', tagKey:'al_preset_2_tag', emoji:'🌙', category:'night_out', color:'#ec4899' },
+    { nameKey:'al_preset_3_name', tagKey:'al_preset_3_tag', emoji:'☕', category:'casual', color:'#10b981' },
+    { nameKey:'al_preset_4_name', tagKey:'al_preset_4_tag', emoji:'💕', category:'date', color:'#f43f5e' },
+    { nameKey:'al_preset_5_name', tagKey:'al_preset_5_tag', emoji:'🎨', category:'creative', color:'#a855f7' },
+    { nameKey:'al_preset_6_name', tagKey:'al_preset_6_tag', emoji:'🏃', category:'sporty', color:'#f59e0b' }
+  ];
+  var EMOJIS = ['💼','🌙','☕','💕','🎨','🏃','🎭','👑','🔥','⭐','🦊','🌸','💎','🎯','🦋','🐉'];
+  var COLORS = ['#ec4899','#f43f5e','#f59e0b','#10b981','#6366f1','#a855f7','#06b6d4','#84cc16'];
+  var CLOTHING_CATS = [
+    {v:'top',lk:'al_cat_top',e:'👔'},{v:'bottom',lk:'al_cat_bottom',e:'👖'},{v:'shoes',lk:'al_cat_shoes',e:'👟'},
+    {v:'outerwear',lk:'al_cat_outerwear',e:'🧥'},{v:'accessory',lk:'al_cat_accessory',e:'⌚'},{v:'dress',lk:'al_cat_dress',e:'👗'}
+  ];
+  var OCCASIONS = [
+    {v:'casual',lk:'al_occ_casual',e:'☕'},{v:'first_date',lk:'al_occ_first_date',e:'💕'},
+    {v:'night_out',lk:'al_occ_night_out',e:'🌙'},{v:'fancy',lk:'al_occ_fancy',e:'🎩'},{v:'professional',lk:'al_occ_professional',e:'💼'}
+  ];
+
+  // ─── Create Alteregó ───
+  function createAlterego(data) {
+    var list = _load();
+    var a = {
+      id: _uuid(),
+      name: (data.name || '').trim(),
+      nameKey: data.nameKey || null,
+      emoji: data.emoji || '🎭',
+      tagline: data.tagline || '',
+      tagKey: data.tagKey || null,
+      color: data.color || '#ec4899',
+      category: data.category || 'custom',
+      xp: 0, level: 1, streak: 0, bestStreak: 0,
+      lastActive: null, isFavorite: false, sortOrder: list.length,
+      items: [], scans: [], goals: [],
+      createdAt: new Date().toISOString()
+    };
+    // Default goals
+    a.goals = [
+      { id: _uuid(), title: t('al_goal_1_title'), description: t('al_goal_1_desc'), xpReward: 25, isCompleted: false },
+      { id: _uuid(), title: t('al_goal_2_title'), description: t('al_goal_2_desc'), xpReward: 15, isCompleted: false },
+      { id: _uuid(), title: t('al_goal_3_title'), description: t('al_goal_3_desc'), xpReward: 50, isCompleted: false }
+    ];
+    list.push(a);
+    _save(list);
+    return a;
+  }
+
+  // ─── Run Scan ───
+  function runScan(alteregoId, occasion) {
+    var list = _load();
+    var idx = list.findIndex(function(a) { return a.id === alteregoId; });
+    if (idx === -1) return null;
+    var a = list[idx];
+
+    var itemCnt = a.items.length;
+    var base = 40 + Math.min(itemCnt * 3, 25);
+    var r = function() { return Math.random() * 20 - 10; };
+    var cs = Math.min(100, Math.max(20, base + r() + (itemCnt >= 5 ? 10 : 0)));
+    var fs = Math.min(100, Math.max(20, base + r() + 5));
+    var gs = Math.min(100, Math.max(20, base + r() + 8));
+    var ov = Math.round((cs + fs + gs) / 3 * 10) / 10;
+
+    var vibes = [t('al_vibe_mysterious'),t('al_vibe_confident'),t('al_vibe_creative'),t('al_vibe_elegant'),t('al_vibe_relaxed'),t('al_vibe_cool'),t('al_vibe_romantic'),t('al_vibe_on_fire')];
+    var vibe = vibes[Math.floor(Math.random() * vibes.length)];
+
+    var fb = '';
+    var _oName = a.nameKey ? t(a.nameKey) : a.name;
+    if (ov >= 85) fb = _oName + (currentLang==='de'?' sieht heute fantastisch aus! Farbwelt, Sitz und Präsenz harmonieren.':currentLang==='hu'?' stílusa ma elképesztő! A színvilág, az illeszkedés és a jelenlét mind harmonizál.':'\'s style today is incredible! Color, fit, and presence all harmonize.') + ' ' + (occasion==='first_date'?(currentLang==='de'?'Dieses Date gehört dir!':currentLang==='hu'?'Ez a randi a tiéd!':'This date is yours!'):(currentLang==='de'?'Alle werden es bemerken!':currentLang==='hu'?'Mindenki észre fogja venni!':'Everyone will notice!'));
+    else if (ov >= 70) fb = (currentLang==='de'?'Sehr gute Basis, ':currentLang==='hu'?'Nagyon jó az alap, ':'Great base, ') + _oName + '! ' + (occasion==='first_date'?(currentLang==='de'?'Ein feines Accessoire macht den Date-Look perfekt.':currentLang==='hu'?'Egy finom kiegészítő még tökéletesebbé teszi a randi lookot.':'A subtle accessory will perfect the date look.'):(currentLang==='de'?'Ein kleiner Twist und es wird perfekt.':currentLang==='hu'?'Egy apró csavar és tökéletes leszez.':'One small tweak and it\'s perfect.')) + ' ' + (currentLang==='de'?'Probiere einen kontrastfarbigen Gürtel oder eine Uhr!':currentLang==='hu'?'Próbálj egy kontrasztos színű övet vagy órát!':'Try a contrasting belt or watch!');
+    else if (ov >= 50) fb = (currentLang==='de'?'Die Grundlage ist da, ':currentLang==='hu'?'Az alapok megvannak, ':'The basics are there, ') + _oName + (currentLang==='de'?', aber es gibt Raum für Verbesserungen! ':currentLang==='hu'?', de van hova fejlődni! ':',  but there\'s room to grow! ') + (occasion==='night_out'?(currentLang==='de'?'Für das Ausgehen würde eine mutigere Farbe oder Textur gut stehen.':currentLang==='hu'?'A bulira egy merészebb szín vagy textúra is jól állna.':'For the night out, a bolder color or texture would work well.'):(currentLang==='de'?'Verbesserung der Farbharmonie würde einen großen Unterschied machen.':currentLang==='hu'?'A színharmonia javítása nagyot dobna a összhatáson.':'Improving the color harmony would make a big difference.'));
+    else fb = _oName + (currentLang==='de'?', dieser Look ist noch im Entstehen! Keine Sorge – Stil ist eine Reise. Beginne mit der Abstimmung der Farben und einem gut sitzenden Grundstück!':currentLang==='hu'?', ez a look még formálódik! Ne aggódj – a stílus egy utazás. Kezdd a színek összehangolásával és egy jól ülő alapdarabbal!':',  this look is still taking shape! Don\'t worry – style is a journey. Start with color coordination and a well-fitting basic piece!');
+
+    var xpEarned = Math.round(ov / 5) + 5;
+    var scan = {
+      id: _uuid(), overallScore: ov,
+      colorScore: Math.round(cs*10)/10, fitScore: Math.round(fs*10)/10, groomingScore: Math.round(gs*10)/10,
+      vibeLabel: vibe, feedback: fb, xpEarned: xpEarned,
+      createdAt: new Date().toISOString()
+    };
+    a.scans.unshift(scan);
+    if (a.scans.length > 20) a.scans = a.scans.slice(0, 20);
+
+    // Update XP & level
+    a.xp += xpEarned;
+    while (xpForLevel(a.level + 1) <= a.xp) a.level++;
+    var leveledUp = a.level > list[idx].level;
+
+    // Streak
+    var now = new Date();
+    if (a.lastActive) {
+      var diff = Math.floor((now.getTime() - new Date(a.lastActive).getTime()) / 86400000);
+      a.streak = diff <= 1 ? a.streak + 1 : 1;
+    } else { a.streak = 1; }
+    a.bestStreak = Math.max(a.bestStreak, a.streak);
+    a.lastActive = now.toISOString();
+
+    // Check goals
+    a.goals.forEach(function(g) {
+      if (g.isCompleted) return;
+      if (g.title.indexOf('scan') >= 0 || g.title.indexOf('analízis') >= 0 || g.title.indexOf('Scan') >= 0) {
+        g.isCompleted = true; g.completedAt = now.toISOString(); a.xp += g.xpReward;
+      }
+      if (g.title.indexOf('80%') >= 0 && ov >= 80) {
+        g.isCompleted = true; g.completedAt = now.toISOString(); a.xp += g.xpReward;
+      }
+      if (g.title.indexOf('3 ruhadarab') >= 0 && a.items.length >= 3) {
+        g.isCompleted = true; g.completedAt = now.toISOString(); a.xp += g.xpReward;
+      }
+    });
+    while (xpForLevel(a.level + 1) <= a.xp) a.level++;
+
+    list[idx] = a;
+    _save(list);
+    return { scan: scan, xpEarned: xpEarned, newXP: a.xp, newLevel: a.level, leveledUp: leveledUp, levelName: getLevelName(a.level), streak: a.streak };
+  }
+
+  // ─── Add Item ───
+  function addItem(alteregoId, item) {
+    var list = _load();
+    var idx = list.findIndex(function(a) { return a.id === alteregoId; });
+    if (idx === -1) return;
+    list[idx].items.push({
+      id: _uuid(), name: item.name, category: item.category,
+      color: item.color || null, brand: item.brand || null,
+      isFavorite: false, wearCount: 0,
+      createdAt: new Date().toISOString()
+    });
+    list[idx].xp += 5;
+    while (xpForLevel(list[idx].level + 1) <= list[idx].xp) list[idx].level++;
+    _save(list);
+  }
+
+  // ─── Delete Item ───
+  function deleteItem(alteregoId, itemId) {
+    var list = _load();
+    var idx = list.findIndex(function(a) { return a.id === alteregoId; });
+    if (idx === -1) return;
+    list[idx].items = list[idx].items.filter(function(i) { return i.id !== itemId; });
+    _save(list);
+  }
+
+  // ─── Add Goal ───
+  function addGoal(alteregoId, title) {
+    var list = _load();
+    var idx = list.findIndex(function(a) { return a.id === alteregoId; });
+    if (idx === -1) return;
+    list[idx].goals.push({ id: _uuid(), title: title, description: '', xpReward: 15, isCompleted: false });
+    _save(list);
+  }
+
+  // ─── Toggle Goal ───
+  function toggleGoal(alteregoId, goalId) {
+    var list = _load();
+    var idx = list.findIndex(function(a) { return a.id === alteregoId; });
+    if (idx === -1) return;
+    list[idx].goals.forEach(function(g) {
+      if (g.id === goalId) {
+        g.isCompleted = !g.isCompleted;
+        g.completedAt = g.isCompleted ? new Date().toISOString() : null;
+        if (g.isCompleted) {
+          list[idx].xp += g.xpReward;
+          while (xpForLevel(list[idx].level + 1) <= list[idx].xp) list[idx].level++;
+        }
+      }
+    });
+    _save(list);
+  }
+
+  // ─── Delete Alteregó ───
+  function deleteAlterego(alteregoId) {
+    var list = _load().filter(function(a) { return a.id !== alteregoId; });
+    _save(list);
+  }
+
+  // ─── Rendering ───
+  var _currentDetail = null;
+  var _currentTab = 'scan';
+
+  function _esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+  function renderGrid() {
+    var list = _load();
+    var grid = document.getElementById('alGrid');
+    var overview = document.getElementById('alOverview');
+    if (!grid) return;
+
+    // Overview
+    if (list.length > 0 && overview) {
+      overview.style.display = '';
+      var totalXP = 0, totalScans = 0, totalItems = 0, bestStreak = 0;
+      list.forEach(function(a) { totalXP += a.xp; totalScans += a.scans.length; totalItems += a.items.length; bestStreak = Math.max(bestStreak, a.bestStreak); });
+      document.getElementById('alOverviewStats').innerHTML =
+        '<div class="al-stat" style="background:rgba(236,72,153,0.1);border:1px solid rgba(236,72,153,0.2)"><div class="al-stat-val">' + list.length + '</div><div class="al-stat-lbl" style="color:rgba(244,114,182,0.8)">Alteregó</div></div>' +
+        '<div class="al-stat" style="background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2)"><div class="al-stat-val">' + totalXP + '</div><div class="al-stat-lbl" style="color:rgba(192,132,252,0.8)">' + t('al_stat_total_xp') + '</div></div>' +
+        '<div class="al-stat" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2)"><div class="al-stat-val">' + totalScans + '</div><div class="al-stat-lbl" style="color:rgba(110,231,183,0.8)">' + t('al_stat_scans') + '</div></div>' +
+        '<div class="al-stat" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2)"><div class="al-stat-val">' + totalItems + '</div><div class="al-stat-lbl" style="color:rgba(252,211,77,0.8)">' + t('al_stat_items') + '</div></div>' +
+        '<div class="al-stat" style="background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2)"><div class="al-stat-val" style="color:#fb923c">' + bestStreak + '🔥</div><div class="al-stat-lbl" style="color:rgba(251,146,60,0.8)">' + t('al_stat_streak') + '</div></div>';
+    } else if (overview) {
+      overview.style.display = 'none';
+    }
+
+    // Cards
+    var html = '';
+    list.forEach(function(a) {
+      var p = calcProgress(a.xp, a.level);
+      html += '<div class="al-card" onclick="window._alOpenDetail(\'' + a.id + '\')">' +
+        '<div class="al-card-bar" style="background:linear-gradient(90deg,' + a.color + ',' + a.color + '88)"></div>' +
+        '<div class="al-card-body">' +
+          '<div class="al-card-head">' +
+            '<div class="al-card-emoji" style="background:linear-gradient(135deg,' + a.color + '30,' + a.color + '10);box-shadow:0 4px 14px ' + a.color + '25">' + a.emoji + '</div>' +
+            '<div><div class="al-card-name">' + (a.nameKey ? t(a.nameKey) : _esc(a.name)) + '</div>' +
+            (a.tagline||a.tagKey ? '<div class="al-card-tagline">' + (a.tagKey ? t(a.tagKey) : _esc(a.tagline)) + '</div>' : '') + '</div>' +
+          '</div>' +
+          '<div class="al-xp-row"><div style="display:flex;align-items:center;gap:5px"><svg width="14" height="14" fill="none" stroke="' + a.color + '" stroke-width="2" viewBox="0 0 24 24"><path d="M2 4h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span style="font-weight:600;color:#fff">' + getLevelName(a.level) + '</span><span style="font-size:9px;padding:2px 6px;border-radius:4px;border:1px solid rgba(255,255,255,0.1);color:#9ca3af">Sz. ' + a.level + '</span></div><span style="color:#9ca3af;font-variant-numeric:tabular-nums">' + a.xp + '/' + p.xpForNext + ' XP</span></div>' +
+          '<div class="al-xp-bar"><div class="al-xp-fill" style="width:' + p.pct + '%;background:linear-gradient(90deg,' + a.color + ',' + a.color + 'aa)"></div></div>' +
+          '<div class="al-stats-row">' +
+            '<div class="al-mini-stat"><div class="al-mini-stat-val"><svg width="12" height="12" fill="none" stroke="' + a.color + '" stroke-width="2" viewBox="0 0 24 24"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg> ' + a.items.length + '</div><div class="al-mini-stat-lbl">Darab</div></div>' +
+            '<div class="al-mini-stat"><div class="al-mini-stat-val"><svg width="12" height="12" fill="none" stroke="' + a.color + '" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> ' + a.scans.length + '</div><div class="al-mini-stat-lbl">Scan</div></div>' +
+            '<div class="al-mini-stat"><div class="al-mini-stat-val" style="color:#fb923c">🔥 ' + a.streak + '</div><div class="al-mini-stat-lbl">Sorozat</div></div>' +
+          '</div>' +
+        '</div></div>';
+    });
+
+    // Add-card button
+    html += '<div class="al-card al-add-card" onclick="window._alOpenCreate()">' +
+      '<div class="al-add-icon">+</div>' +
+      '<div class="al-add-text">' + t('al_new_alterego') + '</div>' +
+      '<div class="al-add-sub">' + t('al_new_sub') + '</div></div>';
+
+    grid.innerHTML = html;
+  }
+
+  function renderDetail(alteregoId) {
+    var list = _load();
+    var a = list.find(function(x) { return x.id === alteregoId; });
+    if (!a) return;
+    _currentDetail = a;
+
+    var p = calcProgress(a.xp, a.level);
+    var avgScore = a.scans.length > 0 ? Math.round(a.scans.reduce(function(s,x) { return s + x.overallScore; }, 0) / a.scans.length * 10) / 10 : 0;
+    var bestScore = a.scans.length > 0 ? Math.round(Math.max.apply(null, a.scans.map(function(x) { return x.overallScore; })) * 10) / 10 : 0;
+
+    var head = document.getElementById('alDetailHead');
+    head.innerHTML =
+      '<div class="al-modal-close" onclick="window._alCloseDetail()">✕</div>' +
+      '<div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">' +
+        '<div style="width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.75rem;background:linear-gradient(135deg,' + a.color + '30,' + a.color + '10);box-shadow:0 4px 20px ' + a.color + '30">' + a.emoji + '</div>' +
+        '<div><h2 style="font-size:1.25rem;font-weight:700;color:#fff">' + (a.nameKey ? t(a.nameKey) : _esc(a.name)) + '</h2>' + (a.tagline||a.tagKey ? '<p style="font-size:11px;color:#9ca3af">' + (a.tagKey ? t(a.tagKey) : _esc(a.tagline)) + '</p>' : '') + '</div>' +
+      '</div>' +
+      '<div class="al-xp-row"><div style="display:flex;align-items:center;gap:5px"><svg width="14" height="14" fill="none" stroke="' + a.color + '" stroke-width="2" viewBox="0 0 24 24"><path d="M2 4h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span style="font-weight:600;color:#fff">' + getLevelName(a.level) + '</span></div><span style="color:#9ca3af;font-variant-numeric:tabular-nums">' + a.xp + '/' + p.xpForNext + ' XP</span></div>' +
+      '<div class="al-xp-bar"><div class="al-xp-fill" style="width:' + p.pct + '%;background:linear-gradient(90deg,' + a.color + ',' + a.color + 'aa)"></div></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-top:8px">' +
+        '<div style="border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);padding:8px;text-align:center"><div style="font-size:14px;font-weight:700;color:#fff;font-variant-numeric:tabular-nums">' + a.scans.length + '</div><div style="font-size:8px;color:#6b7280">Scan</div></div>' +
+        '<div style="border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);padding:8px;text-align:center"><div style="font-size:14px;font-weight:700;color:#fff;font-variant-numeric:tabular-nums">' + avgScore + '</div><div style="font-size:8px;color:#6b7280">Átlag</div></div>' +
+        '<div style="border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);padding:8px;text-align:center"><div style="font-size:14px;font-weight:700;color:#fff;font-variant-numeric:tabular-nums">' + bestScore + '</div><div style="font-size:8px;color:#6b7280">Legjobb</div></div>' +
+        '<div style="border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);padding:8px;text-align:center"><div style="font-size:14px;font-weight:700;color:#fb923c;font-variant-numeric:tabular-nums">' + a.streak + '🔥</div><div style="font-size:8px;color:#6b7280">Sorozat</div></div>' +
+      '</div>';
+
+    _renderTab();
+  }
+
+  function _renderTab() {
+    if (!_currentDetail) return;
+    var a = _currentDetail;
+    var body = document.getElementById('alDetailBody');
+    if (!body) return;
+
+    if (_currentTab === 'scan') {
+      var occHtml = OCCASIONS.map(function(o) {
+        return '<button onclick="window._alScanOcc=\'' + o.v + '\';document.querySelectorAll(\'.al-occ-btn\').forEach(function(b){b.style.background=\'rgba(255,255,255,0.04)\';b.style.borderColor=\'rgba(255,255,255,0.05)\';b.style.color=\'#9ca3af\'});this.style.background=\'rgba(236,72,153,0.2)\';this.style.borderColor=\'rgba(236,72,153,0.4)\';this.style.color=\'#f9a8d4\'" class="al-occ-btn" style="display:inline-flex;align-items:center;gap:6px;border-radius:12px;padding:8px 12px;font-size:11px;font-weight:700;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.04);color:#9ca3af;cursor:pointer;transition:all 0.2s' + (o.v === (window._alScanOcc || 'casual') ? ';background:rgba(236,72,153,0.2);border-color:rgba(236,72,153,0.4);color:#f9a8d4' : '') + '">' + o.e + ' ' + t(o.lk) + '</button>';
+      }).join(' ');
+
+      body.innerHTML =
+        '<div style="margin-bottom:16px"><p style="font-size:10px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">' + t('al_occasion_label') + '</p>' +
+        '<div style="display:flex;flex-wrap:wrap;gap:8px">' + occHtml + '</div></div>' +
+        '<button onclick="window._alRunScan(\'' + a.id + '\')" style="width:100%;height:52px;border-radius:16px;border:none;background:linear-gradient(90deg,#ec4899,#9333ea);color:#fff;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(236,72,153,0.3);display:flex;align-items:center;justify-content:center;gap:8px">' + t('al_scan_btn') + '</button>' +
+        (a.scans.length > 0 ?
+          '<div style="margin-top:16px"><p style="font-size:10px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">' + t('al_scan_history') + '</p>' +
+          a.scans.slice(0, 5).map(function(s) {
+            return '<div style="display:flex;align-items:center;gap:12px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);padding:10px;margin-bottom:6px">' +
+              '<div style="font-size:18px;font-weight:700;color:#fff;font-variant-numeric:tabular-nums">' + s.overallScore + '</div>' +
+              '<div style="flex:1;min-width:0"><p style="font-size:11px;color:#e5e7eb;font-weight:500">' + (s.vibeLabel || '') + '</p><p style="font-size:9px;color:#6b7280">' + new Date(s.createdAt).toLocaleDateString('hu-HU') + '</p></div>' +
+              '<span style="font-size:9px;padding:3px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);color:#9ca3af">+' + s.xpEarned + ' XP</span></div>';
+          }).join('') + '</div>'
+        : '');
+
+    } else if (_currentTab === 'closet') {
+      var catOptions = CLOTHING_CATS.map(function(c) { return '<option value="' + c.v + '">' + c.e + ' ' + t(c.lk) + '</option>'; }).join('');
+      body.innerHTML =
+        '<div style="display:flex;gap:8px;margin-bottom:16px">' +
+          '<input type="text" id="alItemName" placeholder="' + t('al_item_placeholder') + '" style="flex:1;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#fff;font-size:13px;outline:none">' +
+          '<select id="alItemCat" style="padding:10px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#fff;font-size:12px">' + catOptions + '</select>' +
+          '<input type="text" id="alItemColor" placeholder="' + t('al_color_placeholder') + '" style="width:60px;padding:10px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#fff;font-size:12px;outline:none">' +
+          '<button onclick="window._alAddItem(\'' + a.id + '\')" style="padding:10px 14px;border-radius:12px;background:rgba(236,72,153,0.2);border:1px solid rgba(236,72,153,0.3);color:#f9a8d4;font-weight:700;cursor:pointer;font-size:14px">+</button>' +
+        '</div>' +
+        (a.items.length > 0 ?
+          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">' +
+          a.items.map(function(item) {
+            var catEmoji = (CLOTHING_CATS.find(function(c) { return c.v === item.category; }) || {}).e || '👔';
+            return '<div style="border-radius:12px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.03);padding:12px;position:relative;cursor:pointer" onclick="window._alDeleteItem(\'' + a.id + '\',\'' + item.id + '\')">' +
+              '<div style="display:flex;align-items:start;justify-content:space-between"><div style="min-width:0"><p style="font-size:12px;font-weight:600;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + _esc(item.name) + '</p>' +
+              '<div style="display:flex;gap:6px;margin-top:4px"><span style="font-size:9px;padding:2px 6px;border-radius:4px;border:1px solid rgba(255,255,255,0.1);color:#9ca3af">' + catEmoji + ' ' + ((CLOTHING_CATS.find(function(c) { return c.v === item.category; }) || {}).l || item.category) + '</span>' +
+              (item.color ? '<span style="font-size:9px;color:#6b7280">' + _esc(item.color) + '</span>' : '') + '</div></div>' +
+              '<span style="font-size:10px;color:#ef4444;opacity:0.5">✕</span></div></div>';
+          }).join('') + '</div>'
+        : '<div style="text-align:center;padding:32px"><p style="font-size:28px;margin-bottom:8px">👔</p><p style="font-size:13px;color:#9ca3af">A szekrény üres</p><p style="font-size:10px;color:#6b7280;margin-top:4px">Adj hozzá ruhadarabokat a fenti mezővel</p></div>');
+
+    } else if (_currentTab === 'goals') {
+      body.innerHTML =
+        '<div style="display:flex;gap:8px;margin-bottom:16px">' +
+          '<input type="text" id="alGoalTitle" placeholder="' + t('al_goal_placeholder') + '" style="flex:1;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#fff;font-size:13px;outline:none">' +
+          '<button onclick="window._alAddGoal(\'' + a.id + '\')" style="padding:10px 14px;border-radius:12px;background:rgba(236,72,153,0.2);border:1px solid rgba(236,72,153,0.3);color:#f9a8d4;font-weight:700;cursor:pointer;font-size:14px">+</button>' +
+        '</div>' +
+        '<div style="display:flex;flex-direction:column;gap:8px">' +
+        a.goals.map(function(g) {
+          return '<div onclick="window._alToggleGoal(\'' + a.id + '\',\'' + g.id + '\')" style="display:flex;align-items:center;gap:12px;border-radius:12px;border:1px solid ' + (g.isCompleted ? 'rgba(16,185,129,0.2)' : 'rgba(255,255,255,0.05)') + ';background:' + (g.isCompleted ? 'rgba(16,185,129,0.05)' : 'rgba(255,255,255,0.03)') + ';padding:12px;cursor:pointer;transition:all 0.2s">' +
+            (g.isCompleted ? '<svg width="20" height="20" fill="none" stroke="#34d399" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>' : '<svg width="20" height="20" fill="none" stroke="#6b7280" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>') +
+            '<div style="flex:1;min-width:0"><p style="font-size:12px;font-weight:600;' + (g.isCompleted ? 'color:#6ee7b7;text-decoration:line-through' : 'color:#fff') + '">' + _esc(g.title) + '</p>' +
+            (g.description ? '<p style="font-size:10px;color:#6b7280;margin-top:2px">' + _esc(g.description) + '</p>' : '') + '</div>' +
+            '<span style="font-size:9px;padding:3px 8px;border-radius:6px;border:1px solid ' + (g.isCompleted ? 'rgba(16,185,129,0.2)' : 'rgba(255,255,255,0.1)') + ';color:' + (g.isCompleted ? '#6ee7b7' : '#9ca3af') + ';white-space:nowrap">+' + g.xpReward + ' XP</span></div>';
+        }).join('') + '</div>';
+
+    } else if (_currentTab === 'ai') {
+      var _isPro = (typeof isProUser === 'function' && isProUser()) || (typeof window.__DS_IS_PRO !== 'undefined' && window.__DS_IS_PRO);
+      if (!_isPro) {
+        body.innerHTML =
+          '<div style="text-align:center;padding:40px 16px">' +
+            '<div style="width:64px;height:64px;border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:2rem;background:linear-gradient(135deg,rgba(236,72,153,0.15),rgba(147,51,234,0.15));border:1px solid rgba(236,72,153,0.2)">👑</div>' +
+            '<h3 style="font-size:1.125rem;font-weight:700;color:#fff;margin-bottom:8px">' + t('al_pro_feature') + '</h3>' +
+            '<p style="font-size:13px;color:#9ca3af;line-height:1.6;max-width:280px;margin:0 auto 20px">' + t('al_pro_desc') + '</p>' +
+            '<button onclick="if(typeof window.showPaywallModal===\'function\')window.showPaywallModal();else if(document.getElementById(\'paywallModal\'))document.getElementById(\'paywallModal\').classList.remove(\'hidden\')" style="padding:12px 28px;border-radius:14px;border:none;background:linear-gradient(90deg,#ec4899,#9333ea);color:#fff;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(236,72,153,0.3)">' + t('al_pro_btn') + '</button>' +
+          '</div>';
+      } else {
+        var aiOccHtml = OCCASIONS.map(function(o) {
+          return '<button onclick="window._alGetAI(\'' + a.id + '\',\'' + o.v + '\')" style="display:inline-flex;align-items:center;gap:4px;border-radius:10px;padding:8px 12px;font-size:11px;font-weight:700;border:1px solid rgba(255,255,255,0.1);background:transparent;color:#d1d5db;cursor:pointer;transition:all 0.2s">' + o.e + ' ' + t(o.lk) + '</button>';
+        }).join(' ');
+        body.innerHTML =
+          '<div style="margin-bottom:16px"><p style="font-size:10px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">' + t('al_occ_label_ai') + '</p>' +
+          '<div style="display:flex;flex-wrap:wrap;gap:6px">' + aiOccHtml + '</div></div>' +
+          '<div id="alAIResult" style="border-radius:12px;border:1px solid rgba(168,85,247,0.2);background:rgba(168,85,247,0.05);padding:16px;display:none">' +
+            '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><svg width="16" height="16" fill="none" stroke="#c084fc" stroke-width="2" viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg><span style="font-size:11px;font-weight:700;color:#c084fc">AI Stíluskutató javaslata</span></div>' +
+            '<p id="alAIText" style="font-size:13px;color:#e5e7eb;line-height:1.6;white-space:pre-wrap"></p></div>' +
+          '<div id="alAIEmpty" style="text-align:center;padding:32px"><p style="font-size:28px;margin-bottom:8px">💡</p><p style="font-size:13px;color:#9ca3af">' + t('al_ai_empty_title') + '</p><p style="font-size:10px;color:#6b7280;margin-top:4px">' + t('al_ai_empty_hint') + '</p></div>';
+      }
+    }
+  }
+
+  function renderCreateModal() {
+    var c = document.getElementById('alCreateContent');
+    if (!c) return;
+    var emojiHtml = EMOJIS.map(function(e) {
+      return '<div class="al-emoji-btn' + (e === '🎭' ? ' sel' : '') + '" onclick="window._alPickEmoji(this,\'' + e + '\')">' + e + '</div>';
+    }).join('');
+    var colorHtml = COLORS.map(function(cl) {
+      return '<div class="al-color-btn' + (cl === '#ec4899' ? ' sel' : '') + '" style="background:' + cl + '" onclick="window._alPickColor(this,\'' + cl + '\')"></div>';
+    }).join('');
+    var presetHtml = PRESETS.map(function(p) {
+      var pName = t(p.nameKey); var pTag = t(p.tagKey);
+      return '<div class="al-preset" onclick="window._alUsePreset(\'' + _esc(pName) + '\',\'' + p.emoji + '\',\'' + p.category + '\',\'' + p.color + '\',\'' + _esc(pTag) + '\')">' +
+        '<span class="al-preset-emoji">' + p.emoji + '</span><div><div class="al-preset-name">' + _esc(pName) + '</div><div class="al-preset-tag">' + _esc(pTag) + '</div></div></div>';
+    }).join('');
+
+    c.innerHTML =
+      '<label>' + t('al_create_presets') + '</label>' +
+      '<div class="al-preset-grid">' + presetHtml + '</div>' +
+      '<div style="display:flex;gap:12px;margin-bottom:8px">' +
+        '<div style="flex-shrink:0"><label>' + t('al_create_emoji') + '</label><div id="alCreateEmoji" style="width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1)">🎭</div></div>' +
+        '<div style="flex:1"><label>' + t('al_create_name') + '</label><input type="text" id="alCreateName" placeholder="' + t('al_create_name_ph') + '"></div>' +
+      '</div>' +
+      '<label>' + t('al_create_emoji_picker') + '</label><div class="al-emoji-grid">' + emojiHtml + '</div>' +
+      '<label>' + t('al_create_tagline') + '</label><input type="text" id="alCreateTagline" placeholder="' + t('al_create_tagline_ph') + '">' +
+      '<label>' + t('al_create_color') + '</label><div class="al-color-grid">' + colorHtml + '</div>' +
+      '<button onclick="window._alCreate()" style="width:100%;height:48px;border-radius:14px;border:none;background:linear-gradient(90deg,#ec4899,#9333ea);color:#fff;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(236,72,153,0.2);display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px">+ Alteregó Létrehozása</button>';
+  }
+
+  // ─── Global API ───
+  window._alRender = renderGrid;
+  window._alScanOcc = 'casual';
+  window._alSelectedEmoji = '🎭';
+  window._alSelectedColor = '#ec4899';
+  window._alSelectedCategory = 'custom';
+  window._alSelectedNameKey = null;
+  window._alSelectedTagKey = null;
+
+  window._alOpenCreate = function() {
+    window._alSelectedNameKey = null;
+    window._alSelectedTagKey = null;
+    renderCreateModal();
+    document.getElementById('alteregoCreateModal').classList.add('show');
+  };
+
+  window._alCloseCreate = function() {
+    document.getElementById('alteregoCreateModal').classList.remove('show');
+  };
+
+  window._alOpenDetail = function(id) {
+    _currentTab = 'scan';
+    renderDetail(id);
+    document.getElementById('alteregoDetailModal').classList.add('show');
+    // Activate first tab
+    document.querySelectorAll('#alDetailTabs .al-tab').forEach(function(t, i) {
+      t.classList.toggle('active', i === 0);
+    });
+  };
+
+  window._alCloseDetail = function() {
+    document.getElementById('alteregoDetailModal').classList.remove('show');
+    _currentDetail = null;
+    renderGrid();
+  };
+
+  window._alPickEmoji = function(el, emoji) {
+    window._alSelectedEmoji = emoji;
+    document.querySelectorAll('#alteregoCreateModal .al-emoji-btn').forEach(function(b) { b.classList.remove('sel'); });
+    el.classList.add('sel');
+    var d = document.getElementById('alCreateEmoji');
+    if (d) d.textContent = emoji;
+  };
+
+  window._alPickColor = function(el, color) {
+    window._alSelectedColor = color;
+    document.querySelectorAll('#alteregoCreateModal .al-color-btn').forEach(function(b) { b.classList.remove('sel'); });
+    el.classList.add('sel');
+  };
+
+  window._alUsePreset = function(name, emoji, category, color, tagline, nameKey, tagKey) {
+    window._alSelectedEmoji = emoji;
+    window._alSelectedColor = color;
+    window._alSelectedCategory = category;
+    window._alSelectedNameKey = nameKey || null;
+    window._alSelectedTagKey = tagKey || null;
+    var n = document.getElementById('alCreateName');
+    var t = document.getElementById('alCreateTagline');
+    var e = document.getElementById('alCreateEmoji');
+    if (n) n.value = name;
+    if (t) t.value = tagline;
+    if (e) e.textContent = emoji;
+    document.querySelectorAll('#alteregoCreateModal .al-emoji-btn').forEach(function(b) { b.classList.toggle('sel', b.textContent === emoji); });
+    document.querySelectorAll('#alteregoCreateModal .al-color-btn').forEach(function(b) { b.classList.remove('sel'); });
+  };
+
+  window._alCreate = function() {
+    var name = (document.getElementById('alCreateName') || {}).value || '';
+    if (!name.trim()) return;
+    var _taglineVal = (document.getElementById('alCreateTagline') || {}).value || '';
+    // If user edited name/tagline away from preset, clear preset keys
+    var _storedNameKey = window._alSelectedNameKey;
+    var _storedTagKey = window._alSelectedTagKey;
+    if (_storedNameKey && name !== t(_storedNameKey)) _storedNameKey = null;
+    if (_storedTagKey && _taglineVal !== t(_storedTagKey)) _storedTagKey = null;
+    createAlterego({
+      name: name,
+      nameKey: _storedNameKey,
+      emoji: window._alSelectedEmoji,
+      tagline: _taglineVal,
+      tagKey: _storedTagKey,
+      color: window._alSelectedColor,
+      category: window._alSelectedCategory
+    });
+    window._alCloseCreate();
+    renderGrid();
+  };
+
+  window._alRunScan = function(id) {
+    var result = runScan(id, window._alScanOcc || 'casual');
+    if (!result) return;
+
+    // Re-render detail
+    renderDetail(id);
+
+    // Show celebration if leveled up
+    if (result.leveledUp) {
+      var list = _load();
+      var a = list.find(function(x) { return x.id === id; });
+      var cel = document.getElementById('alteregoCelebrate');
+      var cc = document.getElementById('alCelebrateContent');
+      if (cel && cc) {
+        cc.innerHTML =
+          '<div style="font-size:4rem;margin-bottom:16px">' + (a ? a.emoji : '🎭') + '</div>' +
+          '<h2 style="font-size:1.75rem;font-weight:700;color:#fff;margin-bottom:8px">' + t('al_level_up') + '</h2>' +
+          '<p style="font-size:1.25rem;color:' + (a ? a.color : '#ec4899') + ';font-weight:600">' + result.levelName + '</p>' +
+          '<p style="font-size:13px;color:#d1d5db;margin-top:8px">' + t('al_xp_level_label',{xp:result.xpEarned,level:result.newLevel}) + '</p>' +
+          '<button onclick="document.getElementById(\'alteregoCelebrate\').classList.remove(\'show\')" style="margin-top:24px;padding:12px 32px;border-radius:14px;border:none;background:linear-gradient(90deg,#ec4899,#9333ea);color:#fff;font-size:14px;font-weight:700;cursor:pointer">' + t('al_awesome') + '</button>';
+        cel.classList.add('show');
+      }
+    }
+  };
+
+  window._alAddItem = function(id) {
+    var name = (document.getElementById('alItemName') || {}).value || '';
+    var cat = (document.getElementById('alItemCat') || {}).value || 'top';
+    var color = (document.getElementById('alItemColor') || {}).value || '';
+    if (!name.trim()) return;
+    addItem(id, { name: name, category: cat, color: color });
+    renderDetail(id);
+  };
+
+  window._alDeleteItem = function(aid, iid) {
+    if (!confirm(t('al_delete_item_confirm'))) return;
+    deleteItem(aid, iid);
+    renderDetail(aid);
+  };
+
+  window._alAddGoal = function(id) {
+    var title = (document.getElementById('alGoalTitle') || {}).value || '';
+    if (!title.trim()) return;
+    addGoal(id, title);
+    renderDetail(id);
+  };
+
+  window._alToggleGoal = function(aid, gid) {
+    toggleGoal(aid, gid);
+    renderDetail(aid);
+  };
+
+  window._alGetAI = function(id, occasion) {
+    var list = _load();
+    var a = list.find(function(x) { return x.id === id; });
+    if (!a) return;
+
+    var resultDiv = document.getElementById('alAIResult');
+    var emptyDiv = document.getElementById('alAIEmpty');
+    var textDiv = document.getElementById('alAIText');
+
+    if (resultDiv) { resultDiv.style.display = 'block'; }
+    if (emptyDiv) { emptyDiv.style.display = 'none'; }
+    if (textDiv) { textDiv.textContent = t('al_ai_loading'); }
+
+    var closetSummary = a.items.length > 0
+      ? t('al_closet_prefix') + a.items.map(function(i) { return i.name + ' (' + i.category + (i.color ? ', ' + i.color : '') + ')'; }).join(', ')
+      : t('al_closet_empty_ctx');
+    var avgScore = a.scans.length > 0 ? Math.round(a.scans.reduce(function(s,x) { return s + x.overallScore; }, 0) / a.scans.length * 10) / 10 : 0;
+    var scoreCtx = avgScore > 0 ? t('al_score_ctx').replace('{score}',avgScore) : '';
+
+    var occasionLabel = t((OCCASIONS.find(function(o) { return o.v === occasion; }) || {}).lk || '') || occasion;
+
+    var systemPrompt = t('al_scan_sys_prompt').replace('{name}',(a.nameKey ? t(a.nameKey) : a.name)).replace('{emoji}',a.emoji);
+    var userPrompt = t('al_scan_user_prompt').replace('{occasion}',occasionLabel).replace('{closet}',closetSummary).replace('{score}',scoreCtx ? scoreCtx : '');
+
+    // --- Use the app's existing AI API infrastructure ---
+    var workerUrl = window.WORKER_URL || '';
+    var apiKey = window.__DS_API_KEY || '';
+
+    if (workerUrl) {
+      // Primary: WORKER_URL endpoint (same as chat)
+      var controller = new AbortController();
+      var timeout = setTimeout(function() { controller.abort(); }, 25000);
+
+      fetch(workerUrl + '/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'zai-org/glm-4.5v',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userPrompt }
+          ]
+        }),
+        signal: controller.signal
+      }).then(function(r) {
+        clearTimeout(timeout);
+        if (!r.ok) throw new Error('API error ' + r.status);
+        return r.json();
+      }).then(function(data) {
+        var reply = data.reply || data.content || data.message ||
+          (data.choices && data.choices[0] && (data.choices[0].message && data.choices[0].message.content || data.choices[0].text)) || '';
+        if (textDiv) textDiv.textContent = (reply || '').trim() || _fallbackAdvice(occasionLabel);
+      }).catch(function(err) {
+        if (textDiv) textDiv.textContent = _fallbackAdvice(occasionLabel);
+        console.warn('[Alteregó Lab] AI advice error:', err);
+      });
+    } else if (apiKey) {
+      // Fallback: direct API with key
+      var endpoint = 'https://api.datescan.app/v1/chat/completions';
+      var controller2 = new AbortController();
+      var timeout2 = setTimeout(function() { controller2.abort(); }, 25000);
+
+      fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': apiKey ? 'Bearer ' + apiKey : ''
+        },
+        body: JSON.stringify({
+          model: 'zai-org/glm-4.5v',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userPrompt }
+          ],
+          temperature: 0.7,
+          max_tokens: 800
+        }),
+        signal: controller2.signal
+      }).then(function(r) {
+        clearTimeout(timeout2);
+        if (!r.ok) throw new Error('API error ' + r.status);
+        return r.json();
+      }).then(function(data) {
+        var content = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+        if (textDiv) textDiv.textContent = (content || '').trim() || _fallbackAdvice(occasionLabel);
+      }).catch(function(err) {
+        if (textDiv) textDiv.textContent = _fallbackAdvice(occasionLabel);
+        console.warn('[Alteregó Lab] AI advice error:', err);
+      });
+    } else {
+      // No API available — show helpful fallback
+      if (textDiv) textDiv.textContent = _fallbackAdvice(occasionLabel);
+    }
+  };
+
+  // Smart fallback that varies by occasion
+  function _fallbackAdvice(occasion) {
+    var keyMap = {casual:'al_fallback_casual',first_date:'al_fallback_first_date',night_out:'al_fallback_night_out',fancy:'al_fallback_fancy',professional:'al_fallback_professional'};
+    return t(keyMap[occasion] || 'al_fallback_generic');
+  }
+
+  // Tab switching in detail modal
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('al-tab') && e.target.closest('#alteregoDetailModal')) {
+      _currentTab = e.target.getAttribute('data-tab') || 'scan';
+      document.querySelectorAll('#alDetailTabs .al-tab').forEach(function(t) { t.classList.remove('active'); });
+      e.target.classList.add('active');
+      _renderTab();
+    }
+  });
+
+  // Close modals on backdrop click
+  document.getElementById('alteregoDetailModal')?.addEventListener('click', function(e) {
+    if (e.target === this) window._alCloseDetail();
+  });
+  document.getElementById('alteregoCreateModal')?.addEventListener('click', function(e) {
+    if (e.target === this) window._alCloseCreate();
+  });
+
+  // Initial render
+  renderGrid();
+
+  // Re-render on language change
+  window.addEventListener('langchange', function() {
+    try { renderGrid(); } catch(e) {}
+  });
+
+  _dsLog && _dsLog('[Alteregó Lab] Module loaded');
+})();
+</script>
 </html>
