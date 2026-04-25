@@ -4388,6 +4388,7 @@ if (window.__DS_IS_ANDROID_APP) {
   #alteregoCreateModal input[type="text"]::placeholder{color:rgba(255,255,255,0.25)}
   /* Celebration overlay */
   @keyframes fadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes alPulse{0%,100%{box-shadow:0 4px 14px rgba(236,72,153,0.2)}50%{box-shadow:0 4px 28px rgba(236,72,153,0.6),0 0 40px rgba(147,51,234,0.3)}}
   #alteregoCelebrate{display:none;position:fixed;inset:0;z-index:116;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;text-align:center;padding:32px}
   #alteregoCelebrate.show{display:flex}
   /* How-it-works */
@@ -28796,6 +28797,18 @@ async function runScan() {
     // including thrown exceptions from analyzers.
     endScan();
     showResultsLayout();
+
+    // If an Alteregó scan was pending, feed the real score back
+    if (window._alPendingScan) {
+      try {
+        var _realScore = (store && store.get() && store.get().lastScore) || null;
+        if (_realScore && typeof window._alCompletePendingScan === 'function') {
+          window._alCompletePendingScan(_realScore);
+        } else {
+          window._alPendingScan = null;
+        }
+      } catch(_alErr) { console.error('[Alteregó] pending scan error:', _alErr); window._alPendingScan = null; }
+    }
   }
 }
 
@@ -28870,6 +28883,7 @@ function endScan() {
   }
   setTimeout(clearHUD, 500);
 }
+window.runScan = runScan;
 
 const _recent = {};
 function pickFresh(key, pool, memory = 4) {
@@ -38347,19 +38361,30 @@ applyOfflineState(!navigator.onLine);
   }
 
   // ─── Run Scan ───
-  function runScan(alteregoId, occasion) {
+  function runScan(alteregoId, occasion, realScoreOverride) {
     var list = _load();
     var idx = list.findIndex(function(a) { return a.id === alteregoId; });
     if (idx === -1) return null;
     var a = list[idx];
 
     var itemCnt = a.items.length;
-    var base = 40 + Math.min(itemCnt * 3, 25);
-    var r = function() { return Math.random() * 20 - 10; };
-    var cs = Math.min(100, Math.max(20, base + r() + (itemCnt >= 5 ? 10 : 0)));
-    var fs = Math.min(100, Math.max(20, base + r() + 5));
-    var gs = Math.min(100, Math.max(20, base + r() + 8));
-    var ov = Math.round((cs + fs + gs) / 3 * 10) / 10;
+    var ov, cs, fs, gs;
+    if (typeof realScoreOverride === 'number' && realScoreOverride > 0) {
+      // Real score from camera scan — derive sub-scores with small variance
+      ov = realScoreOverride;
+      var r2 = function() { return Math.random() * 10 - 5; };
+      cs = Math.min(100, Math.max(15, Math.round(ov + r2())));
+      fs = Math.min(100, Math.max(15, Math.round(ov + r2())));
+      gs = Math.min(100, Math.max(15, Math.round(ov + r2())));
+    } else {
+      // Fallback: random score (no camera)
+      var base = 40 + Math.min(itemCnt * 3, 25);
+      var r = function() { return Math.random() * 20 - 10; };
+      cs = Math.min(100, Math.max(20, base + r() + (itemCnt >= 5 ? 10 : 0)));
+      fs = Math.min(100, Math.max(20, base + r() + 5));
+      gs = Math.min(100, Math.max(20, base + r() + 8));
+      ov = Math.round((cs + fs + gs) / 3 * 10) / 10;
+    }
 
     var vibes = [t('al_vibe_mysterious'),t('al_vibe_confident'),t('al_vibe_creative'),t('al_vibe_elegant'),t('al_vibe_relaxed'),t('al_vibe_cool'),t('al_vibe_romantic'),t('al_vibe_on_fire')];
     var vibe = vibes[Math.floor(Math.random() * vibes.length)];
@@ -38790,50 +38815,70 @@ applyOfflineState(!navigator.onLine);
   };
 
   window._alRunScan = function(id) {
-    // Visual feedback: animate button
-    var scanBtns = document.querySelectorAll('#alDetailBody button');
-    var origBtn = null;
-    scanBtns.forEach(function(b) { if (b.textContent.indexOf('📸') >= 0) origBtn = b; });
-    if (origBtn) {
-      origBtn.style.opacity = '0.6';
-      origBtn.style.transform = 'scale(0.97)';
-      origBtn.style.pointerEvents = 'none';
-    }
+    // Store pending scan context, close modal, switch to scanner
+    window._alPendingScan = { id: id, occasion: window._alScanOcc || 'casual' };
+    window._alCloseDetail();
+    if (typeof window.toggleView === 'function') window.toggleView('scanner');
 
-    // Small delay for visual feedback
+    // Highlight the scan button so user knows to tap it
     setTimeout(function() {
-      try {
-        var result = runScan(id, window._alScanOcc || 'casual');
-        if (!result) {
-          if (origBtn) { origBtn.style.opacity = '1'; origBtn.style.transform = ''; origBtn.style.pointerEvents = ''; }
-          return;
+      var sb = document.getElementById('scanBtn');
+      if (!sb) return;
+      // Pulse animation
+      sb.style.animation = 'alPulse 1s ease-in-out 3';
+      sb.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Show a banner above the scan button
+      var banner = document.createElement('div');
+      banner.id = 'alScanBanner';
+      banner.style.cssText = 'text-align:center;padding:10px 16px;margin-bottom:12px;border-radius:14px;background:linear-gradient(90deg,rgba(236,72,153,0.15),rgba(147,51,234,0.15));border:1px solid rgba(236,72,153,0.3);font-size:12px;font-weight:600;color:#f9a8d4;animation:fadeIn 0.4s ease';
+      var a = _load().find(function(x) { return x.id === id; });
+      var eName = a ? (a.nameKey ? t(a.nameKey) : a.name) : '';
+      banner.innerHTML = '📸 ' + (currentLang === 'de' ? 'Scanne für: ' : currentLang === 'hu' ? 'Scan ehhez: ' : 'Scanning for: ') + '<strong>' + eName + '</strong> ' + (a ? a.emoji : '');
+      sb.parentNode.insertBefore(banner, sb);
+      // Remove banner after scan or after 15s
+      setTimeout(function() { var b = document.getElementById('alScanBanner'); if (b) b.remove(); }, 15000);
+    }, 600);
+  };
+
+  // Called after main scan completes — feeds real score into alterego
+  window._alCompletePendingScan = function(realScore) {
+    var pending = window._alPendingScan;
+    if (!pending) return;
+    window._alPendingScan = null;
+    // Remove scan banner
+    var banner = document.getElementById('alScanBanner');
+    if (banner) banner.remove();
+    var sb = document.getElementById('scanBtn');
+    if (sb) sb.style.animation = '';
+
+    var occasion = pending.occasion;
+    var result = runScan(pending.id, occasion, realScore);
+    if (!result) return;
+
+    // Switch back to closet/alterego view and show result
+    if (typeof window.toggleView === 'function') window.toggleView('alterego');
+    setTimeout(function() {
+      window._alLastScanResult = result;
+      _currentTab = 'scan';
+      window._alOpenDetail(pending.id);
+
+      // Show celebration if leveled up
+      if (result.leveledUp) {
+        var list = _load();
+        var a = list.find(function(x) { return x.id === pending.id; });
+        var cel = document.getElementById('alteregoCelebrate');
+        var cc = document.getElementById('alCelebrateContent');
+        if (cel && cc) {
+          cc.innerHTML =
+            '<div style="font-size:4rem;margin-bottom:16px">' + (a ? a.emoji : '🎭') + '</div>' +
+            '<h2 style="font-size:1.75rem;font-weight:700;color:#fff;margin-bottom:8px">' + t('al_level_up') + '</h2>' +
+            '<p style="font-size:1.25rem;color:' + (a ? a.color : '#ec4899') + ';font-weight:600">' + result.levelName + '</p>' +
+            '<p style="font-size:13px;color:#d1d5db;margin-top:8px">' + t('al_xp_level_label',{xp:result.xpEarned,level:result.newLevel}) + '</p>' +
+            '<button onclick="document.getElementById(\'alteregoCelebrate\').classList.remove(\'show\')" style="margin-top:24px;padding:12px 32px;border-radius:14px;border:none;background:linear-gradient(90deg,#ec4899,#9333ea);color:#fff;font-size:14px;font-weight:700;cursor:pointer">' + t('al_awesome') + '</button>';
+          cel.classList.add('show');
         }
-
-        // Set result BEFORE renderDetail (which calls _renderTab internally)
-        window._alLastScanResult = result;
-        renderDetail(id);
-
-    // Show celebration if leveled up
-    if (result.leveledUp) {
-      var list = _load();
-      var a = list.find(function(x) { return x.id === id; });
-      var cel = document.getElementById('alteregoCelebrate');
-      var cc = document.getElementById('alCelebrateContent');
-      if (cel && cc) {
-        cc.innerHTML =
-          '<div style="font-size:4rem;margin-bottom:16px">' + (a ? a.emoji : '🎭') + '</div>' +
-          '<h2 style="font-size:1.75rem;font-weight:700;color:#fff;margin-bottom:8px">' + t('al_level_up') + '</h2>' +
-          '<p style="font-size:1.25rem;color:' + (a ? a.color : '#ec4899') + ';font-weight:600">' + result.levelName + '</p>' +
-          '<p style="font-size:13px;color:#d1d5db;margin-top:8px">' + t('al_xp_level_label',{xp:result.xpEarned,level:result.newLevel}) + '</p>' +
-          '<button onclick="document.getElementById(\'alteregoCelebrate\').classList.remove(\'show\')" style="margin-top:24px;padding:12px 32px;border-radius:14px;border:none;background:linear-gradient(90deg,#ec4899,#9333ea);color:#fff;font-size:14px;font-weight:700;cursor:pointer">' + t('al_awesome') + '</button>';
-        cel.classList.add('show');
       }
-    }
-      } catch(e) {
-        console.error('[Alteregó] Scan error:', e);
-        if (origBtn) { origBtn.style.opacity = '1'; origBtn.style.transform = ''; origBtn.style.pointerEvents = ''; }
-      }
-    }, 200);
+    }, 300);
   };
 
   window._alAddItem = function(id) {
