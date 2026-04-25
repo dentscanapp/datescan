@@ -3225,6 +3225,8 @@ if (window.__DS_IS_ANDROID_APP) {
   body:has(.ds-consent:not([hidden])) #mobileBottomNav,
   body:has(#closetUploadConsent:not(.hidden)) #mobileBottomNav,
   body:has(#duelModal:not(.hidden)) #mobileBottomNav,
+  body:has(#alteregoCreateModal.show) #mobileBottomNav,
+  body:has(#alteregoDetailModal.show) #mobileBottomNav,
   body:has(#paywallModal:not(.hidden)) #mobileBottomNav,
   body:has(#vibeCheckModal:not(.hidden)) #mobileBottomNav,
   body:has(#smartShopModal:not(.hidden)) #mobileBottomNav,
@@ -4312,7 +4314,7 @@ if (window.__DS_IS_ANDROID_APP) {
        ALTEREGÓ LAB — Alteregó Építő Modul Stílusok
        ═══════════════════════════════════════════════════════════════ */
   #viewAlterego{font-family:Inter,sans-serif}
-  #viewAlterego .al-back-btn{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);cursor:pointer;transition:all 0.2s;flex-shrink:0}
+  #viewAlterego .al-back-btn{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);cursor:pointer;transition:all 0.2s;flex-shrink:0;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
   #viewAlterego .al-back-btn:hover{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.2)}
   #viewAlterego .al-back-btn:active{transform:scale(0.95)}
   #viewAlterego .al-header{display:flex;align-items:center;gap:10px;margin-bottom:24px}
@@ -4323,13 +4325,13 @@ if (window.__DS_IS_ANDROID_APP) {
   #viewAlterego .al-hero h2{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:500;color:#fff;margin-bottom:8px;letter-spacing:-0.02em}
   #viewAlterego .al-hero h2 em{font-style:italic;background:linear-gradient(90deg,#f472b6,#c084fc,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
   #viewAlterego .al-hero p{font-size:0.8125rem;color:#9ca3af;max-width:420px;margin:0 auto;line-height:1.6}
-  #viewAlterego .al-overview{border-radius:16px;border:1px solid rgba(255,255,255,0.1);background:linear-gradient(135deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02));backdrop-filter:blur(20px);padding:20px;margin-bottom:24px}
-  #viewAlterego .al-overview-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-  #viewAlterego .al-stat{border-radius:12px;padding:12px 8px;text-align:center}
+  #viewAlterego .al-overview{border-radius:16px;border:1px solid rgba(255,255,255,0.1);background:linear-gradient(135deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02));backdrop-filter:blur(20px);padding:16px 0 16px 0;margin-bottom:24px;overflow:hidden}
+  #viewAlterego .al-overview-stats{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:0 16px 4px 16px;scrollbar-width:none}
+  #viewAlterego .al-stat{border-radius:12px;padding:12px 8px;text-align:center;flex-shrink:0;min-width:72px}
   #viewAlterego .al-stat-val{font-size:1.25rem;font-weight:700;color:#fff;font-variant-numeric:tabular-nums}
   #viewAlterego .al-stat-lbl{font-size:9px;font-weight:600;margin-top:2px;text-transform:uppercase;letter-spacing:0.08em}
-  #viewAlterego .al-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:24px}
-  #viewAlterego .al-card{position:relative;border-radius:16px;border:1px solid rgba(255,255,255,0.1);background:linear-gradient(135deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02));backdrop-filter:blur(20px);overflow:hidden;cursor:pointer;transition:all 0.25s}
+  #viewAlterego .al-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:24px}@media(min-width:600px){#viewAlterego .al-grid{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}}
+  #viewAlterego .al-card{position:relative;border-radius:16px;border:1px solid rgba(255,255,255,0.1);background:linear-gradient(135deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02));backdrop-filter:blur(20px);overflow:hidden;cursor:pointer;transition:all 0.25s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
   #viewAlterego .al-card:hover{border-color:rgba(255,255,255,0.2);transform:translateY(-4px);box-shadow:0 8px 30px rgba(236,72,153,0.12)}
   #viewAlterego .al-card-bar{height:6px;width:100%}
   #viewAlterego .al-card-body{padding:20px}
@@ -4345,35 +4347,35 @@ if (window.__DS_IS_ANDROID_APP) {
   #viewAlterego .al-mini-stat{border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);padding:6px 8px;text-align:center}
   #viewAlterego .al-mini-stat-val{font-size:11px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;gap:3px}
   #viewAlterego .al-mini-stat-lbl{font-size:8px;color:#6b7280;margin-top:1px}
-  #viewAlterego .al-add-card{border:2px dashed rgba(255,255,255,0.1);background:rgba(255,255,255,0.02);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:220px;cursor:pointer;transition:all 0.25s}
+  #viewAlterego .al-add-card{border:2px dashed rgba(255,255,255,0.1);background:rgba(255,255,255,0.02);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:220px;cursor:pointer;transition:all 0.25s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
   #viewAlterego .al-add-card:hover{border-color:rgba(236,72,153,0.3);background:rgba(236,72,153,0.03)}
   #viewAlterego .al-add-icon{width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:8px;color:#9ca3af;font-size:24px}
   #viewAlterego .al-add-text{font-size:13px;font-weight:600;color:#9ca3af}
   #viewAlterego .al-add-sub{font-size:10px;color:#6b7280;margin-top:4px}
   /* Detail modal */
-  #alteregoDetailModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);z-index:115;align-items:flex-start;justify-content:center;padding:16px;padding-top:96px;padding-bottom:100px;overflow-y:auto}
+  #alteregoDetailModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);z-index:125;align-items:flex-start;justify-content:center;padding:16px;padding-top:16px;padding-bottom:100px;overflow-y:auto}
   #alteregoDetailModal.show{display:flex}
-  #alteregoDetailModal .al-modal{background:#0c0c10;border:1px solid rgba(255,255,255,0.1);border-radius:20px;width:100%;max-width:560px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column}
+  #alteregoDetailModal .al-modal{background:#0c0c10;border:1px solid rgba(255,255,255,0.1);border-radius:20px;width:100%;max-width:560px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column}
   #alteregoDetailModal .al-modal-head{padding:20px 20px 12px;position:relative}
-  .al-modal-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:10px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:#d1d5db;cursor:pointer;transition:all 0.2s;z-index:5;font-size:14px;font-weight:700}
+  .al-modal-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:10px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:#d1d5db;cursor:pointer;transition:all 0.2s;z-index:5;font-size:14px;font-weight:700;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
   .al-modal-close:hover{color:#fff;background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.25)}
-  #alteregoDetailModal .al-modal-body{padding:0 20px 20px;overflow-y:auto;flex:1}
+  #alteregoDetailModal .al-modal-body{padding:0 20px 20px;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
   #alteregoDetailModal .al-tabs{display:flex;gap:4px;border-bottom:1px solid rgba(255,255,255,0.06);padding:0 20px;margin-bottom:16px}
-  #alteregoDetailModal .al-tab{padding:10px 14px;font-size:11px;font-weight:700;color:#6b7280;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;text-transform:uppercase;letter-spacing:0.05em}
+  #alteregoDetailModal .al-tab{padding:10px 14px;font-size:11px;font-weight:700;color:#6b7280;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;text-transform:uppercase;letter-spacing:0.05em;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none}
   #alteregoDetailModal .al-tab.active{color:#f472b6;border-bottom-color:#ec4899}
   #alteregoDetailModal .al-tab:hover{color:#9ca3af}
   /* Create modal */
-  #alteregoCreateModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);z-index:115;align-items:flex-start;justify-content:center;padding:16px;padding-top:96px;padding-bottom:100px;overflow-y:auto}
+  #alteregoCreateModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);z-index:125;align-items:flex-start;justify-content:center;padding:16px;padding-top:16px;padding-bottom:100px;overflow-y:auto}
   #alteregoCreateModal.show{display:flex}
-  #alteregoCreateModal .al-modal{background:#0c0c10;border:1px solid rgba(255,255,255,0.1);border-radius:20px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;padding:24px;position:relative}
+  #alteregoCreateModal .al-modal{background:#0c0c10;border:1px solid rgba(255,255,255,0.1);border-radius:20px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;padding:24px;position:relative;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
   #alteregoCreateModal .al-preset-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
-  #alteregoCreateModal .al-preset{display:flex;align-items:center;gap:8px;border-radius:12px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.03);padding:10px;cursor:pointer;transition:all 0.2s;text-align:left}
+  #alteregoCreateModal .al-preset{display:flex;align-items:center;gap:8px;border-radius:12px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.03);padding:10px;cursor:pointer;transition:all 0.2s;text-align:left;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
   #alteregoCreateModal .al-preset:hover{border-color:rgba(255,255,255,0.15);background:rgba(255,255,255,0.06)}
   #alteregoCreateModal .al-preset-emoji{font-size:1.25rem}
   #alteregoCreateModal .al-preset-name{font-size:11px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   #alteregoCreateModal .al-preset-tag{font-size:9px;color:#6b7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   #alteregoCreateModal .al-emoji-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
-  #alteregoCreateModal .al-emoji-btn{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.125rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);cursor:pointer;transition:all 0.15s}
+  #alteregoCreateModal .al-emoji-btn{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.125rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);cursor:pointer;transition:all 0.15s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
   #alteregoCreateModal .al-emoji-btn.sel{background:rgba(236,72,153,0.3);border-color:rgba(236,72,153,0.5);transform:scale(1.1)}
   #alteregoCreateModal .al-emoji-btn:hover{background:rgba(255,255,255,0.08)}
   #alteregoCreateModal .al-color-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
@@ -4390,7 +4392,7 @@ if (window.__DS_IS_ANDROID_APP) {
   /* How-it-works */
   #viewAlterego .al-how{border-radius:16px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);padding:24px;margin-top:24px}
   #viewAlterego .al-how h3{font-size:13px;font-weight:700;color:#fff;margin-bottom:16px;display:flex;align-items:center;gap:8px}
-  #viewAlterego .al-how-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+  #viewAlterego .al-how-grid{display:grid;grid-template-columns:1fr;gap:12px}@media(min-width:480px){#viewAlterego .al-how-grid{grid-template-columns:1fr 1fr 1fr}}
   #viewAlterego .al-how-step{text-align:center;padding:12px}
   #viewAlterego .al-how-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:1.25rem}
   #viewAlterego .al-how-title{font-size:11px;font-weight:700;color:#fff;margin-bottom:4px}
@@ -7488,36 +7490,6 @@ if (window.__DS_IS_ANDROID_APP) {
     </div>
   </div>
 
-  <!-- Alteregó Detail Modal -->
-  <div id="alteregoDetailModal">
-    <div class="al-modal">
-      <div class="al-modal-head" id="alDetailHead"></div>
-      <div class="al-tabs" id="alDetailTabs">
-        <div class="al-tab active" data-tab="scan">Scan</div>
-        <div class="al-tab" data-tab="closet" data-i18n="al_tab_closet">Szekrény</div>
-        <div class="al-tab" data-tab="goals" data-i18n="al_tab_goals">Célok</div>
-        <div class="al-tab" data-tab="ai" data-i18n="al_tab_ai">AI Tanács</div>
-      </div>
-      <div class="al-modal-body" id="alDetailBody"></div>
-    </div>
-  </div>
-
-  <!-- Alteregó Create Modal -->
-  <div id="alteregoCreateModal">
-    <div class="al-modal">
-      <div class="al-modal-close" onclick="window._alCloseCreate()">✕</div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
-        <div style="width:36px;height:36px;border-radius:10px;background:rgba(236,72,153,0.2);display:flex;align-items:center;justify-content:center;font-size:14px">✨</div>
-        <h2 style="font-size:1.125rem;font-weight:700;color:#fff" data-i18n="al_create_title">Új Alteregó Létrehozása</h2>
-      </div>
-      <div id="alCreateContent"></div>
-    </div>
-  </div>
-
-  <!-- Alteregó Celebration Overlay -->
-  <div id="alteregoCelebrate">
-    <div id="alCelebrateContent"></div>
-  </div>
 
   <!-- ============================================================
        TINDER-STYLE FULL-BLEED SPLASH / LOADING SCREEN
@@ -7564,6 +7536,37 @@ if (window.__DS_IS_ANDROID_APP) {
   </div>
 
 </main>
+
+  <!-- Alteregó Detail Modal -->
+  <div id="alteregoDetailModal">
+    <div class="al-modal">
+      <div class="al-modal-head" id="alDetailHead"></div>
+      <div class="al-tabs" id="alDetailTabs">
+        <div class="al-tab active" data-tab="scan">Scan</div>
+        <div class="al-tab" data-tab="closet" data-i18n="al_tab_closet">Szekrény</div>
+        <div class="al-tab" data-tab="goals" data-i18n="al_tab_goals">Célok</div>
+        <div class="al-tab" data-tab="ai" data-i18n="al_tab_ai">AI Tanács</div>
+      </div>
+      <div class="al-modal-body" id="alDetailBody"></div>
+    </div>
+  </div>
+
+  <!-- Alteregó Create Modal -->
+  <div id="alteregoCreateModal">
+    <div class="al-modal">
+      <div class="al-modal-close" onclick="window._alCloseCreate()">✕</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+        <div style="width:36px;height:36px;border-radius:10px;background:rgba(236,72,153,0.2);display:flex;align-items:center;justify-content:center;font-size:14px">✨</div>
+        <h2 style="font-size:1.125rem;font-weight:700;color:#fff" data-i18n="al_create_title">Új Alteregó Létrehozása</h2>
+      </div>
+      <div id="alCreateContent"></div>
+    </div>
+  </div>
+
+  <!-- Alteregó Celebration Overlay -->
+  <div id="alteregoCelebrate">
+    <div id="alCelebrateContent"></div>
+  </div>
 
 <!-- Footer -->
 <footer class="relative z-20 w-full bg-[#09090b] border-t border-white/10 pt-14 pb-32 lg:pb-12 mt-8 overflow-hidden">
@@ -38513,7 +38516,7 @@ applyOfflineState(!navigator.onLine);
           '<div class="al-stats-row">' +
             '<div class="al-mini-stat"><div class="al-mini-stat-val"><svg width="12" height="12" fill="none" stroke="' + a.color + '" stroke-width="2" viewBox="0 0 24 24"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg> ' + a.items.length + '</div><div class="al-mini-stat-lbl">Darab</div></div>' +
             '<div class="al-mini-stat"><div class="al-mini-stat-val"><svg width="12" height="12" fill="none" stroke="' + a.color + '" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> ' + a.scans.length + '</div><div class="al-mini-stat-lbl">Scan</div></div>' +
-            '<div class="al-mini-stat"><div class="al-mini-stat-val" style="color:#fb923c">🔥 ' + a.streak + '</div><div class="al-mini-stat-lbl">Sorozat</div></div>' +
+            '<div class="al-mini-stat"><div class="al-mini-stat-val" style="color:#fb923c">🔥 ' + a.streak + '</div><div class="al-mini-stat-lbl">' + t('al_streak_lbl') + '</div></div>' +
           '</div>' +
         '</div></div>';
     });
@@ -38548,9 +38551,9 @@ applyOfflineState(!navigator.onLine);
       '<div class="al-xp-bar"><div class="al-xp-fill" style="width:' + p.pct + '%;background:linear-gradient(90deg,' + a.color + ',' + a.color + 'aa)"></div></div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-top:8px">' +
         '<div style="border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);padding:8px;text-align:center"><div style="font-size:14px;font-weight:700;color:#fff;font-variant-numeric:tabular-nums">' + a.scans.length + '</div><div style="font-size:8px;color:#6b7280">Scan</div></div>' +
-        '<div style="border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);padding:8px;text-align:center"><div style="font-size:14px;font-weight:700;color:#fff;font-variant-numeric:tabular-nums">' + avgScore + '</div><div style="font-size:8px;color:#6b7280">Átlag</div></div>' +
-        '<div style="border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);padding:8px;text-align:center"><div style="font-size:14px;font-weight:700;color:#fff;font-variant-numeric:tabular-nums">' + bestScore + '</div><div style="font-size:8px;color:#6b7280">Legjobb</div></div>' +
-        '<div style="border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);padding:8px;text-align:center"><div style="font-size:14px;font-weight:700;color:#fb923c;font-variant-numeric:tabular-nums">' + a.streak + '🔥</div><div style="font-size:8px;color:#6b7280">Sorozat</div></div>' +
+        '<div style="border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);padding:8px;text-align:center"><div style="font-size:14px;font-weight:700;color:#fff;font-variant-numeric:tabular-nums">' + avgScore + '</div><div style="font-size:8px;color:#6b7280">' + t('al_avg') + '</div></div>' +
+        '<div style="border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);padding:8px;text-align:center"><div style="font-size:14px;font-weight:700;color:#fff;font-variant-numeric:tabular-nums">' + bestScore + '</div><div style="font-size:8px;color:#6b7280">' + t('al_best') + '</div></div>' +
+        '<div style="border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);padding:8px;text-align:center"><div style="font-size:14px;font-weight:700;color:#fb923c;font-variant-numeric:tabular-nums">' + a.streak + '🔥</div><div style="font-size:8px;color:#6b7280">' + t('al_streak_lbl') + '</div></div>' +
       '</div>';
 
     _renderTab();
@@ -38576,7 +38579,7 @@ applyOfflineState(!navigator.onLine);
           a.scans.slice(0, 5).map(function(s) {
             return '<div style="display:flex;align-items:center;gap:12px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);padding:10px;margin-bottom:6px">' +
               '<div style="font-size:18px;font-weight:700;color:#fff;font-variant-numeric:tabular-nums">' + s.overallScore + '</div>' +
-              '<div style="flex:1;min-width:0"><p style="font-size:11px;color:#e5e7eb;font-weight:500">' + (s.vibeLabel || '') + '</p><p style="font-size:9px;color:#6b7280">' + new Date(s.createdAt).toLocaleDateString('hu-HU') + '</p></div>' +
+              '<div style="flex:1;min-width:0"><p style="font-size:11px;color:#e5e7eb;font-weight:500">' + (s.vibeLabel || '') + '</p><p style="font-size:9px;color:#6b7280">' + new Date(s.createdAt).toLocaleDateString(window.LOCALE_MAP && window.LOCALE_MAP[currentLang] || 'hu-HU') + '</p></div>' +
               '<span style="font-size:9px;padding:3px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);color:#9ca3af">+' + s.xpEarned + ' XP</span></div>';
           }).join('') + '</div>'
         : '');
@@ -38625,7 +38628,7 @@ applyOfflineState(!navigator.onLine);
             '<div style="width:64px;height:64px;border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:2rem;background:linear-gradient(135deg,rgba(236,72,153,0.15),rgba(147,51,234,0.15));border:1px solid rgba(236,72,153,0.2)">👑</div>' +
             '<h3 style="font-size:1.125rem;font-weight:700;color:#fff;margin-bottom:8px">' + t('al_pro_feature') + '</h3>' +
             '<p style="font-size:13px;color:#9ca3af;line-height:1.6;max-width:280px;margin:0 auto 20px">' + t('al_pro_desc') + '</p>' +
-            '<button onclick="if(typeof window.showPaywallModal===\'function\')window.showPaywallModal();else if(document.getElementById(\'paywallModal\'))document.getElementById(\'paywallModal\').classList.remove(\'hidden\')" style="padding:12px 28px;border-radius:14px;border:none;background:linear-gradient(90deg,#ec4899,#9333ea);color:#fff;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(236,72,153,0.3)">' + t('al_pro_btn') + '</button>' +
+
           '</div>';
       } else {
         var aiOccHtml = OCCASIONS.map(function(o) {
@@ -38667,7 +38670,7 @@ applyOfflineState(!navigator.onLine);
       '<label>' + t('al_create_emoji_picker') + '</label><div class="al-emoji-grid">' + emojiHtml + '</div>' +
       '<label>' + t('al_create_tagline') + '</label><input type="text" id="alCreateTagline" placeholder="' + t('al_create_tagline_ph') + '">' +
       '<label>' + t('al_create_color') + '</label><div class="al-color-grid">' + colorHtml + '</div>' +
-      '<button onclick="window._alCreate()" style="width:100%;height:48px;border-radius:14px;border:none;background:linear-gradient(90deg,#ec4899,#9333ea);color:#fff;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(236,72,153,0.2);display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px">+ Alteregó Létrehozása</button>';
+      '<button onclick="window._alCreate()" style="width:100%;height:48px;border-radius:14px;border:none;background:linear-gradient(90deg,#ec4899,#9333ea);color:#fff;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(236,72,153,0.2);display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px">' + t('al_create_btn') + '</button>';
   }
 
   // ─── Global API ───
@@ -38684,16 +38687,19 @@ applyOfflineState(!navigator.onLine);
     window._alSelectedTagKey = null;
     renderCreateModal();
     document.getElementById('alteregoCreateModal').classList.add('show');
+    document.body.style.overflow = 'hidden';
   };
 
   window._alCloseCreate = function() {
     document.getElementById('alteregoCreateModal').classList.remove('show');
+    document.body.style.overflow = '';
   };
 
   window._alOpenDetail = function(id) {
     _currentTab = 'scan';
     renderDetail(id);
     document.getElementById('alteregoDetailModal').classList.add('show');
+    document.body.style.overflow = 'hidden';
     // Activate first tab
     document.querySelectorAll('#alDetailTabs .al-tab').forEach(function(t, i) {
       t.classList.toggle('active', i === 0);
@@ -38702,6 +38708,7 @@ applyOfflineState(!navigator.onLine);
 
   window._alCloseDetail = function() {
     document.getElementById('alteregoDetailModal').classList.remove('show');
+    document.body.style.overflow = '';
     _currentDetail = null;
     renderGrid();
   };
@@ -38759,11 +38766,44 @@ applyOfflineState(!navigator.onLine);
   };
 
   window._alRunScan = function(id) {
-    var result = runScan(id, window._alScanOcc || 'casual');
-    if (!result) return;
+    // Visual feedback: animate button
+    var scanBtns = document.querySelectorAll('#alDetailBody button');
+    var origBtn = null;
+    scanBtns.forEach(function(b) { if (b.textContent.indexOf('📸') >= 0) origBtn = b; });
+    if (origBtn) {
+      origBtn.style.opacity = '0.6';
+      origBtn.style.transform = 'scale(0.97)';
+      origBtn.style.pointerEvents = 'none';
+    }
 
-    // Re-render detail
-    renderDetail(id);
+    // Small delay for visual feedback
+    setTimeout(function() {
+      try {
+        var result = runScan(id, window._alScanOcc || 'casual');
+        if (!result) {
+          if (origBtn) { origBtn.style.opacity = '1'; origBtn.style.transform = ''; origBtn.style.pointerEvents = ''; }
+          return;
+        }
+
+        // Re-render detail
+        renderDetail(id);
+
+        // Show score toast
+        var toast = document.createElement('div');
+        toast.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.8);z-index:200;background:rgba(12,12,16,0.95);border:1px solid rgba(236,72,153,0.4);border-radius:20px;padding:24px 32px;text-align:center;backdrop-filter:blur(12px);transition:all 0.3s ease;opacity:0;pointer-events:none';
+        toast.innerHTML = '<div style="font-size:2.5rem;font-weight:800;color:#fff;margin-bottom:4px">' + result.scan.overallScore + '<span style="font-size:1rem;color:#9ca3af">/100</span></div>' +
+          '<div style="font-size:13px;color:' + (result.scan.overallScore >= 70 ? '#34d399' : result.scan.overallScore >= 50 ? '#fbbf24' : '#fb923c') + ';font-weight:600">' + result.scan.vibeLabel + '</div>' +
+          '<div style="font-size:11px;color:#9ca3af;margin-top:4px">+' + result.xpEarned + ' XP</div>';
+        document.body.appendChild(toast);
+        requestAnimationFrame(function() {
+          toast.style.opacity = '1';
+          toast.style.transform = 'translate(-50%,-50%) scale(1)';
+        });
+        setTimeout(function() {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translate(-50%,-50%) scale(0.8)';
+          setTimeout(function() { toast.remove(); }, 300);
+        }, 1800);
 
     // Show celebration if leveled up
     if (result.leveledUp) {
@@ -38781,6 +38821,11 @@ applyOfflineState(!navigator.onLine);
         cel.classList.add('show');
       }
     }
+      } catch(e) {
+        console.error('[Alteregó] Scan error:', e);
+        if (origBtn) { origBtn.style.opacity = '1'; origBtn.style.transform = ''; origBtn.style.pointerEvents = ''; }
+      }
+    }, 200);
   };
 
   window._alAddItem = function(id) {
