@@ -38809,12 +38809,9 @@ applyOfflineState(!navigator.onLine);
           return;
         }
 
-        // Re-render detail
-        renderDetail(id);
-
-        // Show full scan result in the detail body
+        // Set result BEFORE renderDetail (which calls _renderTab internally)
         window._alLastScanResult = result;
-        _renderTab();  // re-render scan tab with result at top
+        renderDetail(id);
 
     // Show celebration if leveled up
     if (result.leveledUp) {
