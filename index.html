@@ -4388,7 +4388,6 @@ if (window.__DS_IS_ANDROID_APP) {
   #alteregoCreateModal input[type="text"]::placeholder{color:rgba(255,255,255,0.25)}
   /* Celebration overlay */
   @keyframes fadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
-  @keyframes alPulse{0%,100%{box-shadow:0 4px 14px rgba(236,72,153,0.2)}50%{box-shadow:0 4px 28px rgba(236,72,153,0.6),0 0 40px rgba(147,51,234,0.3)}}
   #alteregoCelebrate{display:none;position:fixed;inset:0;z-index:116;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;text-align:center;padding:32px}
   #alteregoCelebrate.show{display:flex}
   /* How-it-works */
@@ -28798,17 +28797,6 @@ async function runScan() {
     endScan();
     showResultsLayout();
 
-    // If an Alteregó scan was pending, feed the real score back
-    if (window._alPendingScan) {
-      try {
-        var _realScore = (store && store.get() && store.get().lastScore) || null;
-        if (_realScore && typeof window._alCompletePendingScan === 'function') {
-          window._alCompletePendingScan(_realScore);
-        } else {
-          window._alPendingScan = null;
-        }
-      } catch(_alErr) { console.error('[Alteregó] pending scan error:', _alErr); window._alPendingScan = null; }
-    }
   }
 }
 
@@ -38360,46 +38348,123 @@ applyOfflineState(!navigator.onLine);
     return a;
   }
 
-  // ─── Run Scan ───
-  function runScan(alteregoId, occasion, realScoreOverride) {
+  // ─── Run Scan — Wardrobe Readiness Analysis ───
+  // Analyzes closet composition for the selected occasion.
+  // No camera needed — scores are based on wardrobe data.
+
+  var OCCASION_NEEDS = {
+    casual:       { must: ['top','bottom','shoes'], bonus: ['accessory'], weight: {top:1,bottom:1,shoes:1,accessory:0.5,outerwear:0.3,dress:0.3} },
+    first_date:   { must: ['top','bottom','shoes'], bonus: ['accessory','outerwear'], weight: {top:1,bottom:1,shoes:1,accessory:1,outerwear:0.7,dress:0.8} },
+    night_out:    { must: ['top','bottom','shoes'], bonus: ['accessory'], weight: {top:1,bottom:1,shoes:1,accessory:0.8,outerwear:0.5,dress:0.7} },
+    fancy:        { must: ['top','bottom','shoes','outerwear'], bonus: ['accessory'], weight: {top:1,bottom:1,shoes:1,accessory:0.8,outerwear:1,dress:1} },
+    professional: { must: ['top','bottom','shoes','outerwear'], bonus: ['accessory'], weight: {top:1,bottom:1,shoes:1,accessory:0.6,outerwear:1,dress:0.5} }
+  };
+
+  function _analyzeColors(items) {
+    var colors = items.map(function(i) { return (i.color || '').toLowerCase().trim(); }).filter(Boolean);
+    if (colors.length === 0) return { score: 30, tip: '' };
+    var unique = [];
+    colors.forEach(function(c) { if (unique.indexOf(c) === -1) unique.push(c); });
+    var variety = Math.min(unique.length / 3, 1);        // 3+ colors = full variety
+    var neutrals = ['fekete','fehér','szürke','bézs','barna','black','white','grey','gray','beige','brown','navy','schwarz','weiß','grau','braun'];
+    var neutralCnt = 0;
+    unique.forEach(function(c) { if (neutrals.indexOf(c) >= 0) neutralCnt++; });
+    var hasNeutralBase = neutralCnt > 0 ? 1 : 0.6;       // neutral base = good
+    var score = Math.round(Math.min(100, 30 + variety * 35 + hasNeutralBase * 20 + Math.min(colors.length, 5) * 3));
+    return { score: score, unique: unique, variety: variety };
+  }
+
+  function _analyzeWardrobe(items, occasion) {
+    var needs = OCCASION_NEEDS[occasion] || OCCASION_NEEDS.casual;
+    var cats = {};
+    items.forEach(function(i) { cats[i.category] = (cats[i.category] || 0) + 1; });
+
+    // Coverage: which required categories are present?
+    var mustHave = needs.must.length;
+    var mustMet = 0;
+    var missing = [];
+    needs.must.forEach(function(c) { if (cats[c]) mustMet++; else missing.push(c); });
+    var coverageScore = Math.round((mustMet / mustHave) * 70);  // max 70 from must-haves
+
+    // Bonus categories
+    var bonusMet = 0;
+    needs.bonus.forEach(function(c) { if (cats[c]) bonusMet++; });
+    coverageScore += Math.round((bonusMet / Math.max(needs.bonus.length, 1)) * 30);
+
+    // Depth: having multiple options per category
+    var depthScore = 0;
+    var totalWeighted = 0;
+    Object.keys(needs.weight).forEach(function(cat) {
+      var w = needs.weight[cat];
+      var cnt = cats[cat] || 0;
+      depthScore += Math.min(cnt / 2, 1) * w;  // 2+ items per cat = full depth for that cat
+      totalWeighted += w;
+    });
+    depthScore = Math.round((depthScore / totalWeighted) * 100);
+
+    return { coverageScore: coverageScore, depthScore: depthScore, missing: missing, cats: cats };
+  }
+
+  function runScan(alteregoId, occasion) {
     var list = _load();
     var idx = list.findIndex(function(a) { return a.id === alteregoId; });
     if (idx === -1) return null;
     var a = list[idx];
-
-    var itemCnt = a.items.length;
-    var ov, cs, fs, gs;
-    if (typeof realScoreOverride === 'number' && realScoreOverride > 0) {
-      // Real score from camera scan — derive sub-scores with small variance
-      ov = realScoreOverride;
-      var r2 = function() { return Math.random() * 10 - 5; };
-      cs = Math.min(100, Math.max(15, Math.round(ov + r2())));
-      fs = Math.min(100, Math.max(15, Math.round(ov + r2())));
-      gs = Math.min(100, Math.max(15, Math.round(ov + r2())));
-    } else {
-      // Fallback: random score (no camera)
-      var base = 40 + Math.min(itemCnt * 3, 25);
-      var r = function() { return Math.random() * 20 - 10; };
-      cs = Math.min(100, Math.max(20, base + r() + (itemCnt >= 5 ? 10 : 0)));
-      fs = Math.min(100, Math.max(20, base + r() + 5));
-      gs = Math.min(100, Math.max(20, base + r() + 8));
-      ov = Math.round((cs + fs + gs) / 3 * 10) / 10;
-    }
-
-    var vibes = [t('al_vibe_mysterious'),t('al_vibe_confident'),t('al_vibe_creative'),t('al_vibe_elegant'),t('al_vibe_relaxed'),t('al_vibe_cool'),t('al_vibe_romantic'),t('al_vibe_on_fire')];
-    var vibe = vibes[Math.floor(Math.random() * vibes.length)];
-
-    var fb = '';
     var _oName = a.nameKey ? t(a.nameKey) : a.name;
-    if (ov >= 85) fb = _oName + (currentLang==='de'?' sieht heute fantastisch aus! Farbwelt, Sitz und Präsenz harmonieren.':currentLang==='hu'?' stílusa ma elképesztő! A színvilág, az illeszkedés és a jelenlét mind harmonizál.':'\'s style today is incredible! Color, fit, and presence all harmonize.') + ' ' + (occasion==='first_date'?(currentLang==='de'?'Dieses Date gehört dir!':currentLang==='hu'?'Ez a randi a tiéd!':'This date is yours!'):(currentLang==='de'?'Alle werden es bemerken!':currentLang==='hu'?'Mindenki észre fogja venni!':'Everyone will notice!'));
-    else if (ov >= 70) fb = (currentLang==='de'?'Sehr gute Basis, ':currentLang==='hu'?'Nagyon jó az alap, ':'Great base, ') + _oName + '! ' + (occasion==='first_date'?(currentLang==='de'?'Ein feines Accessoire macht den Date-Look perfekt.':currentLang==='hu'?'Egy finom kiegészítő még tökéletesebbé teszi a randi lookot.':'A subtle accessory will perfect the date look.'):(currentLang==='de'?'Ein kleiner Twist und es wird perfekt.':currentLang==='hu'?'Egy apró csavar és tökéletes leszez.':'One small tweak and it\'s perfect.')) + ' ' + (currentLang==='de'?'Probiere einen kontrastfarbigen Gürtel oder eine Uhr!':currentLang==='hu'?'Próbálj egy kontrasztos színű övet vagy órát!':'Try a contrasting belt or watch!');
-    else if (ov >= 50) fb = (currentLang==='de'?'Die Grundlage ist da, ':currentLang==='hu'?'Az alapok megvannak, ':'The basics are there, ') + _oName + (currentLang==='de'?', aber es gibt Raum für Verbesserungen! ':currentLang==='hu'?', de van hova fejlődni! ':',  but there\'s room to grow! ') + (occasion==='night_out'?(currentLang==='de'?'Für das Ausgehen würde eine mutigere Farbe oder Textur gut stehen.':currentLang==='hu'?'A bulira egy merészebb szín vagy textúra is jól állna.':'For the night out, a bolder color or texture would work well.'):(currentLang==='de'?'Verbesserung der Farbharmonie würde einen großen Unterschied machen.':currentLang==='hu'?'A színharmonia javítása nagyot dobna a összhatáson.':'Improving the color harmony would make a big difference.'));
-    else fb = _oName + (currentLang==='de'?', dieser Look ist noch im Entstehen! Keine Sorge – Stil ist eine Reise. Beginne mit der Abstimmung der Farben und einem gut sitzenden Grundstück!':currentLang==='hu'?', ez a look még formálódik! Ne aggódj – a stílus egy utazás. Kezdd a színek összehangolásával és egy jól ülő alapdarabbal!':',  this look is still taking shape! Don\'t worry – style is a journey. Start with color coordination and a well-fitting basic piece!');
+
+    // ── Analyze ──
+    var colorResult = _analyzeColors(a.items);
+    var wardrobeResult = _analyzeWardrobe(a.items, occasion);
+
+    var cs = colorResult.score;                         // Color Harmony
+    var ws = wardrobeResult.coverageScore;              // Wardrobe Coverage
+    var ds = wardrobeResult.depthScore;                 // Wardrobe Depth
+    var ov = Math.round((cs * 0.3 + ws * 0.45 + ds * 0.25) * 10) / 10;  // Overall
+
+    // ── Vibe label ──
+    var vibes = [t('al_vibe_mysterious'),t('al_vibe_confident'),t('al_vibe_creative'),t('al_vibe_elegant'),t('al_vibe_relaxed'),t('al_vibe_cool'),t('al_vibe_romantic'),t('al_vibe_on_fire')];
+    var vIdx = ov >= 85 ? 7 : ov >= 75 ? 1 : ov >= 60 ? 3 : ov >= 40 ? 4 : 0;
+    var vibe = vibes[vIdx] || vibes[0];
+
+    // ── Feedback — specific, actionable ──
+    var fb = '';
+    var missingLabels = wardrobeResult.missing.map(function(cat) {
+      var c = CLOTHING_CATS.find(function(x) { return x.v === cat; });
+      return c ? t(c.lk) : cat;
+    });
+    var occLabel = t((OCCASIONS.find(function(o) { return o.v === occasion; }) || {}).lk || '') || occasion;
+
+    if (a.items.length === 0) {
+      // Empty closet
+      fb = currentLang==='de' ? _oName + ' hat noch keine Kleidung! Füge Kleidungsstücke zum Schrank hinzu, um eine bessere Bewertung zu bekommen. Beginne mit den Basics: Oberteil, Unterteil und Schuhe.'
+         : currentLang==='hu' ? _oName + ' szekrénye még üres! Adj hozzá ruhadarabokat a jobb eredményhez. Kezdd az alapokkal: felső, alsó és cipő.'
+         : _oName + '\'s closet is empty! Add items to get a better score. Start with the basics: top, bottom, and shoes.';
+    } else if (ov >= 85) {
+      fb = currentLang==='de' ? _oName + ' ist perfekt ausgestattet für «' + occLabel + '»! Die Garderobe hat alles — Farbharmonie, Vielfalt und Tiefe. Bereit für jeden Anlass!'
+         : currentLang==='hu' ? _oName + ' tökéletesen felszerelt a «' + occLabel + '» alkalomra! A szekrény mindent tartalmaz — színharmonia, változatosság és mélység. Bármire kész!'
+         : _oName + ' is perfectly equipped for «' + occLabel + '»! The wardrobe has it all — color harmony, variety, and depth. Ready for anything!';
+    } else if (wardrobeResult.missing.length > 0) {
+      fb = currentLang==='de' ? _oName + ' fehlt noch: ' + missingLabels.join(', ') + ' für «' + occLabel + '». Füge diese Kategorie(n) hinzu, um deine Bewertung deutlich zu verbessern!'
+         : currentLang==='hu' ? _oName + ' szekrényéből hiányzik: ' + missingLabels.join(', ') + ' a «' + occLabel + '» alkalomhoz. Add hozzá ezeket a kategóriákat a nagyobb pontszámért!'
+         : _oName + ' is missing: ' + missingLabels.join(', ') + ' for «' + occLabel + '». Add these categories to boost your score significantly!';
+    } else if (cs < 50) {
+      fb = currentLang==='de' ? 'Die Grundkategorien sind abgedeckt, ' + _oName + '! Tipp: Füge Farbinfos zu deinen Kleidungsstücken hinzu und achte auf eine Basis aus neutralen Farben (schwarz, weiß, grau) mit 1-2 Akzentfarben.'
+         : currentLang==='hu' ? 'Az alapkategóriák megvannak, ' + _oName + '! Tipp: Adj meg színeket a ruhadarabjaidhoz, és építs egy neutrális alapot (fekete, fehér, szürke) 1-2 akcentszínnel.'
+         : 'The basic categories are covered, ' + _oName + '! Tip: Add color info to your items and build a neutral base (black, white, grey) with 1-2 accent colors.';
+    } else if (ds < 60) {
+      fb = currentLang==='de' ? 'Gute Farbauswahl, ' + _oName + '! Für «' + occLabel + '» brauchst du mehr Optionen. Füge pro Kategorie mindestens 2 Teile hinzu, damit du Outfits kombinieren kannst.'
+         : currentLang==='hu' ? 'Jó a színválasztás, ' + _oName + '! A «' + occLabel + '» alkalomhoz több opció kell. Adj hozzá kategóriánként legalább 2 darabot, hogy outfit-öket kombinálhass.'
+         : 'Good color choices, ' + _oName + '! For «' + occLabel + '» you need more options. Add at least 2 items per category so you can mix and match outfits.';
+    } else {
+      fb = currentLang==='de' ? 'Solide Garderobe, ' + _oName + '! Um die 90+ zu erreichen, erweitere mit Accessoires und experimentiere mit kontrastierenden Farben.'
+         : currentLang==='hu' ? 'Stabil szekrény, ' + _oName + '! A 90+ pontszámhoz bővíts kiegészítőkkel és kísérletezz kontrasztos színekkel.'
+         : 'Solid wardrobe, ' + _oName + '! To reach 90+, expand with accessories and experiment with contrasting colors.';
+    }
 
     var xpEarned = Math.round(ov / 5) + 5;
     var scan = {
       id: _uuid(), overallScore: ov,
-      colorScore: Math.round(cs*10)/10, fitScore: Math.round(fs*10)/10, groomingScore: Math.round(gs*10)/10,
+      colorScore: cs, fitScore: ws, groomingScore: ds,
       vibeLabel: vibe, feedback: fb, xpEarned: xpEarned,
       createdAt: new Date().toISOString()
     };
@@ -38407,9 +38472,10 @@ applyOfflineState(!navigator.onLine);
     if (a.scans.length > 20) a.scans = a.scans.slice(0, 20);
 
     // Update XP & level
+    var oldLevel = a.level;
     a.xp += xpEarned;
     while (xpForLevel(a.level + 1) <= a.xp) a.level++;
-    var leveledUp = a.level > list[idx].level;
+    var leveledUp = a.level > oldLevel;
 
     // Streak
     var now = new Date();
@@ -38423,13 +38489,13 @@ applyOfflineState(!navigator.onLine);
     // Check goals
     a.goals.forEach(function(g) {
       if (g.isCompleted) return;
-      if (g.title.indexOf('scan') >= 0 || g.title.indexOf('analízis') >= 0 || g.title.indexOf('Scan') >= 0) {
+      if (g.title.indexOf('scan') >= 0 || g.title.indexOf('anal') >= 0 || g.title.indexOf('Scan') >= 0 || g.title === t('al_goal_1_title')) {
         g.isCompleted = true; g.completedAt = now.toISOString(); a.xp += g.xpReward;
       }
-      if (g.title.indexOf('80%') >= 0 && ov >= 80) {
+      if ((g.title.indexOf('80%') >= 0 || g.title === t('al_goal_3_title')) && ov >= 80) {
         g.isCompleted = true; g.completedAt = now.toISOString(); a.xp += g.xpReward;
       }
-      if (g.title.indexOf('3 ruhadarab') >= 0 && a.items.length >= 3) {
+      if ((g.title.indexOf('3') >= 0 || g.title === t('al_goal_2_title')) && a.items.length >= 3) {
         g.isCompleted = true; g.completedAt = now.toISOString(); a.xp += g.xpReward;
       }
     });
@@ -38815,70 +38881,31 @@ applyOfflineState(!navigator.onLine);
   };
 
   window._alRunScan = function(id) {
-    // Store pending scan context, close modal, switch to scanner
-    window._alPendingScan = { id: id, occasion: window._alScanOcc || 'casual' };
-    window._alCloseDetail();
-    if (typeof window.toggleView === 'function') window.toggleView('scanner');
-
-    // Highlight the scan button so user knows to tap it
-    setTimeout(function() {
-      var sb = document.getElementById('scanBtn');
-      if (!sb) return;
-      // Pulse animation
-      sb.style.animation = 'alPulse 1s ease-in-out 3';
-      sb.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      // Show a banner above the scan button
-      var banner = document.createElement('div');
-      banner.id = 'alScanBanner';
-      banner.style.cssText = 'text-align:center;padding:10px 16px;margin-bottom:12px;border-radius:14px;background:linear-gradient(90deg,rgba(236,72,153,0.15),rgba(147,51,234,0.15));border:1px solid rgba(236,72,153,0.3);font-size:12px;font-weight:600;color:#f9a8d4;animation:fadeIn 0.4s ease';
-      var a = _load().find(function(x) { return x.id === id; });
-      var eName = a ? (a.nameKey ? t(a.nameKey) : a.name) : '';
-      banner.innerHTML = '📸 ' + (currentLang === 'de' ? 'Scanne für: ' : currentLang === 'hu' ? 'Scan ehhez: ' : 'Scanning for: ') + '<strong>' + eName + '</strong> ' + (a ? a.emoji : '');
-      sb.parentNode.insertBefore(banner, sb);
-      // Remove banner after scan or after 15s
-      setTimeout(function() { var b = document.getElementById('alScanBanner'); if (b) b.remove(); }, 15000);
-    }, 600);
-  };
-
-  // Called after main scan completes — feeds real score into alterego
-  window._alCompletePendingScan = function(realScore) {
-    var pending = window._alPendingScan;
-    if (!pending) return;
-    window._alPendingScan = null;
-    // Remove scan banner
-    var banner = document.getElementById('alScanBanner');
-    if (banner) banner.remove();
-    var sb = document.getElementById('scanBtn');
-    if (sb) sb.style.animation = '';
-
-    var occasion = pending.occasion;
-    var result = runScan(pending.id, occasion, realScore);
+    var occasion = window._alScanOcc || 'casual';
+    var result = runScan(id, occasion);
     if (!result) return;
 
-    // Switch back to closet/alterego view and show result
-    if (typeof window.toggleView === 'function') window.toggleView('alterego');
-    setTimeout(function() {
-      window._alLastScanResult = result;
-      _currentTab = 'scan';
-      window._alOpenDetail(pending.id);
+    // Show result inline
+    window._alLastScanResult = result;
+    _currentTab = 'scan';
+    renderDetail(id);
 
-      // Show celebration if leveled up
-      if (result.leveledUp) {
-        var list = _load();
-        var a = list.find(function(x) { return x.id === pending.id; });
-        var cel = document.getElementById('alteregoCelebrate');
-        var cc = document.getElementById('alCelebrateContent');
-        if (cel && cc) {
-          cc.innerHTML =
-            '<div style="font-size:4rem;margin-bottom:16px">' + (a ? a.emoji : '🎭') + '</div>' +
-            '<h2 style="font-size:1.75rem;font-weight:700;color:#fff;margin-bottom:8px">' + t('al_level_up') + '</h2>' +
-            '<p style="font-size:1.25rem;color:' + (a ? a.color : '#ec4899') + ';font-weight:600">' + result.levelName + '</p>' +
-            '<p style="font-size:13px;color:#d1d5db;margin-top:8px">' + t('al_xp_level_label',{xp:result.xpEarned,level:result.newLevel}) + '</p>' +
-            '<button onclick="document.getElementById(\'alteregoCelebrate\').classList.remove(\'show\')" style="margin-top:24px;padding:12px 32px;border-radius:14px;border:none;background:linear-gradient(90deg,#ec4899,#9333ea);color:#fff;font-size:14px;font-weight:700;cursor:pointer">' + t('al_awesome') + '</button>';
-          cel.classList.add('show');
-        }
+    // Celebration if leveled up
+    if (result.leveledUp) {
+      var list = _load();
+      var a = list.find(function(x) { return x.id === id; });
+      var cel = document.getElementById('alteregoCelebrate');
+      var cc = document.getElementById('alCelebrateContent');
+      if (cel && cc) {
+        cc.innerHTML =
+          '<div style="font-size:4rem;margin-bottom:16px">' + (a ? a.emoji : '🎭') + '</div>' +
+          '<h2 style="font-size:1.75rem;font-weight:700;color:#fff;margin-bottom:8px">' + t('al_level_up') + '</h2>' +
+          '<p style="font-size:1.25rem;color:' + (a ? a.color : '#ec4899') + ';font-weight:600">' + result.levelName + '</p>' +
+          '<p style="font-size:13px;color:#d1d5db;margin-top:8px">' + t('al_xp_level_label',{xp:result.xpEarned,level:result.newLevel}) + '</p>' +
+          '<button onclick="document.getElementById(\'alteregoCelebrate\').classList.remove(\'show\')" style="margin-top:24px;padding:12px 32px;border-radius:14px;border:none;background:linear-gradient(90deg,#ec4899,#9333ea);color:#fff;font-size:14px;font-weight:700;cursor:pointer">' + t('al_awesome') + '</button>';
+        cel.classList.add('show');
       }
-    }, 300);
+    }
   };
 
   window._alAddItem = function(id) {
