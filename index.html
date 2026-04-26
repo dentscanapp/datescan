@@ -4275,12 +4275,12 @@ if (window.__DS_IS_ANDROID_APP) {
   #viewShopping .siq-cpw-counter button{width:32px;height:32px;border-radius:10px;font-size:16px;font-weight:700;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;transition:.15s;cursor:pointer;color:#fff}
   #viewShopping .siq-cpw-counter button:hover{background:rgba(236,72,153,0.15);border-color:rgba(236,72,153,0.3)}
   #viewShopping .siq-cpw-counter .count{font-size:18px;font-weight:800;min-width:32px;text-align:center}
-  #viewShopping .siq-score-ring{position:relative;width:100px;height:100px;margin:0 auto 12px}
+  #viewShopping .siq-score-ring{position:relative;width:140px;height:140px;margin:0 auto 12px}
   #viewShopping .siq-score-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
   #viewShopping .siq-score-ring .bg{fill:none;stroke:rgba(255,255,255,0.06);stroke-width:8}
   #viewShopping .siq-score-ring .fg{fill:none;stroke:url(#siqScoreGrad);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1)}
-  #viewShopping .siq-score-ring .score-val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:28px;font-weight:800}
-  #viewShopping .siq-score-ring .score-lbl{font-size:8px;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
+  #viewShopping .siq-score-ring .score-val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:36px;font-weight:800}
+  #viewShopping .siq-score-ring .score-lbl{font-size:7px;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:.05em;margin-top:2px;max-width:80px;text-align:center;line-height:1.3}
   #viewShopping .siq-tip{background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.15);border-radius:12px;padding:12px 14px;margin-bottom:8px;font-size:12px;color:rgba(167,243,208,0.9);line-height:1.5}
   #viewShopping .siq-warning{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:12px;padding:12px 14px;margin-bottom:10px;font-size:12px;color:#fcd34d;display:flex;align-items:flex-start;gap:8px;line-height:1.4}
   #viewShopping .siq-replace-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:14px;margin-bottom:10px}
@@ -4822,7 +4822,7 @@ if (window.__DS_IS_ANDROID_APP) {
     </button>
     <button id="navAlteregoBtn" class="hidden lg:flex text-xs font-bold px-3 py-2 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors items-center gap-1.5" title="Alteregó Lab">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
-      <span class="hidden sm:inline">Alteregó</span>
+      <span class="hidden sm:inline" data-i18n="al_brand_short">Alteregó</span>
     </button>
     <!-- Points pill (replaces the old "Free Scans Left" badge).
          Populated by updatePointsBadge(). Always visible — shows the
@@ -5714,7 +5714,7 @@ if (window.__DS_IS_ANDROID_APP) {
             </button>
             <button id="closetAlteregoBtn" class="lg:hidden px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-gradient-to-r from-pink-500/20 to-fuchsia-500/20 border border-pink-500/30 text-pink-300 hover:from-pink-500/30 hover:to-fuchsia-500/30 active:scale-[0.98] transition" title="Alteregó Lab" onclick="if(typeof window.toggleView==='function')window.toggleView('alterego')">
                <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
-               <span>Alteregó</span>
+               <span data-i18n="al_brand_short">Alteregó</span>
             </button>
             <div class="flex gap-1.5 shrink-0 w-full">
                <button id="closetExportBtn" class="flex-1 px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center md:px-3 md:py-2.5 md:rounded-xl md:text-sm bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-[0.98] transition" title="Export closet backup">
@@ -5992,7 +5992,7 @@ if (window.__DS_IS_ANDROID_APP) {
   <!-- ===== SMART SHOPPING LIST MODAL ===== -->
   <div id="smartShopModal" class="hidden fixed inset-0 z-[115] bg-black/85 backdrop-blur-md flex items-center justify-center p-4" style="z-index:120">
     <div class="premium-glass rounded-3xl border border-amber-500/20 max-w-lg w-full p-6 sm:p-7 relative max-h-[92vh] overflow-y-auto">
-      <button id="smartShopClose" type="button" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition" aria-label="Close">
+      <button id="smartShopClose" type="button" onclick="document.getElementById('smartShopModal').classList.add('hidden')" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition" aria-label="Close">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
       <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500/20 to-orange-500/20 border border-amber-500/30 flex items-center justify-center mb-4 mx-auto">
@@ -7441,7 +7441,7 @@ if (window.__DS_IS_ANDROID_APP) {
             <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
           </div>
           <div>
-            <h1 class="al-title">Alteregó Lab<span style="color:#ec4899">.</span></h1>
+            <h1 class="al-title" id="alBrandTitle">Alteregó Lab<span style="color:#ec4899">.</span></h1>
             <p class="al-subtitle" data-i18n="al_subtitle">Alteregó Építő</p>
           </div>
         </div>
@@ -13188,6 +13188,10 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       siq_ph_price: '29',
       siq_ph_budget: '200',
       // Alteregó Lab
+      al_brand: 'Alter Ego Lab',
+      al_brand_short: 'Alter Ego',
+      al_scan_need_items: 'Add at least 3 items to your closet before running an analysis.',
+      al_scan_need_items_btn: 'Add items first →',
       al_subtitle: 'Alter Ego Builder',
       al_hero_h2: 'Build your <em>style alter egos</em>',
       al_hero_p: 'A different persona for every occasion. Create alter egos for your wardrobe, level them up with scans, and earn XP for your style awareness!',
@@ -15361,6 +15365,10 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       siq_ph_budget: '50000',
 
       // Alteregó Lab
+      al_brand: 'Alteregó Lab',
+      al_brand_short: 'Alteregó',
+      al_scan_need_items: 'Adj hozzá legalább 3 ruhadarabot a szekrényedhez az elemzés előtt.',
+      al_scan_need_items_btn: 'Ruhadarabok hozzáadása →',
       al_subtitle: 'Alteregó Építő',
       al_hero_h2: 'Építsd a <em>stílusalteregóidat</em>',
       al_hero_p: 'Minden alkalomhoz más személyiség. Hozz létre alteregókat a ruhatáradhoz, fejleszd őket scannel, és érdemelj XP-t a stílustudatodért!',
@@ -17534,6 +17542,10 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       siq_ph_budget: '200',
 
       // Alteregó Lab
+      al_brand: 'Alter Ego Lab',
+      al_brand_short: 'Alter Ego',
+      al_scan_need_items: 'Füge mindestens 3 Kleidungsstücke hinzu, bevor du eine Analyse startest.',
+      al_scan_need_items_btn: 'Kleidung hinzufügen →',
       al_subtitle: 'Alter Ego Baukasten',
       al_hero_h2: 'Baue deine <em>Stil-Alter-Egos</em>',
       al_hero_p: 'Für jeden Anlass eine andere Persönlichkeit. Erstelle Alter Egos für deine Garderobe, entwickle sie mit Scans weiter und verdiene XP für dein Stilbewusstsein!',
@@ -38252,6 +38264,9 @@ applyOfflineState(!navigator.onLine);
 (function() {
   'use strict';
 
+  // Local alias for current language
+  function _lang() { return (typeof window.getLang === 'function') ? window.getLang() : 'en'; }
+
   var STORAGE_KEY = 'datescan.alteregos';
 
   // ─── Data Layer ───
@@ -38436,28 +38451,28 @@ applyOfflineState(!navigator.onLine);
 
     if (a.items.length === 0) {
       // Empty closet
-      fb = currentLang==='de' ? _oName + ' hat noch keine Kleidung! Füge Kleidungsstücke zum Schrank hinzu, um eine bessere Bewertung zu bekommen. Beginne mit den Basics: Oberteil, Unterteil und Schuhe.'
-         : currentLang==='hu' ? _oName + ' szekrénye még üres! Adj hozzá ruhadarabokat a jobb eredményhez. Kezdd az alapokkal: felső, alsó és cipő.'
+      fb = _lang()==='de' ? _oName + ' hat noch keine Kleidung! Füge Kleidungsstücke zum Schrank hinzu, um eine bessere Bewertung zu bekommen. Beginne mit den Basics: Oberteil, Unterteil und Schuhe.'
+         : _lang()==='hu' ? _oName + ' szekrénye még üres! Adj hozzá ruhadarabokat a jobb eredményhez. Kezdd az alapokkal: felső, alsó és cipő.'
          : _oName + '\'s closet is empty! Add items to get a better score. Start with the basics: top, bottom, and shoes.';
     } else if (ov >= 85) {
-      fb = currentLang==='de' ? _oName + ' ist perfekt ausgestattet für «' + occLabel + '»! Die Garderobe hat alles — Farbharmonie, Vielfalt und Tiefe. Bereit für jeden Anlass!'
-         : currentLang==='hu' ? _oName + ' tökéletesen felszerelt a «' + occLabel + '» alkalomra! A szekrény mindent tartalmaz — színharmonia, változatosság és mélység. Bármire kész!'
+      fb = _lang()==='de' ? _oName + ' ist perfekt ausgestattet für «' + occLabel + '»! Die Garderobe hat alles — Farbharmonie, Vielfalt und Tiefe. Bereit für jeden Anlass!'
+         : _lang()==='hu' ? _oName + ' tökéletesen felszerelt a «' + occLabel + '» alkalomra! A szekrény mindent tartalmaz — színharmonia, változatosság és mélység. Bármire kész!'
          : _oName + ' is perfectly equipped for «' + occLabel + '»! The wardrobe has it all — color harmony, variety, and depth. Ready for anything!';
     } else if (wardrobeResult.missing.length > 0) {
-      fb = currentLang==='de' ? _oName + ' fehlt noch: ' + missingLabels.join(', ') + ' für «' + occLabel + '». Füge diese Kategorie(n) hinzu, um deine Bewertung deutlich zu verbessern!'
-         : currentLang==='hu' ? _oName + ' szekrényéből hiányzik: ' + missingLabels.join(', ') + ' a «' + occLabel + '» alkalomhoz. Add hozzá ezeket a kategóriákat a nagyobb pontszámért!'
+      fb = _lang()==='de' ? _oName + ' fehlt noch: ' + missingLabels.join(', ') + ' für «' + occLabel + '». Füge diese Kategorie(n) hinzu, um deine Bewertung deutlich zu verbessern!'
+         : _lang()==='hu' ? _oName + ' szekrényéből hiányzik: ' + missingLabels.join(', ') + ' a «' + occLabel + '» alkalomhoz. Add hozzá ezeket a kategóriákat a nagyobb pontszámért!'
          : _oName + ' is missing: ' + missingLabels.join(', ') + ' for «' + occLabel + '». Add these categories to boost your score significantly!';
     } else if (cs < 50) {
-      fb = currentLang==='de' ? 'Die Grundkategorien sind abgedeckt, ' + _oName + '! Tipp: Füge Farbinfos zu deinen Kleidungsstücken hinzu und achte auf eine Basis aus neutralen Farben (schwarz, weiß, grau) mit 1-2 Akzentfarben.'
-         : currentLang==='hu' ? 'Az alapkategóriák megvannak, ' + _oName + '! Tipp: Adj meg színeket a ruhadarabjaidhoz, és építs egy neutrális alapot (fekete, fehér, szürke) 1-2 akcentszínnel.'
+      fb = _lang()==='de' ? 'Die Grundkategorien sind abgedeckt, ' + _oName + '! Tipp: Füge Farbinfos zu deinen Kleidungsstücken hinzu und achte auf eine Basis aus neutralen Farben (schwarz, weiß, grau) mit 1-2 Akzentfarben.'
+         : _lang()==='hu' ? 'Az alapkategóriák megvannak, ' + _oName + '! Tipp: Adj meg színeket a ruhadarabjaidhoz, és építs egy neutrális alapot (fekete, fehér, szürke) 1-2 akcentszínnel.'
          : 'The basic categories are covered, ' + _oName + '! Tip: Add color info to your items and build a neutral base (black, white, grey) with 1-2 accent colors.';
     } else if (ds < 60) {
-      fb = currentLang==='de' ? 'Gute Farbauswahl, ' + _oName + '! Für «' + occLabel + '» brauchst du mehr Optionen. Füge pro Kategorie mindestens 2 Teile hinzu, damit du Outfits kombinieren kannst.'
-         : currentLang==='hu' ? 'Jó a színválasztás, ' + _oName + '! A «' + occLabel + '» alkalomhoz több opció kell. Adj hozzá kategóriánként legalább 2 darabot, hogy outfit-öket kombinálhass.'
+      fb = _lang()==='de' ? 'Gute Farbauswahl, ' + _oName + '! Für «' + occLabel + '» brauchst du mehr Optionen. Füge pro Kategorie mindestens 2 Teile hinzu, damit du Outfits kombinieren kannst.'
+         : _lang()==='hu' ? 'Jó a színválasztás, ' + _oName + '! A «' + occLabel + '» alkalomhoz több opció kell. Adj hozzá kategóriánként legalább 2 darabot, hogy outfit-öket kombinálhass.'
          : 'Good color choices, ' + _oName + '! For «' + occLabel + '» you need more options. Add at least 2 items per category so you can mix and match outfits.';
     } else {
-      fb = currentLang==='de' ? 'Solide Garderobe, ' + _oName + '! Um die 90+ zu erreichen, erweitere mit Accessoires und experimentiere mit kontrastierenden Farben.'
-         : currentLang==='hu' ? 'Stabil szekrény, ' + _oName + '! A 90+ pontszámhoz bővíts kiegészítőkkel és kísérletezz kontrasztos színekkel.'
+      fb = _lang()==='de' ? 'Solide Garderobe, ' + _oName + '! Um die 90+ zu erreichen, erweitere mit Accessoires und experimentiere mit kontrastierenden Farben.'
+         : _lang()==='hu' ? 'Stabil szekrény, ' + _oName + '! A 90+ pontszámhoz bővíts kiegészítőkkel és kísérletezz kontrasztos színekkel.'
          : 'Solid wardrobe, ' + _oName + '! To reach 90+, expand with accessories and experiment with contrasting colors.';
     }
 
@@ -38688,13 +38703,23 @@ applyOfflineState(!navigator.onLine);
       body.innerHTML = resultHtml +
         '<div style="margin-bottom:16px"><p style="font-size:10px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">' + t('al_occasion_label') + '</p>' +
         '<div style="display:flex;flex-wrap:wrap;gap:8px">' + occHtml + '</div></div>' +
-        '<button onclick="window._alRunScan(\'' + a.id + '\')" style="width:100%;height:52px;border-radius:16px;border:none;background:linear-gradient(90deg,#ec4899,#9333ea);color:#fff;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(236,72,153,0.3);display:flex;align-items:center;justify-content:center;gap:8px">' + t('al_scan_btn') + '</button>' +
+        (a.items.length >= 3 ?
+          '<button onclick="window._alRunScan(\'' + a.id + '\')" style="width:100%;height:52px;border-radius:16px;border:none;background:linear-gradient(90deg,#ec4899,#9333ea);color:#fff;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(236,72,153,0.3);display:flex;align-items:center;justify-content:center;gap:8px">' + t('al_scan_btn') + '</button>'
+        :
+          '<div style="text-align:center;padding:24px 16px;border-radius:16px;background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.1)">' +
+            '<p style="font-size:28px;margin-bottom:8px">📦</p>' +
+            '<p style="font-size:13px;color:#9ca3af;line-height:1.5;margin-bottom:12px">' + t('al_scan_need_items') + '</p>' +
+            '<div style="width:100%;height:6px;border-radius:3px;background:rgba(255,255,255,0.06);margin-bottom:8px"><div style="height:100%;border-radius:3px;width:' + Math.round(a.items.length/3*100) + '%;background:linear-gradient(90deg,#ec4899,#9333ea);transition:width 0.4s"></div></div>' +
+            '<p style="font-size:11px;color:#6b7280;margin-bottom:12px">' + a.items.length + ' / 3 ' + t('al_stat_items') + '</p>' +
+            '<button onclick="window._alSwitchTab(\'' + a.id + '\',\'closet\')" style="padding:10px 24px;border-radius:12px;border:1px solid rgba(236,72,153,0.3);background:rgba(236,72,153,0.1);color:#f9a8d4;font-size:12px;font-weight:600;cursor:pointer">' + t('al_scan_need_items_btn') + '</button>' +
+          '</div>'
+        ) +
         (a.scans.length > 0 ?
           '<div style="margin-top:16px"><p style="font-size:10px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">' + t('al_scan_history') + '</p>' +
           a.scans.slice(0, 5).map(function(s) {
             return '<div style="display:flex;align-items:center;gap:12px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);padding:10px;margin-bottom:6px">' +
               '<div style="font-size:18px;font-weight:700;color:#fff;font-variant-numeric:tabular-nums">' + s.overallScore + '</div>' +
-              '<div style="flex:1;min-width:0"><p style="font-size:11px;color:#e5e7eb;font-weight:500">' + (s.vibeLabel || '') + '</p><p style="font-size:9px;color:#6b7280">' + new Date(s.createdAt).toLocaleDateString(window.LOCALE_MAP && window.LOCALE_MAP[currentLang] || 'hu-HU') + '</p></div>' +
+              '<div style="flex:1;min-width:0"><p style="font-size:11px;color:#e5e7eb;font-weight:500">' + (s.vibeLabel || '') + '</p><p style="font-size:9px;color:#6b7280">' + new Date(s.createdAt).toLocaleDateString(window.LOCALE_MAP && window.LOCALE_MAP[_lang()] || 'hu-HU') + '</p></div>' +
               '<span style="font-size:9px;padding:3px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);color:#9ca3af">+' + s.xpEarned + ' XP</span></div>';
           }).join('') + '</div>'
         : '');
@@ -38881,14 +38906,21 @@ applyOfflineState(!navigator.onLine);
   };
 
   window._alRunScan = function(id) {
-    var occasion = window._alScanOcc || 'casual';
-    var result = runScan(id, occasion);
-    if (!result) return;
+    try {
+      console.log('[Alteregó] runScan called for:', id);
+      var occasion = window._alScanOcc || 'casual';
+      var result = runScan(id, occasion);
+      console.log('[Alteregó] runScan result:', result);
+      if (!result) { console.warn('[Alteregó] runScan returned null'); return; }
 
-    // Show result inline
-    window._alLastScanResult = result;
-    _currentTab = 'scan';
-    renderDetail(id);
+      // Show result inline
+      window._alLastScanResult = result;
+      _currentTab = 'scan';
+      renderDetail(id);
+
+      // Scroll modal body to top so user sees result
+      var mb = document.getElementById('alDetailBody');
+      if (mb) mb.scrollTop = 0;
 
     // Celebration if leveled up
     if (result.leveledUp) {
@@ -38906,6 +38938,17 @@ applyOfflineState(!navigator.onLine);
         cel.classList.add('show');
       }
     }
+    } catch(err) {
+      console.error('[Alteregó] _alRunScan error:', err);
+      // error logged to console
+    }
+  };
+
+  window._alSwitchTab = function(id, tab) {
+    _currentTab = tab;
+    var tabs = document.querySelectorAll('#alDetailTabs .al-tab');
+    tabs.forEach(function(el) { el.classList.toggle('active', el.getAttribute('data-tab') === tab); });
+    _renderTab();
   };
 
   window._alAddItem = function(id) {
@@ -39059,7 +39102,11 @@ applyOfflineState(!navigator.onLine);
 
   // Re-render on language change
   window.addEventListener('langchange', function() {
-    try { renderGrid(); } catch(e) {}
+    try {
+      renderGrid();
+      var bt = document.getElementById('alBrandTitle');
+      if (bt) bt.innerHTML = t('al_brand') + '<span style="color:#ec4899">.</span>';
+    } catch(e) {}
   });
 
   _dsLog && _dsLog('[Alteregó Lab] Module loaded');
