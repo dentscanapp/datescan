@@ -1090,8 +1090,12 @@ window._dsLog = function() { if (window.__DS_DEBUG) console.log.apply(console, a
   }
   .scorecal-weekday-cell {
     text-align: center;
-    font-size: 11px;
+    font-size: 9px;
     font-weight: 600;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     text-transform: uppercase;
     letter-spacing: 0.14em;
     color: #6b7280;
@@ -3236,7 +3240,8 @@ if (window.__DS_IS_ANDROID_APP) {
   body:has(#dateOutfitModal:not(.hidden)) #mobileBottomNav,
   body:has(#weeklyPlannerModal:not(.hidden)) #mobileBottomNav,
   body:has(#styleProfileModal:not(.hidden)) #mobileBottomNav,
-  body:has(#trendRadarModal:not(.hidden)) #mobileBottomNav {
+  body:has(#trendRadarModal:not(.hidden)) #mobileBottomNav,
+  body:has(#ocalDayModal:not(.hidden)) #mobileBottomNav {
     display: none !important;
   }
   /* Hide header (PNT / PRO / lang icons) when modals are open so
@@ -3264,7 +3269,9 @@ if (window.__DS_IS_ANDROID_APP) {
   body:has(#styleProfileModal:not(.hidden)) > header,
   body:has(#styleProfileModal:not(.hidden)) > #langSelectorDropdown,
   body:has(#trendRadarModal:not(.hidden)) > header,
-  body:has(#trendRadarModal:not(.hidden)) > #langSelectorDropdown {
+  body:has(#trendRadarModal:not(.hidden)) > #langSelectorDropdown,
+  body:has(#ocalDayModal:not(.hidden)) > header,
+  body:has(#ocalDayModal:not(.hidden)) > #langSelectorDropdown {
     visibility: hidden !important;
     pointer-events: none !important;
   }
@@ -4399,6 +4406,91 @@ if (window.__DS_IS_ANDROID_APP) {
   #viewAlterego .al-how-title{font-size:11px;font-weight:700;color:#fff;margin-bottom:4px}
   #viewAlterego .al-how-desc{font-size:10px;color:#9ca3af;line-height:1.5}
 
+  /* ===== Outfit Calendar / Planner ===== */
+  .ocal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+  .ocal-title{font-size:1rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px}
+  .ocal-nav-group{display:flex;align-items:center;gap:6px}
+  .ocal-today-btn{font-size:10px;font-weight:700;padding:5px 12px;border-radius:8px;background:rgba(236,72,153,0.15);border:1px solid rgba(236,72,153,0.3);color:#f472b6;cursor:pointer;transition:all .15s;text-transform:uppercase;letter-spacing:.05em}
+  .ocal-today-btn:hover{background:rgba(236,72,153,0.25)}
+  .ocal-month-label{font-size:12px;font-weight:700;color:#fff;min-width:110px;text-align:center;text-transform:uppercase;letter-spacing:.05em}
+  .ocal-nav-btn{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#d1d5db;font-size:16px;font-weight:700;cursor:pointer;transition:all .15s}
+  .ocal-nav-btn:hover{background:rgba(236,72,153,0.15);border-color:rgba(236,72,153,0.3);color:#f472b6}
+  .ocal-nav-btn:active{transform:scale(.95)}
+
+  .ocal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px}
+  .ocal-weekday{text-align:center;font-size:8px;font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.05em;padding:6px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.2}
+
+  .ocal-date-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+  .ocal-day{position:relative;aspect-ratio:1;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;border:1px solid transparent;background:rgba(255,255,255,0.02);gap:2px;overflow:hidden}
+  .ocal-day:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1)}
+  .ocal-day--empty{cursor:default;opacity:.3;pointer-events:none}
+  .ocal-day--today{border-color:rgba(236,72,153,0.4);background:rgba(236,72,153,0.08)}
+  .ocal-day--today:hover{background:rgba(236,72,153,0.15)}
+  .ocal-day--selected{border-color:rgba(236,72,153,0.7)!important;background:rgba(236,72,153,0.18)!important;box-shadow:0 0 12px rgba(236,72,153,0.2)}
+  .ocal-day--has-plan{border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.06)}
+  .ocal-day--has-outfit{border-color:rgba(168,85,247,0.3);background:rgba(168,85,247,0.06)}
+  .ocal-day--repeat-warn{border-color:rgba(245,158,11,0.4)!important;background:rgba(245,158,11,0.08)!important}
+
+  .ocal-day-num{font-size:11px;font-weight:700;color:#fff;line-height:1}
+  .ocal-day--empty .ocal-day-num{color:rgba(255,255,255,0.15)}
+  .ocal-day-weather{font-size:8px;color:rgba(147,197,253,0.8);line-height:1}
+  .ocal-day-dots{display:flex;gap:2px;position:absolute;bottom:4px}
+  .ocal-dot{width:4px;height:4px;border-radius:50%}
+  .ocal-dot--plan{background:#34d399}
+  .ocal-dot--outfit{background:#a855f7}
+  .ocal-dot--warn{background:#fbbf24}
+  .ocal-dot--date{background:#ec4899}
+
+  /* Day detail modal */
+  #ocalDayModal .ocal-modal{background:#0c0c10;border:1px solid rgba(255,255,255,0.1);border-radius:20px;width:100%;max-width:480px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column}
+  #ocalDayModal .ocal-modal-head{padding:20px 20px 12px;position:relative;border-bottom:1px solid rgba(255,255,255,0.06)}
+  #ocalDayModal .ocal-modal-body{padding:16px 20px 20px;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+  .ocal-event-type-btn{padding:8px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:#9ca3af;flex:1;justify-content:center}
+  .ocal-event-type-btn:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.15)}
+  .ocal-event-type-btn.sel{border-color:rgba(236,72,153,0.5);background:rgba(236,72,153,0.15);color:#f472b6}
+  .ocal-event-type-btn[data-type="date"] .ocal-evt-icon{color:#ec4899}
+  .ocal-event-type-btn[data-type="business"] .ocal-evt-icon{color:#3b82f6}
+  .ocal-event-type-btn[data-type="casual"] .ocal-evt-icon{color:#34d399}
+  .ocal-event-type-btn[data-type="party"] .ocal-evt-icon{color:#a855f7}
+  .ocal-event-type-btn[data-type="workout"] .ocal-evt-icon{color:#f97316}
+
+  .ocal-outfit-pick{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);cursor:pointer;transition:all .15s}
+  .ocal-outfit-pick:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12)}
+  .ocal-outfit-pick.sel{border-color:rgba(236,72,153,0.5);background:rgba(236,72,153,0.1)}
+  .ocal-outfit-pick img{width:48px;height:48px;border-radius:10px;object-fit:cover}
+  .ocal-outfit-pick .info{flex:1;min-width:0}
+  .ocal-outfit-pick .name{font-size:12px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ocal-outfit-pick .meta{font-size:10px;color:#9ca3af;margin-top:2px}
+
+  .ocal-weather-bar{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.15);font-size:12px;color:#93c5fd}
+  .ocal-weather-bar .temp{font-size:18px;font-weight:800;color:#fff}
+
+  .ocal-repeat-warn{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);font-size:11px;color:#fcd34d}
+
+  .ocal-upcoming-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);transition:all .15s;cursor:pointer}
+  .ocal-upcoming-item:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12)}
+  .ocal-upcoming-item .date-col{min-width:44px;text-align:center}
+  .ocal-upcoming-item .date-day{font-size:20px;font-weight:800;color:#fff;line-height:1}
+  .ocal-upcoming-item .date-month{font-size:9px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+  .ocal-upcoming-item .info-col{flex:1;min-width:0}
+  .ocal-upcoming-item .event-type{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+  .ocal-upcoming-item .event-label{font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ocal-upcoming-item .event-weather{font-size:10px;color:#93c5fd;margin-top:2px}
+  .ocal-upcoming-item .outfit-thumb{width:40px;height:40px;border-radius:10px;object-fit:cover}
+
+  .ocal-tabs{display:flex;gap:4px;margin-bottom:16px}
+  .ocal-tab{flex:1;padding:8px 12px;border-radius:10px;font-size:11px;font-weight:700;text-align:center;cursor:pointer;transition:all .15s;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);color:#9ca3af}
+  .ocal-tab:hover{background:rgba(255,255,255,0.08)}
+  .ocal-tab.active{background:rgba(236,72,153,0.15);border-color:rgba(236,72,153,0.3);color:#f472b6}
+
+  .ocal-empty-state{text-align:center;padding:32px 16px}
+  .ocal-empty-state .icon{font-size:2rem;margin-bottom:12px;opacity:.5}
+  .ocal-empty-state .msg{font-size:13px;color:#9ca3af;line-height:1.5}
+
+  /* Save to calendar CTA on scan result */
+  .scan-save-calendar-btn{width:100%;padding:12px;border-radius:12px;border:1px solid rgba(16,185,129,0.3);background:rgba(16,185,129,0.08);color:#34d399;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px}
+  .scan-save-calendar-btn:hover{background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.4)}
+
   /* SIQ Edit Modal — lives outside #viewShopping for z-index reasons */
   #siqEditModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:200;align-items:center;justify-content:center;padding:20px}
   #siqEditModal.show{display:flex}
@@ -4411,6 +4503,76 @@ if (window.__DS_IS_ANDROID_APP) {
   #siqEditModal .siq-btn:active{transform:scale(.96)}
   #siqEditModal .siq-btn-primary{background:linear-gradient(135deg,#ec4899,#9333ea);color:#fff;box-shadow:0 4px 14px rgba(236,72,153,0.3)}
   #siqEditModal .siq-btn-outline{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5)}
+
+  /* ===== Second Date / Randi Utáni Reflekszió ===== */
+  .sd-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+  .sd-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:600;background:linear-gradient(135deg,#f472b6,#c084fc);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sd-close-btn{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s}
+  .sd-close-btn:hover{background:rgba(255,255,255,0.1);color:#fff}
+  .sd-tabs{display:flex;gap:4px;margin-bottom:20px;background:rgba(255,255,255,0.03);border-radius:14px;padding:4px;border:1px solid rgba(255,255,255,0.06)}
+  .sd-tab{flex:1;padding:10px 8px;border-radius:10px;font-size:11px;font-weight:700;text-align:center;cursor:pointer;transition:.2s;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.06em;border:none;background:none}
+  .sd-tab:hover{color:rgba(255,255,255,0.6);background:rgba(255,255,255,0.03)}
+  .sd-tab.active{background:linear-gradient(135deg,rgba(236,72,153,0.15),rgba(168,85,247,0.15));color:#f9a8d4;border:1px solid rgba(236,72,153,0.2)}
+  .sd-panel{display:none}.sd-panel.active{display:block}
+  .sd-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:16px;margin-bottom:12px;transition:.2s}
+  .sd-card:hover{border-color:rgba(236,72,153,0.2)}
+  .sd-card-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .sd-card-subtitle{font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:12px}
+  .sd-stars{display:flex;gap:6px;margin:12px 0}
+  .sd-star{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;font-size:18px;color:rgba(255,255,255,0.2)}
+  .sd-star:hover,.sd-star.lit{background:linear-gradient(135deg,rgba(251,191,36,0.2),rgba(234,179,8,0.2));border-color:rgba(251,191,36,0.4);color:#fbbf24}
+  .sd-correlation-bar{height:8px;border-radius:4px;background:rgba(255,255,255,0.05);overflow:hidden;margin:6px 0 2px}
+  .sd-correlation-fill{height:100%;border-radius:4px;transition:width .6s ease}
+  .sd-grooming-item{display:flex;align-items:center;gap:12px;padding:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;margin-bottom:8px}
+  .sd-grooming-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+  .sd-grooming-info{flex:1;min-width:0}
+  .sd-grooming-label{font-size:13px;font-weight:600;color:#fff}
+  .sd-grooming-meta{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px}
+  .sd-grooming-actions{display:flex;gap:6px;flex-shrink:0}
+  .sd-grooming-btn{padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:.2s;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.5)}
+  .sd-grooming-btn:hover{background:rgba(255,255,255,0.1);color:#fff}
+  .sd-grooming-btn.primary{background:linear-gradient(135deg,rgba(236,72,153,0.2),rgba(168,85,247,0.2));border-color:rgba(236,72,153,0.3);color:#f9a8d4}
+  .sd-share-link{display:flex;align-items:center;gap:10px;padding:14px;background:rgba(255,255,255,0.03);border:1px dashed rgba(236,72,153,0.3);border-radius:12px;margin-top:12px}
+  .sd-share-link input{flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 12px;color:#fff;font-size:12px;font-family:ui-monospace,monospace;outline:none}
+  .sd-share-link input:focus{border-color:rgba(236,72,153,0.4)}
+  .sd-share-copy{padding:8px 14px;border-radius:8px;background:linear-gradient(135deg,rgba(236,72,153,0.2),rgba(168,85,247,0.2));border:1px solid rgba(236,72,153,0.3);color:#f9a8d4;font-size:11px;font-weight:700;cursor:pointer;transition:.2s;white-space:nowrap}
+  .sd-share-copy:hover{background:linear-gradient(135deg,rgba(236,72,153,0.3),rgba(168,85,247,0.3))}
+  .sd-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+  .sd-badge--date{background:rgba(236,72,153,0.15);color:#f472b6;border:1px solid rgba(236,72,153,0.25)}
+  .sd-badge--business{background:rgba(59,130,246,0.15);color:#60a5fa;border:1px solid rgba(59,130,246,0.25)}
+  .sd-badge--casual{background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.25)}
+  .sd-empty-state{text-align:center;padding:40px 20px;color:rgba(255,255,255,0.3)}
+  .sd-empty-state .sd-empty-icon{font-size:48px;margin-bottom:12px;opacity:.5}
+  .sd-empty-state .sd-empty-title{font-size:16px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:6px}
+  .sd-empty-state .sd-empty-desc{font-size:12px;color:rgba(255,255,255,0.3);max-width:260px;margin:0 auto}
+  .sd-insight-card{background:linear-gradient(135deg,rgba(236,72,153,0.08),rgba(168,85,247,0.08));border:1px solid rgba(236,72,153,0.15);border-radius:14px;padding:16px;margin-bottom:12px}
+  .sd-insight-card .sd-insight-emoji{font-size:28px;margin-bottom:8px}
+  .sd-insight-card .sd-insight-text{font-size:13px;color:rgba(255,255,255,0.7);line-height:1.5}
+  .sd-insight-card .sd-insight-highlight{color:#f472b6;font-weight:700}
+  .sd-date-list-item{display:flex;align-items:center;gap:12px;padding:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;margin-bottom:8px;cursor:pointer;transition:.2s}
+  .sd-date-list-item:hover{background:rgba(255,255,255,0.05);border-color:rgba(236,72,153,0.2)}
+  .sd-date-list-item .sd-dli-score{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;flex-shrink:0}
+  .sd-date-list-item .sd-dli-info{flex:1;min-width:0}
+  .sd-date-list-item .sd-dli-date{font-size:13px;font-weight:600;color:#fff}
+  .sd-date-list-item .sd-dli-detail{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px}
+  .sd-date-list-item .sd-dli-stars{font-size:12px;letter-spacing:2px}
+  .sd-form-group{margin-bottom:14px}
+  .sd-form-group label{display:block;font-size:11px;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+  .sd-form-input{width:100%;padding:10px 14px;font-size:13px;font-weight:500;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#fff;outline:none;transition:.2s}
+  .sd-form-input:focus{border-color:rgba(236,72,153,0.4);box-shadow:0 0 0 3px rgba(236,72,153,0.1)}
+  .sd-form-select{appearance:none;-webkit-appearance:none;width:100%;padding:10px 14px;font-size:13px;font-weight:500;border-radius:10px;background:rgba(255,255,255,0.05) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23999' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E") no-repeat right 12px center;border:1px solid rgba(255,255,255,0.1);color:#fff;outline:none;transition:.2s}
+  .sd-form-select:focus{border-color:rgba(236,72,153,0.4)}
+  .sd-form-select option{background:#1a1a2e;color:#fff}
+  .sd-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:700;padding:10px 18px;border-radius:12px;transition:.2s;letter-spacing:.02em;border:none;cursor:pointer}
+  .sd-btn:active{transform:scale(.96)}
+  .sd-btn-primary{background:linear-gradient(135deg,#ec4899,#9333ea);color:#fff;box-shadow:0 4px 14px rgba(236,72,153,0.3)}
+  .sd-btn-outline{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5)}
+  .sd-btn-outline:hover{background:rgba(255,255,255,0.1);color:#fff}
+  #sdSurveyModal .sd-modal{background:#0c0c10;border:1px solid rgba(255,255,255,0.1);border-radius:20px;width:100%;max-width:440px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column}
+  #sdSurveyModal .sd-modal-head{padding:20px 20px 12px;border-bottom:1px solid rgba(255,255,255,0.06)}
+  #sdSurveyModal .sd-modal-body{padding:16px 20px 20px;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+  body:has(#sdSurveyModal:not(.hidden)) #mobileBottomNav,
+  body:has(#sdGroomingModal:not(.hidden)) #mobileBottomNav{display:none!important}
 
 </style>
 
@@ -4776,7 +4938,7 @@ if (window.__DS_IS_ANDROID_APP) {
 <!-- Onboarding Modal — REMOVED (not needed) -->
 
 <!-- Header -->
-<header class="relative z-[110] px-6 py-5 flex items-center justify-between max-w-7xl mx-auto">
+<header class="sticky top-0 z-[110] px-6 py-5 flex items-center justify-between max-w-7xl mx-auto bg-[#09090b]/95 backdrop-blur-xl">
   <div class="flex items-center gap-3 cursor-pointer" id="logoBtn">
     <div class="w-12 h-12 flex items-center justify-center shrink-0">
       <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-[0_0_8px_rgba(236,72,153,0.4)]">
@@ -4869,7 +5031,7 @@ if (window.__DS_IS_ANDROID_APP) {
   <!-- Populated by JS from getSupportedLangs() -->
 </div>
 
-<main class="relative z-20 px-4 sm:px-6 pb-12 max-w-7xl mx-auto overflow-hidden">
+<main class="relative z-20 px-4 sm:px-6 pb-28 max-w-7xl mx-auto overflow-hidden">
   
   <!-- SCANNER & RESULTS VIEW -->
   <div id="viewScanner" class="transition-all duration-500 block">
@@ -5669,7 +5831,7 @@ if (window.__DS_IS_ANDROID_APP) {
   </div>
 
   <!-- DIGITAL CLOSET VIEW -->
-  <div id="viewCloset" class="hidden opacity-0 translate-y-8 transition-all duration-500 pb-12 pt-4">
+  <div id="viewCloset" class="hidden opacity-0 translate-y-8 transition-all duration-500 pb-28 pt-6">
       <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
          <div>
             <h2 class="font-serif text-3xl md:text-4xl font-medium mb-2 leading-tight" data-i18n="closet_title">Digital Closet</h2>
@@ -5715,6 +5877,14 @@ if (window.__DS_IS_ANDROID_APP) {
             <button id="closetAlteregoBtn" class="lg:hidden px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-gradient-to-r from-pink-500/20 to-fuchsia-500/20 border border-pink-500/30 text-pink-300 hover:from-pink-500/30 hover:to-fuchsia-500/30 active:scale-[0.98] transition" title="Alteregó Lab" onclick="if(typeof window.toggleView==='function')window.toggleView('alterego')">
                <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
                <span data-i18n="al_brand_short">Alteregó</span>
+            </button>
+            <button id="closetOutfitCalendarBtn" class="px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-amber-300 hover:from-amber-500/30 hover:to-orange-500/30 active:scale-[0.98] transition" title="Outfit Naptár / Tervező" onclick="if(typeof window.toggleView==='function')window.toggleView('outfitcalendar')">
+               <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+               <span data-i18n="nav_calendar">Naptár</span>
+            </button>
+            <button id="closetSecondDateBtn" class="px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center flex-1 md:flex-none md:px-4 md:py-2.5 md:rounded-xl md:text-sm bg-gradient-to-r from-rose-500/20 to-purple-500/20 border border-rose-500/30 text-rose-300 hover:from-rose-500/30 hover:to-purple-500/30 active:scale-[0.98] transition" title="Randi Utáni Reflekszió" onclick="if(typeof window.toggleView==='function')window.toggleView('seconddate')">
+               <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+               <span data-i18n="nav_second_date">Reflekszió</span>
             </button>
             <div class="flex gap-1.5 shrink-0 w-full">
                <button id="closetExportBtn" class="flex-1 px-2.5 py-2 rounded-lg text-xs font-bold flex gap-1.5 items-center justify-center md:px-3 md:py-2.5 md:rounded-xl md:text-sm bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-[0.98] transition" title="Export closet backup">
@@ -6810,7 +6980,7 @@ if (window.__DS_IS_ANDROID_APP) {
        coachChatClosetBtn, coachChatAttachments, coachChatSend, chatChips)
        are unchanged — every handler in the chat IIFE still binds to them
        by ID, so no JS rewiring is needed for the move. -->
-  <div id="viewChat" class="hidden opacity-0 translate-y-8 transition-all duration-500 pb-12 pt-4">
+  <div id="viewChat" class="hidden opacity-0 translate-y-8 transition-all duration-500 pb-28 pt-6">
     <div class="max-w-2xl mx-auto w-full">
       <div class="mb-8">
         <h2 data-i18n="coach_title" class="font-serif text-3xl md:text-4xl font-medium mb-2 leading-tight" data-i18n="coach_title">AI Style Coach</h2>
@@ -7083,13 +7253,13 @@ if (window.__DS_IS_ANDROID_APP) {
 
         <!-- Weekday Headers -->
         <div class="scorecal-weekday-row">
-          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_sun">Sun</div>
-          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_mon">Mon</div>
-          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_tue">Tue</div>
-          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_wed">Wed</div>
-          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_thu">Thu</div>
-          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_fri">Fri</div>
-          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_sat">Sat</div>
+          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_sun">Sunday</div>
+          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_mon">Monday</div>
+          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_tue">Tuesday</div>
+          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_wed">Wednesday</div>
+          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_thu">Thursday</div>
+          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_fri">Friday</div>
+          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_sat">Saturday</div>
         </div>
 
         <!-- Date Grid -->
@@ -7131,13 +7301,13 @@ if (window.__DS_IS_ANDROID_APP) {
         </div>
 
         <div class="scorecal-weekday-row">
-          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_sun">Sun</div>
-          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_mon">Mon</div>
-          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_tue">Tue</div>
-          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_wed">Wed</div>
-          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_thu">Thu</div>
-          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_fri">Fri</div>
-          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_sat">Sat</div>
+          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_sun">Sunday</div>
+          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_mon">Monday</div>
+          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_tue">Tuesday</div>
+          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_wed">Wednesday</div>
+          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_thu">Thursday</div>
+          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_fri">Friday</div>
+          <div class="scorecal-weekday-cell" data-i18n="cal_weekday_sat">Saturday</div>
         </div>
 
         <div class="stylecal-date-grid" id="stylecalDateGrid">
@@ -7276,7 +7446,7 @@ if (window.__DS_IS_ANDROID_APP) {
        ═══════════════════════════════════════════════════════ -->
   <svg width="0" height="0" style="position:absolute"><defs><linearGradient id="siqScoreGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ec4899"/><stop offset="100%" stop-color="#9333ea"/></linearGradient></defs></svg>
 
-  <div id="viewShopping" class="hidden opacity-0 translate-y-8 transition-all duration-500 pb-12 pt-4">
+  <div id="viewShopping" class="hidden opacity-0 translate-y-8 transition-all duration-500 pb-28 pt-6">
     <div class="max-w-2xl mx-auto w-full">
 
       <div class="mb-6" style="display:flex;align-items:flex-start;justify-content:space-between">
@@ -7397,6 +7567,304 @@ if (window.__DS_IS_ANDROID_APP) {
     </div>
   </div>
 
+  <!-- ═══════════════════════════════════════════════════════
+       OUTFIT CALENDAR / PLANNER — Outfit Tervező Modul
+       ═══════════════════════════════════════════════════════ -->
+  <div id="viewOutfitCalendar" class="hidden opacity-0 translate-y-8 transition-all duration-500 pb-12 pt-4">
+    <div class="max-w-4xl mx-auto w-full px-2 sm:px-4">
+
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-6 px-2">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-brand-500/20 border border-emerald-500/30 flex items-center justify-center">
+            <svg width="20" height="20" fill="none" stroke="#34d399" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>
+          </div>
+          <div>
+            <h1 class="font-serif text-xl font-semibold text-white">Outfit Calendar<span style="color:#34d399">.</span></h1>
+            <p class="text-[11px] text-gray-400" data-i18n="ocal_subtitle">Tervezd előre, mit veszel fel</p>
+          </div>
+        </div>
+        <button class="w-9 h-9 rounded-full bg-white/5 border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition" onclick="if(typeof window.toggleView==='function')window.toggleView('closet')" aria-label="Close">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- Tabs: Calendar / Upcoming -->
+      <div class="ocal-tabs" id="ocalMainTabs">
+        <button class="ocal-tab active" data-ocal-tab="calendar" onclick="window._ocalSwitchTab('calendar')">
+          <span data-i18n="ocal_tab_calendar">Naptár</span>
+        </button>
+        <button class="ocal-tab" data-ocal-tab="upcoming" onclick="window._ocalSwitchTab('upcoming')">
+          <span data-i18n="ocal_tab_upcoming">Közelgő</span>
+        </button>
+      </div>
+
+      <!-- Calendar Panel -->
+      <div id="ocalPanelCalendar">
+        <!-- Calendar Card -->
+        <div class="premium-glass rounded-[28px] p-4 sm:p-6 relative overflow-hidden mb-6">
+          <div class="glow-orb glow-orb--pink" style="opacity:.4"></div>
+          <div class="glow-orb glow-orb--purple" style="opacity:.3"></div>
+
+          <div class="ocal-header relative z-10">
+            <div class="ocal-title">
+              <svg width="16" height="16" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+              <span data-i18n="ocal_calendar_title">Outfit Naptár</span>
+            </div>
+            <div class="ocal-nav-group">
+              <button class="ocal-today-btn" onclick="typeof window._ocalGoToday==='function'&&window._ocalGoToday()" data-i18n="ocal_today">Ma</button>
+              <button class="ocal-nav-btn" onclick="typeof window._ocalChangeMonth==='function'&&window._ocalChangeMonth(-1)">&#8249;</button>
+              <span class="ocal-month-label" id="ocalMonthLabel"></span>
+              <button class="ocal-nav-btn" onclick="typeof window._ocalChangeMonth==='function'&&window._ocalChangeMonth(1)">&#8250;</button>
+            </div>
+          </div>
+
+          <div class="ocal-weekdays relative z-10" id="ocalWeekdays"></div>
+          <div class="ocal-date-grid relative z-10" id="ocalDateGrid"></div>
+        </div>
+
+        <!-- Quick Tips -->
+        <div class="premium-glass rounded-2xl p-4 mb-6">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-sm">💡</span>
+            <span class="text-xs font-bold text-gray-300" data-i18n="ocal_tips_title">Gyors tippek</span>
+          </div>
+          <div class="space-y-2" id="ocalTipsList">
+            <div class="flex items-start gap-2">
+              <span class="ocal-dot ocal-dot--plan mt-1.5 shrink-0"></span>
+              <span class="text-[11px] text-gray-400" data-i18n="ocal_tip_plan">Zöld pont = tervezett outfit</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="ocal-dot ocal-dot--outfit mt-1.5 shrink-0"></span>
+              <span class="text-[11px] text-gray-400" data-i18n="ocal_tip_outfit">Lila pont = korábbi outfit</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="ocal-dot ocal-dot--warn mt-1.5 shrink-0"></span>
+              <span class="text-[11px] text-gray-400" data-i18n="ocal_tip_repeat">Sárga pont = ismétlődés!</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="ocal-dot ocal-dot--date mt-1.5 shrink-0"></span>
+              <span class="text-[11px] text-gray-400" data-i18n="ocal_tip_date">Rózsaszín pont = randi nap</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upcoming Panel -->
+      <div id="ocalPanelUpcoming" class="hidden">
+        <div class="premium-glass rounded-[28px] p-4 sm:p-6 relative overflow-hidden mb-6">
+          <div class="glow-orb glow-orb--pink" style="opacity:.3"></div>
+          <h3 class="font-serif text-lg font-semibold text-white mb-4 relative z-10" data-i18n="ocal_upcoming_title">Közelgő események</h3>
+          <div id="ocalUpcomingList" class="space-y-3 relative z-10"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Outfit Calendar — Day Detail Modal -->
+  <div id="ocalDayModal" class="hidden fixed inset-0 z-[115] bg-black/85 backdrop-blur-md flex items-center justify-center p-4" style="z-index:120">
+    <div class="ocal-modal">
+      <div class="ocal-modal-head">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="font-serif text-xl font-semibold text-white" id="ocalModalDate"></h3>
+            <p class="text-[11px] text-gray-400 mt-1" id="ocalModalSub"></p>
+          </div>
+          <button id="ocalDayModalClose" type="button" class="w-8 h-8 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition" aria-label="Close">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="ocal-modal-body" id="ocalModalBody">
+        <!-- Dynamic content rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECOND DATE / RANDI UTÁNI REFLEKSZIÓ — Modul
+       ═══════════════════════════════════════════════════════ -->
+  <div id="viewSecondDate" class="hidden opacity-0 translate-y-8 transition-all duration-500 pb-12 pt-4">
+    <div class="max-w-4xl mx-auto w-full px-2 sm:px-4">
+
+      <!-- Header -->
+      <div class="sd-header">
+        <div>
+          <h2 class="sd-title" data-i18n="sd_title">Randi Utáni Reflekszió</h2>
+          <p class="text-[11px] text-gray-400 mt-1" data-i18n="sd_subtitle">Tanulj a múltból, készülj a következő randira</p>
+        </div>
+        <button class="sd-close-btn" onclick="if(typeof window.toggleView==='function')window.toggleView('closet')" aria-label="Close">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- Tabs -->
+      <div class="sd-tabs" id="sdTabs">
+        <button class="sd-tab active" data-sd-tab="reflections" data-i18n="sd_tab_reflections">Refleksziók</button>
+        <button class="sd-tab" data-sd-tab="insights" data-i18n="sd_tab_insights">Meglátások</button>
+        <button class="sd-tab" data-sd-tab="grooming" data-i18n="sd_tab_grooming">Ápolás</button>
+      </div>
+
+      <!-- Panel: Reflections -->
+      <div class="sd-panel active" id="sdPanelReflections">
+        <div class="sd-card">
+          <div class="sd-card-title">
+            <span>📝</span>
+            <span data-i18n="sd_new_reflection">Új randi reflekszió</span>
+          </div>
+          <div class="sd-card-subtitle" data-i18n="sd_new_reflection_desc">Hogyan érezted magad az outfitben a randin?</div>
+
+          <div class="sd-form-group">
+            <label data-i18n="sd_form_date">Randi dátuma</label>
+            <input type="date" class="sd-form-input" id="sdReflectDate">
+          </div>
+
+          <div class="sd-form-group">
+            <label data-i18n="sd_form_event_type">Esemény típusa</label>
+            <select class="sd-form-select" id="sdReflectEventType">
+              <option value="date" data-i18n="sd_event_date">Randi</option>
+              <option value="business" data-i18n="sd_event_business">Üzleti meeting</option>
+              <option value="casual" data-i18n="sd_event_casual">Casual</option>
+              <option value="party" data-i18n="sd_event_party">Buli</option>
+            </select>
+          </div>
+
+          <div class="sd-form-group">
+            <label data-i18n="sd_form_outfit">Mit viseltél?</label>
+            <select class="sd-form-select" id="sdReflectOutfit">
+              <option value="" data-i18n="sd_select_outfit">Válassz outfitet a szekrényből...</option>
+            </select>
+          </div>
+
+          <div class="sd-form-group">
+            <label data-i18n="sd_form_comfort">Milyen kényelmes volt az outfit? (1-5 csillag)</label>
+            <div class="sd-stars" id="sdComfortStars">
+              <span class="sd-star" data-val="1">★</span>
+              <span class="sd-star" data-val="2">★</span>
+              <span class="sd-star" data-val="3">★</span>
+              <span class="sd-star" data-val="4">★</span>
+              <span class="sd-star" data-val="5">★</span>
+            </div>
+          </div>
+
+          <div class="sd-form-group">
+            <label data-i18n="sd_form_confidence">Mennyire érezted magad magabiztosnak? (1-5 csillag)</label>
+            <div class="sd-stars" id="sdConfidenceStars">
+              <span class="sd-star" data-val="1">★</span>
+              <span class="sd-star" data-val="2">★</span>
+              <span class="sd-star" data-val="3">★</span>
+              <span class="sd-star" data-val="4">★</span>
+              <span class="sd-star" data-val="5">★</span>
+            </div>
+          </div>
+
+          <div class="sd-form-group">
+            <label data-i18n="sd_form_notes">Megjegyzések</label>
+            <textarea class="sd-form-input" id="sdReflectNotes" rows="3" data-i18n-placeholder="sd_notes_placeholder" placeholder="Mit mondtak? Mi volt a reakció?"></textarea>
+          </div>
+
+          <button class="sd-btn sd-btn-primary w-full" id="sdSaveReflection" data-i18n="sd_save_reflection">Reflekszió mentése</button>
+        </div>
+
+        <!-- Past reflections list -->
+        <div id="sdReflectionsList"></div>
+      </div>
+
+      <!-- Panel: Insights (Correlation + Second Date Prep) -->
+      <div class="sd-panel" id="sdPanelInsights">
+        <div id="sdInsightsContent">
+          <!-- Dynamically rendered -->
+        </div>
+      </div>
+
+      <!-- Panel: Grooming Tracker -->
+      <div class="sd-panel" id="sdPanelGrooming">
+        <div class="sd-card">
+          <div class="sd-card-title">
+            <span>💈</span>
+            <span data-i18n="sd_grooming_title">Ápolási ütemező</span>
+          </div>
+          <div class="sd-card-subtitle" data-i18n="sd_grooming_desc">Tervezd meg a következő randi előtti ápolást</div>
+
+          <div class="sd-form-group">
+            <label data-i18n="sd_grooming_next_date">Következő randi dátuma</label>
+            <input type="date" class="sd-form-input" id="sdGroomingNextDate">
+          </div>
+
+          <button class="sd-btn sd-btn-primary w-full mb-4" id="sdCalcGrooming" data-i18n="sd_grooming_calc">Ápolási terv generálása</button>
+
+          <div id="sdGroomingPlan"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Second Date — Survey Modal (for quick survey after scanning) -->
+  <div id="sdSurveyModal" class="hidden fixed inset-0 z-[115] bg-black/85 backdrop-blur-md flex items-center justify-center p-4" style="z-index:120">
+    <div class="sd-modal">
+      <div class="sd-modal-head">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="font-serif text-lg font-semibold text-white" data-i18n="sd_survey_title">Hogy érezted magad?</h3>
+            <p class="text-[11px] text-gray-400 mt-1" data-i18n="sd_survey_subtitle">Gyors reflekszió a legutóbbi outról</p>
+          </div>
+          <button id="sdSurveyModalClose" type="button" class="w-8 h-8 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition" aria-label="Close">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="sd-modal-body">
+        <div class="sd-form-group">
+          <label data-i18n="sd_form_comfort">Kényelem</label>
+          <div class="sd-stars" id="sdSurveyComfortStars">
+            <span class="sd-star" data-val="1">★</span>
+            <span class="sd-star" data-val="2">★</span>
+            <span class="sd-star" data-val="3">★</span>
+            <span class="sd-star" data-val="4">★</span>
+            <span class="sd-star" data-val="5">★</span>
+          </div>
+        </div>
+        <div class="sd-form-group">
+          <label data-i18n="sd_form_confidence">Magabiztosság</label>
+          <div class="sd-stars" id="sdSurveyConfStars">
+            <span class="sd-star" data-val="1">★</span>
+            <span class="sd-star" data-val="2">★</span>
+            <span class="sd-star" data-val="3">★</span>
+            <span class="sd-star" data-val="4">★</span>
+            <span class="sd-star" data-val="5">★</span>
+          </div>
+        </div>
+        <div class="sd-form-group">
+          <label data-i18n="sd_form_notes">Megjegyzések</label>
+          <textarea class="sd-form-input" id="sdSurveyNotes" rows="2" placeholder="Gyors jegyzet..."></textarea>
+        </div>
+        <button class="sd-btn sd-btn-primary w-full" id="sdSurveySave" data-i18n="sd_save_reflection">Mentés</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Second Date — Grooming Add Modal -->
+  <div id="sdGroomingModal" class="hidden fixed inset-0 z-[115] bg-black/85 backdrop-blur-md flex items-center justify-center p-4" style="z-index:120">
+    <div class="sd-modal">
+      <div class="sd-modal-head">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="font-serif text-lg font-semibold text-white" id="sdGroomingModalTitle">Ápolás hozzáadása</h3>
+            <p class="text-[11px] text-gray-400 mt-1" id="sdGroomingModalSub">Tervezd meg az időpontot</p>
+          </div>
+          <button id="sdGroomingModalClose" type="button" class="w-8 h-8 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition" aria-label="Close">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="sd-modal-body" id="sdGroomingModalBody">
+        <!-- Dynamic content -->
+      </div>
+    </div>
+  </div>
+
   <!-- Outfit Duplicate Detector — Confirm Modal (top-level so it works from any view) -->
   <div id="dupCheckModal" class="hidden fixed inset-0 z-[120] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="premium-glass rounded-3xl max-w-md w-full overflow-hidden">
@@ -7436,7 +7904,7 @@ if (window.__DS_IS_ANDROID_APP) {
   <!-- ═══════════════════════════════════════════════════════
        ALTEREGÓ LAB — Alteregó Építő Modul
        ═══════════════════════════════════════════════════════ -->
-  <div id="viewAlterego" class="hidden opacity-0 translate-y-8 transition-all duration-500 pb-12 pt-4">
+  <div id="viewAlterego" class="hidden opacity-0 translate-y-8 transition-all duration-500 pb-28 pt-6">
     <div class="max-w-4xl mx-auto w-full px-2 sm:px-4">
 
       <!-- Header + Close button -->
@@ -7706,7 +8174,7 @@ if (window.__DS_IS_ANDROID_APP) {
       </svg>
       <span class="text-[10px] font-bold uppercase tracking-widest text-white" data-i18n="nav_story">Story</span>
     </button>
-    <!-- Alteregó removed from mobile nav — accessible from Closet view instead -->
+    <!-- Calendar & Alteregó removed from mobile nav — accessible from Closet view instead -->
   </div>
 </nav>
 
@@ -10616,6 +11084,8 @@ function toggleView(targetView, opts) {
     const viewHistory = $("viewHistory");
     const viewShopping = $("viewShopping");
     const viewAlterego = $("viewAlterego");
+    const viewOutfitCalendar = $("viewOutfitCalendar");
+    const viewSecondDate = $("viewSecondDate");
     const navBtn = $("navClosetBtn");
     const storyBtn = $("navStoryModeBtn");
     const aiChatBtn = $("navAiChatBtn");
@@ -10726,6 +11196,8 @@ function toggleView(targetView, opts) {
         hideOverlay(viewHistory);
         hideOverlay(viewShopping);
         hideOverlay(viewAlterego);
+        hideOverlay(viewOutfitCalendar);
+        hideOverlay(viewSecondDate);
         showOverlay(viewCloset);
         resetStoryNavBtn();
         resetAiChatNavBtn();
@@ -10757,6 +11229,8 @@ function toggleView(targetView, opts) {
         hideOverlay(viewHistory);
         hideOverlay(viewShopping);
         hideOverlay(viewAlterego);
+        hideOverlay(viewOutfitCalendar);
+        hideOverlay(viewSecondDate);
         showOverlay(viewChat);
         resetClosetNavBtn();
         resetStoryNavBtn();
@@ -10776,6 +11250,8 @@ function toggleView(targetView, opts) {
         hideOverlay(viewChat);
         hideOverlay(viewShopping);
         hideOverlay(viewAlterego);
+        hideOverlay(viewOutfitCalendar);
+        hideOverlay(viewSecondDate);
         showOverlay(viewHistory);
         resetClosetNavBtn();
         activateStoryNavBtn();
@@ -10798,6 +11274,8 @@ function toggleView(targetView, opts) {
         hideOverlay(viewChat);
         hideOverlay(viewHistory);
         hideOverlay(viewAlterego);
+        hideOverlay(viewOutfitCalendar);
+        hideOverlay(viewSecondDate);
         showOverlay(viewShopping);
         resetClosetNavBtn();
         resetStoryNavBtn();
@@ -10819,6 +11297,8 @@ function toggleView(targetView, opts) {
         hideOverlay(viewChat);
         hideOverlay(viewHistory);
         hideOverlay(viewShopping);
+        hideOverlay(viewOutfitCalendar);
+        hideOverlay(viewSecondDate);
         showOverlay(viewAlterego);
         resetClosetNavBtn();
         resetStoryNavBtn();
@@ -10836,6 +11316,58 @@ function toggleView(targetView, opts) {
             if (_skipPush) history.replaceState({ view: 'alterego' }, '', '#alterego');
             else history.pushState({ view: 'alterego' }, '', '#alterego');
         }
+    } else if (targetView === 'outfitcalendar') {
+        hideScanner();
+        hideOverlay(viewCloset);
+        hideOverlay(viewChat);
+        hideOverlay(viewHistory);
+        hideOverlay(viewShopping);
+        hideOverlay(viewAlterego);
+        hideOverlay(viewOutfitCalendar);
+        hideOverlay(viewSecondDate);
+        showOverlay(viewOutfitCalendar);
+        resetClosetNavBtn();
+        resetStoryNavBtn();
+        resetAiChatNavBtn();
+        resetShoppingNavBtn();
+        resetAlteregoNavBtn();
+        stopCameraIfLeavingScanner();
+
+        // Render outfit calendar
+        if (typeof window._ocalRender === 'function') {
+            window._ocalRender();
+        }
+        store.set({ activeView: 'outfitcalendar' });
+        if (location.hash !== '#calendar') {
+            if (_skipPush) history.replaceState({ view: 'outfitcalendar' }, '', '#calendar');
+            else history.pushState({ view: 'outfitcalendar' }, '', '#calendar');
+        }
+    } else if (targetView === 'seconddate') {
+        hideScanner();
+        hideOverlay(viewCloset);
+        hideOverlay(viewChat);
+        hideOverlay(viewHistory);
+        hideOverlay(viewShopping);
+        hideOverlay(viewAlterego);
+        hideOverlay(viewOutfitCalendar);
+        hideOverlay(viewSecondDate);
+        showOverlay(viewSecondDate);
+        resetClosetNavBtn();
+        resetStoryNavBtn();
+        resetAiChatNavBtn();
+        resetShoppingNavBtn();
+        resetAlteregoNavBtn();
+        stopCameraIfLeavingScanner();
+
+        // Render Second Date module
+        if (typeof window._sdRender === 'function') {
+            window._sdRender();
+        }
+        store.set({ activeView: 'seconddate' });
+        if (location.hash !== '#reflection') {
+            if (_skipPush) history.replaceState({ view: 'seconddate' }, '', '#reflection');
+            else history.pushState({ view: 'seconddate' }, '', '#reflection');
+        }
     } else {
         // targetView === 'scanner' (or any unrecognized value — default).
         hideOverlay(viewCloset);
@@ -10843,6 +11375,8 @@ function toggleView(targetView, opts) {
         hideOverlay(viewHistory);
         hideOverlay(viewShopping);
         hideOverlay(viewAlterego);
+        hideOverlay(viewOutfitCalendar);
+        hideOverlay(viewSecondDate);
         // Scanner comes back in after the overlay fade-down completes
         // so the two transitions don't visually fight.
         setTimeout(showScanner, 300);
@@ -10987,7 +11521,7 @@ window.unlockBodyScroll = unlockBodyScroll;
 window.addEventListener('popstate', function(e) {
   try {
     var hash = location.hash.replace('#', '');
-    var viewMap = { closet: 'closet', chat: 'chat', story: 'history', shopping: 'shopping', alterego: 'alterego' };
+    var viewMap = { closet: 'closet', chat: 'chat', story: 'history', shopping: 'shopping', alterego: 'alterego', calendar: 'outfitcalendar', reflection: 'seconddate' };
     var targetView = viewMap[hash] || 'scanner';
     var currentView = store.get().activeView;
     // Only switch if the view actually changed (avoid redundant transitions)
@@ -11661,13 +12195,13 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       story_timeline: 'Timeline',
       story_level_progress: 'Level Progress',
       cal_today: 'Today',
-      cal_weekday_sun: 'Sun',
-      cal_weekday_mon: 'Mon',
-      cal_weekday_tue: 'Tue',
-      cal_weekday_wed: 'Wed',
-      cal_weekday_thu: 'Thu',
-      cal_weekday_fri: 'Fri',
-      cal_weekday_sat: 'Sat',
+      cal_weekday_sun: 'Sunday',
+      cal_weekday_mon: 'Monday',
+      cal_weekday_tue: 'Tuesday',
+      cal_weekday_wed: 'Wednesday',
+      cal_weekday_thu: 'Thursday',
+      cal_weekday_fri: 'Friday',
+      cal_weekday_sat: 'Saturday',
       cal_legend_no_scan: 'No scan',
       cal_legend_low: '40–59',
       cal_legend_mid: '60–79',
@@ -13111,6 +13645,115 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
 
       // ── Shopping IQ Module ──
       nav_shopping: 'Shop IQ',
+      nav_calendar: 'Plan',
+      ocal_subtitle: 'Plan ahead what to wear',
+      ocal_tab_calendar: 'Calendar',
+      ocal_tab_upcoming: 'Upcoming',
+      ocal_calendar_title: 'Outfit Calendar',
+      ocal_today: 'Today',
+      ocal_tips_title: 'Quick tips',
+      ocal_tip_plan: 'Green dot = planned outfit',
+      ocal_tip_outfit: 'Purple dot = past outfit',
+      ocal_tip_repeat: 'Yellow dot = repeat!',
+      ocal_tip_date: 'Pink dot = date day',
+      ocal_upcoming_title: 'Upcoming Events',
+      ocal_empty_upcoming: 'No upcoming events planned yet. Tap a day on the calendar to plan your outfit!',
+      ocal_modal_event: 'Event Type',
+      ocal_modal_event_date: 'Date Night',
+      ocal_modal_event_business: 'Business',
+      ocal_modal_event_casual: 'Casual',
+      ocal_modal_event_party: 'Party',
+      ocal_modal_event_workout: 'Workout',
+      ocal_modal_label: 'Label (optional)',
+      ocal_modal_label_placeholder: 'e.g. Dinner with Alex',
+      ocal_modal_pick_outfit: 'Pick an Outfit from Closet',
+      ocal_modal_no_outfits: 'No outfits in your closet yet. Scan or upload outfits first!',
+      ocal_modal_save: 'Save Plan',
+      ocal_modal_delete: 'Remove Plan',
+      ocal_modal_weather: 'Weather Forecast',
+      ocal_modal_no_weather: 'Weather data not available',
+      ocal_modal_repeat_warn: 'You wore this outfit recently!',
+      ocal_modal_repeat_days: 'days ago',
+      ocal_score: 'Score',
+      ocal_no_plan: 'No outfit planned for this day',
+      ocal_add_plan: 'Plan an Outfit',
+      ocal_weekday_mon: 'Monday',
+      ocal_weekday_tue: 'Tuesday',
+      ocal_weekday_wed: 'Wednesday',
+      ocal_weekday_thu: 'Thursday',
+      ocal_weekday_fri: 'Friday',
+      ocal_weekday_sat: 'Saturday',
+      ocal_weekday_sun: 'Sunday',
+      ocal_month_1: 'Jan', ocal_month_2: 'Feb', ocal_month_3: 'Mar', ocal_month_4: 'Apr',
+      ocal_month_5: 'May', ocal_month_6: 'Jun', ocal_month_7: 'Jul', ocal_month_8: 'Aug',
+      ocal_month_9: 'Sep', ocal_month_10: 'Oct', ocal_month_11: 'Nov', ocal_month_12: 'Dec',
+      ocal_weather_cold: 'Cold', ocal_weather_warm: 'Warm', ocal_weather_hot: 'Hot',
+      ocal_weather_rain: 'Rain expected', ocal_weather_perfect: 'Perfect',
+      ocal_save_to_calendar: 'Add to Calendar',
+      ocal_saved_to_calendar: 'Added to Calendar!',
+      ocal_select_date: 'Select a date',
+      ocal_tomorrow: 'Tomorrow',
+      ocal_in_days: 'in {n} days',
+      ocal_outfit_color: 'Color',
+      ocal_plan_saved: 'Plan saved!',
+      ocal_plan_deleted: 'Plan removed!',
+      ocal_from_closet: 'From Closet',
+      nav_second_date: 'Reflection',
+      sd_title: 'Post-Date Reflection',
+      sd_subtitle: 'Learn from the past, prep for the next date',
+      sd_tab_reflections: 'Reflections',
+      sd_tab_insights: 'Insights',
+      sd_tab_grooming: 'Grooming',
+      sd_tab_partner: 'Partner',
+      sd_new_reflection: 'New Date Reflection',
+      sd_new_reflection_desc: 'How did you feel in your outfit on the date?',
+      sd_form_date: 'Date of the date',
+      sd_form_event_type: 'Event type',
+      sd_form_outfit: 'What did you wear?',
+      sd_form_comfort: 'How comfortable was the outfit? (1-5 stars)',
+      sd_form_confidence: 'How confident did you feel? (1-5 stars)',
+      sd_form_notes: 'Notes',
+      sd_notes_placeholder: 'What did they say? What was the reaction?',
+      sd_save_reflection: 'Save Reflection',
+      sd_event_date: 'Date',
+      sd_event_business: 'Business Meeting',
+      sd_event_casual: 'Casual',
+      sd_event_party: 'Party',
+      sd_select_outfit: 'Choose an outfit from your closet...',
+      sd_no_reflections: 'No reflections yet...',
+      sd_no_reflections_desc: 'After your next date, come back and rate how you felt!',
+      sd_reflection_saved: 'Reflection saved!',
+      sd_grooming_title: 'Grooming Scheduler',
+      sd_grooming_desc: 'Plan your grooming before the next date',
+      sd_grooming_next_date: 'Next date',
+      sd_grooming_calc: 'Generate Grooming Plan',
+      sd_grooming_haircut: 'Haircut',
+      sd_grooming_shave: 'Shave / Trim',
+      sd_grooming_skincare: 'Skincare',
+      sd_grooming_nails: 'Nail Care',
+      sd_grooming_days_before: '{n} days before',
+      sd_grooming_day_before: '1 day before',
+      sd_grooming_done: 'Done',
+      sd_grooming_past_date: 'Past date',
+      sd_grooming_schedule: 'Schedule',
+      sd_partner_title: 'Partner Feedback',
+      sd_partner_desc: 'Send a link to your partner — ask them to rate your style!',
+      sd_partner_select_reflection: 'Choose a date',
+      sd_select_reflection: 'Choose a past date...',
+      sd_copy_link: 'Copy',
+      sd_partner_disclaimer: 'The link is anonymous — your partner won\'t see your profile, only rate the outfit.',
+      sd_partner_feedback: 'Partner Feedback',
+      sd_partner_no_feedback: 'No feedback received yet',
+      sd_survey_title: 'How did you feel?',
+      sd_survey_subtitle: 'Quick reflection on your last outing',
+      sd_insight_top_outfit: 'Your Top Outfit',
+      sd_insight_top_outfit_desc: 'When you wore this outfit, you scored an average of {score} points',
+      sd_insight_second_date: 'Second Date Prep',
+      sd_insight_second_date_desc: 'The {item} worked well last time — try the {suggestion} variant!',
+      sd_insight_no_data: 'Not enough data yet',
+      sd_insight_no_data_desc: 'Save at least 3 reflections to unlock outfit correlations and second date suggestions.',
+      sd_correlation_title: 'Outfit-Score Correlation',
+      sd_correlation_avg: 'Avg. score',
       siq_heading: 'Shopping IQ',
       siq_subheading: 'Wardrobe investment tracker.',
       siq_tab_log: 'Log',
@@ -13838,13 +14481,13 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       story_timeline: 'Idővonal',
       story_level_progress: 'Szintelőrehaladás',
       cal_today: 'Ma',
-      cal_weekday_sun: 'Vas',
-      cal_weekday_mon: 'Hét',
-      cal_weekday_tue: 'Ked',
-      cal_weekday_wed: 'Sze',
-      cal_weekday_thu: 'Csü',
-      cal_weekday_fri: 'Pén',
-      cal_weekday_sat: 'Szo',
+      cal_weekday_sun: 'Vasárnap',
+      cal_weekday_mon: 'Hétfő',
+      cal_weekday_tue: 'Kedd',
+      cal_weekday_wed: 'Szerda',
+      cal_weekday_thu: 'Csütörtök',
+      cal_weekday_fri: 'Péntek',
+      cal_weekday_sat: 'Szombat',
       cal_legend_no_scan: 'Nincs szkenn',
       cal_legend_low: '40–59',
       cal_legend_mid: '60–79',
@@ -15287,6 +15930,110 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
 
       // ── Shopping IQ Module ──
       nav_shopping: 'Shop IQ',
+      nav_calendar: 'Terv',
+      ocal_subtitle: 'Tervezd előre, mit veszel fel',
+      ocal_tab_calendar: 'Naptár',
+      ocal_tab_upcoming: 'Közelgő',
+      ocal_calendar_title: 'Outfit Naptár',
+      ocal_today: 'Ma',
+      ocal_tips_title: 'Gyors tippek',
+      ocal_tip_plan: 'Zöld pont = tervezett outfit',
+      ocal_tip_outfit: 'Lila pont = korábbi outfit',
+      ocal_tip_repeat: 'Sárga pont = ismétlődés!',
+      ocal_tip_date: 'Rózsaszín pont = randi nap',
+      ocal_upcoming_title: 'Közelgő események',
+      ocal_empty_upcoming: 'Még nincs tervezett esemény. Koppints egy napra a naptárban az outfit tervezéséhez!',
+      ocal_modal_event: 'Esemény típus',
+      ocal_modal_event_date: 'Randi',
+      ocal_modal_event_business: 'Üzleti',
+      ocal_modal_event_casual: 'Casual',
+      ocal_modal_event_party: 'Buli',
+      ocal_modal_event_workout: 'Edzés',
+      ocal_modal_label: 'Címke (opcionális)',
+      ocal_modal_label_placeholder: 'pl. Vacsora Alexszel',
+      ocal_modal_pick_outfit: 'Válassz outfitet a szekrényből',
+      ocal_modal_no_outfits: 'Még nincs outfit a szekrényben. Scannelj vagy tölts fel először!',
+      ocal_modal_save: 'Terv mentése',
+      ocal_modal_delete: 'Terv törlése',
+      ocal_modal_weather: 'Időjárás előrejelzés',
+      ocal_modal_no_weather: 'Időjárás adat nem elérhető',
+      ocal_modal_repeat_warn: 'Ezt az outfitet mostanában hordtad!',
+      ocal_modal_repeat_days: 'napja',
+      ocal_score: 'Pontszám',
+      ocal_no_plan: 'Nincs tervezett outfit erre a napra',
+      ocal_add_plan: 'Outfit tervezése',
+      ocal_weekday_mon: 'Hétfő', ocal_weekday_tue: 'Kedd', ocal_weekday_wed: 'Szerda',
+      ocal_weekday_thu: 'Csütörtök', ocal_weekday_fri: 'Péntek', ocal_weekday_sat: 'Szombat', ocal_weekday_sun: 'Vasárnap',
+      ocal_month_1: 'Jan', ocal_month_2: 'Feb', ocal_month_3: 'Már', ocal_month_4: 'Ápr',
+      ocal_month_5: 'Máj', ocal_month_6: 'Jún', ocal_month_7: 'Júl', ocal_month_8: 'Aug',
+      ocal_month_9: 'Sze', ocal_month_10: 'Okt', ocal_month_11: 'Nov', ocal_month_12: 'Dec',
+      ocal_weather_cold: 'Hideg', ocal_weather_warm: 'Meleg', ocal_weather_hot: 'Hőség',
+      ocal_weather_rain: 'Eső várható', ocal_weather_perfect: 'Tökéletes',
+      ocal_save_to_calendar: 'Hozzáadás a naptárhoz',
+      ocal_saved_to_calendar: 'Hozzáadva a naptárhoz!',
+      ocal_select_date: 'Válassz dátumot',
+      ocal_tomorrow: 'Holnap',
+      ocal_in_days: '{n} nap múlva',
+      ocal_outfit_color: 'Szín',
+      ocal_plan_saved: 'Terv elmentve!',
+      ocal_plan_deleted: 'Terv törölve!',
+      ocal_from_closet: 'A szekrényből',
+      nav_second_date: 'Reflekszió',
+      sd_title: 'Randi Utáni Reflekszió',
+      sd_subtitle: 'Tanulj a múltból, készülj a következő randira',
+      sd_tab_reflections: 'Refleksziók',
+      sd_tab_insights: 'Meglátások',
+      sd_tab_grooming: 'Ápolás',
+      sd_tab_partner: 'Partner',
+      sd_new_reflection: 'Új randi reflekszió',
+      sd_new_reflection_desc: 'Hogyan érezted magad az outfitben a randin?',
+      sd_form_date: 'Randi dátuma',
+      sd_form_event_type: 'Esemény típusa',
+      sd_form_outfit: 'Mit viseltél?',
+      sd_form_comfort: 'Milyen kényelmes volt az outfit? (1-5 csillag)',
+      sd_form_confidence: 'Mennyire érezted magad magabiztosnak? (1-5 csillag)',
+      sd_form_notes: 'Megjegyzések',
+      sd_notes_placeholder: 'Mit mondtak? Mi volt a reakció?',
+      sd_save_reflection: 'Reflekszió mentése',
+      sd_event_date: 'Randi',
+      sd_event_business: 'Üzleti meeting',
+      sd_event_casual: 'Casual',
+      sd_event_party: 'Buli',
+      sd_select_outfit: 'Válassz outfitet a szekrényből...',
+      sd_no_reflections: 'Még nincsenek refleksziók...',
+      sd_no_reflections_desc: 'A következő randi után gyere vissza és értékeld, hogyan érezted magad!',
+      sd_reflection_saved: 'Reflekszió elmentve!',
+      sd_grooming_title: 'Ápolási ütemező',
+      sd_grooming_desc: 'Tervezd meg a következő randi előtti ápolást',
+      sd_grooming_next_date: 'Következő randi dátuma',
+      sd_grooming_calc: 'Ápolási terv generálása',
+      sd_grooming_haircut: 'Hajvágás',
+      sd_grooming_shave: 'Borotválkozás / Trim',
+      sd_grooming_skincare: 'Bőrápolás',
+      sd_grooming_nails: 'Körömápolás',
+      sd_grooming_days_before: '{n} nappal előtte',
+      sd_grooming_day_before: '1 nappal előtte',
+      sd_grooming_done: 'Kész',
+      sd_grooming_past_date: 'Múltbeli dátum',
+      sd_grooming_schedule: 'Ütemezés',
+      sd_partner_title: 'Partner visszajelzés',
+      sd_partner_desc: 'Küldj egy linket a partnerednek — kérd meg, értékelje a stílusodat!',
+      sd_partner_select_reflection: 'Válassz egy randit',
+      sd_select_reflection: 'Válassz korábbi randit...',
+      sd_copy_link: 'Másolás',
+      sd_partner_disclaimer: 'A link névtelen — a partnered nem látja a profilod, csak az outfitet értékelheti.',
+      sd_partner_feedback: 'Partner visszajelzés',
+      sd_partner_no_feedback: 'Még nem érkezett visszajelzés',
+      sd_survey_title: 'Hogy érezted magad?',
+      sd_survey_subtitle: 'Gyors reflekszió a legutóbbi outról',
+      sd_insight_top_outfit: 'Legjobb outfit',
+      sd_insight_top_outfit_desc: 'Ebben az outfitben átlagosan {score} pontot kaptál',
+      sd_insight_second_date: 'Második randi felkészítés',
+      sd_insight_second_date_desc: 'A(z) {item} jött be a múltkor — próbáld meg a {suggestion} változatot!',
+      sd_insight_no_data: 'Még nincs elég adat',
+      sd_insight_no_data_desc: 'Ments legalább 3 refleksziót az outfit-korrelációk és második randi javaslatok feloldásához.',
+      sd_correlation_title: 'Outfit-Pontszám korreláció',
+      sd_correlation_avg: 'Átl. pontszám',
       siq_heading: 'Shopping IQ',
       siq_subheading: 'Gardróbbefektetés-követő.',
       siq_tab_log: 'Napló',
@@ -16015,13 +16762,13 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
       story_timeline: 'Zeitleiste',
       story_level_progress: 'Level-Fortschritt',
       cal_today: 'Heute',
-      cal_weekday_sun: 'So',
-      cal_weekday_mon: 'Mo',
-      cal_weekday_tue: 'Di',
-      cal_weekday_wed: 'Mi',
-      cal_weekday_thu: 'Do',
-      cal_weekday_fri: 'Fr',
-      cal_weekday_sat: 'Sa',
+      cal_weekday_sun: 'Sonntag',
+      cal_weekday_mon: 'Montag',
+      cal_weekday_tue: 'Dienstag',
+      cal_weekday_wed: 'Mittwoch',
+      cal_weekday_thu: 'Donnerstag',
+      cal_weekday_fri: 'Freitag',
+      cal_weekday_sat: 'Samstag',
       cal_legend_no_scan: 'Kein Scan',
       cal_legend_low: '40–59',
       cal_legend_mid: '60–79',
@@ -17464,6 +18211,110 @@ const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
 
       // ── Shopping IQ Module ──
       nav_shopping: 'Shop IQ',
+      nav_calendar: 'Plan',
+      ocal_subtitle: 'Plane im Voraus, was du trägst',
+      ocal_tab_calendar: 'Kalender',
+      ocal_tab_upcoming: 'Demnächst',
+      ocal_calendar_title: 'Outfit-Kalender',
+      ocal_today: 'Heute',
+      ocal_tips_title: 'Schnelltipps',
+      ocal_tip_plan: 'Grüner Punkt = geplantes Outfit',
+      ocal_tip_outfit: 'Lila Punkt = vergangenes Outfit',
+      ocal_tip_repeat: 'Gelber Punkt = Wiederholung!',
+      ocal_tip_date: 'Pink Punkt = Date-Tag',
+      ocal_upcoming_title: 'Demnächste Events',
+      ocal_empty_upcoming: 'Noch keine Events geplant. Tippe auf einen Tag im Kalender um dein Outfit zu planen!',
+      ocal_modal_event: 'Event-Typ',
+      ocal_modal_event_date: 'Date-Night',
+      ocal_modal_event_business: 'Business',
+      ocal_modal_event_casual: 'Casual',
+      ocal_modal_event_party: 'Party',
+      ocal_modal_event_workout: 'Workout',
+      ocal_modal_label: 'Label (optional)',
+      ocal_modal_label_placeholder: 'z.B. Abendessen mit Alex',
+      ocal_modal_pick_outfit: 'Outfit aus dem Kleiderschrank wählen',
+      ocal_modal_no_outfits: 'Noch keine Outfits im Kleiderschrank. Scanne oder lade zuerst welche hoch!',
+      ocal_modal_save: 'Plan speichern',
+      ocal_modal_delete: 'Plan entfernen',
+      ocal_modal_weather: 'Wettervorhersage',
+      ocal_modal_no_weather: 'Wetterdaten nicht verfügbar',
+      ocal_modal_repeat_warn: 'Du hast dieses Outfit kürzlich getragen!',
+      ocal_modal_repeat_days: 'Tage her',
+      ocal_score: 'Punktzahl',
+      ocal_no_plan: 'Kein Outfit für diesen Tag geplant',
+      ocal_add_plan: 'Outfit planen',
+      ocal_weekday_mon: 'Montag', ocal_weekday_tue: 'Dienstag', ocal_weekday_wed: 'Mittwoch',
+      ocal_weekday_thu: 'Donnerstag', ocal_weekday_fri: 'Freitag', ocal_weekday_sat: 'Samstag', ocal_weekday_sun: 'Sonntag',
+      ocal_month_1: 'Jan', ocal_month_2: 'Feb', ocal_month_3: 'Mär', ocal_month_4: 'Apr',
+      ocal_month_5: 'Mai', ocal_month_6: 'Jun', ocal_month_7: 'Jul', ocal_month_8: 'Aug',
+      ocal_month_9: 'Sep', ocal_month_10: 'Okt', ocal_month_11: 'Nov', ocal_month_12: 'Dez',
+      ocal_weather_cold: 'Kalt', ocal_weather_warm: 'Warm', ocal_weather_hot: 'Heiß',
+      ocal_weather_rain: 'Regen erwartet', ocal_weather_perfect: 'Perfekt',
+      ocal_save_to_calendar: 'Zum Kalender hinzufügen',
+      ocal_saved_to_calendar: 'Zum Kalender hinzugefügt!',
+      ocal_select_date: 'Datum wählen',
+      ocal_tomorrow: 'Morgen',
+      ocal_in_days: 'in {n} Tagen',
+      ocal_outfit_color: 'Farbe',
+      ocal_plan_saved: 'Plan gespeichert!',
+      ocal_plan_deleted: 'Plan entfernt!',
+      ocal_from_closet: 'Aus dem Kleiderschrank',
+      nav_second_date: 'Reflexion',
+      sd_title: 'Post-Date Reflexion',
+      sd_subtitle: 'Lerne aus der Vergangenheit, bereite dich aufs nächste Date vor',
+      sd_tab_reflections: 'Reflexionen',
+      sd_tab_insights: 'Erkenntnisse',
+      sd_tab_grooming: 'Pflege',
+      sd_tab_partner: 'Partner',
+      sd_new_reflection: 'Neue Date-Reflexion',
+      sd_new_reflection_desc: 'Wie hast du dich in deinem Outfit beim Date gefühlt?',
+      sd_form_date: 'Datum des Dates',
+      sd_form_event_type: 'Event-Typ',
+      sd_form_outfit: 'Was hast du getragen?',
+      sd_form_comfort: 'Wie bequem war das Outfit? (1-5 Sterne)',
+      sd_form_confidence: 'Wie selbstbewusst hast du dich gefühlt? (1-5 Sterne)',
+      sd_form_notes: 'Notizen',
+      sd_notes_placeholder: 'Was haben sie gesagt? Wie war die Reaktion?',
+      sd_save_reflection: 'Reflexion speichern',
+      sd_event_date: 'Date',
+      sd_event_business: 'Geschäftstreffen',
+      sd_event_casual: 'Casual',
+      sd_event_party: 'Party',
+      sd_select_outfit: 'Outfit aus dem Kleiderschrank wählen...',
+      sd_no_reflections: 'Noch keine Reflexionen...',
+      sd_no_reflections_desc: 'Nach deinem nächsten Date, komm zurück und bewerte wie du dich gefühlt hast!',
+      sd_reflection_saved: 'Reflexion gespeichert!',
+      sd_grooming_title: 'Pflegeplaner',
+      sd_grooming_desc: 'Plane deine Pflege vor dem nächsten Date',
+      sd_grooming_next_date: 'Nächstes Date',
+      sd_grooming_calc: 'Pflegeplan generieren',
+      sd_grooming_haircut: 'Haarschnitt',
+      sd_grooming_shave: 'Rasur / Trimmen',
+      sd_grooming_skincare: 'Hautpflege',
+      sd_grooming_nails: 'Nagelpflege',
+      sd_grooming_days_before: '{n} Tage vorher',
+      sd_grooming_day_before: '1 Tag vorher',
+      sd_grooming_done: 'Erledigt',
+      sd_grooming_past_date: 'Vergangenes Datum',
+      sd_grooming_schedule: 'Terminieren',
+      sd_partner_title: 'Partner-Feedback',
+      sd_partner_desc: 'Sende einen Link an deinen Partner — bitte ihn, deinen Stil zu bewerten!',
+      sd_partner_select_reflection: 'Wähle ein Date',
+      sd_select_reflection: 'Wähle ein vergangenes Date...',
+      sd_copy_link: 'Kopieren',
+      sd_partner_disclaimer: 'Der Link ist anonym — dein Partner sieht dein Profil nicht, nur die Outfit-Bewertung.',
+      sd_partner_feedback: 'Partner-Feedback',
+      sd_partner_no_feedback: 'Noch kein Feedback erhalten',
+      sd_survey_title: 'Wie hast du dich gefühlt?',
+      sd_survey_subtitle: 'Schnelle Reflexion zu deinem letzten Ausgehen',
+      sd_insight_top_outfit: 'Dein Top-Outfit',
+      sd_insight_top_outfit_desc: 'Mit diesem Outfit hast du durchschnittlich {score} Punkte erzielt',
+      sd_insight_second_date: 'Zweites Date Vorbereitung',
+      sd_insight_second_date_desc: 'Das {item} hat beim letzten Mal funktioniert — probiere die {suggestion} Variante!',
+      sd_insight_no_data: 'Noch nicht genug Daten',
+      sd_insight_no_data_desc: 'Speichere mindestens 3 Reflexionen, um Outfit-Korrelationen und Second-Date-Vorschläge freizuschalten.',
+      sd_correlation_title: 'Outfit-Punkte-Korrelation',
+      sd_correlation_avg: 'Durchschn. Punkte',
       siq_heading: 'Shopping IQ',
       siq_subheading: 'Garderoben-Investitions-Tracker.',
       siq_tab_log: 'Protokoll',
@@ -19819,6 +20670,24 @@ window.saveCurrentOutfit = function() {
             btn.classList.remove("bg-white/5", "border-white/20", "text-white");
             btn.classList.add("bg-emerald-500/10", "border-emerald-500/40", "text-emerald-400");
 
+            // ── Add "Save to Calendar" button after successful save ──
+            try {
+              var calBtn = document.getElementById('saveOutfitCalendarBtn');
+              if (calBtn) calBtn.remove(); // remove old if exists
+              calBtn = document.createElement('button');
+              calBtn.id = 'saveOutfitCalendarBtn';
+              calBtn.className = 'scan-save-calendar-btn';
+              calBtn.innerHTML = '📅 ' + (typeof t === 'function' ? t('ocal_save_to_calendar') : 'Add to Calendar');
+              calBtn.onclick = function() {
+                if (typeof window._ocalSaveFromScan === 'function') {
+                  window._ocalSaveFromScan(newOutfit.id);
+                }
+                calBtn.innerHTML = '✓ ' + (typeof t === 'function' ? t('ocal_saved_to_calendar') : 'Added to Calendar!');
+                calBtn.style.pointerEvents = 'none';
+              };
+              btn.parentNode.insertBefore(calBtn, btn.nextSibling);
+            } catch(e) {}
+
             if(store.get().activeView === 'closet') renderCloset();
         } catch(e) {
             console.error(e);
@@ -22111,7 +22980,7 @@ window.saveCurrentOutfit = function() {
     dayWeathers.forEach(function(dw, idx) {
       var date = new Date(now);
       date.setDate(date.getDate() + idx);
-      var dayName = date.toLocaleDateString(typeof window.t === 'function' ? (window.currentLang || 'en') : 'en', { weekday: 'short' });
+      var dayName = date.toLocaleDateString(typeof window.t === 'function' ? (window.currentLang || 'en') : 'en', { weekday: 'long' });
 
       var icon = getWeatherIcon(dw.minTemp, dw.rain, dw.wind);
       var cls = dw.rain >= RAIN_THRESHOLD ? ' rain' : (dw.minTemp <= 5 ? ' cold' : (dw.maxTemp >= 28 ? ' warm' : ''));
@@ -22209,7 +23078,7 @@ window.saveCurrentOutfit = function() {
     dailyPlan.forEach(function(day) {
       var date = new Date(now);
       date.setDate(date.getDate() + day.day);
-      var dateStr = date.toLocaleDateString(typeof window.t === 'function' ? (window.currentLang || 'en') : 'en', { weekday: 'short', month: 'short', day: 'numeric' });
+      var dateStr = date.toLocaleDateString(typeof window.t === 'function' ? (window.currentLang || 'en') : 'en', { weekday: 'long', month: 'short', day: 'numeric' });
       var icon = getWeatherIcon(day.weather.minTemp, day.weather.rain, day.weather.wind);
 
       html += '<div class="trip-daily-card">';
@@ -34481,7 +35350,7 @@ applyOfflineState(!navigator.onLine);
   function _scorecalFormatDate(key) {
     const parts = key.split('-').map(Number);
     const d = new Date(parts[0], parts[1] - 1, parts[2]);
-    return d.toLocaleDateString(window.getLang?.() || 'en', { weekday: 'short', month: 'short', day: 'numeric' });
+    return d.toLocaleDateString(window.getLang?.() || 'en', { weekday: 'long', month: 'short', day: 'numeric' });
   }
 
   function _scorecalBuildCell(day, key, score, isOtherMonth, isToday) {
@@ -39115,6 +39984,1173 @@ applyOfflineState(!navigator.onLine);
   });
 
   _dsLog && _dsLog('[Alteregó Lab] Module loaded');
+})();
+</script>
+<script>
+// ============================================================
+// OUTFIT CALENDAR / PLANNER MODULE
+// ============================================================
+(function() {
+  'use strict';
+  var _t = function(k,v) { return typeof window.t === 'function' ? window.t(k,v) : k; };
+  var $ = function(id) { return document.getElementById(id); };
+
+  // ── State ──
+  var _year, _month; // current calendar month
+  var _selectedDate = null; // "YYYY-MM-DD"
+  var _activeTab = 'calendar';
+  var _weatherCache = {}; // dateStr -> { high, low, code, wind, humidity }
+  var _plans = {}; // dateStr -> { eventType, label, outfitId, ts }
+
+  var STORAGE_KEY = 'datescan.outfitCalendar';
+  var WEATHER_CACHE_KEY = 'datescan.ocalWeatherCache';
+
+  var EVENT_ICONS = { date: '🍷', business: '💼', casual: '☕', party: '🎉', workout: '🏃' };
+  var EVENT_COLORS = { date: '#ec4899', business: '#3b82f6', casual: '#34d399', party: '#a855f7', workout: '#f97316' };
+
+  // Weather code → icon (WMO)
+  var WMO_ICONS = { 0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',56:'🌧️',57:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',66:'🌧️',67:'🌧️',71:'🌨️',73:'🌨️',75:'🌨️',77:'🌨️',80:'🌦️',81:'🌦️',82:'🌧️',85:'🌨️',86:'🌨️',95:'⛈️',96:'⛈️',99:'⛈️' };
+
+  // ── Persistence ──
+  function _loadPlans() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) _plans = JSON.parse(raw);
+    } catch(e) { _plans = {}; }
+  }
+  function _savePlans() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(_plans)); } catch(e) {}
+  }
+  function _loadWeatherCache() {
+    try {
+      var raw = localStorage.getItem(WEATHER_CACHE_KEY);
+      if (raw) {
+        var obj = JSON.parse(raw);
+        // Discard cache older than 6 hours
+        var now = Date.now();
+        Object.keys(obj).forEach(function(k) {
+          if (obj[k].ts && (now - obj[k].ts > 6 * 3600000)) delete obj[k];
+        });
+        _weatherCache = obj;
+      }
+    } catch(e) { _weatherCache = {}; }
+  }
+  function _saveWeatherCache() {
+    try { localStorage.setItem(WEATHER_CACHE_KEY, JSON.stringify(_weatherCache)); } catch(e) {}
+  }
+
+  // ── Date helpers ──
+  function _dayKey(y, m, d) {
+    return y + '-' + (m + 1) + '-' + d;
+  }
+  function _todayKey() {
+    var d = new Date();
+    return _dayKey(d.getFullYear(), d.getMonth(), d.getDate());
+  }
+  function _isToday(y, m, d) {
+    var t = new Date();
+    return y === t.getFullYear() && m === t.getMonth() && d === t.getDate();
+  }
+  function _isFuture(y, m, d) {
+    var today = new Date(); today.setHours(0,0,0,0);
+    var target = new Date(y, m, d); target.setHours(0,0,0,0);
+    return target >= today;
+  }
+  function _daysInMonth(y, m) { return new Date(y, m + 1, 0).getDate(); }
+  function _firstDayOfWeek(y, m) { return new Date(y, m, 1).getDay(); } // 0=Sun
+
+  // ── Weather fetching (open-meteo 7-day) ──
+  function _fetchWeather7d() {
+    var lat = null, lon = null;
+    try {
+      var wd = JSON.parse(localStorage.getItem('datescan.weather') || 'null');
+      if (wd && wd.lat && wd.lon) { lat = wd.lat; lon = wd.lon; }
+    } catch(e) {}
+    // Try navigator.geolocation as fallback
+    if (lat === null && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(pos) {
+        _fetchWeather7dByCoords(pos.coords.latitude, pos.coords.longitude);
+      }, function() {}, { timeout: 5000 });
+      return;
+    }
+    if (lat !== null) _fetchWeather7dByCoords(lat, lon);
+  }
+  function _fetchWeather7dByCoords(lat, lon) {
+    var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat.toFixed(2) + '&longitude=' + lon.toFixed(2) + '&daily=temperature_2m_max,temperature_2m_min,weather_code,wind_speed_10m_max&timezone=auto&forecast_days=7';
+    fetch(url).then(function(r) { return r.json(); }).then(function(data) {
+      if (!data || !data.daily) return;
+      var dates = data.daily.time || [];
+      var highs = data.daily.temperature_2m_max || [];
+      var lows = data.daily.temperature_2m_min || [];
+      var codes = data.daily.weather_code || [];
+      var winds = data.daily.wind_speed_10m_max || [];
+      for (var i = 0; i < dates.length; i++) {
+        var parts = dates[i].split('-');
+        var key = parseInt(parts[0]) + '-' + parseInt(parts[1]) + '-' + parseInt(parts[2]);
+        _weatherCache[key] = { high: Math.round(highs[i]), low: Math.round(lows[i]), code: codes[i], wind: Math.round(winds[i]), ts: Date.now() };
+      }
+      _saveWeatherCache();
+      if (_activeTab === 'calendar') _renderCalendar();
+      else _renderUpcoming();
+    }).catch(function() {});
+  }
+
+  // ── Repeat detection ──
+  function _getRecentOutfitIds(dateKey, days) {
+    // Look back N days from dateKey, collect outfit IDs worn
+    var ids = [];
+    var parts = dateKey.split('-');
+    var base = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+    for (var i = 1; i <= days; i++) {
+      var d = new Date(base); d.setDate(d.getDate() - i);
+      var key = _dayKey(d.getFullYear(), d.getMonth(), d.getDate());
+      if (_plans[key] && _plans[key].outfitId) ids.push(_plans[key].outfitId);
+    }
+    // Also check closet items with lastWorn within the period
+    try {
+      var closet = window.userCloset && window.userCloset.outfits ? window.userCloset.outfits : [];
+      var cutoff = base.getTime() - days * 86400000;
+      closet.forEach(function(item) {
+        if (item.lastWorn && item.lastWorn >= cutoff && item.lastWorn < base.getTime()) {
+          if (ids.indexOf(item.id) === -1) ids.push(item.id);
+        }
+      });
+    } catch(e) {}
+    return ids;
+  }
+
+  // ── Calendar rendering ──
+  function _renderWeekdays() {
+    var el = $('ocalWeekdays');
+    if (!el) return;
+    var days = ['sun','mon','tue','wed','thu','fri','sat'];
+    // Start from Monday (European convention)
+    var ordered = ['mon','tue','wed','thu','fri','sat','sun'];
+    var html = '';
+    ordered.forEach(function(d) {
+      html += '<div class="ocal-weekday">' + _t('ocal_weekday_' + d) + '</div>';
+    });
+    el.innerHTML = html;
+  }
+
+  function _renderCalendar() {
+    if (!_year && _year !== 0) { var now = new Date(); _year = now.getFullYear(); _month = now.getMonth(); }
+
+    // Month label
+    var label = $('ocalMonthLabel');
+    if (label) label.textContent = _t('ocal_month_' + (_month + 1)) + ' ' + _year;
+
+    var grid = $('ocalDateGrid');
+    if (!grid) return;
+
+    var totalDays = _daysInMonth(_year, _month);
+    var firstDay = _firstDayOfWeek(_year, _month);
+    // Convert Sunday=0 to Monday-start: Mon=0, Tue=1...Sun=6
+    var startOffset = (firstDay + 6) % 7;
+
+    var html = '';
+    var todayKey = _todayKey();
+
+    // Previous month padding
+    var prevMonth = _month === 0 ? 11 : _month - 1;
+    var prevYear = _month === 0 ? _year - 1 : _year;
+    var prevDays = _daysInMonth(prevYear, prevMonth);
+    for (var i = startOffset - 1; i >= 0; i--) {
+      var d = prevDays - i;
+      html += '<div class="ocal-day ocal-day--empty"><span class="ocal-day-num">' + d + '</span></div>';
+    }
+
+    // Current month days
+    for (var day = 1; day <= totalDays; day++) {
+      var key = _dayKey(_year, _month, day);
+      var isToday = key === todayKey;
+      var plan = _plans[key];
+      var hasPlan = !!plan;
+      var hasOutfit = hasPlan && plan.outfitId;
+      var isDate = hasPlan && plan.eventType === 'date';
+      var weather = _weatherCache[key];
+
+      // Repeat detection for future days
+      var isRepeat = false;
+      if (hasOutfit && _isFuture(_year, _month, day)) {
+        var recentIds = _getRecentOutfitIds(key, 3);
+        if (recentIds.indexOf(plan.outfitId) !== -1) isRepeat = true;
+      }
+
+      var classes = 'ocal-day';
+      if (isToday) classes += ' ocal-day--today';
+      if (_selectedDate === key) classes += ' ocal-day--selected';
+      if (hasPlan) classes += ' ocal-day--has-plan';
+      if (hasOutfit && !hasPlan) classes += ' ocal-day--has-outfit';
+      if (isRepeat) classes += ' ocal-day--repeat-warn';
+
+      var weatherIcon = '';
+      if (weather && _isFuture(_year, _month, day)) {
+        weatherIcon = '<span class="ocal-day-weather">' + (WMO_ICONS[weather.code] || '') + (weather.high || '') + '°</span>';
+      }
+
+      var dots = '';
+      if (hasPlan) {
+        dots += '<div class="ocal-day-dots">';
+        if (isDate) dots += '<span class="ocal-dot ocal-dot--date"></span>';
+        if (hasOutfit) dots += '<span class="ocal-dot ocal-dot--plan"></span>';
+        if (isRepeat) dots += '<span class="ocal-dot ocal-dot--warn"></span>';
+        dots += '</div>';
+      }
+
+      // Also show past outfit dots (from closet scan history)
+      if (!hasPlan) {
+        try {
+          var closet = window.userCloset && window.userCloset.outfits ? window.userCloset.outfits : [];
+          var dayMs = new Date(_year, _month, day).getTime();
+          var nextMs = dayMs + 86400000;
+          var hasPast = closet.some(function(o) { return o.date >= dayMs && o.date < nextMs; });
+          if (hasPast) {
+            dots += '<div class="ocal-day-dots"><span class="ocal-dot ocal-dot--outfit"></span></div>';
+          }
+        } catch(e) {}
+      }
+
+      html += '<div class="' + classes + '" data-date="' + key + '" onclick="window._ocalOpenDay(\'' + key + '\')">' +
+        '<span class="ocal-day-num">' + day + '</span>' +
+        weatherIcon + dots +
+        '</div>';
+    }
+
+    // Next month padding
+    var totalCells = startOffset + totalDays;
+    var remaining = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+    for (var j = 1; j <= remaining; j++) {
+      html += '<div class="ocal-day ocal-day--empty"><span class="ocal-day-num">' + j + '</span></div>';
+    }
+
+    grid.innerHTML = html;
+  }
+
+  // ── Upcoming panel ──
+  function _renderUpcoming() {
+    var el = $('ocalUpcomingList');
+    if (!el) return;
+
+    var today = new Date(); today.setHours(0,0,0,0);
+    var upcoming = [];
+
+    // Look ahead 30 days
+    for (var i = 0; i <= 30; i++) {
+      var d = new Date(today); d.setDate(d.getDate() + i);
+      var key = _dayKey(d.getFullYear(), d.getMonth(), d.getDate());
+      if (_plans[key]) upcoming.push({ dateKey: key, date: d, plan: _plans[key] });
+    }
+
+    if (upcoming.length === 0) {
+      el.innerHTML = '<div class="ocal-empty-state"><div class="icon">📅</div><div class="msg">' + _t('ocal_empty_upcoming') + '</div></div>';
+      return;
+    }
+
+    var html = '';
+    upcoming.forEach(function(item) {
+      var p = item.plan;
+      var daysUntil = Math.round((item.date - today) / 86400000);
+      var when = daysUntil === 0 ? _t('ocal_today') : daysUntil === 1 ? _t('ocal_tomorrow') : _t('ocal_in_days', {n: daysUntil});
+      var weather = _weatherCache[item.dateKey];
+      var weatherStr = '';
+      if (weather) weatherStr = (WMO_ICONS[weather.code] || '') + ' ' + weather.high + '°/' + weather.low + '°';
+
+      var outfitThumb = '';
+      try {
+        var closet = window.userCloset && window.userCloset.outfits ? window.userCloset.outfits : [];
+        var outfit = closet.find(function(o) { return o.id === p.outfitId; });
+        if (outfit && outfit.image) outfitThumb = '<img class="outfit-thumb" src="' + outfit.image + '" alt="">';
+      } catch(e) {}
+
+      html += '<div class="ocal-upcoming-item" onclick="window._ocalOpenDay(\'' + item.dateKey + '\')">' +
+        '<div class="date-col"><div class="date-day">' + item.date.getDate() + '</div><div class="date-month">' + _t('ocal_month_' + (item.date.getMonth() + 1)) + '</div></div>' +
+        '<div class="info-col">' +
+          '<div class="event-type" style="color:' + (EVENT_COLORS[p.eventType] || '#34d399') + '">' + (EVENT_ICONS[p.eventType] || '') + ' ' + _t('ocal_modal_event_' + p.eventType) + '</div>' +
+          '<div class="event-label">' + (p.label || _t('ocal_modal_event_' + p.eventType)) + '</div>' +
+          (weatherStr ? '<div class="event-weather">' + weatherStr + '</div>' : '') +
+          '<div class="text-[10px] text-gray-500 mt-1">' + when + '</div>' +
+        '</div>' +
+        outfitThumb +
+        '</div>';
+    });
+
+    el.innerHTML = html;
+  }
+
+  // ── Day detail modal ──
+  function _openDayModal(dateKey) {
+    _selectedDate = dateKey;
+    var modal = $('ocalDayModal');
+    var body = $('ocalModalBody');
+    var dateEl = $('ocalModalDate');
+    var subEl = $('ocalModalSub');
+    if (!modal || !body) return;
+
+    var parts = dateKey.split('-');
+    var y = parseInt(parts[0]), m = parseInt(parts[1]), d = parseInt(parts[2]);
+    var dateObj = new Date(y, m - 1, d);
+    var dayNames = ['ocal_weekday_sun','ocal_weekday_mon','ocal_weekday_tue','ocal_weekday_wed','ocal_weekday_thu','ocal_weekday_fri','ocal_weekday_sat'];
+    dateEl.textContent = d + ' ' + _t('ocal_month_' + m) + ' ' + y + ', ' + _t(dayNames[dateObj.getDay()]);
+    subEl.textContent = _isToday(y, m-1, d) ? _t('ocal_today') : (_isFuture(y, m-1, d) ? '⏳' : '📋');
+
+    var plan = _plans[dateKey] || {};
+    var weather = _weatherCache[dateKey];
+    var closet = window.userCloset && window.userCloset.outfits ? window.userCloset.outfits : [];
+
+    var html = '';
+
+    // Weather bar (for future dates)
+    if (weather && _isFuture(y, m-1, d)) {
+      var weatherDesc = '';
+      if (weather.high < 10) weatherDesc = _t('ocal_weather_cold');
+      else if (weather.high < 22) weatherDesc = _t('ocal_weather_warm');
+      else if (weather.high >= 30) weatherDesc = _t('ocal_weather_hot');
+      else weatherDesc = _t('ocal_weather_perfect');
+      if (weather.code >= 51 && weather.code <= 67) weatherDesc = _t('ocal_weather_rain');
+      if (weather.code >= 80) weatherDesc = _t('ocal_weather_rain');
+
+      html += '<div class="mb-4"><div class="text-[10px] uppercase tracking-widest font-bold text-blue-400 mb-2">' + _t('ocal_modal_weather') + '</div>' +
+        '<div class="ocal-weather-bar"><span style="font-size:1.3rem">' + (WMO_ICONS[weather.code] || '🌡️') + '</span><span class="temp">' + weather.high + '°</span><span>' + weather.low + '°</span><span style="margin-left:auto">' + weatherDesc + '</span></div></div>';
+    }
+
+    // Event type selector
+    html += '<div class="mb-4"><div class="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">' + _t('ocal_modal_event') + '</div>' +
+      '<div class="flex gap-2 flex-wrap">';
+    ['date','business','casual','party','workout'].forEach(function(et) {
+      var sel = plan.eventType === et ? ' sel' : '';
+      html += '<button class="ocal-event-type-btn' + sel + '" data-type="' + et + '" onclick="window._ocalSetEventType(\'' + et + '\')">' +
+        '<span class="ocal-evt-icon">' + EVENT_ICONS[et] + '</span><span>' + _t('ocal_modal_event_' + et) + '</span></button>';
+    });
+    html += '</div></div>';
+
+    // Label input
+    html += '<div class="mb-4"><label class="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2 block">' + _t('ocal_modal_label') + '</label>' +
+      '<input type="text" id="ocalLabelInput" class="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm font-medium outline-none focus:border-brand-500/50 transition" placeholder="' + _t('ocal_modal_label_placeholder') + '" value="' + (plan.label || '').replace(/"/g, '&quot;') + '"></div>';
+
+    // Outfit picker
+    html += '<div class="mb-4"><div class="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">' + _t('ocal_modal_pick_outfit') + '</div>';
+    if (closet.length === 0) {
+      html += '<div class="text-xs text-gray-500 text-center py-4">' + _t('ocal_modal_no_outfits') + '</div>';
+    } else {
+      html += '<div class="space-y-2 max-h-[200px] overflow-y-auto">';
+      // "No outfit" option
+      html += '<div class="ocal-outfit-pick' + (!plan.outfitId ? ' sel' : '') + '" onclick="window._ocalSelectOutfit(null)">' +
+        '<div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-lg">🚫</div>' +
+        '<div class="info"><div class="name text-gray-400">—</div></div></div>';
+
+      closet.slice(0, 20).forEach(function(item) {
+        var sel = plan.outfitId === item.id ? ' sel' : '';
+        var img = item.image ? '<img src="' + item.image + '" alt="">' : '<div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center">👕</div>';
+        html += '<div class="ocal-outfit-pick' + sel + '" onclick="window._ocalSelectOutfit(\'' + item.id + '\')">' +
+          img + '<div class="info"><div class="name">' + (item.color || _t('ocal_from_closet')) + '</div>' +
+          '<div class="meta">' + _t('ocal_score') + ': ' + (item.score || '—') + '</div></div></div>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+
+    // Repeat warning
+    if (plan.outfitId) {
+      var recentIds = _getRecentOutfitIds(dateKey, 3);
+      if (recentIds.indexOf(plan.outfitId) !== -1) {
+        html += '<div class="ocal-repeat-warn mb-4"><span>⚠️</span><span>' + _t('ocal_modal_repeat_warn') + ' (' + _t('ocal_modal_repeat_days') + ')</span></div>';
+      }
+    }
+
+    // Save / Delete buttons
+    html += '<div class="flex gap-3 mt-6">';
+    html += '<button class="flex-1 py-3 rounded-xl text-sm font-bold transition bg-gradient-to-r from-brand-500 to-purple-500 text-white hover:opacity-90 active:scale-[0.98]" onclick="window._ocalSavePlan()">' + _t('ocal_modal_save') + '</button>';
+    if (_plans[dateKey]) {
+      html += '<button class="py-3 px-4 rounded-xl text-sm font-bold transition bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20" onclick="window._ocalDeletePlan()">' + _t('ocal_modal_delete') + '</button>';
+    }
+    html += '</div>';
+
+    body.innerHTML = html;
+    modal.classList.remove('hidden');
+
+    // Re-render calendar to show selection
+    _renderCalendar();
+  }
+
+  function _closeDayModal() {
+    var modal = $('ocalDayModal');
+    if (modal) modal.classList.add('hidden');
+    _selectedDate = null;
+    _renderCalendar();
+  }
+
+  // ── Modal state (temporary) ──
+  var _modalEventType = 'casual';
+  var _modalOutfitId = null;
+
+  window._ocalSetEventType = function(type) {
+    _modalEventType = type;
+    document.querySelectorAll('.ocal-event-type-btn').forEach(function(btn) {
+      btn.classList.toggle('sel', btn.getAttribute('data-type') === type);
+    });
+  };
+
+  window._ocalSelectOutfit = function(id) {
+    _modalOutfitId = id;
+    document.querySelectorAll('.ocal-outfit-pick').forEach(function(el) {
+      el.classList.remove('sel');
+    });
+    // Find and select the clicked one
+    if (id === null) {
+      var first = document.querySelector('.ocal-outfit-pick');
+      if (first) first.classList.add('sel');
+    } else {
+      document.querySelectorAll('.ocal-outfit-pick').forEach(function(el) {
+        var onclick = el.getAttribute('onclick') || '';
+        if (onclick.indexOf("'" + id + "'") !== -1) el.classList.add('sel');
+      });
+    }
+  };
+
+  window._ocalSavePlan = function() {
+    if (!_selectedDate) return;
+    var labelEl = $('ocalLabelInput');
+    var label = labelEl ? labelEl.value.trim() : '';
+    _plans[_selectedDate] = {
+      eventType: _modalEventType,
+      label: label,
+      outfitId: _modalOutfitId,
+      ts: Date.now()
+    };
+    _savePlans();
+    _closeDayModal();
+    _renderCalendar();
+    _renderUpcoming();
+    // Toast
+    if (typeof window.showToast === 'function') window.showToast(_t('ocal_plan_saved'), 'success');
+  };
+
+  window._ocalDeletePlan = function() {
+    if (!_selectedDate) return;
+    delete _plans[_selectedDate];
+    _savePlans();
+    _closeDayModal();
+    _renderCalendar();
+    _renderUpcoming();
+    if (typeof window.showToast === 'function') window.showToast(_t('ocal_plan_deleted'), 'info');
+  };
+
+  window._ocalOpenDay = function(dateKey) {
+    _modalEventType = _plans[dateKey] ? _plans[dateKey].eventType : 'casual';
+    _modalOutfitId = _plans[dateKey] ? _plans[dateKey].outfitId : null;
+    _openDayModal(dateKey);
+  };
+
+  // ── Tab switching ──
+  window._ocalSwitchTab = function(tab) {
+    _activeTab = tab;
+    document.querySelectorAll('#ocalMainTabs .ocal-tab').forEach(function(btn) {
+      btn.classList.toggle('active', btn.getAttribute('data-ocal-tab') === tab);
+    });
+    $('ocalPanelCalendar').classList.toggle('hidden', tab !== 'calendar');
+    $('ocalPanelUpcoming').classList.toggle('hidden', tab !== 'upcoming');
+    if (tab === 'upcoming') _renderUpcoming();
+  };
+
+  // ── Navigation ──
+  window._ocalChangeMonth = function(delta) {
+    _month += delta;
+    if (_month < 0) { _month = 11; _year--; }
+    if (_month > 11) { _month = 0; _year++; }
+    _renderCalendar();
+  };
+
+  window._ocalGoToday = function() {
+    var now = new Date();
+    _year = now.getFullYear();
+    _month = now.getMonth();
+    _selectedDate = _todayKey();
+    _renderCalendar();
+  };
+
+  // ── Main render (called by toggleView) ──
+  window._ocalRender = function() {
+    if (!_year && _year !== 0) { var now = new Date(); _year = now.getFullYear(); _month = now.getMonth(); }
+    _loadPlans();
+    _loadWeatherCache();
+    _renderWeekdays();
+    _renderCalendar();
+    _renderUpcoming();
+    _fetchWeather7d();
+  };
+
+  // ── Save to Calendar from scan (global hook) ──
+  window._ocalSaveFromScan = function(outfitId) {
+    _loadPlans();
+    // Show a quick date picker — for now, default to tomorrow
+    var tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+    var key = _dayKey(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate());
+    _plans[key] = {
+      eventType: 'casual',
+      label: '',
+      outfitId: outfitId,
+      ts: Date.now()
+    };
+    _savePlans();
+    // Now open the modal on that date so the user can customize
+    _modalEventType = 'casual';
+    _modalOutfitId = outfitId;
+    _openDayModal(key);
+  };
+
+  // ── Close modal handlers ──
+  document.addEventListener('DOMContentLoaded', function() {
+    var closeBtn = $('ocalDayModalClose');
+    if (closeBtn) closeBtn.addEventListener('click', _closeDayModal);
+    var modal = $('ocalDayModal');
+    if (modal) modal.addEventListener('click', function(e) { if (e.target === modal) _closeDayModal(); });
+  });
+
+  // ── Mobile nav active state ──
+  var _origToggleView = window.toggleView;
+  // We'll update the mobile nav buttons when entering outfitcalendar
+  var _updateMobileNav = function(view) {
+    ['mobileNavScan','mobileNavCloset','mobileNavChat','mobileNavStory'].forEach(function(id) {
+      var btn = $(id);
+      if (!btn) return;
+      var isActive = (view === 'scanner' && id === 'mobileNavScan') ||
+                     (view === 'closet' && id === 'mobileNavCloset') ||
+                     (view === 'chat' && id === 'mobileNavChat') ||
+                     (view === 'history' && id === 'mobileNavStory');
+      btn.classList.toggle('is-active', isActive);
+    });
+  };
+  // Patch into toggleView
+  var _prevToggleView = window.toggleView;
+  window.toggleView = function(target, opts) {
+    _prevToggleView(target, opts);
+    _updateMobileNav(target);
+  };
+
+  // ── Closet button — "Plan Outfit" is now a static HTML button (#closetOutfitCalendarBtn) ──
+
+  // ── Language change ──
+  window.addEventListener('langchange', function() {
+    _renderWeekdays();
+    _renderCalendar();
+    _renderUpcoming();
+  });
+
+  _dsLog && _dsLog('[Outfit Calendar] Module loaded');
+})();
+</script>
+<script>
+// ============================================================
+// SECOND DATE / RANDI UTÁNI REFLEKSZIÓ — Module
+// ============================================================
+(function() {
+  'use strict';
+
+  var _t = function(key, vals) {
+    if (typeof window.t === 'function') return window.t(key, vals);
+    return key;
+  };
+  var $ = function(id) { return document.getElementById(id); };
+
+  // ── Storage ──
+  var REFLECT_KEY = 'datescan.sdReflections';
+  var GROOM_KEY = 'datescan.sdGrooming';
+  var PARTNER_FB_KEY = 'datescan.sdPartnerFeedback';
+
+  function _loadReflections() {
+    try { return JSON.parse(localStorage.getItem(REFLECT_KEY) || '[]'); } catch(e) { return []; }
+  }
+  function _saveReflections(data) {
+    try { localStorage.setItem(REFLECT_KEY, JSON.stringify(data)); } catch(e) {}
+  }
+  function _loadGrooming() {
+    try { return JSON.parse(localStorage.getItem(GROOM_KEY) || '{}'); } catch(e) { return {}; }
+  }
+  function _saveGrooming(data) {
+    try { localStorage.setItem(GROOM_KEY, JSON.stringify(data)); } catch(e) {}
+  }
+  function _loadPartnerFeedback() {
+    try { return JSON.parse(localStorage.getItem(PARTNER_FB_KEY) || '[]'); } catch(e) { return []; }
+  }
+  function _savePartnerFeedback(data) {
+    try { localStorage.setItem(PARTNER_FB_KEY, JSON.stringify(data)); } catch(e) {}
+  }
+
+  // ── Stars interaction ──
+  function _initStars(containerId, callback) {
+    var container = $(containerId);
+    if (!container) return;
+    var stars = container.querySelectorAll('.sd-star');
+    var currentVal = 0;
+    stars.forEach(function(star) {
+      star.addEventListener('click', function() {
+        currentVal = parseInt(this.getAttribute('data-val'), 10);
+        stars.forEach(function(s) {
+          var v = parseInt(s.getAttribute('data-val'), 10);
+          s.classList.toggle('lit', v <= currentVal);
+        });
+        if (callback) callback(currentVal);
+      });
+    });
+    return function() { return currentVal; };
+  }
+
+  // ── Populate outfit dropdown ──
+  function _populateOutfitDropdown(selectId) {
+    var sel = $(selectId);
+    if (!sel) return;
+    // Clear existing options except the first placeholder
+    while (sel.options.length > 1) sel.remove(1);
+    // Try to access closet outfits
+    if (typeof window.userCloset !== 'undefined' && window.userCloset && window.userCloset.outfits) {
+      window.userCloset.outfits.forEach(function(outfit) {
+        var opt = document.createElement('option');
+        opt.value = outfit.id;
+        var label = (outfit.color || '') + ' ' + (outfit.garmentType || outfit.type || 'Outfit');
+        opt.textContent = label.trim() + (outfit.score ? ' (' + outfit.score + ' pts)' : '');
+        sel.appendChild(opt);
+      });
+    }
+  }
+
+  // ── Tab switching ──
+  function _initTabs() {
+    var tabs = document.querySelectorAll('#sdTabs .sd-tab');
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var target = this.getAttribute('data-sd-tab');
+        tabs.forEach(function(t) { t.classList.remove('active'); });
+        this.classList.add('active');
+        document.querySelectorAll('.sd-panel').forEach(function(p) { p.classList.remove('active'); });
+        var panelMap = { reflections: 'sdPanelReflections', insights: 'sdPanelInsights', grooming: 'sdPanelGrooming' };
+        var panel = $(panelMap[target]);
+        if (panel) panel.classList.add('active');
+        // Re-render on tab switch
+        if (target === 'insights') _renderInsights();
+      });
+    });
+  }
+
+  // ── Save Reflection ──
+  var _getComfort, _getConfidence;
+
+  function _initReflectionForm() {
+    _getComfort = _initStars('sdComfortStars');
+    _getConfidence = _initStars('sdConfidenceStars');
+    _populateOutfitDropdown('sdReflectOutfit');
+
+    var saveBtn = $('sdSaveReflection');
+    if (saveBtn) {
+      saveBtn.addEventListener('click', function() {
+        var dateVal = $('sdReflectDate').value;
+        var eventType = $('sdReflectEventType').value;
+        var outfitId = $('sdReflectOutfit').value;
+        var comfort = _getComfort ? _getComfort() : 0;
+        var confidence = _getConfidence ? _getConfidence() : 0;
+        var notes = $('sdReflectNotes').value;
+
+        if (!dateVal) {
+          if (typeof window._dsToast === 'function') window._dsToast(_t('sd_form_date'));
+          return;
+        }
+
+        // Get outfit details if selected
+        var outfitName = '';
+        var outfitScore = null;
+        if (outfitId && typeof window.userCloset !== 'undefined' && window.userCloset) {
+          var found = window.userCloset.outfits.find(function(o) { return o.id === outfitId; });
+          if (found) {
+            outfitName = (found.color || '') + ' ' + (found.garmentType || found.type || 'Outfit');
+            outfitScore = found.score || null;
+          }
+        }
+
+        var reflections = _loadReflections();
+        reflections.push({
+          id: 'ref_' + Date.now(),
+          date: dateVal,
+          eventType: eventType,
+          outfitId: outfitId || null,
+          outfitName: outfitName.trim() || _t('sd_select_outfit'),
+          outfitScore: outfitScore,
+          comfort: comfort,
+          confidence: confidence,
+          notes: notes,
+          ts: Date.now()
+        });
+        _saveReflections(reflections);
+
+        // Reset form
+        $('sdReflectDate').value = '';
+        $('sdReflectNotes').value = '';
+        document.querySelectorAll('#sdComfortStars .sd-star, #sdConfidenceStars .sd-star').forEach(function(s) { s.classList.remove('lit'); });
+
+        if (typeof window._dsToast === 'function') window._dsToast(_t('sd_reflection_saved'));
+        _renderReflectionsList();
+      });
+    }
+  }
+
+  // ── Render Reflections List ──
+  function _renderReflectionsList() {
+    var container = $('sdReflectionsList');
+    if (!container) return;
+    var reflections = _loadReflections();
+
+    if (reflections.length === 0) {
+      container.innerHTML = '<div class="sd-empty-state"><div class="sd-empty-icon">📝</div><div class="sd-empty-title">' + _t('sd_no_reflections') + '</div><div class="sd-empty-desc">' + _t('sd_no_reflections_desc') + '</div></div>';
+      return;
+    }
+
+    var html = '';
+    // Show most recent first
+    var sorted = reflections.slice().reverse();
+    sorted.forEach(function(ref) {
+      var badgeClass = 'sd-badge--date';
+      if (ref.eventType === 'business') badgeClass = 'sd-badge--business';
+      else if (ref.eventType === 'casual') badgeClass = 'sd-badge--casual';
+
+      var starsHtml = '';
+      for (var i = 1; i <= 5; i++) {
+        starsHtml += i <= ref.comfort ? '★' : '☆';
+      }
+
+      var scoreHtml = '';
+      if (ref.outfitScore) {
+        scoreHtml = '<div class="sd-dli-score" style="background:linear-gradient(135deg,rgba(236,72,153,0.2),rgba(168,85,247,0.2))">' + ref.outfitScore + '</div>';
+      } else {
+        scoreHtml = '<div class="sd-dli-score" style="background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.3)">—</div>';
+      }
+
+      var displayDate = ref.date ? new Date(ref.date + 'T00:00:00').toLocaleDateString(typeof window.getLang === 'function' ? window.getLang() : 'en', { year: 'numeric', month: 'short', day: 'numeric' }) : ref.date;
+      html += '<div class="sd-date-list-item" data-ref-id="' + ref.id + '">' +
+        scoreHtml +
+        '<div class="sd-dli-info">' +
+          '<div class="sd-dli-date">' + displayDate + ' <span class="sd-badge ' + badgeClass + '">' + _t('sd_event_' + ref.eventType) + '</span></div>' +
+          '<div class="sd-dli-detail">' + ref.outfitName + '</div>' +
+          (ref.notes ? '<div class="sd-dli-detail" style="color:rgba(255,255,255,0.3);margin-top:4px;font-style:italic">"' + _escHtml(ref.notes.substring(0, 80)) + '"</div>' : '') +
+        '</div>' +
+        '<div class="sd-dli-stars" style="color:#fbbf24">' + starsHtml + '</div>' +
+      '</div>';
+    });
+
+    container.innerHTML = html;
+
+    // Add delete on long-press/click
+    container.querySelectorAll('.sd-date-list-item').forEach(function(item) {
+      var deleteBtn = document.createElement('button');
+      deleteBtn.className = 'sd-btn sd-btn-outline';
+      deleteBtn.style.cssText = 'position:absolute;top:8px;right:8px;padding:4px 8px;font-size:10px;opacity:0;transition:opacity .2s';
+      deleteBtn.textContent = '✕';
+      deleteBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var id = item.getAttribute('data-ref-id');
+        var refs = _loadReflections().filter(function(r) { return r.id !== id; });
+        _saveReflections(refs);
+        _renderReflectionsList();
+      });
+      item.style.position = 'relative';
+      item.appendChild(deleteBtn);
+      item.addEventListener('mouseenter', function() { deleteBtn.style.opacity = '1'; });
+      item.addEventListener('mouseleave', function() { deleteBtn.style.opacity = '0'; });
+    });
+  }
+
+  function _escHtml(str) {
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // ── Insights: Outfit-Score Correlation ──
+  function _renderInsights() {
+    var container = $('sdInsightsContent');
+    if (!container) return;
+    var reflections = _loadReflections();
+
+    if (reflections.length < 3) {
+      container.innerHTML = '<div class="sd-empty-state"><div class="sd-empty-icon">📊</div><div class="sd-empty-title">' + _t('sd_insight_no_data') + '</div><div class="sd-empty-desc">' + _t('sd_insight_no_data_desc') + '</div></div>';
+      return;
+    }
+
+    var html = '';
+
+    // ── Correlation: Group by outfit and calculate average score ──
+    var outfitScores = {};
+    var outfitComforts = {};
+    reflections.forEach(function(ref) {
+      var key = ref.outfitId || ref.outfitName;
+      if (!outfitScores[key]) {
+        outfitScores[key] = { name: ref.outfitName, scores: [], comforts: [], confidences: [] };
+      }
+      if (ref.outfitScore) outfitScores[key].scores.push(ref.outfitScore);
+      outfitScores[key].comforts.push(ref.comfort);
+      outfitScores[key].confidences.push(ref.confidence);
+    });
+
+    html += '<div class="sd-card"><div class="sd-card-title"><span>📈</span> <span>' + _t('sd_correlation_title') + '</span></div>';
+
+    var sorted = Object.values(outfitScores).sort(function(a, b) {
+      var avgA = a.scores.length ? a.scores.reduce(function(s, v) { return s + v; }, 0) / a.scores.length : 0;
+      var avgB = b.scores.length ? b.scores.reduce(function(s, v) { return s + v; }, 0) / b.scores.length : 0;
+      return avgB - avgA;
+    });
+
+    sorted.forEach(function(item) {
+      var avgScore = item.scores.length ? Math.round(item.scores.reduce(function(s, v) { return s + v; }, 0) / item.scores.length) : 0;
+      var avgComfort = item.comforts.length ? (item.comforts.reduce(function(s, v) { return s + v; }, 0) / item.comforts.length).toFixed(1) : 0;
+      var pct = Math.min(100, avgScore);
+
+      var gradient = avgScore >= 80 ? 'background:linear-gradient(90deg,#34d399,#10b981)' :
+                     avgScore >= 60 ? 'background:linear-gradient(90deg,#fbbf24,#f59e0b)' :
+                     'background:linear-gradient(90deg,#f87171,#ef4444)';
+
+      html += '<div style="margin-bottom:10px">' +
+        '<div class="flex items-center justify-between mb-1">' +
+          '<span class="text-xs font-bold text-white truncate" style="max-width:60%">' + _escHtml(item.name) + '</span>' +
+          '<span class="text-xs font-bold text-gray-400">' + _t('sd_correlation_avg') + ': <span class="text-white">' + avgScore + '</span></span>' +
+        '</div>' +
+        '<div class="sd-correlation-bar"><div class="sd-correlation-fill" style="width:' + pct + '%;' + gradient + '"></div></div>' +
+        '<div class="text-[10px] text-gray-500 mt-1">' + _t('sd_form_comfort').replace('(1-5 csillag)','').replace('(1-5 stars)','').replace('(1-5 Sterne)','') + ': ' + avgComfort + '/5 · ' + item.scores.length + 'x worn</div>' +
+      '</div>';
+    });
+
+    html += '</div>';
+
+    // ── Top Outfit Insight Card ──
+    if (sorted.length > 0 && sorted[0].scores.length > 0) {
+      var top = sorted[0];
+      var topAvg = Math.round(top.scores.reduce(function(s, v) { return s + v; }, 0) / top.scores.length);
+      html += '<div class="sd-insight-card">' +
+        '<div class="sd-insight-emoji">🏆</div>' +
+        '<div class="sd-insight-text">' + _t('sd_insight_top_outfit_desc').replace('{score}', '<span class="sd-insight-highlight">' + topAvg + '</span>') + '</div>' +
+        '<div class="text-xs text-white mt-2 font-bold">' + _escHtml(top.name) + '</div>' +
+      '</div>';
+    }
+
+    // ── Second Date Prep ──
+    if (sorted.length > 0) {
+      var bestItem = sorted[0];
+      var colorSuggestions = {
+        'black': 'dark grey', 'white': 'light grey', 'blue': 'navy', 'navy': 'royal blue',
+        'grey': 'charcoal', 'red': 'burgundy', 'green': 'olive', 'brown': 'tan',
+        'fekete': 'sötétszürke', 'fehér': 'világosszürke', 'kék': 'tengerkék',
+        'szürke': 'szénaszürke', 'piros': 'bordó', 'zöld': 'olív', 'barna': 'homokszín'
+      };
+      var baseColor = bestItem.name.toLowerCase().split(' ')[0];
+      var suggestion = colorSuggestions[baseColor] || 'different shade';
+
+      html += '<div class="sd-insight-card">' +
+        '<div class="sd-insight-emoji">💡</div>' +
+        '<div class="sd-insight-text">' + _t('sd_insight_second_date_desc').replace('{item}', '<span class="sd-insight-highlight">' + _escHtml(bestItem.name) + '</span>').replace('{suggestion}', '<span class="sd-insight-highlight">' + suggestion + '</span>') + '</div>' +
+      '</div>';
+    }
+
+    container.innerHTML = html;
+  }
+
+  // ── Grooming Scheduler ──
+  function _initGrooming() {
+    var calcBtn = $('sdCalcGrooming');
+    if (calcBtn) {
+      calcBtn.addEventListener('click', function() {
+        var nextDate = $('sdGroomingNextDate').value;
+        if (!nextDate) return;
+        _renderGroomingPlan(nextDate);
+      });
+    }
+  }
+
+  function _renderGroomingPlan(nextDate) {
+    var container = $('sdGroomingPlan');
+    if (!container) return;
+
+    var target = new Date(nextDate);
+    var now = new Date();
+    var daysUntil = Math.ceil((target - now) / (1000 * 60 * 60 * 24));
+
+    if (daysUntil < 0) {
+      container.innerHTML = '<div class="sd-empty-state"><div class="sd-empty-icon">⚠️</div><div class="sd-empty-title">' + _t('sd_grooming_past_date') + '</div></div>';
+      return;
+    }
+
+    var tasks = [
+      { key: 'haircut', icon: '✂️', daysBefore: 3, label: _t('sd_grooming_haircut'), bgColor: 'rgba(168,85,247,0.15)' },
+      { key: 'skincare', icon: '🧴', daysBefore: 2, label: _t('sd_grooming_skincare'), bgColor: 'rgba(59,130,246,0.15)' },
+      { key: 'shave', icon: '🪒', daysBefore: 1, label: _t('sd_grooming_shave'), bgColor: 'rgba(16,185,129,0.15)' },
+      { key: 'nails', icon: '💅', daysBefore: 1, label: _t('sd_grooming_nails'), bgColor: 'rgba(236,72,153,0.15)' }
+    ];
+
+    var grooming = _loadGrooming();
+    var html = '';
+
+    tasks.forEach(function(task) {
+      var scheduledDate = new Date(target);
+      scheduledDate.setDate(scheduledDate.getDate() - task.daysBefore);
+      var dateStr = scheduledDate.toLocaleDateString(typeof window.getLang === 'function' ? window.getLang() : 'en', { year: 'numeric', month: 'short', day: 'numeric' });
+      var taskKey = nextDate + '_' + task.key;
+      var isDone = grooming[taskKey] === true;
+      var daysLabel = task.daysBefore === 1 ? _t('sd_grooming_day_before') : _t('sd_grooming_days_before').replace('{n}', task.daysBefore);
+
+      html += '<div class="sd-grooming-item">' +
+        '<div class="sd-grooming-icon" style="background:' + task.bgColor + '">' + task.icon + '</div>' +
+        '<div class="sd-grooming-info">' +
+          '<div class="sd-grooming-label">' + task.label + '</div>' +
+          '<div class="sd-grooming-meta">' + dateStr + ' · ' + daysLabel + '</div>' +
+        '</div>' +
+        '<div class="sd-grooming-actions">' +
+          '<button class="sd-grooming-btn' + (isDone ? ' primary' : '') + '" data-task-key="' + taskKey + '" onclick="window._sdToggleGrooming(\'' + taskKey + '\')">' +
+            (isDone ? _t('sd_grooming_done') : _t('sd_grooming_schedule')) +
+          '</button>' +
+        '</div>' +
+      '</div>';
+    });
+
+    container.innerHTML = html;
+  }
+
+  window._sdToggleGrooming = function(taskKey) {
+    var grooming = _loadGrooming();
+    grooming[taskKey] = !grooming[taskKey];
+    _saveGrooming(grooming);
+    // Re-render with the same date
+    var nextDate = $('sdGroomingNextDate').value;
+    if (nextDate) _renderGroomingPlan(nextDate);
+  };
+
+  // ── Partner Feedback ──
+  function _renderPartnerPanel() {
+    var sel = $('sdPartnerReflection');
+    if (!sel) return;
+
+    // Populate dropdown
+    while (sel.options.length > 1) sel.remove(1);
+    var reflections = _loadReflections();
+    reflections.forEach(function(ref) {
+      var opt = document.createElement('option');
+      opt.value = ref.id;
+      opt.textContent = ref.date + ' — ' + ref.outfitName;
+      sel.appendChild(opt);
+    });
+
+    // Generate link button
+    sel.onchange = function() {
+      var linkArea = $('sdPartnerLinkArea');
+      if (sel.value) {
+        linkArea.style.display = 'block';
+        // Generate a pseudo-anonymous link
+        var link = window.location.origin + window.location.pathname + '?partner_feedback=' + btoa(sel.value).replace(/=/g, '');
+        $('sdPartnerLinkInput').value = link;
+      } else {
+        linkArea.style.display = 'none';
+      }
+    };
+
+    // Copy button
+    var copyBtn = $('sdCopyPartnerLink');
+    if (copyBtn) {
+      copyBtn.onclick = function() {
+        var input = $('sdPartnerLinkInput');
+        if (input && input.value) {
+          try {
+            if (navigator.clipboard) {
+              navigator.clipboard.writeText(input.value);
+            } else {
+              input.select();
+              document.execCommand('copy');
+            }
+            if (typeof window._dsToast === 'function') window._dsToast('📋 Copied!');
+          } catch(e) {}
+        }
+      };
+    }
+
+    // Show received feedback
+    var fbList = $('sdPartnerFeedbackList');
+    var feedbacks = _loadPartnerFeedback();
+    if (fbList) {
+      if (feedbacks.length === 0) {
+        fbList.innerHTML = '<div class="sd-empty-state" style="padding:20px"><div class="sd-empty-icon">💬</div><div class="sd-empty-title">' + _t('sd_partner_no_feedback') + '</div></div>';
+      } else {
+        var fbHtml = '<div class="sd-card"><div class="sd-card-title"><span>💬</span> <span>' + _t('sd_partner_feedback') + '</span></div>';
+        feedbacks.forEach(function(fb) {
+          var starsHtml = '';
+          for (var i = 1; i <= 5; i++) starsHtml += i <= fb.rating ? '★' : '☆';
+          fbHtml += '<div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05)">' +
+            '<div class="flex items-center justify-between"><span class="text-xs text-white font-bold">' + _escHtml(fb.reflectionDate || 'Date') + '</span><span style="color:#fbbf24;font-size:12px;letter-spacing:2px">' + starsHtml + '</span></div>' +
+            (fb.comment ? '<div class="text-xs text-gray-400 mt-1">"' + _escHtml(fb.comment) + '"</div>' : '') +
+          '</div>';
+        });
+        fbHtml += '</div>';
+        fbList.innerHTML = fbHtml;
+      }
+    }
+  }
+
+  // ── Quick Survey Modal (after scan) ──
+  function _initSurveyModal() {
+    var getSurveyComfort = _initStars('sdSurveyComfortStars');
+    var getSurveyConf = _initStars('sdSurveyConfStars');
+
+    var saveBtn = $('sdSurveySave');
+    if (saveBtn) {
+      saveBtn.addEventListener('click', function() {
+        var comfort = getSurveyComfort ? getSurveyComfort() : 0;
+        var confidence = getSurveyConf ? getSurveyConf() : 0;
+        var notes = $('sdSurveyNotes').value;
+
+        var reflections = _loadReflections();
+        var today = new Date().toISOString().split('T')[0];
+
+        // Find the most recent scan score
+        var lastScore = null;
+        try {
+          var hist = JSON.parse(localStorage.getItem('datescan.history') || '[]');
+          if (hist.length > 0) lastScore = hist[hist.length - 1].score;
+        } catch(e) {}
+
+        reflections.push({
+          id: 'ref_' + Date.now(),
+          date: today,
+          eventType: 'date',
+          outfitId: null,
+          outfitName: 'Recent Scan Outfit',
+          outfitScore: lastScore,
+          comfort: comfort,
+          confidence: confidence,
+          notes: notes,
+          ts: Date.now()
+        });
+        _saveReflections(reflections);
+
+        // Close modal
+        $('sdSurveyModal').classList.add('hidden');
+        // Reset
+        $('sdSurveyNotes').value = '';
+        document.querySelectorAll('#sdSurveyComfortStars .sd-star, #sdSurveyConfStars .sd-star').forEach(function(s) { s.classList.remove('lit'); });
+
+        if (typeof window._dsToast === 'function') window._dsToast(_t('sd_reflection_saved'));
+      });
+    }
+
+    // Close buttons
+    var closeBtn = $('sdSurveyModalClose');
+    if (closeBtn) closeBtn.addEventListener('click', function() { $('sdSurveyModal').classList.add('hidden'); });
+    var modal = $('sdSurveyModal');
+    if (modal) modal.addEventListener('click', function(e) { if (e.target === modal) modal.classList.add('hidden'); });
+
+    // Grooming modal close
+    var groomCloseBtn = $('sdGroomingModalClose');
+    if (groomCloseBtn) groomCloseBtn.addEventListener('click', function() { $('sdGroomingModal').classList.add('hidden'); });
+    var groomModal = $('sdGroomingModal');
+    if (groomModal) groomModal.addEventListener('click', function(e) { if (e.target === groomModal) groomModal.classList.add('hidden'); });
+  }
+
+  // ── Check for partner feedback in URL ──
+  function _checkPartnerFeedback() {
+    try {
+      var params = new URLSearchParams(location.search);
+      var fbParam = params.get('partner_feedback');
+      if (fbParam) {
+        try {
+          var refId = atob(fbParam + '=='.substring(0, (4 - fbParam.length % 4) % 4));
+          // Show a simple partner feedback form
+          _showPartnerFeedbackForm(refId);
+        } catch(e) {}
+      }
+    } catch(e) {}
+  }
+
+  function _showPartnerFeedbackForm(refId) {
+    var modal = $('sdGroomingModal');
+    var title = $('sdGroomingModalTitle');
+    var sub = $('sdGroomingModalSub');
+    var body = $('sdGroomingModalBody');
+    if (!modal || !body) return;
+
+    title.textContent = 'Rate This Style';
+    sub.textContent = 'How would you rate this outfit?';
+
+    body.innerHTML = '<div class="sd-form-group"><label>Style Rating (1-5)</label>' +
+      '<div class="sd-stars" id="sdPartnerRateStars">' +
+        '<span class="sd-star" data-val="1">★</span>' +
+        '<span class="sd-star" data-val="2">★</span>' +
+        '<span class="sd-star" data-val="3">★</span>' +
+        '<span class="sd-star" data-val="4">★</span>' +
+        '<span class="sd-star" data-val="5">★</span>' +
+      '</div></div>' +
+      '<div class="sd-form-group"><label>Comment (optional)</label>' +
+        '<textarea class="sd-form-input" id="sdPartnerComment" rows="2" placeholder="What did you think?"></textarea>' +
+      '</div>' +
+      '<button class="sd-btn sd-btn-primary w-full" id="sdPartnerSubmit">Submit Feedback</button>';
+
+    var getRating = _initStars('sdPartnerRateStars');
+
+    var submitBtn = $('sdPartnerSubmit');
+    if (submitBtn) {
+      submitBtn.addEventListener('click', function() {
+        var rating = getRating ? getRating() : 0;
+        var comment = $('sdPartnerComment').value;
+
+        // Find reflection for date
+        var reflections = _loadReflections();
+        var ref = reflections.find(function(r) { return r.id === refId; });
+
+        var feedbacks = _loadPartnerFeedback();
+        feedbacks.push({
+          reflectionId: refId,
+          reflectionDate: ref ? ref.date : 'Unknown',
+          rating: rating,
+          comment: comment,
+          ts: Date.now()
+        });
+        _savePartnerFeedback(feedbacks);
+
+        modal.classList.add('hidden');
+        if (typeof window._dsToast === 'function') window._dsToast('Thank you for your feedback!');
+        else alert('Thank you for your feedback!');
+      });
+    }
+
+    modal.classList.remove('hidden');
+  }
+
+  // ── Public render function ──
+  window._sdRender = function() {
+    _populateOutfitDropdown('sdReflectOutfit');
+    _renderReflectionsList();
+
+    // Set default date to today
+    var dateInput = $('sdReflectDate');
+    if (dateInput && !dateInput.value) {
+      dateInput.value = new Date().toISOString().split('T')[0];
+    }
+  };
+
+  // ── Public function to open quick survey ──
+  window._sdOpenSurvey = function() {
+    var modal = $('sdSurveyModal');
+    if (modal) modal.classList.remove('hidden');
+  };
+
+  // ── Init on DOMContentLoaded ──
+  window.addEventListener('DOMContentLoaded', function() {
+    _initTabs();
+    _initReflectionForm();
+    _initGrooming();
+    _initSurveyModal();
+    _checkPartnerFeedback();
+  });
+
+  // ── Language change ──
+  window.addEventListener('langchange', function() {
+    _renderReflectionsList();
+    var nextDate = $('sdGroomingNextDate');
+    if (nextDate && nextDate.value) _renderGroomingPlan(nextDate.value);
+  });
+
+  _dsLog && _dsLog('[Second Date] Module loaded');
 })();
 </script>
 </html>
