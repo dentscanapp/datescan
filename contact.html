@@ -122,7 +122,8 @@
       impressum_title: 'Legal / Impressum',
       impressum_operator: 'Operator:',
       impressum_name: 'Petor Péter',
-      impressum_address: '2233 Ecser, Nádas Béla utca 10, Magyarország',
+      impressum_country: 'Hungary',
+      impressum_postal_note: 'Postal address available on written request for legal correspondence.',
       impressum_email_label: 'Email:',
       impressum_email: 'info@datescan.app',
       impressum_law: 'Applicable law: Hungary / European Union',
@@ -208,7 +209,8 @@
       impressum_title: 'Jogi / Impresszum',
       impressum_operator: 'Üzemeltető:',
       impressum_name: 'Petor Péter',
-      impressum_address: '2233 Ecser, Nádas Béla utca 10, Magyarország',
+      impressum_country: 'Magyarország',
+      impressum_postal_note: 'A postai cím jogi levelezés céljából írásos kérésre elérhető.',
       impressum_email_label: 'Email:',
       impressum_email: 'info@datescan.app',
       impressum_law: 'Irányadó jog: Magyarország / Európai Unió',
@@ -294,7 +296,8 @@
       impressum_title: 'Rechtliches / Impressum',
       impressum_operator: 'Betreiber:',
       impressum_name: 'Petor Péter',
-      impressum_address: '2233 Ecser, Nádas Béla utca 10, Magyarország',
+      impressum_country: 'Ungarn',
+      impressum_postal_note: 'Die Postanschrift ist auf schriftliche Anfrage für rechtliche Korrespondenz erhältlich.',
       impressum_email_label: 'E-Mail:',
       impressum_email: 'info@datescan.app',
       impressum_law: 'Anwendbares Recht: Ungarn / Europäische Union',
@@ -868,8 +871,9 @@
       <h2 data-i18n="impressum_title">Legal / Impressum</h2>
       <div class="text-sm text-gray-400 space-y-1.5">
         <p><strong class="text-white" data-i18n="impressum_operator">Operator:</strong> <span class="ds-n"></span></p>
-        <p><span class="ds-a"></span>, <span class="ds-c">Hungary</span></p>
+        <p><span class="ds-c">Hungary</span></p>
         <p><strong class="text-white" data-i18n="impressum_email_label">Email:</strong> <a href="mailto:info@datescan.app" class="text-brand-400 hover:text-brand-500 underline" data-i18n="impressum_email">info@datescan.app</a></p>
+        <p class="italic" data-i18n="impressum_postal_note">Postal address available on written request for legal correspondence.</p>
         <p data-i18n="impressum_law">Applicable law: Hungary / European Union</p>
         <p><span data-i18n="impressum_odr">EU Online Dispute Resolution:</span> <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener" class="text-brand-400 hover:text-brand-500 underline">ec.europa.eu/consumers/odr</a></p>
       </div>
@@ -1004,9 +1008,6 @@
   function _f(){
     document.querySelectorAll('.ds-n').forEach(function(el){
       el.textContent="Pet"+"or"+" P\u00e9"+"ter";
-    });
-    document.querySelectorAll('.ds-a').forEach(function(el){
-      el.textContent="22"+"33 Ec"+"ser, N\u00e1d"+"as B\u00e9"+"la ut"+"ca 1"+"0";
     });
     // Country adapts to page language
     var lang = document.documentElement.lang || 'en';
